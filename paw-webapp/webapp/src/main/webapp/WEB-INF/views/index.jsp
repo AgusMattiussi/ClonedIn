@@ -26,8 +26,10 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
             </div>
             <div class="col-sm-10 mt-2">
                 <h3>Descubrir Perfiles</h3>
-                <button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>
-                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square"></i>  AGREGAR PERFIL</button>
+                <div class="d-flex justify-content-between mr-5">
+                    <button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>
+                    <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>AGREGAR PERFIL</button>
+                </div>
                 <div class="card w-75 mt-2" style="background: #F2F2F2">
                     <div class="card-deck m-2">
                         <div class="card">
