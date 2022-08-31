@@ -25,47 +25,26 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                 </div>
             </div>
             <div class="col mr-2">
-                <h3>Descubrir Perfiles</h3>
-                <div class="d-flex justify-content-between mr-5">
+                <div class="d-flex justify-content-between mt-2">
+                    <h3>Descubrir Perfiles</h3>
                     <!--<button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>-->
                     <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>AGREGAR PERFIL</button>
                 </div>
                 <div class="card w-100 mt-2" style="background: #F2F2F2">
                     <div class="card-deck m-2">
-                        <div class="card">
-<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <c:forEach begin = "1" end = "3">
+                            <div class="card">
+                                <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Profile picture" width="100" height="200">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                </div>
+                                <div class="card-footer bg-white text-right">
+                                    <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
+                                    <button type="button" class="btn btn-outline-dark">Contactar</button>
+                                </div>
                             </div>
-                            <div class="card-footer bg-white text-right">
-                                <!--<button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>-->
-                                <button type="button" class="btn btn-outline-dark">Contactar</button>
-                            </div>
-                        </div>
-                        <div class="card">
-<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                            </div>
-                            <div class="card-footer bg-white text-right">
-                                <!--<button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>-->
-
-                                <button type="button" class="btn btn-outline-dark">Contactar</button>
-                            </div>
-                        </div>
-                        <div class="card">
-<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                            </div>
-                            <div class="card-footer bg-white text-right">
-                               <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
-                                <button type="button" class="btn btn-outline-dark">Contactar</button>
-                            </div>
-                        </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
