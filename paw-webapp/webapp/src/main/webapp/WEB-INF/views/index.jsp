@@ -37,7 +37,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                             </div>
                             <div class="card-footer bg-white text-right">
-                                <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>
+                                <!--<button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>-->
                                 <button type="button" class="btn btn-outline-dark">Contactar</button>
                             </div>
                         </div>
@@ -47,7 +47,8 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                                 <h5 class="card-title">Card title</h5>
                                 <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
                             </div>
-                            <div class="card-footer bg-white text-right"><button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>
+                            <div class="card-footer bg-white text-right">
+                                <!--<button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2"></i></button>-->
 
                                 <button type="button" class="btn btn-outline-dark">Contactar</button>
                             </div>
@@ -59,7 +60,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
                             </div>
                             <div class="card-footer bg-white text-right">
-                                <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button>
+                               <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
                                 <button type="button" class="btn btn-outline-dark">Contactar</button>
                             </div>
                         </div>

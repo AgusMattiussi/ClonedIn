@@ -1,8 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- FIX: VER COMO ESPACIAR LOS COMPONENTES EN EL NAVBAR (VER justify-content-between Y XQ NO TOMA EL CSS) -->
-
 <html>
     <head>
         <!-- CSS -->
