@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
-<!--FIX: QUE LA COLUMNA SE PINTE ENTERA NO SOLO ESA ROW; QUE LA LISTA NO TENGA FONDO Y QUE CADA ITEM SE HAGA DROPDOWN
+<!--QUE LA LISTA NO TENGA FONDO Y QUE CADA ITEM SE HAGA DROPDOWN
 SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA LISTA CON CHECKBOXES COMO MERCADOLIBRE)-->
 
 <html>
@@ -8,13 +8,13 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <!-- CSS -->
-        <link rel="stylesheet" href="../assets/style.css">
+        <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
         <!--icons-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
-        <div class="row">
+        <div class="row h-100">
             <div class="col-sm-2" style="background-color: #459F78;">
                 <div class="list-group list-group-flush ml-2 mt-2">
                     <p style="color: white">FILTRAR POR</p>
@@ -24,13 +24,14 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                     <a href="#" class="list-group-item list-group-item-action disabled">Graduado</a>
                 </div>
             </div>
-            <div class="col-sm-10 mt-2">
+            <div class="col mr-2">
                 <h3>Descubrir Perfiles</h3>
-                <button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>
-                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square"></i>  AGREGAR PERFIL</button>
-                <div class="card w-75 mt-2" style="background: #F2F2F2">
+                <!--<button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>-->
+                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square"></i> AGREGAR PERFIL</button>
+                <div class="card w-100 mt-2" style="background: #F2F2F2">
                     <div class="card-deck m-2">
                         <div class="card">
+<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
                             <div class="card-body">
                                 <h5 class="card-title">Card title</h5>
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -41,6 +42,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                             </div>
                         </div>
                         <div class="card">
+<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
                             <div class="card-body">
                                 <h5 class="card-title">Card title</h5>
                                 <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
@@ -51,6 +53,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                             </div>
                         </div>
                         <div class="card">
+<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap" width="50" height="70">--%>
                             <div class="card-body">
                                 <h5 class="card-title">Card title</h5>
                                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
