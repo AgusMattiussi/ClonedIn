@@ -13,7 +13,7 @@
     <div class="card w-100 mt-2" style="background: #F2F2F2">
         <div class="row">
             <div class="col-sm-3">
-                <div class="card ml-2 mt-2 h-100">
+                <div class="card ml-2 mt-2 h-75">
                     <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">Aptitudes</h5>
@@ -24,8 +24,8 @@
                 </div>
             </div>
             <div class="col-sm-9">
-                <div class="row">
-                <div class="card mr-2 mt-2">
+                <div class="row mr-2">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Experiencia</h5>
                     </div>
@@ -34,8 +34,8 @@
                     </div>
                 </div>
                 </div>
-                <div class="row">
-                <div class="card mr-2 mt-2">
+                <div class="row mr-2">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Educacion</h5>
                     </div>
@@ -44,8 +44,8 @@
                     </div>
                 </div>
                 </div>
-                <div class="row">
-                <div class="card mr-2 mt-2">
+                <div class="row mr-2">
+                <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">Aptitudes</h5>
                     </div>
