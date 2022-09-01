@@ -6,22 +6,67 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
 <html>
     <head>
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
         <!--icons-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+        <!-- JQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Popper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!-- BootStrap JS -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
         <div class="row h-100">
-            <div class="col-sm-2" style="background-color: #459F78;">
-                <div class="list-group list-group-flush ml-2 mt-2">
-                    <p style="color: white">FILTRAR POR</p>
-                    <a href="#" class="list-group-item list-group-item-action">Area de conocimiento</a>
-                    <a href="#" class="list-group-item list-group-item-action">Aptitudes</a>
-                    <a href="#" class="list-group-item list-group-item-action">Experiencia Laboral</a>
-                    <a href="#" class="list-group-item list-group-item-action disabled">Graduado</a>
+            <div class="col-sm-2 sidebar">
+                <div class="dropdown-group">
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Area de conocimiento
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Area 1</a></li>
+                            <li><a class="dropdown-item" href="#">Area 2</a></li>
+                            <li><a class="dropdown-item" href="#">Area 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Aptitudes
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Aptitud 1</a></li>
+                            <li><a class="dropdown-item" href="#">Aptitud 2</a></li>
+                            <li><a class="dropdown-item" href="#">Aptitud 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Experiencia Laboral
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Exp 1</a></li>
+                            <li><a class="dropdown-item" href="#">Exp 1</a></li>
+                            <li><a class="dropdown-item" href="#">Exp 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton4"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Graduado de
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Universidad A</a></li>
+                            <li><a class="dropdown-item" href="#">Universidad B</a></li>
+                            <li><a class="dropdown-item" href="#">Universidad C</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col mr-2">
@@ -49,9 +94,5 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                 </div>
             </div>
         </div>
-
-
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
     </body>
 </html>

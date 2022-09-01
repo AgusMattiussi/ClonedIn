@@ -1,1 +1,17 @@
 /* add css here */
+.sidebar{
+    background-color: #459F78;
+}
+
+.dropdown-group {
+    width:100%;
+}
+.dropdown-group .btn {
+    width:100%;
+    background-color: #F2F2F2;
+    color: black;
+    font-size: 1vw;
+}
+.dropdown-group .dropdown-menu {
+    width:100%;
+}
