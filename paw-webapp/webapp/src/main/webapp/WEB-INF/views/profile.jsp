@@ -9,39 +9,50 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     </head>
     <body>
+    <jsp:include page="../components/navbar.jsp"/>
     <div class="card w-100 mt-2" style="background: #F2F2F2">
-        <div class="card-deck m-2">
-            <div class="card">
-                <!--<img class="card-img-top small" src="<c:url value="/assets/images/logo.png"/>" alt="Card image cap">-->
-                <div class="card-body">
-                    <h5 class="card-title">Aptitudes</h5>
-                </div>
-                <div class="card-footer bg-white text-right">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Experiencia</h5>
-                </div>
-                <div class="card-footer bg-white text-right">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="card ml-2 mt-2 h-100">
+                    <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Aptitudes</h5>
+                    </div>
+                    <div class="card-footer bg-white text-right">
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Educacion</h5>
+            <div class="col-sm-9">
+                <div class="row">
+                <div class="card mr-2 mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Experiencia</h5>
+                    </div>
+                    <div class="card-footer bg-white text-right">
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    </div>
                 </div>
-                <div class="card-footer bg-white text-right">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Aptitudes</h5>
+                <div class="row">
+                <div class="card mr-2 mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Educacion</h5>
+                    </div>
+                    <div class="card-footer bg-white text-right">
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    </div>
                 </div>
-                <div class="card-footer bg-white text-right">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                </div>
+                <div class="row">
+                <div class="card mr-2 mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Aptitudes</h5>
+                    </div>
+                    <div class="card-footer bg-white text-right">
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
