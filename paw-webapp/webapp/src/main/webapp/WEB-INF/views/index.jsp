@@ -86,7 +86,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                                 </div>
                                 <div class="card-footer bg-white text-right">
                                     <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
-                                    <button type="button" class="btn btn-outline-dark">Contactar</button>
+                                    <a href="<c:url value="/formenterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                 </div>
                             </div>
                         </c:forEach>
