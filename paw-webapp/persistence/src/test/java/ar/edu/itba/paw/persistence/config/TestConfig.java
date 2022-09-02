@@ -1,49 +1,49 @@
-package ar.edu.itba.paw.webapp.config;
+package ar.edu.itba.paw.persistence.config;
 
+import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-@EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
-@Configuration
-public class WebConfig {
 
+
+@ComponentScan({ "ar.edu.itba.paw.persistence" })
+@Configuration
+public class TestConfig {
+
+    @Value("classpath:hsqldb.sql")
+    private Resource hsqldbSql;
     @Value("classpath:schema.sql")
     private Resource schemaSql;
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver vr = new InternalResourceViewResolver();
+    @Value("classpath:init.sql")
+    private Resource initSql;
 
-        vr.setViewClass(JstlView.class);
-        vr.setPrefix("/WEB-INF/views/");
-        vr.setSuffix(".jsp");
-
-        return vr;
-    }
 
     @Bean
     public DataSource dataSource(){
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
-        ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("admin");
+        ds.setDriverClass(JDBCDriver.class);
+        ds.setUrl("jdbc:hsqldb:mem:paw");
+        ds.setUsername("ha");
+        ds.setPassword("");
 
         return ds;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final DataSource ds){
+        return new DataSourceTransactionManager(ds);
     }
 
     @Bean
@@ -59,7 +59,10 @@ public class WebConfig {
     private DatabasePopulator dataSourcePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
+        dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
+        dbp.addScript(initSql);
+        /* Puedo agregar script de inserts iniciales para la DB */
 
         return dbp;
     }

@@ -35,12 +35,6 @@ public class UserJdbcDao implements UserDao {
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
-
-        template.execute("CREATE TABLE IF NOT EXISTS users (" +
-                "id SERIAL PRIMARY KEY," +
-                "email VARCHAR(255) NOT NULL," +
-                "password VARCHAR(255) NOT NULL" +
-                ")");
     }
 
     @Override
