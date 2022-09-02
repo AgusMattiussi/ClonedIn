@@ -17,25 +17,70 @@
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp"/>
-    <div class="card w-100 mt-2" style="background: #F2F2F2">
-        <div class="d-flex justify-content-between mt-2">
-            <form>
-                <h3>Contactarse con NOMBRE USUARIO</h3>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="button" class="btn btn-outline-dark">Contactar</button>
-            </form>
+    <div class="d-flex justify-content-between mt-2">
+        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+                <form class="mr-2 ml-2 mt-2">
+                    <h3>Contactarse con NOMBRE USUARIO</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Infomacion basica</h5>
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputname" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="inputname">
+                            </div>
+                            <div class="mb-3">
+                                <label for="textarea">Descripcion de la empresa</label>
+                                <textarea class="form-control" id="textarea" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputzone" class="form-label">Ubicacion</label>
+                                <input type="text" class="form-control" id="inputzone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="controlSelect">Rubro</label>
+                                <select class="form-control" id="controlSelect">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Oferta de trabajo</h5>
+                            <div class="mb-3">
+                                <label for="inputposition" class="form-label">Puesto</label>
+                                <input type="text" class="form-control" id="inputposition">
+                            </div>
+                            <div class="mb-3">
+                                <label for="textarea1">Descripcion de la oferta</label>
+                                <textarea class="form-control" id="textarea1" rows="4"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputsal" class="form-label">salario</label>
+                                <input type="text" class="form-control" id="inputsal">
+                            </div>
+                            <div class="mb-3">
+                                <label for="controlSelect1">Rubro</label>
+                                <select class="form-control" id="controlSelect1">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-dark">Contactar</button>
+                </form>
+            </div>
         </div>
     </div>
     <!-- JavaScript Bundle with Popper -->

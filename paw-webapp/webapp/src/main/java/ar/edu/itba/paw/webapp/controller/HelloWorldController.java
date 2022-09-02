@@ -49,6 +49,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping("/formuser")
+    public ModelAndView formuser() {
+        final ModelAndView mav = new ModelAndView("formuser");
+        return mav;
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView userNotFound() {
