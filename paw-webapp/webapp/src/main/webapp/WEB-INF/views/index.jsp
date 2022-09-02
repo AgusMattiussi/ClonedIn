@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
-        <!--icons-->
+        <!-- Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -14,6 +14,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <!-- BootStrap JS -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Script -->
+        <script src="<c:url value="/assets/js/script.js"/>"></script>
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
@@ -25,6 +27,7 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Area de conocimiento
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Area 1</a></li>
@@ -36,6 +39,7 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Aptitudes
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Aptitud 1</a></li>
@@ -47,6 +51,7 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Experiencia Laboral
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Exp 1</a></li>
@@ -58,6 +63,7 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton4"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Graduado de
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Universidad A</a></li>
