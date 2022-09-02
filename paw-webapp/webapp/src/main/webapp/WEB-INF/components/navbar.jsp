@@ -12,14 +12,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark mb-auto" style="background-color: #04704C;">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="<c:url value="/assets/images/logo.png"/>" width="40" height="40" class="d-inline-block align-top" alt="">
-                <span class="navbar-brand mb-0 h1">NOMBRE</span>
+                <img src="<c:url value="/assets/images/logo4.png"/>" height="40" class="d-inline-block align-top" alt="">
             </a>
-            <!--volver a inicio & FALTAN NUESTRO NOMBRE Y NUESTRO LOGO-->
-
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Descubrir Perfiles<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="<c:url value="/"/>">Descubrir Perfiles<span class="sr-only">(current)</span></a>
                 </li>
                 <!--volver a la pagina de los perfiles-->
             </ul>
