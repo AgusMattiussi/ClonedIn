@@ -73,7 +73,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                 <div class="d-flex justify-content-between mt-2">
                     <h3>Descubrir Perfiles</h3>
                     <!--<button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>-->
-                    <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>AGREGAR PERFIL</button>
+                    <a href="<c:url value="/formuser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>AGREGAR PERFIL</button></a>
                 </div>
                 <div class="card w-100 mt-2" style="background: #F2F2F2">
                     <div class="card-deck m-2">
