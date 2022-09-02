@@ -1,8 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
-<!--QUE LA LISTA NO TENGA FONDO Y QUE CADA ITEM SE HAGA DROPDOWN
-SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA LISTA CON CHECKBOXES COMO MERCADOLIBRE)-->
-
 <html>
     <head>
         <!-- Bootstrap -->
@@ -22,6 +19,7 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
         <jsp:include page="../components/navbar.jsp"/>
         <div class="row h-100">
             <div class="col-sm-2 sidebar">
+                <h5 class="ml-2 mt-2">Filtrar por:</h5>
                 <div class="dropdown-group">
                     <div class="dropdown ml-2 mt-2">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -66,6 +64,11 @@ SINO - ALTERNATIVA: DEJAR UNA LISTA FIJA PARA EL FILTRADO (CADA TITULO SEA UNA L
                             <li><a class="dropdown-item" href="#">Universidad B</a></li>
                             <li><a class="dropdown-item" href="#">Universidad C</a></li>
                         </ul>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary filterbtn" type="button">
+                            Filtrar
+                        </button>
                     </div>
                 </div>
             </div>

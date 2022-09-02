@@ -15,3 +15,8 @@
 .dropdown-group .dropdown-menu {
     width:100%;
 }
+
+.filterbtn {
+    width:100%;
+    background-color: darkgray !important;
+}
