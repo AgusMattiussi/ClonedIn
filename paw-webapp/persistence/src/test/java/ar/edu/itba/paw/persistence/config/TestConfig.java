@@ -61,7 +61,7 @@ public class TestConfig {
 
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
-        //dbp.addScript(initSql);
+        dbp.addScript(initSql);
         /* Puedo agregar script de inserts iniciales para la DB */
 
         return dbp;
