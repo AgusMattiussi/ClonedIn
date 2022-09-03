@@ -41,14 +41,14 @@ public class UserServiceImplTest {
         //Assert.assertEquals(PASSWORD, newUser.getPassword());
     }
 
-    /*@Test
+    /*@Test(expected = DuplicateKeyException.class)
     public void testCreateEmailAlreadyExists() {
         // 1. Setup!
         Mockito.when(userDao.create(eq(EMAIL), eq(PASSWORD)))
             .thenThrow(DuplicateKeyException.class);
     }*/
 
-    /*@Test
+    @Test
     public void testFindByEmail() {
         Mockito.when(userDao.findByEmail(eq(EMAIL)))
                 .thenReturn(Optional.of(new User(1, EMAIL, PASSWORD)));
@@ -57,6 +57,6 @@ public class UserServiceImplTest {
 
         Assert.assertTrue(maybeUser.isPresent());
         Assert.assertEquals(EMAIL, maybeUser.get().getEmail());
-    }*/
+    }
 
 }
