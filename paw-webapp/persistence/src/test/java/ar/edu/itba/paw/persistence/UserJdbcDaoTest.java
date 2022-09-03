@@ -24,9 +24,30 @@ import java.util.Optional;
 @Transactional
 public class UserJdbcDaoTest {
 
-    private static final String EMAIL = "foo@bar.com";
-    private static final String PASSWORD = "secret";
-    private static final String NON_EXISTING_EMAIL = "foo@barbaz.com";
+    private static final String USER_TABLE = "usuario";
+    private static final String ID = "id";
+    private static final String NAME = "nombre";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "contrasenia";
+    private static final String LOCATION = "ubicacion";
+    private static final String CATEGORY_ID_FK = "idRubro";
+    private static final String CURRENT_POSITION = "posicionActual";
+    private static final String DESCRIPTION = "descripcion";
+    private static final String EDUCATION = "educacion";
+
+    private static final String TEST_NAME = "John Doe";
+    private static final String TEST_EMAIL = "johndoe@gmail.com";
+    private static final String TEST_PASSWORD = "pass123";
+    private static final String TEST_LOCATION = "Calle Falsa 123";
+    private static final long TEST_CATEGORY_ID_FK = 1;
+    private static final String TEST_CURRENT_POSITION = "CEO de PAW";
+    private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
+    private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
+
+    private static final long FIRST_ID = 1;
+    private static final String EXISTING_NAME = "John Lennon";
+    private static final String EXISTING_EMAIL = "johnlennon@gmail.com";
+    private static final String EXISTING_PASSWORD = "imagineAPassword";
 
     @Autowired
     private UserJdbcDao dao;
@@ -36,42 +57,49 @@ public class UserJdbcDaoTest {
 
     private JdbcTemplate jdbctemplate;
 
-    /*@Before
+    @Before
     public void setUp() {
         jdbctemplate = new JdbcTemplate(ds);
-        JdbcTestUtils.deleteFromTables(jdbctemplate, "users");
-    }*/
-
-    @Test
-    public void easy() {
-        Assert.assertTrue(true);
+        //JdbcTestUtils.deleteFromTables(jdbctemplate, CATEGORY_TABLE);
     }
 
-   /* @Test
-    public void testFindByEmailNonExisting() {
-        Optional<User> maybeUser = dao.findByEmail(NON_EXISTING_EMAIL);
-
-        Assert.assertFalse(maybeUser.isPresent());
-    }*/
-
-   /* @Test
+    @Test
     public void testCreate() {
-       final User newUser = dao.create(NON_EXISTING_EMAIL, PASSWORD);
+        final User newUser = dao.create(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION) ;
 
-       Assert.assertNotNull(newUser);
-       Assert.assertEquals(NON_EXISTING_EMAIL, newUser.getEmail());
-       Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, "users", "email = '" + NON_EXISTING_EMAIL + "'"));
-    }*/
+        Assert.assertNotNull(newUser);
+        Assert.assertEquals(TEST_EMAIL, newUser.getEmail());
+        //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
+        Assert.assertEquals(TEST_NAME, newUser.getName());
+        Assert.assertEquals(TEST_LOCATION, newUser.getLocation());
+        Assert.assertEquals(TEST_CATEGORY_ID_FK, newUser.getCategoryId_fk());
+        Assert.assertEquals(TEST_CURRENT_POSITION, newUser.getCurrentPosition());
+        Assert.assertEquals(TEST_DESCRIPTION, newUser.getDescription());
+        Assert.assertEquals(TEST_EDUCATION, newUser.getEducation());
 
-    /*@Test(expected = DuplicateKeyException.class)
-    public void testCreateAltredyExists() {
-       final User newUser = dao.create(EMAIL, PASSWORD);
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, USER_TABLE, EMAIL + " = '" + TEST_EMAIL + "'"));
+    }
 
-       Assert.assertNotNull(newUser);
-       Assert.assertEquals(EMAIL, newUser.getEmail());
-       Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, "users", "email = '" + EMAIL + "'"));
-    }*/
+
+
+    @Test
+    public void testFindById() {
+        final Optional<User> newUser = dao.findById(FIRST_ID);
+
+        Assert.assertTrue(newUser.isPresent());
+        Assert.assertEquals(FIRST_ID, newUser.get().getId());
+        Assert.assertEquals(EXISTING_EMAIL, newUser.get().getEmail());
+        Assert.assertEquals(EXISTING_NAME, newUser.get().getName());
+    }
+
+    @Test
+    public void testFindByEmail() {
+        final Optional<User> newUser = dao.findByEmail(EXISTING_EMAIL);
+
+        Assert.assertTrue(newUser.isPresent());
+        Assert.assertEquals(FIRST_ID, newUser.get().getId());
+        Assert.assertEquals(EXISTING_EMAIL, newUser.get().getEmail());
+        Assert.assertEquals(EXISTING_NAME, newUser.get().getName());
+    }
 
 }
-
-
