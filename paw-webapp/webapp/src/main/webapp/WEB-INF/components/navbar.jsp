@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
-    <nav class="navbar navbar-expand-lg navbar-dark mb-auto" style="background-color: #04704C;">
+    <nav class="navbar navbar-expand-lg navbar-dark mb-auto" style="background-color: #04704C; font-size: large">
         <div class="container-fluid">
             <a class="navbar-brand" href="<c:url value="/"/>">
                 <img src="<c:url value="/assets/images/logo4.png"/>" height="40" class="d-inline-block align-top" alt="">
@@ -18,7 +18,6 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="<c:url value="/"/>">Descubrir Perfiles<span class="sr-only">(current)</span></a>
                 </li>
-                <!--volver a la pagina de los perfiles-->
             </ul>
             <form class="form-inline my-2 my-lg-0 d-flex">
                 <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
