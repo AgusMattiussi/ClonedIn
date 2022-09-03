@@ -30,7 +30,7 @@ public class WebController {
 
     @RequestMapping("/register")
     public ModelAndView register(@RequestParam("email") final String email, @RequestParam("password") final String password) {
-        final User user = us.register(email, password);
+        final User user = us.register(email, password, null, null, 0, null, null, null);
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
 

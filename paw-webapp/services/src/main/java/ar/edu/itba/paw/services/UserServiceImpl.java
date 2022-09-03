@@ -20,10 +20,9 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-
     @Override
-    public User register(String email, String password) {
-        return null;
+    public User register(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
+        return userDao.create(email, password, name, location, categoryId_fk, currentPosition, description, education);
     }
 
     @Override

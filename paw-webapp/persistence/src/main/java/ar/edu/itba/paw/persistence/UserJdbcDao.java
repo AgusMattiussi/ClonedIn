@@ -63,7 +63,8 @@ public class UserJdbcDao implements UserDao {
         values.put(PASSWORD, password);
         values.put(NAME, name);
         values.put(LOCATION, location);
-        values.put(CATEGORY_ID_FK, categoryId_fk);
+        //TODO: Chequear si esta validacion se hace aca
+        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);

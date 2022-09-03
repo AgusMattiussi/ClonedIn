@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.User;
 import java.util.Optional;
 
 public interface UserService {
-    User register(String email, String password);
+    User register(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education);
 
     Optional<User> findByEmail(String email);
 
