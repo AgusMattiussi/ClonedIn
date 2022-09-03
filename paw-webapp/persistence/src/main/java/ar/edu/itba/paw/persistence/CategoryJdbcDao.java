@@ -48,7 +48,7 @@ public class CategoryJdbcDao implements CategoryDao {
 
     @Override
     public Optional<Category> findByName(String name) {
-        return template.query("SELECT * FROM rubro WHERE nombre = ?",
+        return template.query("SELECT * FROM " + CATEGORY_TABLE + " WHERE " + NAME + " = ?",
                 new Object[]{ name }, CATEGORY_MAPPER).stream().findFirst();
     }
 

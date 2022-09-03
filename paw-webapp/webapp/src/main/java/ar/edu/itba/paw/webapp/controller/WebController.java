@@ -10,15 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
-
 @Controller
-public class HelloWorldController {
+public class WebController {
 
     private UserService us;
 
     @Autowired
-    public HelloWorldController(final UserService us){
+    public WebController(final UserService us){
         this.us = us;
     }
 
