@@ -56,7 +56,7 @@
                         </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
-                        <button class="btn btn-secondary filterbtn" type="button">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
                             Filtrar
                         </button>
                     </div>

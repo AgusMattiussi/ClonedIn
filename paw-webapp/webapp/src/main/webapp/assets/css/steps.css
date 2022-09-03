@@ -33,7 +33,7 @@ html {
 }
 
 #msform fieldset {
-    background: white;
+    background: #F2F2F2 !important;
     border: 0 none;
     border-radius: 0.5rem;
     box-sizing: border-box;
