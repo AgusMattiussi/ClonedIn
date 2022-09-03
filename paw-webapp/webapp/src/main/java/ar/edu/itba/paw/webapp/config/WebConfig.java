@@ -1,9 +1,14 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,6 +22,9 @@ import javax.sql.DataSource;
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Value("classpath:schema.sql")
+    private Resource schemaSql;
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
@@ -38,6 +46,24 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setPassword("admin");
 
         return ds;
+    }
+
+    @Bean
+    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
+        final DataSourceInitializer dsInit = new DataSourceInitializer();
+
+        dsInit.setDataSource(ds);
+        dsInit.setDatabasePopulator(dataSourcePopulator());
+
+        return dsInit;
+    }
+
+    private DatabasePopulator dataSourcePopulator() {
+        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+
+        dbp.addScript(schemaSql);
+
+        return dbp;
     }
 
     @Override

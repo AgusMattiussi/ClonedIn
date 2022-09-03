@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -24,7 +25,7 @@ public class UserJdbcDao implements UserDao {
 
     private static final RowMapper<User> USER_MAPPER = (rs, rowNum) ->
             new User(rs.getLong("id"), rs.getString("email"),
-                    rs.getString("password"));
+                    rs.getString("contrasenia"));
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -33,35 +34,33 @@ public class UserJdbcDao implements UserDao {
     public UserJdbcDao(final DataSource ds){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
-                .withTableName("users")
+                .withTableName("usuarios")
                 .usingGeneratedKeyColumns("id");
-
-        template.execute("CREATE TABLE IF NOT EXISTS users (" +
-                "id SERIAL PRIMARY KEY," +
-                "email VARCHAR(255) NOT NULL," +
-                "password VARCHAR(255) NOT NULL" +
-                ")");
     }
 
     @Override
-    public User create(final String email, final String password) {
-        final Map<String, Object> values = new HashMap<>();
+    public User create(final String email, final String password) throws DuplicateKeyException {
+        /*final Map<String, Object> values = new HashMap<>();
         values.put("email", email);
-        values.put("password", password);
+        values.put("contrasenia", password);
+
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password);
+        return new User(userId.longValue(), email, password);*/
+        return null;
     }
 
     @Override
     public Optional<User> findByEmail(final String email) {
-        return template.query("SELECT * FROM users WHERE email = ?",
-                new Object[]{ email }, USER_MAPPER).stream().findFirst();
+        /*return template.query("SELECT * FROM usuario WHERE email = ?",
+                new Object[]{ email }, USER_MAPPER).stream().findFirst();*/
+        return Optional.empty();
     }
 
     @Override
     public Optional<User> findById(final long userId) {
-        return template.query("SELECT * FROM users WHERE id = ?",
-                new Object[]{ userId }, USER_MAPPER).stream().findFirst();
+        /*return template.query("SELECT * FROM usuario WHERE id = ?",
+                new Object[]{ userId }, USER_MAPPER).stream().findFirst();*/
+        return Optional.empty();
     }
 }
