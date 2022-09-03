@@ -6,9 +6,9 @@
 .dropdown-group {
     width:100%;
 }
-.dropdown-group .btn {
+.dropdown-group .form-select{
     width:100%;
-    background-color: #F2F2F2;
+    background-color: #F2F2F2 !important;
     color: black;
     font-size: 1vw;
 }

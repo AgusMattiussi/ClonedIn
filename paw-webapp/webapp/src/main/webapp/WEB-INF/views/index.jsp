@@ -24,52 +24,36 @@
                 <h5 class="ml-2 mt-2">Filtrar por:</h5>
                 <div class="dropdown-group">
                     <div class="dropdown ml-2 mt-2">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Area de conocimiento
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Area 1</a></li>
-                            <li><a class="dropdown-item" href="#">Area 2</a></li>
-                            <li><a class="dropdown-item" href="#">Area 3</a></li>
-                        </ul>
+                        <select class="form-select" aria-label="false">
+                            <option selected>Area de conocimiento</option>
+                            <option value="1">Area 1</option>
+                            <option value="2">Area 2</option>
+                            <option value="3">Area 3</option>
+                        </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Aptitudes
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Aptitud 1</a></li>
-                            <li><a class="dropdown-item" href="#">Aptitud 2</a></li>
-                            <li><a class="dropdown-item" href="#">Aptitud 3</a></li>
-                        </ul>
+                        <select class="form-select" aria-label="false">
+                            <option selected>Aptitudes</option>
+                            <option value="1">Aptitud 1</option>
+                            <option value="2">Aptitud 2</option>
+                            <option value="3">Aptitud 3</option>
+                        </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Experiencia Laboral
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Exp 1</a></li>
-                            <li><a class="dropdown-item" href="#">Exp 1</a></li>
-                            <li><a class="dropdown-item" href="#">Exp 3</a></li>
-                        </ul>
+                        <select class="form-select" aria-label="false">
+                            <option selected>Experiencia Laboral</option>
+                            <option value="1">Exp 1</option>
+                            <option value="2">Exp 2</option>
+                            <option value="3">Exp 3</option>
+                        </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton4"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Graduado de
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Universidad A</a></li>
-                            <li><a class="dropdown-item" href="#">Universidad B</a></li>
-                            <li><a class="dropdown-item" href="#">Universidad C</a></li>
-                        </ul>
+                        <select class="form-select" aria-label="false">
+                            <option selected>Graduado de</option>
+                            <option value="1">Universidad A</option>
+                            <option value="2">Universidad B</option>
+                            <option value="3">Universidad C</option>
+                        </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
                         <button class="btn btn-secondary filterbtn" type="button">
