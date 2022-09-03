@@ -71,7 +71,4 @@ public class CategoryJdbcDaoTest {
         Assert.assertEquals(FIRST_ID, category.get().getId());
         Assert.assertEquals(TEST_CATEGORY, category.get().getName());
     }
-
-
-
 }
