@@ -2,8 +2,8 @@ package ar.edu.itba.paw.models;
 
 public class Category {
 
-    private long id;
-    private String name;
+    private final long id;
+    private final String name;
 
     public Category(long id, String name) {
         this.id = id;

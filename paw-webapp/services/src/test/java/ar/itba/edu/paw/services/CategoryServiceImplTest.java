@@ -32,7 +32,7 @@ public class CategoryServiceImplTest {
             .thenReturn(new Category(TEST_ID, TEST_CATEGORY));
 
         final Category newCategory = categoryService.create(TEST_CATEGORY);
-        
+
         Assert.assertNotNull(newCategory);
         Assert.assertEquals(TEST_CATEGORY, newCategory.getName());
         Assert.assertEquals(TEST_ID, newCategory.getId());

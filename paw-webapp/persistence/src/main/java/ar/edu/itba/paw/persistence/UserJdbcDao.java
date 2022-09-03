@@ -23,9 +23,27 @@ import java.util.Optional;
 @Repository
 public class UserJdbcDao implements UserDao {
 
-    private static final RowMapper<User> USER_MAPPER = (rs, rowNum) ->
-            new User(rs.getLong("id"), rs.getString("email"),
-                    rs.getString("contrasenia"));
+    private static final String USER_TABLE = "usuario";
+    private static final String ID = "id";
+    private static final String NAME = "nombre";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "contrasenia";
+    private static final String LOCATION = "ubicacion";
+    private static final String CATEGORY_ID_FK = "idRubro";
+    private static final String CURRENT_POSITION = "posicionActual";
+    private static final String DESCRIPTION = "descripcion";
+    private static final String EDUCATION = "educacion";
+
+    private static final RowMapper<User> USER_MAPPER = (resultSet, rowNum) ->
+            new User(resultSet.getLong(ID),
+                    resultSet.getString(EMAIL),
+                    resultSet.getString(PASSWORD),
+                    resultSet.getString(NAME),
+                    resultSet.getString(LOCATION),
+                    resultSet.getLong(CATEGORY_ID_FK),
+                    resultSet.getString(CURRENT_POSITION),
+                    resultSet.getString(DESCRIPTION),
+                    resultSet.getString(EDUCATION));
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -34,33 +52,36 @@ public class UserJdbcDao implements UserDao {
     public UserJdbcDao(final DataSource ds){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
-                .withTableName("usuarios")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(USER_TABLE)
+                .usingGeneratedKeyColumns(ID);
     }
 
     @Override
-    public User create(final String email, final String password) throws DuplicateKeyException {
-        /*final Map<String, Object> values = new HashMap<>();
-        values.put("email", email);
-        values.put("contrasenia", password);
+    public User create(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
+        final Map<String, Object> values = new HashMap<>();
+        values.put(EMAIL, email);
+        values.put(PASSWORD, password);
+        values.put(NAME, name);
+        values.put(LOCATION, location);
+        values.put(CATEGORY_ID_FK, categoryId_fk);
+        values.put(CURRENT_POSITION, currentPosition);
+        values.put(DESCRIPTION, description);
+        values.put(EDUCATION, education);
 
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password);*/
-        return null;
+        return new User(userId.longValue(), email, password, name, location, categoryId_fk, currentPosition, description, education);
     }
 
     @Override
     public Optional<User> findByEmail(final String email) {
-        /*return template.query("SELECT * FROM usuario WHERE email = ?",
-                new Object[]{ email }, USER_MAPPER).stream().findFirst();*/
-        return Optional.empty();
+        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + EMAIL + " = ?",
+                new Object[]{ email }, USER_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> findById(final long userId) {
-        /*return template.query("SELECT * FROM usuario WHERE id = ?",
-                new Object[]{ userId }, USER_MAPPER).stream().findFirst();*/
-        return Optional.empty();
+        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + ID + " = ?",
+                new Object[]{ userId }, USER_MAPPER).stream().findFirst();
     }
 }
