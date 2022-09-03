@@ -80,24 +80,17 @@ html {
     outline-width: 0;
 }
 
-/*Blue Buttons*/
+/*Buttons*/
 #msform .action-button {
     width: 100px;
     background: #459F78;
     font-weight: bold;
     color: white;
-    /*border: 0 none;*/
-    /*border-radius: 0px;*/
     cursor: pointer;
     padding: 10px 5px;
     margin: 10px 5px;
 }
 
-#msform .action-button:hover, #msform .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #459F78;
-}
-
-/*Previous Buttons*/
 #msform .action-button-previous {
     width: 100px;
     background: #459F78;
@@ -106,6 +99,10 @@ html {
     cursor: pointer;
     padding: 10px 5px;
     margin: 10px 5px;
+}
+
+#msform .action-button:hover, #msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #459F78;
 }
 
 #msform .action-button-previous:hover, #msform .action-button-previous:focus {
