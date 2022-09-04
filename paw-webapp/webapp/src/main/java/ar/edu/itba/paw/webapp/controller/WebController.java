@@ -4,11 +4,16 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.CompanyForm;
+import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 public class WebController {
@@ -42,15 +47,33 @@ public class WebController {
     }
 
     @RequestMapping("/formenterprise")
-    public ModelAndView formenterprise() {
+    public ModelAndView formenterprise(@ModelAttribute("companyForm") final CompanyForm form) {
         final ModelAndView mav = new ModelAndView("formenterprise");
         return mav;
     }
 
     @RequestMapping("/formuser")
-    public ModelAndView formuser() {
+    public ModelAndView formuser(@ModelAttribute("userForm") final UserForm form) {
         final ModelAndView mav = new ModelAndView("formuser");
         return mav;
+    }
+
+    @RequestMapping(value = "/create", method = { RequestMethod.POST })
+    public ModelAndView create(@Valid @ModelAttribute("userForm") final UserForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return formuser(form);
+        }
+        final User u = us.create(form.getUsername(), form.getPassword());
+        return new ModelAndView("redirect:/user?userId=" + u.getId());
+    }
+
+    @RequestMapping(value = "/create", method = { RequestMethod.POST })
+    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return formenterprise(form);
+        }
+        final User u = us.create(form.getCusername(), form.getCpassword());
+        return new ModelAndView("redirect:/user?userId=" + u.getId());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
