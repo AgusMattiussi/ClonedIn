@@ -43,13 +43,21 @@
                                                 <h2 class="fs-title">Informacion Basica</h2>
                                                 <input type="email" name="email" placeholder="Email"/>
                                                 <input type="text" name="name" placeholder="Nombre"/>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="ControlFile">Elegir foto de perfil</label>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type="file" class="form-control-file" id="ControlFile">
+                                                    </div>
+                                                </div>
                                                 <input type="text" name="location" placeholder="Ubicacion"/>
                                                 <input type="text" name="description" placeholder="Descripcion"/>
                                                 <div class="row">
-                                                    <div class="col-3">
+                                                    <div class="col-6">
                                                         <label class="area">Rubro Empresarial</label>
                                                     </div>
-                                                    <div class="col-9">
+                                                    <div class="col-6">
                                                         <select class="list-dt" id="area" name="area">
                                                             <option selected>Ninguno</option>
                                                             <option>Tecnologia</option>
@@ -72,10 +80,10 @@
                                                 <input type="text" name="description" placeholder="Descripcion"/>
                                                 <input type="text" name="salary" placeholder="Salario"/>
                                                 <div class="row">
-                                                    <div class="col-2">
+                                                    <div class="col-6">
                                                         <label class="Rubro">Rubro Laboral</label>
                                                     </div>
-                                                    <div class="col-9">
+                                                    <div class="col-6">
                                                         <select class="list-dt" id="area1" name="area1">
                                                             <option selected>Ninguno</option>
                                                             <option>IT</option>

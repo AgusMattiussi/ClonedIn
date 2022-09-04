@@ -45,8 +45,31 @@
                           <h2 class="fs-title">Informacion Personal</h2>
                           <input type="email" name="email" placeholder="Email"/>
                           <input type="text" name="name" placeholder="Nombre"/>
+                          <div class="row">
+                            <div class="col-6">
+                              <label for="ControlFile">Elegir foto de perfil</label>
+                            </div>
+                            <div class="col-6">
+                              <input type="file" class="form-control-file" id="ControlFile">
+                            </div>
+                          </div>
                           <input type="text" name="location" placeholder="Ubicacion"/>
                           <input type="text" name="description" placeholder="Descripcion"/>
+                          <div class="row">
+                            <div class="col-6">
+                              <label class="Rubro">Rubro Laboral</label>
+                            </div>
+                            <div class="col-6">
+                              <select class="list-dt" id="area1" name="area1">
+                                <option selected>Ninguno</option>
+                                <option>IT</option>
+                                <option>RRHH</option>
+                                <option>Secretaria</option>
+                                <option>Investigacion</option>
+                                <option>Otro</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
