@@ -22,70 +22,80 @@
     <body>
         <jsp:include page="../components/navbar.jsp"/>
         <div class="d-flex justify-content-between mt-2">
-            <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
-                <form class="mr-2 ml-2 mt-2">
-                    <h3>Contactarse con NOMBRE USUARIO</h3>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h5>Infomacion basica</h5>
-                            <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputname" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="inputname">
-                            </div>
-                            <div class="mb-3">
-                                <label for="textarea">Descripcion de la empresa</label>
-                                <textarea class="form-control" id="textarea" rows="2"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputzone" class="form-label">Ubicacion</label>
-                                <input type="text" class="form-control" id="inputzone">
-                            </div>
-<%--                            <div class="mb-3">--%>
-<%--                                <label for="controlSelect">Rubro</label>--%>
-<%--                                <select class="form-control" id="controlSelect">--%>
-<%--                                    <option>1</option>--%>
-<%--                                    <option>2</option>--%>
-<%--                                    <option>3</option>--%>
-<%--                                    <option>4</option>--%>
-<%--                                    <option>5</option>--%>
-<%--                                </select>--%>
-<%--                            </div>--%>
-                        </div>
-                        <div class="col-sm-6">
-                            <h5>Oferta de trabajo</h5>
-                            <div class="mb-3">
-                                <label for="inputposition" class="form-label">Puesto</label>
-                                <input type="text" class="form-control" id="inputposition">
-                            </div>
-                            <div class="mb-3">
-                                <label for="textarea1">Descripcion de la oferta</label>
-                                <textarea class="form-control" id="textarea1" rows="4"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputsal" class="form-label">Salario</label>
-                                <input type="text" class="form-control" id="inputsal">
-                            </div>
-                            <div class="mb-3">
-                                <label for="controlSelect1">Rubro</label>
-                                <select class="form-control" id="controlSelect1">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
+            <!-- MultiStep Form -->
+            <div class="container-fluid">
+                <div class="row justify-content-center mt-0">
+                    <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+                        <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
+                            <h2><strong>Contactarse con el (nombre-usuario)</strong></h2>
+                            <p>Asegurate de llenar todos los campos antes de avanzar</p>
+                            <div class="row">
+                                <div class="col-md-12 mx-0">
+                                    <form id="msform">
+                                        <!-- progressbar -->
+                                        <ul id="progressbar">
+                                            <li class="active" id="personal"><strong>Informacion Basica</strong></li>
+                                            <li id="experience"><strong>Oferta Laboral</strong></li>
+                                        </ul>
+                                        <!-- fieldsets -->
+                                        <fieldset>
+                                            <div class="form-card">
+                                                <h2 class="fs-title">Informacion Basica</h2>
+                                                <input type="email" name="email" placeholder="Email"/>
+                                                <input type="text" name="name" placeholder="Nombre"/>
+                                                <input type="text" name="location" placeholder="Ubicacion"/>
+                                                <input type="text" name="description" placeholder="Descripcion"/>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <label class="area">Rubro Empresarial</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <select class="list-dt" id="area" name="area">
+                                                            <option selected>Ninguno</option>
+                                                            <option>Tecnologia</option>
+                                                            <option>Medicina</option>
+                                                            <option>Computacion</option>
+                                                            <option>Empresarial</option>
+                                                            <option>Educacion</option>
+                                                            <option>Bancario</option>
+                                                            <option>Otro</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" name="next" class="btn next action-button">Continuar</button>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="form-card">
+                                                <h2 class="fs-title">Oferta de trabajo</h2>
+                                                <input type="text" name="position" placeholder="Puesto"/>
+                                                <input type="text" name="description" placeholder="Descripcion"/>
+                                                <input type="text" name="salary" placeholder="Salario"/>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="Rubro">Rubro Laboral</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <select class="list-dt" id="area1" name="area1">
+                                                            <option selected>Ninguno</option>
+                                                            <option>IT</option>
+                                                            <option>RRHH</option>
+                                                            <option>Secretaria</option>
+                                                            <option>Investigacion</option>
+                                                            <option>Otro</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
+                                            <button type="button" name="next" class="btn next action-button">Continuar</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-outline-dark">Contactar</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </body>
