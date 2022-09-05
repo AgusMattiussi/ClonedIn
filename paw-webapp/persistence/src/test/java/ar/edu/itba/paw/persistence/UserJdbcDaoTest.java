@@ -40,7 +40,8 @@ public class UserJdbcDaoTest {
     private static final String TEST_EMAIL = "johndoe@gmail.com";
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa 123";
-    private static final long TEST_CATEGORY_ID_FK = 1;
+    //private static final long TEST_CATEGORY_ID_FK = 1;
+    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
     private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
@@ -66,14 +67,14 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final User newUser = dao.create(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION) ;
+        final User newUser = dao.create(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION) ;
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(TEST_EMAIL, newUser.getEmail());
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, newUser.getName());
         Assert.assertEquals(TEST_LOCATION, newUser.getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, newUser.getCategoryId_fk());
+        Assert.assertEquals(0, newUser.getCategoryId_fk());
         Assert.assertEquals(TEST_CURRENT_POSITION, newUser.getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, newUser.getDescription());
         Assert.assertEquals(TEST_EDUCATION, newUser.getEducation());
@@ -105,9 +106,9 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testGetAllUsers() {
-        final User u1 = dao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u2 = dao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u3 = dao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u1 = dao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u2 = dao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u3 = dao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
 
         final List<User> allUsers = dao.getAllUsers();
         //Tenemos en cuenta el insert inicial
