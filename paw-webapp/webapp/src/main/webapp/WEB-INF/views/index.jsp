@@ -73,7 +73,7 @@
                         <c:forEach var="us" items="${users}">
                             <div class="card">
                                 <a class="card-block stretched-link text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
-                                    <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Profile picture" width="100" height="200">
+                                    <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Profile picture" width="100" height="200">
                                     <div class="card-body">
                                         <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>

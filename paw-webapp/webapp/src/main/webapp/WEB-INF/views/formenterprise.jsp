@@ -31,7 +31,7 @@
                         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
                             <h2><strong>Contactarse con el (nombre-usuario)</strong></h2>
                             <p>Asegurate de llenar todos los campos antes de avanzar</p>
-                            <!--<c:url value="/create" var="postPath"/>
+                            <c:url value="/createEnterprise" var="postPath"/>
                             <form:form modelAttribute="companyForm" action="${postPath}" method="post">
                             <div class="row">
                                 <div class="col-md-12 mx-0">
@@ -49,14 +49,14 @@
 
                                                 <form:errors path="cemail" cssClass="formError" element="p"/>
                                                 <form:input type="text" path="cname" name="name" placeholder="Nombre"/>
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <div class="col-6">
                                                         <label for="ControlFile">Elegir foto de perfil</label>
                                                     </div>
                                                     <div class="col-6">
                                                         <input type="file" class="form-control-file" id="ControlFile">
                                                     </div>
-                                                </div>
+                                                </div>-->
                                                 <form:input type="text" path="ccity" name="location" placeholder="Ubicacion"/>
                                                 <form:input type="text" path="cdesc" name="description" placeholder="Descripcion"/>
                                                 <div class="row">
@@ -106,12 +106,12 @@
                                                 </div>
                                             </div>
                                             <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                                            <button type="button" name="next" class="btn next action-button">Continuar</button>
+                                            <button type="button" name="end" class="btn next action-button">Finalizar</button>
                                         </fieldset>
                                     </form>
                                 </div>
                             </div>
-                            </form:form> -->
+                            </form:form>
                         </div>
                     </div>
                 </div>
