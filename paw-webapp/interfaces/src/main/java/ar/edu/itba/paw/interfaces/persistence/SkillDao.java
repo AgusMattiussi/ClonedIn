@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Skill;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SkillDao {
@@ -12,5 +13,7 @@ public interface SkillDao {
     Optional<Skill> findByDescription(String description);
 
     Skill findByDescriptionOrCreate(String description);
+
+    List<Skill> getAllSkills();
 
 }

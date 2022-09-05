@@ -15,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +48,7 @@ public class SkillJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final Skill newSkill = dao.create(NEW_SKILL) ;
+        final Skill newSkill = dao.create(NEW_SKILL);
 
         Assert.assertNotNull(newSkill);
         Assert.assertEquals(NEW_SKILL, newSkill.getDescription());
@@ -80,5 +81,19 @@ public class SkillJdbcDaoTest {
         Assert.assertFalse(notFoundCategory.isPresent());
         Assert.assertNotNull(skill);
         Assert.assertEquals(NON_EXISTING_SKILL, skill.getDescription());
+    }
+
+    @Test
+    public void testGetAllSkills(){
+        final Skill skill1 = dao.create("skill1");
+        final Skill skill2 = dao.create("skill2");
+        final Skill skill3 = dao.create("skill3");
+
+        final List<Skill> allSkills = dao.getAllSkills();
+
+        Assert.assertEquals(3 + 1, allSkills.size());
+        Assert.assertTrue(allSkills.contains(skill1));
+        Assert.assertTrue(allSkills.contains(skill2));
+        Assert.assertTrue(allSkills.contains(skill3));
     }
 }

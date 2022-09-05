@@ -9,9 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class SkillJdbcDao implements SkillDao {
@@ -64,5 +62,14 @@ public class SkillJdbcDao implements SkillDao {
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);
         return optSkill.orElse(create(description));
+    }
+
+    @Override
+    public List<Skill> getAllSkills() {
+        List<Skill> allSkills = template.query("SELECT * FROM " + SKILL_TABLE, SKILL_MAPPER);
+        // Fixme: Es necesario?
+        if(allSkills == null)
+            return new ArrayList<>();
+        return allSkills;
     }
 }
