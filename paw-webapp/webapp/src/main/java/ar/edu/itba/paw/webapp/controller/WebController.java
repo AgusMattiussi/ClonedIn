@@ -63,18 +63,18 @@ public class WebController {
         if (errors.hasErrors()) {
             return formuser(form);
         }
-        final User u = us.create(form.getUsername(), form.getPassword());
+        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), 0, form.getJob(), form.getDesc(), form.getCollege());
         return new ModelAndView("redirect:/user?userId=" + u.getId());
     }
 
-    @RequestMapping(value = "/create", method = { RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return formenterprise(form);
-        }
-        final User u = us.create(form.getCusername(), form.getCpassword());
-        return new ModelAndView("redirect:/user?userId=" + u.getId());
-    }
+//    @RequestMapping(value = "/create", method = { RequestMethod.POST })
+//    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
+//        if (errors.hasErrors()) {
+//            return formenterprise(form);
+//        }
+//        final User u = us.register(form.getCemail(), form.getCpassword(), form.getCname(), form.getCcity(), 0, form.getCjob(), form.getCdesc(), form.getCjobdesc());
+//        return new ModelAndView("redirect:/user?userId=" + u.getId());
+//    }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)

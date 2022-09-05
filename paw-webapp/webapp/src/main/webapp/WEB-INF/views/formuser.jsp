@@ -31,7 +31,6 @@
               <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
                 <h2><strong>Completa tu perfil</strong></h2>
                 <p>Asegurate de llenar todos los campos antes de avanzar</p>
-                <!--no estoy segura que poner aca-si va el register o no-->
                 <c:url value="/create" var="postPath"/>
                 <form:form modelAttribute="userForm" action="${postPath}" method="post">
                 <div class="row">
