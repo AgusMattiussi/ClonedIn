@@ -29,6 +29,7 @@ public class CategoryJdbcDaoTest {
 
     private static final String TEST_CATEGORY = "testCategory";
     private static final String NEW_CATEGORY = "newCategory";
+    private static final String NON_EXISTING_CATEGORY = "NonExistingCategory";
     private static final long FIRST_ID = 1;
 
     @Autowired
@@ -62,6 +63,16 @@ public class CategoryJdbcDaoTest {
         Assert.assertTrue(category.isPresent());
         Assert.assertEquals(TEST_CATEGORY, category.get().getName());
         Assert.assertEquals(FIRST_ID, category.get().getId());
+    }
+
+    @Test
+    public void testFindByNameOrCreate(){
+        final Optional<Category> notFoundCategory = dao.findByName(NON_EXISTING_CATEGORY);
+        final Category category = dao.findByNameOrCreate(NON_EXISTING_CATEGORY);
+
+        Assert.assertFalse(notFoundCategory.isPresent());
+        Assert.assertNotNull(category);
+        Assert.assertEquals(NON_EXISTING_CATEGORY, category.getName());
     }
 
     @Test

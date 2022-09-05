@@ -55,6 +55,12 @@ public class CategoryJdbcDao implements CategoryDao {
     }
 
     @Override
+    public Category findByNameOrCreate(String name) {
+        Optional<Category> optCategory = findByName(name);
+        return optCategory.orElse(create(name));
+    }
+
+    @Override
     public Optional<Category> findById(long id) {
         if(id == 0)
             return Optional.empty();
