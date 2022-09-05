@@ -28,6 +28,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
+
+    @Value("classpath:category.sql")
+    private Resource categorySql;
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
@@ -65,6 +69,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
 
         dbp.addScript(schemaSql);
+        dbp.addScript(categorySql);
 
         return dbp;
     }
