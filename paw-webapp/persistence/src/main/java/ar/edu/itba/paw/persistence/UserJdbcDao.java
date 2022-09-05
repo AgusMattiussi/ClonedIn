@@ -71,13 +71,12 @@ public class UserJdbcDao implements UserDao {
         values.put(EDUCATION, education);
 
         //TODO: Chequear si esta validacion se hace aca
-        Optional<Category> optCategory = categoryDao.findByName(categoryName);
-        long categoryId_fk = optCategory.map(Category::getId).orElse(0L);
-        values.put(CATEGORY_ID_FK, optCategory.isPresent() ? categoryId_fk : null);
+        Category category = categoryDao.findByNameOrCreate(categoryName);
+        values.put(CATEGORY_ID_FK, category.getId());
 
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password, name, location, categoryId_fk, currentPosition, description, education);
+        return new User(userId.longValue(), email, password, name, location, category.getId(), currentPosition, description, education);
     }
 
     @Override

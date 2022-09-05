@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
@@ -74,7 +75,7 @@ public class UserJdbcDaoTest {
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, newUser.getName());
         Assert.assertEquals(TEST_LOCATION, newUser.getLocation());
-        Assert.assertEquals(0, newUser.getCategoryId_fk());
+        //Assert.assertEquals(0, newUser.getCategoryId_fk());
         Assert.assertEquals(TEST_CURRENT_POSITION, newUser.getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, newUser.getDescription());
         Assert.assertEquals(TEST_EDUCATION, newUser.getEducation());
