@@ -33,41 +33,43 @@
                                 <div class="col-md-12 mx-0">
                                     <form id="msform">
                                         <!-- progressbar -->
-                                        <ul id="progressbar">
-                                            <li class="active" id="personal"><strong>Informacion Basica</strong></li>
-                                            <li id="experience"><strong>Oferta Laboral</strong></li>
-                                        </ul>
+                                            <ul id="progressbar">
+                                                <li class="active" id="personal"><strong>Informacion Basica</strong></li>
+                                                <li id="experience"><strong>Oferta Laboral</strong></li>
+                                            </ul>
                                         <!-- fieldsets -->
                                         <fieldset>
                                             <div class="form-card">
                                                 <h2 class="fs-title">Informacion Basica</h2>
                                                 <input type="email" name="email" placeholder="Email"/>
                                                 <input type="text" name="name" placeholder="Nombre"/>
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <label for="ControlFile">Elegir foto de perfil</label>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <input type="file" class="form-control-file" id="ControlFile">
-                                                    </div>
-                                                </div>
+<%--                                                <div class="row">--%>
+<%--                                                    <div class="col-6">--%>
+<%--                                                        <label for="ControlFile">Elegir foto de perfil</label>--%>
+<%--                                                    </div>--%>
+<%--                                                    <div class="col-6">--%>
+<%--                                                        <input type="file" class="form-control-file" id="ControlFile">--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
                                                 <input type="text" name="location" placeholder="Ubicacion"/>
                                                 <input type="text" name="description" placeholder="Descripcion"/>
                                                 <div class="row">
-                                                    <div class="col-6">
-                                                        <label class="area">Rubro Empresarial</label>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <select class="list-dt" id="area" name="area">
-                                                            <option selected>Ninguno</option>
-                                                            <option>Tecnologia</option>
-                                                            <option>Medicina</option>
-                                                            <option>Computacion</option>
-                                                            <option>Empresarial</option>
-                                                            <option>Educacion</option>
-                                                            <option>Bancario</option>
-                                                            <option>Otro</option>
-                                                        </select>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="pl-2">
+                                                            <label class="area">Rubro Empresarial</label>
+                                                        </div>
+                                                        <div>
+                                                            <select class="list-dt ml-auto" id="area" name="area">
+                                                                <option selected>Ninguno</option>
+                                                                <option>Tecnologia</option>
+                                                                <option>Medicina</option>
+                                                                <option>Computacion</option>
+                                                                <option>Empresarial</option>
+                                                                <option>Educacion</option>
+                                                                <option>Bancario</option>
+                                                                <option>Otro</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -80,18 +82,20 @@
                                                 <input type="text" name="description" placeholder="Descripcion"/>
                                                 <input type="text" name="salary" placeholder="Salario"/>
                                                 <div class="row">
-                                                    <div class="col-6">
-                                                        <label class="Rubro">Rubro Laboral</label>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <select class="list-dt" id="area1" name="area1">
-                                                            <option selected>Ninguno</option>
-                                                            <option>IT</option>
-                                                            <option>RRHH</option>
-                                                            <option>Secretaria</option>
-                                                            <option>Investigacion</option>
-                                                            <option>Otro</option>
-                                                        </select>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="pl-2">
+                                                            <label class="area">Rubro Laboral</label>
+                                                        </div>
+                                                        <div>
+                                                            <select class="list-dt ml-auto" id="area1" name="area1">
+                                                                <option selected>Ninguno</option>
+                                                                <option>IT</option>
+                                                                <option>RRHH</option>
+                                                                <option>Secretaria</option>
+                                                                <option>Investigacion</option>
+                                                                <option>Otro</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

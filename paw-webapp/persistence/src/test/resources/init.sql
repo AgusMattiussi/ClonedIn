@@ -2,3 +2,5 @@
 INSERT INTO rubro (nombre) VALUES ('testCategory');
 INSERT INTO aptitud (descripcion) VALUES ('testSkill');
 INSERT INTO usuario (nombre, email, contrasenia, descripcion, idRubro, ubicacion, posicionActual, educacion) VALUES ('John Lennon', 'johnlennon@gmail.com', 'imagineAPassword', null, null, null, null, null);
+INSERT INTO empresa (nombre, email, contrasenia, descripcion, idRubro, ubicacion) VALUES ('Empresaurio', 'empresaurio@gmail.com', '12345678', null, null, null);
+
