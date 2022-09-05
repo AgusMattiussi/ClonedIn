@@ -31,8 +31,6 @@
               <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
                 <h2><strong>Completa tu perfil</strong></h2>
                 <p>Asegurate de llenar todos los campos antes de avanzar</p>
-                <c:url value="/create" var="postPath"/>
-                <form:form modelAttribute="userForm" action="${postPath}" method="post">
                 <div class="row">
                   <div class="col-md-12 mx-0">
                     <form id="msform">
@@ -44,6 +42,8 @@
                         <li id="skills"><strong>Aptitudes</strong></li>
                       </ul>
                       <!-- fieldsets -->
+                      <c:url value="/create" var="postPath"/>
+                      <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
