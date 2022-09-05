@@ -38,8 +38,8 @@ public class WebController {
     }
 
     @RequestMapping("/register")
-    public ModelAndView register(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name) {
-        final User user = us.register(email, password, name, null, 0, null, null, null);
+    public ModelAndView register(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
+        final User user = us.register(email, password, name, null, category, null, null, null);
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
 
@@ -67,7 +67,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formuser(form);
         }
-        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), 0, form.getJob(), form.getDesc(), form.getCollege());
+        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), "Alguna Categoria", form.getJob(), form.getDesc(), form.getCollege());
         return new ModelAndView("redirect:/profile/" + u.getId());
     }
 

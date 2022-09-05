@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -45,26 +47,33 @@ public class UserJdbcDao implements UserDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
+    private final CategoryDao categoryDao;
+
+
     @Autowired
-    public UserJdbcDao(final DataSource ds){
+    public UserJdbcDao(final DataSource ds, final CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(USER_TABLE)
                 .usingGeneratedKeyColumns(ID);
+        this.categoryDao = categoryDao;
     }
 
     @Override
-    public User create(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
+    public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
         values.put(NAME, name);
         values.put(LOCATION, location);
-        //TODO: Chequear si esta validacion se hace aca
-        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
+
+        //TODO: Chequear si esta validacion se hace aca
+        Optional<Category> optCategory = categoryDao.findByName(categoryName);
+        long categoryId_fk = optCategory.map(Category::getId).orElse(0L);
+        values.put(CATEGORY_ID_FK, optCategory.isPresent() ? categoryId_fk : null);
 
         Number userId = insert.executeAndReturnKey(values);
 

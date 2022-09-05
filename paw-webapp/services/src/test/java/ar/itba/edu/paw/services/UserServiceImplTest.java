@@ -28,7 +28,8 @@ public class UserServiceImplTest {
     private static final String TEST_EMAIL = "johndoe@gmail.com";
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa 123";
-    private static final long TEST_CATEGORY_ID_FK = 1;
+    //private static final long TEST_CATEGORY_ID_FK = 1;
+    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
     private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
@@ -43,27 +44,27 @@ public class UserServiceImplTest {
 
     @Before
     public void setUp(){
-        Mockito.when(userDao.create(eq("naruto@gmail.com"), eq(TEST_PASSWORD), eq("Naruto"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
-        Mockito.when(userDao.create(eq("sasuke@gmail.com"), eq(TEST_PASSWORD), eq("Sasuke"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
-        Mockito.when(userDao.create(eq("sakura@gmail.com"), eq(TEST_PASSWORD), eq("Sakura"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq("naruto@gmail.com"), eq(TEST_PASSWORD), eq("Naruto"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq("sasuke@gmail.com"), eq(TEST_PASSWORD), eq("Sasuke"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq("sakura@gmail.com"), eq(TEST_PASSWORD), eq("Sakura"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
     }
 
     @Test
     public void testCreate() {
-        Mockito.when(userDao.create(eq(TEST_EMAIL), eq(TEST_PASSWORD), eq(TEST_NAME), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq(TEST_EMAIL), eq(TEST_PASSWORD), eq(TEST_NAME), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
 
-        final User newUser = userService.register(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User newUser = userService.register(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(TEST_EMAIL, newUser.getEmail());
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, newUser.getName());
         Assert.assertEquals(TEST_LOCATION, newUser.getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, newUser.getCategoryId_fk());
+        Assert.assertEquals(0, newUser.getCategoryId_fk());
         Assert.assertEquals(TEST_CURRENT_POSITION, newUser.getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, newUser.getDescription());
         Assert.assertEquals(TEST_EDUCATION, newUser.getEducation());
@@ -72,7 +73,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindByEmail() {
         Mockito.when(userDao.findByEmail(eq(TEST_EMAIL)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
 
         final Optional<User> optUser = userService.findByEmail(TEST_EMAIL);
 
@@ -81,7 +82,7 @@ public class UserServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, optUser.get().getName());
         Assert.assertEquals(TEST_LOCATION, optUser.get().getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, optUser.get().getCategoryId_fk());
+        Assert.assertEquals(0, optUser.get().getCategoryId_fk());
         Assert.assertEquals(TEST_CURRENT_POSITION, optUser.get().getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, optUser.get().getDescription());
         Assert.assertEquals(TEST_EDUCATION, optUser.get().getEducation());
@@ -91,7 +92,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindById() {
         Mockito.when(userDao.findById(eq(TEST_ID)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
 
 
         final Optional<User> optUser = userService.findById(TEST_ID);
@@ -101,7 +102,7 @@ public class UserServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, optUser.get().getName());
         Assert.assertEquals(TEST_LOCATION, optUser.get().getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, optUser.get().getCategoryId_fk());
+        Assert.assertEquals(0, optUser.get().getCategoryId_fk());
         Assert.assertEquals(TEST_CURRENT_POSITION, optUser.get().getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, optUser.get().getDescription());
         Assert.assertEquals(TEST_EDUCATION, optUser.get().getEducation());
@@ -109,9 +110,9 @@ public class UserServiceImplTest {
 
     @Test
     public void testGetAllUsers() {
-        final User u1 = userDao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u2 = userDao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u3 = userDao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u1 = userDao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u2 = userDao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u3 = userDao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
 
         List<User> mockAllUsers = new ArrayList<>();
         mockAllUsers.add(u1);

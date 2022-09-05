@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -33,5 +34,15 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public Optional<Skill> findByDescription(String description) {
         return skillDao.findByDescription(description);
+    }
+
+    @Override
+    public Skill findByDescriptionOrCreate(String description) {
+        return skillDao.findByDescriptionOrCreate(description);
+    }
+
+    @Override
+    public List<Skill> getAllSkills() {
+        return skillDao.getAllSkills();
     }
 }
