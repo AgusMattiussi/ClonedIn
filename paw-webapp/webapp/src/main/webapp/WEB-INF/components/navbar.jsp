@@ -12,7 +12,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark mb-auto" style="background-color: #04704C; font-size: large">
         <div class="container-fluid">
             <a class="navbar-brand" href="<c:url value="/"/>">
-                <img src="<c:url value="/assets/images/logo4.png"/>" height="40" class="d-inline-block align-top" alt="">
+                <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
             </a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">

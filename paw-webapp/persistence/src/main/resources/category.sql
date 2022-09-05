@@ -1,0 +1,2 @@
+INSERT INTO rubro (nombre) VALUES ('IT') ON CONFLICT DO NOTHING;
+INSERT INTO rubro (nombre) VALUES ('Medicina') ON CONFLICT DO NOTHING;

@@ -42,7 +42,7 @@
                         <li id="skills"><strong>Aptitudes</strong></li>
                       </ul>
                       <!-- fieldsets -->
-                      <c:url value="/create" var="postPath"/>
+                      <c:url value="/createUser" var="postPath"/>
                       <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
@@ -51,15 +51,15 @@
                           <!-- para customizar los errores -->
                           <form:errors path="email" cssClass="formError" element="p"/>
                           <form:input type="text" path="name" name="name" placeholder="Nombre"/>
-                          <div class="row">
+                          <!--<div class="row">
                             <div class="col-6">
-                              <!--agregar form:-->
+                              agregar form:
                               <label for="ControlFile">Elegir foto de perfil</label>
                             </div>
                             <div class="col-6">
                               <input type="file" class="form-control-file" id="ControlFile">
                             </div>
-                          </div>
+                          </div>-->
                           <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
                           <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
                           <div class="row">

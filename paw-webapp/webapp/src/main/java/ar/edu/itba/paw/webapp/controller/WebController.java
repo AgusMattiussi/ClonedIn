@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.EnterpriseService;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 public class WebController {
 
     private UserService us;
+    private EnterpriseService es;
 
     @Autowired
     public WebController(final UserService us){
@@ -59,10 +62,8 @@ public class WebController {
         return mav;
     }
 
-    @RequestMapping(value = "/create", method = { RequestMethod.POST })
+    @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("userForm") final UserForm form, final BindingResult errors) {
-        System.out.println("ESTOY ACAAAAA");
-        System.out.println(form.toString());
         if (errors.hasErrors()) {
             return formuser(form);
         }
@@ -70,14 +71,14 @@ public class WebController {
         return new ModelAndView("redirect:/user?userId=" + u.getId());
     }
 
-//    @RequestMapping(value = "/create", method = { RequestMethod.POST })
-//    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
-//        if (errors.hasErrors()) {
-//            return formenterprise(form);
-//        }
-//        final User u = us.register(form.getCemail(), form.getCpassword(), form.getCname(), form.getCcity(), 0, form.getCjob(), form.getCdesc(), form.getCjobdesc());
-//        return new ModelAndView("redirect:/user?userId=" + u.getId());
-//    }
+    @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
+    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return formenterprise(form);
+        }
+        final Enterprise e = es.create(form.getCemail(), form.getCname(), form.getCpassword(), form.getCcity(), 0, form.getCdesc());
+        return new ModelAndView("redirect:/");
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
