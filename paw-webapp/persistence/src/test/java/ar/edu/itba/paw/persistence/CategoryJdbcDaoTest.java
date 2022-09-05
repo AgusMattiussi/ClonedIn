@@ -15,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,5 +71,19 @@ public class CategoryJdbcDaoTest {
         Assert.assertTrue(category.isPresent());
         Assert.assertEquals(FIRST_ID, category.get().getId());
         Assert.assertEquals(TEST_CATEGORY, category.get().getName());
+    }
+
+    @Test
+    public void testGetAllCategories(){
+        final Category cat1 = dao.create("Cat1");
+        final Category cat2 = dao.create("Cat2");
+        final Category cat3 = dao.create("Cat3");
+
+        final List<Category> allCategories = dao.getAllCategories();
+
+        Assert.assertEquals(3 + 1, allCategories.size());
+        Assert.assertTrue(allCategories.contains(cat1));
+        Assert.assertTrue(allCategories.contains(cat2));
+        Assert.assertTrue(allCategories.contains(cat3));
     }
 }

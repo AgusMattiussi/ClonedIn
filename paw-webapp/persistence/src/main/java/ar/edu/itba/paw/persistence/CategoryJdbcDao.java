@@ -9,9 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CategoryJdbcDao implements CategoryDao {
@@ -38,6 +36,10 @@ public class CategoryJdbcDao implements CategoryDao {
 
     @Override
     public Category create(String name) {
+        Optional<Category> existing = findByName(name);
+        if(existing.isPresent())
+            return existing.get();
+
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
 
@@ -56,5 +58,14 @@ public class CategoryJdbcDao implements CategoryDao {
     public Optional<Category> findById(long id) {
         return template.query("SELECT * FROM " + CATEGORY_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ id }, CATEGORY_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        List<Category> allCategories = template.query("SELECT * FROM " + CATEGORY_TABLE, CATEGORY_MAPPER);
+        // Fixme: Es necesario?
+        if(allCategories == null)
+            return new ArrayList<>();
+        return allCategories;
     }
 }
