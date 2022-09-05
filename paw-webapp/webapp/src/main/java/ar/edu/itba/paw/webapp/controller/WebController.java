@@ -68,7 +68,7 @@ public class WebController {
             return formuser(form);
         }
         final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), 0, form.getJob(), form.getDesc(), form.getCollege());
-        return new ModelAndView("redirect:/user?userId=" + u.getId());
+        return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })

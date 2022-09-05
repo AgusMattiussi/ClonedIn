@@ -20,6 +20,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
+    <title>Contactate | ClonedIn</title>
+    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>

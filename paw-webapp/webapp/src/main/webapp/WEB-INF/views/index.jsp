@@ -16,6 +16,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <!-- Script -->
         <script src="<c:url value="/assets/js/script.js"/>"></script>
+        <title>ClonedIn</title>
+        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
@@ -72,14 +74,14 @@
                     <div class="card-deck m-2">
                         <c:forEach var="us" items="${users}">
                             <div class="card">
-                                <a class="card-block stretched-link text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
+                                <a class="text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
                                     <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Profile picture" width="100" height="200">
                                     <div class="card-body">
                                         <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
                                     </div>
                                 </a>
-                                <div class="card-footer bg-white text-right">
+                                <div class="card-footer second bg-white text-right">
                                     <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
                                     <a href="<c:url value="/formenterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                 </div>

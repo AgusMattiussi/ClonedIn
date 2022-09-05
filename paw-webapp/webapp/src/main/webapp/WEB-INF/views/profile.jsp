@@ -13,6 +13,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <!-- BootStrap JS -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <title><c:out value="${user.name}"/> | ClonedIn</title>
+        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
     </head>
     <body>
     <jsp:include page="../components/navbar.jsp"/>
@@ -23,7 +25,7 @@
                 <div class="card ml-2 mt-2 mb-2 h-70">
                     <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Card image cap">
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Descripcion de <c:out value="${user.name}" /></h5>
+                        <h5 class="card-title">Descripcion de <c:out value="${user.name}"/></h5>
                     </div>
                     <div class="card-footer bg-white text-center">
                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
