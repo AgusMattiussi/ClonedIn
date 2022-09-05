@@ -10,4 +10,6 @@ public interface SkillService {
     Optional<Skill> findById(long id);
 
     Optional<Skill> findByDescription(String description);
+
+    Skill findByDescriptionOrCreate(String description);
 }

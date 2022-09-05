@@ -26,8 +26,9 @@ public class SkillJdbcDaoTest {
 
     private static final String DESCRIPTION = "descripcion";
 
-    private static final String TEST_SKILL = "testSkill";
-    private static final String NEW_SKILL = "newSkill";
+    private static final String TEST_SKILL = "testskill";
+    private static final String NEW_SKILL = "newskill";
+    private static final String NON_EXISTING_SKILL = "nonexistingskill";
     private static final long FIRST_ID = 1;
 
     @Autowired
@@ -51,7 +52,6 @@ public class SkillJdbcDaoTest {
         Assert.assertNotNull(newSkill);
         Assert.assertEquals(NEW_SKILL, newSkill.getDescription());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, SKILL_TABLE, DESCRIPTION + " = '" + NEW_SKILL + "'"));
-
     }
 
     @Test
@@ -70,5 +70,15 @@ public class SkillJdbcDaoTest {
         Assert.assertTrue(skill.isPresent());
         Assert.assertEquals(TEST_SKILL, skill.get().getDescription());
         Assert.assertEquals(FIRST_ID, skill.get().getId());
+    }
+
+    @Test
+    public void testFindByDescriptionOrCreate(){
+        final Optional<Skill> notFoundCategory = dao.findByDescription(NON_EXISTING_SKILL);
+        final Skill skill = dao.findByDescriptionOrCreate(NON_EXISTING_SKILL);
+
+        Assert.assertFalse(notFoundCategory.isPresent());
+        Assert.assertNotNull(skill);
+        Assert.assertEquals(NON_EXISTING_SKILL, skill.getDescription());
     }
 }

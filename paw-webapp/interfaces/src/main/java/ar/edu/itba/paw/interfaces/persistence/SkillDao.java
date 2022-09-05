@@ -11,4 +11,6 @@ public interface SkillDao {
 
     Optional<Skill> findByDescription(String description);
 
+    Skill findByDescriptionOrCreate(String description);
+
 }

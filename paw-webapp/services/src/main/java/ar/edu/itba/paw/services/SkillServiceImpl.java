@@ -34,4 +34,9 @@ public class SkillServiceImpl implements SkillService {
     public Optional<Skill> findByDescription(String description) {
         return skillDao.findByDescription(description);
     }
+
+    @Override
+    public Skill findByDescriptionOrCreate(String description) {
+        return skillDao.findByDescriptionOrCreate(description);
+    }
 }

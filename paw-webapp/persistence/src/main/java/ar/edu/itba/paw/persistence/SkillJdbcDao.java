@@ -41,11 +41,11 @@ public class SkillJdbcDao implements SkillDao {
     @Override
     public Skill create(String description) {
         final Map<String, Object> values = new HashMap<>();
-        values.put(DESCRIPTION, description);
+        values.put(DESCRIPTION, description.toLowerCase());
 
         Number skillId = insert.executeAndReturnKey(values);
 
-        return new Skill(skillId.longValue(), description);
+        return new Skill(skillId.longValue(), description.toLowerCase());
     }
 
     @Override
@@ -57,6 +57,12 @@ public class SkillJdbcDao implements SkillDao {
     @Override
     public Optional<Skill> findByDescription(String description) {
         return template.query("SELECT * FROM " + SKILL_TABLE + " WHERE " + DESCRIPTION + " = ?",
-                new Object[]{ description }, SKILL_MAPPER).stream().findFirst();
+                new Object[]{ description.toLowerCase() }, SKILL_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Skill findByDescriptionOrCreate(String description) {
+        Optional<Skill> optSkill = findByDescription(description);
+        return optSkill.orElse(create(description));
     }
 }
