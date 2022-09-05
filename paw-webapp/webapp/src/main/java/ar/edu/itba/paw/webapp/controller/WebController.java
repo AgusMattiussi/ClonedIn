@@ -30,6 +30,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("index");
 //        final User user = us.register("paw@itba.edu.ar", "secret");
 //        mav.addObject("user", user);
+         mav.addObject("users", us.getAllUsers());
         return mav;
     }
 

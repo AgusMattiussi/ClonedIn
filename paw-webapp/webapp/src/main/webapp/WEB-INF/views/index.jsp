@@ -68,15 +68,17 @@
                     <!--<button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>-->
                     <a href="<c:url value="/formuser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
-                <div class="card w-100 mt-2" style="background: #F2F2F2">
+                <div class="card w-100 mt-2 d-flex flex-wrap" style="background: #F2F2F2">
                     <div class="card-deck m-2">
-                        <c:forEach begin = "1" end = "3">
+                        <c:forEach var="us" items="${users}">
                             <div class="card">
-                                <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Profile picture" width="100" height="200">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                                </div>
+                                <a class="card-block stretched-link text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
+                                    <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Profile picture" width="100" height="200">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><c:out value="${us.name}"/></h5>
+                                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                    </div>
+                                </a>
                                 <div class="card-footer bg-white text-right">
                                     <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
                                     <a href="<c:url value="/formenterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
