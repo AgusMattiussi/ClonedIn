@@ -161,7 +161,7 @@
                           <form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="end" class="btn action-button">Finalizar</button>
+                        <button type="submit" name="end" class="btn action-button">Finalizar</button>
                       </fieldset>
                     </form>
                   </div>

@@ -15,10 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserJdbcDao implements UserDao {
@@ -84,5 +81,14 @@ public class UserJdbcDao implements UserDao {
     public Optional<User> findById(final long userId) {
         return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ userId }, USER_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> allUsers = template.query("SELECT * FROM " + USER_TABLE, USER_MAPPER);
+        // Fixme: Es necesario?
+        if(allUsers == null)
+            return new ArrayList<>();
+        return allUsers;
     }
 }

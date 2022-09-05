@@ -60,6 +60,8 @@ public class WebController {
 
     @RequestMapping(value = "/create", method = { RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("userForm") final UserForm form, final BindingResult errors) {
+        System.out.println("ESTOY ACAAAAA");
+        System.out.println(form.toString());
         if (errors.hasErrors()) {
             return formuser(form);
         }

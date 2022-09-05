@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserServiceImpl;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,9 +41,14 @@ public class UserServiceImplTest {
     @Mock
     private UserDao userDao;
 
-    @Test
-    public void easy() {
-        Assert.assertTrue(true);
+    @Before
+    public void setUp(){
+        Mockito.when(userDao.create(eq("naruto@gmail.com"), eq(TEST_PASSWORD), eq("Naruto"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq("sasuke@gmail.com"), eq(TEST_PASSWORD), eq("Sasuke"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+        Mockito.when(userDao.create(eq("sakura@gmail.com"), eq(TEST_PASSWORD), eq("Sakura"), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
+            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
     }
 
     @Test
@@ -97,6 +105,28 @@ public class UserServiceImplTest {
         Assert.assertEquals(TEST_CURRENT_POSITION, optUser.get().getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, optUser.get().getDescription());
         Assert.assertEquals(TEST_EDUCATION, optUser.get().getEducation());
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        final User u1 = userDao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u2 = userDao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u3 = userDao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+
+        List<User> mockAllUsers = new ArrayList<>();
+        mockAllUsers.add(u1);
+        mockAllUsers.add(u2);
+        mockAllUsers.add(u3);
+        Mockito.when(userDao.getAllUsers())
+            .thenReturn(mockAllUsers);
+
+        final List<User> allUsers = userDao.getAllUsers();
+
+        //Tenemos en cuenta el insert inicial
+        Assert.assertEquals(3, allUsers.size());
+        Assert.assertTrue(allUsers.contains(u1));
+        Assert.assertTrue(allUsers.contains(u2));
+        Assert.assertTrue(allUsers.contains(u3));
     }
 
 }

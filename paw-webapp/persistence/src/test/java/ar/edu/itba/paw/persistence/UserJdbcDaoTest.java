@@ -16,6 +16,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -100,6 +101,20 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(FIRST_ID, newUser.get().getId());
         Assert.assertEquals(EXISTING_EMAIL, newUser.get().getEmail());
         Assert.assertEquals(EXISTING_NAME, newUser.get().getName());
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        final User u1 = dao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u2 = dao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u3 = dao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+
+        final List<User> allUsers = dao.getAllUsers();
+        //Tenemos en cuenta el insert inicial
+        Assert.assertEquals(3 + 1, allUsers.size());
+        Assert.assertTrue(allUsers.contains(u1));
+        Assert.assertTrue(allUsers.contains(u2));
+        Assert.assertTrue(allUsers.contains(u3));
     }
 
 }

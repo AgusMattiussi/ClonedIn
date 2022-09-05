@@ -40,8 +40,11 @@ public class UserForm {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    // TODO: Cambiar esto
     public String getPassword() {
-        return password;
+        return "contraseniaDificil";
+        //return password;
     }
     public void setPassword(String password) {
         this.password = password;
