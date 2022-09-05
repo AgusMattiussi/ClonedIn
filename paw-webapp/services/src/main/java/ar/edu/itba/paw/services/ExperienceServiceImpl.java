@@ -1,0 +1,32 @@
+package ar.edu.itba.paw.services;
+
+import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
+import ar.edu.itba.paw.interfaces.services.ExperienceService;
+import ar.edu.itba.paw.models.Experience;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.util.Optional;
+
+@Primary
+@Service
+public class ExperienceServiceImpl implements ExperienceService {
+    private final ExperienceDao experienceDao;
+
+    @Autowired
+    public ExperienceServiceImpl(ExperienceDao experienceDao) {
+        this.experienceDao = experienceDao;
+    }
+
+    @Override
+    public Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description) {
+        return experienceDao.create(userId, from, to, enterpriseName, position, description);
+    }
+
+    @Override
+    public Optional<Experience> findById(long experienceId) {
+        return experienceDao.findById(experienceId);
+    }
+}
