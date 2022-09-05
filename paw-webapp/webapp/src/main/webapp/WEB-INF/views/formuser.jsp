@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
   <head>
@@ -40,23 +42,29 @@
                         <li id="skills"><strong>Aptitudes</strong></li>
                       </ul>
                       <!-- fieldsets -->
+                      <c:url value="/create" var="postPath"/>
+                      <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
-                          <input type="email" name="email" placeholder="Email"/>
-                          <input type="text" name="name" placeholder="Nombre"/>
+                          <form:input type="email" path="email" name="email" placeholder="Email"/>
+                          <!-- para customizar los errores -->
+                          <form:errors path="email" cssClass="formError" element="p"/>
+                          <form:input type="text" path="name" name="name" placeholder="Nombre"/>
                           <div class="row">
                             <div class="col-6">
+                              <!--agregar form:-->
                               <label for="ControlFile">Elegir foto de perfil</label>
                             </div>
                             <div class="col-6">
                               <input type="file" class="form-control-file" id="ControlFile">
                             </div>
                           </div>
-                          <input type="text" name="location" placeholder="Ubicacion"/>
-                          <input type="text" name="description" placeholder="Descripcion"/>
+                          <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
+                          <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
                           <div class="row">
                             <div class="col-6">
+                              <!--agregar form:-->
                               <label class="Rubro">Rubro Laboral</label>
                             </div>
                             <div class="col-6">
@@ -76,9 +84,9 @@
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Educacion</h2>
-                          <input type="text" name="school" placeholder="Institución"/>
-                          <input type="text" name="degree" placeholder="Titulo"/>
-                          <input type="text" name="years" placeholder="Cantidad de anios"/>
+                          <form:input type="text" path="college" name="school" placeholder="Institución"/>
+                          <form:input type="text" path="degree" name="degree" placeholder="Titulo"/>
+                          <form:input type="text" path="years" name="years" placeholder="Cantidad de anios"/>
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
@@ -87,9 +95,9 @@
                         <c:forEach begin = "1" end = "3">
                         <div class="form-card">
                           <h2 class="fs-title">Experiencia</h2>
-                          <input type="text" name="company" placeholder="Empresa"/>
-                          <input type="text" name="position" placeholder="Puesto"/>
-                          <input type="text" name="description" placeholder="Descripcion"/>
+                          <form:input type="text" path="company" name="company" placeholder="Empresa"/>
+                          <form:input type="text" path="job" name="position" placeholder="Puesto"/>
+                          <form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
                           <div class="row">
                             <div class="col-3">
                               <label class="startDate">Desde</label>
@@ -148,16 +156,17 @@
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Aptitudes</h2>
-                          <input type="text" name="languages" placeholder="Idiomas"/>
-                          <input type="text" name="skills" placeholder="Habilidades"/>
-                          <input type="text" name="otherSkills" placeholder="Comentarios Adicionales"/>
+                          <form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
+                          <form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
+                          <form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="end" class="btn action-button">Finalizar</button>
+                        <button type="submit" name="end" class="btn action-button">Finalizar</button>
                       </fieldset>
                     </form>
                   </div>
                 </div>
+                </form:form>
               </div>
             </div>
           </div>

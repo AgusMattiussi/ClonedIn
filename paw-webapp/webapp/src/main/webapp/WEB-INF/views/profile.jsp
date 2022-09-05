@@ -23,7 +23,7 @@
                 <div class="card ml-2 mt-2 mb-2 h-70">
                     <img class="card-img-top small" src="<c:url value="/assets/images/naruto.jpg"/>" alt="Card image cap">
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Descripcion</h5>
+                        <h5 class="card-title">Descripcion de <c:out value="${user.name}" /></h5>
                     </div>
                     <div class="card-footer bg-white text-center">
                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
