@@ -96,4 +96,5 @@ public class SkillJdbcDaoTest {
         Assert.assertTrue(allSkills.contains(skill2));
         Assert.assertTrue(allSkills.contains(skill3));
     }
+
 }

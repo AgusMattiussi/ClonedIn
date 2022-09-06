@@ -16,4 +16,7 @@ public interface SkillDao {
 
     List<Skill> getAllSkills();
 
+    boolean addSkillToUser(String skillDescription, long userID);
+    boolean addSkillToUser(long skillID, long userID);
+
 }

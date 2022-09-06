@@ -15,4 +15,7 @@ public interface SkillService {
     Skill findByDescriptionOrCreate(String description);
 
     List<Skill> getAllSkills();
+
+    boolean addSkillToUser(String skillDescription, long userID);
+    boolean addSkillToUser(long skillID, long userID);
 }
