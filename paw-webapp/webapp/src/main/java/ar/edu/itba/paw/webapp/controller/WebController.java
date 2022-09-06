@@ -31,14 +31,12 @@ public class WebController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-//        final User user = us.register("paw@itba.edu.ar", "secret");
-//        mav.addObject("user", user);
          mav.addObject("users", us.getAllUsers());
         return mav;
     }
 
     @RequestMapping("/register")
-    public ModelAndView register(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
+    public ModelAndView create(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
         final User user = us.register(email, password, name, null, category, null, null, null);
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
@@ -50,27 +48,29 @@ public class WebController {
         return mav;
     }
 
+    @RequestMapping(value ="/create", method = { RequestMethod.GET })
+    public ModelAndView registerForm(@ModelAttribute("simpleUserForm") final UserForm form) {
+//        return new ModelAndView("formuser");
+        return new ModelAndView("simpleform");
+    }
+
+    @RequestMapping(value = "/create", method = { RequestMethod.POST })
+    public ModelAndView register(@Valid @ModelAttribute("simpleUserForm") final UserForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return registerForm(form);
+        }
+//        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), "Alguna Categoria", form.getJob(), form.getDesc(), form.getCollege());
+        final User u = us.register(form.getEmail(), "superPassword", form.getName(), form.getCity(), "Alguna Categoria", "CEO", form.getDesc(), "ITBA");
+//        return new ModelAndView("redirect:/profile/" + u.getId());
+        return new ModelAndView("redirect:/");
+
+    }
+
     @RequestMapping("/formenterprise")
     public ModelAndView formenterprise(@ModelAttribute("companyForm") final CompanyForm form) {
         final ModelAndView mav = new ModelAndView("formenterprise");
         return mav;
     }
-
-    @RequestMapping("/formuser")
-    public ModelAndView formuser(@ModelAttribute("userForm") final UserForm form) {
-        final ModelAndView mav = new ModelAndView("formuser");
-        return mav;
-    }
-
-    @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("userForm") final UserForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return formuser(form);
-        }
-        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), "Alguna Categoria", form.getJob(), form.getDesc(), form.getCollege());
-        return new ModelAndView("redirect:/profile/" + u.getId());
-    }
-
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
     public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
         if (errors.hasErrors()) {

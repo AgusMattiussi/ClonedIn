@@ -23,12 +23,12 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
-                    <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Card image cap">
+                    <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap">
                     <div class="card-body pb-0">
                         <h5 class="card-title">Descripcion de <c:out value="${user.name}"/></h5>
                     </div>
                     <div class="card-footer bg-white text-center">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                        <p class="card-text"><c:out value="${user.description}"/></p>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                         <h5 class="card-title">Experiencia</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                        <p class="card-text"><c:out value="${user.currentPosition}"/></p>
                     </div>
                 </div>
                 </div>
@@ -49,7 +49,7 @@
                         <h5 class="card-title">Educacion</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                        <p class="card-text"><c:out value="${user.education}"/></p>
                     </div>
                 </div>
                 </div>
@@ -59,7 +59,7 @@
                         <h5 class="card-title">Aptitudes</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                        <p class="card-text">Aptitudes del usuario</p>
                     </div>
                 </div>
                 </div>

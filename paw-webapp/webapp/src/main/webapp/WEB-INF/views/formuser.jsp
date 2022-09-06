@@ -44,7 +44,7 @@
                         <li id="skills"><strong>Aptitudes</strong></li>
                       </ul>
                       <!-- fieldsets -->
-                      <c:url value="/createUser" var="postPath"/>
+                      <c:url value="/create" var="postPath"/>
                       <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
@@ -64,22 +64,22 @@
                           </div>-->
                           <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
                           <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
-                          <div class="row">
-                            <div class="col-6">
-                              <!--agregar form:-->
-                              <label class="Rubro">Rubro Laboral</label>
-                            </div>
-                            <div class="col-6">
-                              <select class="list-dt" id="area1" name="area1">
-                                <option selected>Ninguno</option>
-                                <option>IT</option>
-                                <option>RRHH</option>
-                                <option>Secretaria</option>
-                                <option>Investigacion</option>
-                                <option>Otro</option>
-                              </select>
-                            </div>
-                          </div>
+<%--                          <div class="row">--%>
+<%--                            <div class="col-6">--%>
+<%--                              <!--agregar form:-->--%>
+<%--                              <label class="Rubro">Rubro Laboral</label>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-6">--%>
+<%--                              <select class="list-dt" id="area1" name="area1">--%>
+<%--                                <option selected>Ninguno</option>--%>
+<%--                                <option>IT</option>--%>
+<%--                                <option>RRHH</option>--%>
+<%--                                <option>Secretaria</option>--%>
+<%--                                <option>Investigacion</option>--%>
+<%--                                <option>Otro</option>--%>
+<%--                              </select>--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
                         </div>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
@@ -94,64 +94,64 @@
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
-                        <c:forEach begin = "1" end = "3">
+<%--                        <c:forEach begin = "1" end = "3">--%>
                         <div class="form-card">
                           <h2 class="fs-title">Experiencia</h2>
                           <form:input type="text" path="company" name="company" placeholder="Empresa"/>
                           <form:input type="text" path="job" name="position" placeholder="Puesto"/>
-                          <form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
-                          <div class="row">
-                            <div class="col-3">
-                              <label class="startDate">Desde</label>
-                            </div>
-                            <div class="col-9">
-                              <select class="list-dt" id="startMonth" name="startMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="startYear" name="startYear">
-                                <option selected>Anio</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-3">
-                              <label class="endDate">Hasta</label>
-                            </div>
-                            <div class="col-9">
-                              <select class="list-dt" id="endMonth" name="endMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="endyear" name="endyear">
-                                <option selected>Anio</option>
-                              </select>
-                            </div>
-                          </div>
+<%--                          <form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>--%>
+<%--                          <div class="row">--%>
+<%--                            <div class="col-3">--%>
+<%--                              <label class="startDate">Desde</label>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-9">--%>
+<%--                              <select class="list-dt" id="startMonth" name="startMonth">--%>
+<%--                                <option selected>Mes</option>--%>
+<%--                                <option>Enero</option>--%>
+<%--                                <option>Febrero</option>--%>
+<%--                                <option>Marzo</option>--%>
+<%--                                <option>Abril</option>--%>
+<%--                                <option>Mayo</option>--%>
+<%--                                <option>Junio</option>--%>
+<%--                                <option>Julio</option>--%>
+<%--                                <option>Agosto</option>--%>
+<%--                                <option>Septiembre</option>--%>
+<%--                                <option>Octubre</option>--%>
+<%--                                <option>Noviembre</option>--%>
+<%--                                <option>Diciembre</option>--%>
+<%--                              </select>--%>
+<%--                              <select class="list-dt" id="startYear" name="startYear">--%>
+<%--                                <option selected>Anio</option>--%>
+<%--                              </select>--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
+<%--                          <div class="row">--%>
+<%--                            <div class="col-3">--%>
+<%--                              <label class="endDate">Hasta</label>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-9">--%>
+<%--                              <select class="list-dt" id="endMonth" name="endMonth">--%>
+<%--                                <option selected>Mes</option>--%>
+<%--                                <option>Enero</option>--%>
+<%--                                <option>Febrero</option>--%>
+<%--                                <option>Marzo</option>--%>
+<%--                                <option>Abril</option>--%>
+<%--                                <option>Mayo</option>--%>
+<%--                                <option>Junio</option>--%>
+<%--                                <option>Julio</option>--%>
+<%--                                <option>Agosto</option>--%>
+<%--                                <option>Septiembre</option>--%>
+<%--                                <option>Octubre</option>--%>
+<%--                                <option>Noviembre</option>--%>
+<%--                                <option>Diciembre</option>--%>
+<%--                              </select>--%>
+<%--                              <select class="list-dt" id="endyear" name="endyear">--%>
+<%--                                <option selected>Anio</option>--%>
+<%--                              </select>--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
                         </div>
-                        </c:forEach>
+<%--                        </c:forEach>--%>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
@@ -160,7 +160,7 @@
                           <h2 class="fs-title">Aptitudes</h2>
                           <form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
                           <form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
-                          <form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>
+<%--                          <form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>--%>
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="submit" name="end" class="btn action-button">Finalizar</button>
