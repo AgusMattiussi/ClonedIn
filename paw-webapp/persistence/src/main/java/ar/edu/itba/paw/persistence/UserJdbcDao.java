@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,10 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserJdbcDao implements UserDao {
@@ -48,30 +47,36 @@ public class UserJdbcDao implements UserDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
+    private final CategoryDao categoryDao;
+
+
     @Autowired
-    public UserJdbcDao(final DataSource ds){
+    public UserJdbcDao(final DataSource ds, final CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(USER_TABLE)
                 .usingGeneratedKeyColumns(ID);
+        this.categoryDao = categoryDao;
     }
 
     @Override
-    public User create(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
+    public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
         values.put(NAME, name);
         values.put(LOCATION, location);
-        //TODO: Chequear si esta validacion se hace aca
-        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
 
+        //TODO: Chequear si esta validacion se hace aca
+        Category category = categoryDao.findByNameOrCreate(categoryName);
+        values.put(CATEGORY_ID_FK, category.getId());
+
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password, name, location, categoryId_fk, currentPosition, description, education);
+        return new User(userId.longValue(), email, password, name, location, category.getId(), currentPosition, description, education);
     }
 
     @Override
@@ -84,5 +89,14 @@ public class UserJdbcDao implements UserDao {
     public Optional<User> findById(final long userId) {
         return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ userId }, USER_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> allUsers = template.query("SELECT * FROM " + USER_TABLE, USER_MAPPER);
+        // Fixme: Es necesario?
+        if(allUsers == null)
+            return new ArrayList<>();
+        return allUsers;
     }
 }

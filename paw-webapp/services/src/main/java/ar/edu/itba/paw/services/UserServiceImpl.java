@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -21,8 +22,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
-        return userDao.create(email, password, name, location, categoryId_fk, currentPosition, description, education);
+    public User register(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
+        return userDao.create(email, password, name, location, categoryName, currentPosition, description, education);
     }
 
     @Override
@@ -33,5 +34,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findById(long userId) {
         return userDao.findById(userId);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 }

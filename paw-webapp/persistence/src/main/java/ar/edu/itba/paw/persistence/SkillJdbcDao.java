@@ -9,16 +9,17 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class SkillJdbcDao implements SkillDao {
 
     private static final String SKILL_TABLE = "aptitud";
+    private static final String USER_SKILL_TABLE = "aptitudUsuario";
 
     private static final String ID = "id";
+    private static final String SKILL_ID = "idAptitud";
+    private static final String USER_ID = "idUsuario";
 
     private static final String DESCRIPTION = "descripcion";
 
@@ -28,24 +29,27 @@ public class SkillJdbcDao implements SkillDao {
 
     private final JdbcTemplate template;
 
-    private final SimpleJdbcInsert insert;
+    private final SimpleJdbcInsert skillInsert;
+    private final SimpleJdbcInsert userSkillInsert;
 
     @Autowired
     public SkillJdbcDao(final DataSource ds){
         this.template = new JdbcTemplate(ds);
-        this.insert = new SimpleJdbcInsert(ds)
+        this.skillInsert = new SimpleJdbcInsert(ds)
                 .withTableName(SKILL_TABLE)
                 .usingGeneratedKeyColumns(ID);
+        this.userSkillInsert = new SimpleJdbcInsert(ds)
+                .withTableName(USER_SKILL_TABLE);
     }
 
     @Override
     public Skill create(String description) {
         final Map<String, Object> values = new HashMap<>();
-        values.put(DESCRIPTION, description);
+        values.put(DESCRIPTION, description.toLowerCase());
 
-        Number skillId = insert.executeAndReturnKey(values);
+        Number skillId = skillInsert.executeAndReturnKey(values);
 
-        return new Skill(skillId.longValue(), description);
+        return new Skill(skillId.longValue(), description.toLowerCase());
     }
 
     @Override
@@ -57,6 +61,36 @@ public class SkillJdbcDao implements SkillDao {
     @Override
     public Optional<Skill> findByDescription(String description) {
         return template.query("SELECT * FROM " + SKILL_TABLE + " WHERE " + DESCRIPTION + " = ?",
-                new Object[]{ description }, SKILL_MAPPER).stream().findFirst();
+                new Object[]{ description.toLowerCase() }, SKILL_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public Skill findByDescriptionOrCreate(String description) {
+        Optional<Skill> optSkill = findByDescription(description);
+        return optSkill.orElse(create(description));
+    }
+
+    @Override
+    public List<Skill> getAllSkills() {
+        List<Skill> allSkills = template.query("SELECT * FROM " + SKILL_TABLE, SKILL_MAPPER);
+        // Fixme: Es necesario?
+        if(allSkills == null)
+            return new ArrayList<>();
+        return allSkills;
+    }
+
+    @Override
+    public boolean addSkillToUser(String skillDescription, long userID) {
+        Skill skill = findByDescriptionOrCreate(skillDescription);
+        return addSkillToUser(skill.getId(), userID);
+    }
+
+    @Override
+    public boolean addSkillToUser(long skillID, long userID) {
+        final Map<String, Object> values = new HashMap<>();
+        values.put(SKILL_ID, skillID);
+        values.put(USER_ID, userID);
+
+        return userSkillInsert.execute(values) > 0;
     }
 }

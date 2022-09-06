@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
   <head>
@@ -18,6 +20,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
+    <title>Agrega tu perfil | ClonedIn</title>
+    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
   </head>
   <body>
     <jsp:include page="../components/navbar.jsp"/>
@@ -40,23 +44,30 @@
                         <li id="skills"><strong>Aptitudes</strong></li>
                       </ul>
                       <!-- fieldsets -->
+                      <c:url value="/createUser" var="postPath"/>
+                      <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
-                          <input type="email" name="email" placeholder="Email"/>
-                          <input type="text" name="name" placeholder="Nombre"/>
-                          <div class="row">
+                          <form:input type="email" path="email" name="email" placeholder="Email"/>
+                          <!-- para customizar los errores -->
+                          <form:errors path="email" cssClass="formError" element="p"/>
+                          <form:input type="text" path="name" name="name" placeholder="Nombre"/>
+                          <!--<div class="row">
                             <div class="col-6">
+                              agregar form:
                               <label for="ControlFile">Elegir foto de perfil</label>
                             </div>
                             <div class="col-6">
                               <input type="file" class="form-control-file" id="ControlFile">
                             </div>
-                          </div>
-                          <input type="text" name="location" placeholder="Ubicacion"/>
-                          <input type="text" name="description" placeholder="Descripcion"/>
-                          <div class="row">
+                          </div>-->
+                          <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
+                          <form:input type="text" path="position" name="position" placeholder="Puesto Actual"/>
+                          <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
+                          <!--<div class="row">
                             <div class="col-6">
+                              agregar form:
                               <label class="Rubro">Rubro Laboral</label>
                             </div>
                             <div class="col-6">
@@ -70,49 +81,20 @@
                               </select>
                             </div>
                           </div>
-                        </div>
+                        </div>-->
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Educacion</h2>
-                          <input type="text" name="school" placeholder="Institución"/>
-                          <input type="text" name="degree" placeholder="Titulo"/>
-                          <input type="text" name="years" placeholder="Cantidad de anios"/>
-                        </div>
-                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="next" class="btn next action-button">Continuar</button>
-                      </fieldset>
-                      <fieldset>
-                        <c:forEach begin = "1" end = "3">
-                        <div class="form-card">
-                          <h2 class="fs-title">Experiencia</h2>
-                          <input type="text" name="company" placeholder="Empresa"/>
-                          <input type="text" name="position" placeholder="Puesto"/>
-                          <input type="text" name="description" placeholder="Descripcion"/>
-                          <div class="row">
+                          <form:input type="text" path="college" name="school" placeholder="Institución"/>
+                          <form:input type="text" path="degree" name="degree" placeholder="Titulo"/>
+                          <!--<div class="row">
                             <div class="col-3">
                               <label class="startDate">Desde</label>
                             </div>
                             <div class="col-9">
-                              <select class="list-dt" id="startMonth" name="startMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="startYear" name="startYear">
-                                <option selected>Anio</option>
-                              </select>
+                              <//form:input type="text" path="datedesde" name="datadesde" placeholder="YY/MM/DD"/>
                             </div>
                           </div>
                           <div class="row">
@@ -120,44 +102,55 @@
                               <label class="endDate">Hasta</label>
                             </div>
                             <div class="col-9">
-                              <select class="list-dt" id="endMonth" name="endMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="endyear" name="endyear">
-                                <option selected>Anio</option>
-                              </select>
+                              <//form:input type="text" path="datehasta" name="datahasta" placeholder="YY/MM/DD"/>
+                            </div>
+                          </div>-->
+                        </div>
+                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
+                        <button type="button" name="next" class="btn next action-button">Continuar</button>
+                      </fieldset>
+                      <fieldset>
+                        <!--<//c:forEach begin = "1" end = "3">
+                        <div class="form-card">
+                          <h2 class="fs-title">Experiencia</h2>
+                          <//form:input type="text" path="company" name="company" placeholder="Empresa"/>
+                          <//form:input type="text" path="job" name="position" placeholder="Puesto"/>
+                          <//form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
+                          <div class="row">
+                            <div class="col-3">
+                              <label class="startDate">Desde</label>
+                            </div>
+                            <div class="col-9">
+                              <//form:input type="text" path="dated" name="datad" placeholder="YY/MM/DD"/>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <label class="endDate">Hasta</label>
+                            </div>
+                            <div class="col-9">
+                              <//form:input type="text" path="dateh" name="datah" placeholder="YY/MM/DD"/>
                             </div>
                           </div>
                         </div>
-                        </c:forEach>
+                        <///c:forEach>-->
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Aptitudes</h2>
-                          <input type="text" name="languages" placeholder="Idiomas"/>
-                          <input type="text" name="skills" placeholder="Habilidades"/>
-                          <input type="text" name="otherSkills" placeholder="Comentarios Adicionales"/>
+                          <!--<//form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
+                          <//form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
+                          <//form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>-->
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="end" class="btn action-button">Finalizar</button>
+                        <button type="submit" name="end" class="btn action-button">Finalizar</button>
                       </fieldset>
                     </form>
                   </div>
                 </div>
+                </form:form>
               </div>
             </div>
           </div>

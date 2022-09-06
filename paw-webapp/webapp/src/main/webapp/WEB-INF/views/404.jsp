@@ -6,6 +6,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
+        <title>Error 404 | ClonedIn</title>
+        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
     </head>
     <body>
         <div class="d-flex align-items-center justify-content-center vh-100">

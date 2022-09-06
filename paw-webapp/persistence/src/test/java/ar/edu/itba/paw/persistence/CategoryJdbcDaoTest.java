@@ -15,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,6 +29,7 @@ public class CategoryJdbcDaoTest {
 
     private static final String TEST_CATEGORY = "testCategory";
     private static final String NEW_CATEGORY = "newCategory";
+    private static final String NON_EXISTING_CATEGORY = "NonExistingCategory";
     private static final long FIRST_ID = 1;
 
     @Autowired
@@ -64,11 +66,35 @@ public class CategoryJdbcDaoTest {
     }
 
     @Test
+    public void testFindByNameOrCreate(){
+        final Optional<Category> notFoundCategory = dao.findByName(NON_EXISTING_CATEGORY);
+        final Category category = dao.findByNameOrCreate(NON_EXISTING_CATEGORY);
+
+        Assert.assertFalse(notFoundCategory.isPresent());
+        Assert.assertNotNull(category);
+        Assert.assertEquals(NON_EXISTING_CATEGORY, category.getName());
+    }
+
+    @Test
     public void testFindById() {
         final Optional<Category> category = dao.findById(1);
 
         Assert.assertTrue(category.isPresent());
         Assert.assertEquals(FIRST_ID, category.get().getId());
         Assert.assertEquals(TEST_CATEGORY, category.get().getName());
+    }
+
+    @Test
+    public void testGetAllCategories(){
+        final Category cat1 = dao.create("Cat1");
+        final Category cat2 = dao.create("Cat2");
+        final Category cat3 = dao.create("Cat3");
+
+        final List<Category> allCategories = dao.getAllCategories();
+
+        Assert.assertEquals(3 + 1, allCategories.size());
+        Assert.assertTrue(allCategories.contains(cat1));
+        Assert.assertTrue(allCategories.contains(cat2));
+        Assert.assertTrue(allCategories.contains(cat3));
     }
 }

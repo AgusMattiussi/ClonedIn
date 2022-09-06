@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
 <head>
@@ -18,6 +20,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
+    <title>Contactate | ClonedIn</title>
+    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
@@ -32,28 +36,31 @@
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <form id="msform">
-                                        <!-- progressbar -->
-                                            <ul id="progressbar">
-                                                <li class="active" id="personal"><strong>Informacion Basica</strong></li>
-                                                <li id="experience"><strong>Oferta Laboral</strong></li>
-                                            </ul>
-                                        <!-- fieldsets -->
+
+                                        <ul id="progressbar">
+                                            <li class="active" id="personal"><strong>Informacion Basica</strong></li>
+                                            <li id="experience"><strong>Oferta Laboral</strong></li>
+                                        </ul>
+                                        <c:url value="/createEnterprise" var="postPath"/>
+                                        <form:form modelAttribute="companyForm" action="${postPath}" method="post">
                                         <fieldset>
                                             <div class="form-card">
                                                 <h2 class="fs-title">Informacion Basica</h2>
-                                                <input type="email" name="email" placeholder="Email"/>
-                                                <input type="text" name="name" placeholder="Nombre"/>
-<%--                                                <div class="row">--%>
-<%--                                                    <div class="col-6">--%>
-<%--                                                        <label for="ControlFile">Elegir foto de perfil</label>--%>
-<%--                                                    </div>--%>
-<%--                                                    <div class="col-6">--%>
-<%--                                                        <input type="file" class="form-control-file" id="ControlFile">--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-                                                <input type="text" name="location" placeholder="Ubicacion"/>
-                                                <input type="text" name="description" placeholder="Descripcion"/>
-                                                <div class="row">
+                                                <form:input type="email" path="cemail" name="email" placeholder="Email"/>
+
+                                                <form:errors path="cemail" cssClass="formError" element="p"/>
+                                                <form:input type="text" path="cname" name="name" placeholder="Nombre"/>
+                                                <!--<div class="row">
+                                                    <div class="col-6">
+                                                        <label for="ControlFile">Elegir foto de perfil</label>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type="file" class="form-control-file" id="ControlFile">
+                                                    </div>
+                                                </div>-->
+                                                <form:input type="text" path="ccity" name="location" placeholder="Ubicacion"/>
+                                                <form:input type="text" path="cdesc" name="description" placeholder="Descripcion"/>
+                                                <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
                                                             <label class="area">Rubro Empresarial</label>
@@ -72,16 +79,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <button type="button" name="next" class="btn next action-button">Continuar</button>
                                         </fieldset>
                                         <fieldset>
                                             <div class="form-card">
                                                 <h2 class="fs-title">Oferta de trabajo</h2>
-                                                <input type="text" name="position" placeholder="Puesto"/>
-                                                <input type="text" name="description" placeholder="Descripcion"/>
-                                                <input type="text" name="salary" placeholder="Salario"/>
-                                                <div class="row">
+                                                <form:input type="text" path="cjob" name="position" placeholder="Puesto"/>
+                                                <form:input type="text" path="cjobdesc" name="description" placeholder="Descripcion"/>
+                                                <form:input type="text" path="salary" name="salary" placeholder="Salario"/>
+                                                <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
                                                             <label class="area">Rubro Laboral</label>
@@ -98,13 +105,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                                            <button type="button" name="next" class="btn next action-button">Continuar</button>
+                                            <button type="button" name="end" class="btn next action-button">Finalizar</button>
                                         </fieldset>
                                     </form>
                                 </div>
                             </div>
+                            </form:form>
                         </div>
                     </div>
                 </div>
