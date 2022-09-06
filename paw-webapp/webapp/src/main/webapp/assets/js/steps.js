@@ -48,7 +48,7 @@ $(document).ready(function(){
         //hide the current fieldset with style
         current_fs.animate({opacity: 0}, {
             step: function(now) {
-                // for making fieldset appear animation
+                // for making fielset appear animation
                 opacity = 1 - now;
 
                 current_fs.css({
