@@ -50,25 +50,24 @@ public class WebController {
         return mav;
     }
 
+    @RequestMapping(value = "/createUser", method = { RequestMethod.GET })
+    public ModelAndView formUser(@ModelAttribute("userForm") final UserForm userForm) {
+        return new ModelAndView("formuser");
+    }
+
+    @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
+    public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return formUser(userForm);
+        }
+        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getJob(), userForm.getDesc(), userForm.getCollege());
+        return new ModelAndView("redirect:/profile/" + u.getId());
+    }
+
     @RequestMapping("/formenterprise")
     public ModelAndView formenterprise(@ModelAttribute("companyForm") final CompanyForm form) {
         final ModelAndView mav = new ModelAndView("formenterprise");
         return mav;
-    }
-
-    @RequestMapping("/formuser")
-    public ModelAndView formuser(@ModelAttribute("userForm") final UserForm form) {
-        final ModelAndView mav = new ModelAndView("formuser");
-        return mav;
-    }
-
-    @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("userForm") final UserForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return formuser(form);
-        }
-        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), "Alguna Categoria", form.getJob(), form.getDesc(), form.getCollege());
-        return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })

@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 public class UserForm {
     @Size(min = 6, max = 100)
@@ -15,11 +17,12 @@ public class UserForm {
     private String repeatPassword;
 
     @NotEmpty
-    @Pattern(regexp = "[a-zA-Z0-9]+@[a-zA-Z0-9]+")
+    @Email
     private String email;
     @NotEmpty private String name;
     //FIX: no estoy segura como validar la foto o si va aca
     private String city;
+    private String position;
     private String desc;
     private String rubro;
     private String college;
@@ -33,6 +36,10 @@ public class UserForm {
     private String lang;
     private String hability;
     private String more;
+    private Date dated;
+    private Date dateh;
+    private Date datedesde;
+    private Date datehasta;
 
     public String getUsername() {
         return username;
@@ -98,6 +105,21 @@ public class UserForm {
     public String getLang() {
         return lang;
     }
+    public Date getDated() {
+        return dated;
+    }
+    public Date getDateh() {
+        return dateh;
+    }
+    public Date getDatedesde() {
+        return datedesde;
+    }
+    public Date getDatehasta() {
+        return datehasta;
+    }
+    public String getPosition() {
+        return position;
+    }
 
     public void setCity(String city) {
         this.city = city;
@@ -141,4 +163,21 @@ public class UserForm {
     public void setYears(String years) {
         this.years = years;
     }
+    public void setDated(Date dated) {
+        this.dated = dated;
+    }
+    public void setDateh(Date dateh) {
+        this.dateh = dateh;
+    }
+    public void setDatedesde(Date datedesde) {
+        this.datedesde = datedesde;
+    }
+    public void setDatehasta(Date datehasta) {
+        this.datehasta = datehasta;
+    }
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+
 }

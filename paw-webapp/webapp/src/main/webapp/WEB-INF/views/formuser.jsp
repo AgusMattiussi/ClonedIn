@@ -63,10 +63,11 @@
                             </div>
                           </div>-->
                           <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
+                          <form:input type="text" path="position" name="position" placeholder="Puesto Actual"/>
                           <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
-                          <div class="row">
+                          <!--<div class="row">
                             <div class="col-6">
-                              <!--agregar form:-->
+                              agregar form:
                               <label class="Rubro">Rubro Laboral</label>
                             </div>
                             <div class="col-6">
@@ -80,7 +81,7 @@
                               </select>
                             </div>
                           </div>
-                        </div>
+                        </div>-->
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
@@ -88,41 +89,12 @@
                           <h2 class="fs-title">Educacion</h2>
                           <form:input type="text" path="college" name="school" placeholder="Institución"/>
                           <form:input type="text" path="degree" name="degree" placeholder="Titulo"/>
-                          <form:input type="text" path="years" name="years" placeholder="Cantidad de anios"/>
-                        </div>
-                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="next" class="btn next action-button">Continuar</button>
-                      </fieldset>
-                      <fieldset>
-                        <c:forEach begin = "1" end = "3">
-                        <div class="form-card">
-                          <h2 class="fs-title">Experiencia</h2>
-                          <form:input type="text" path="company" name="company" placeholder="Empresa"/>
-                          <form:input type="text" path="job" name="position" placeholder="Puesto"/>
-                          <form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
-                          <div class="row">
+                          <!--<div class="row">
                             <div class="col-3">
                               <label class="startDate">Desde</label>
                             </div>
                             <div class="col-9">
-                              <select class="list-dt" id="startMonth" name="startMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="startYear" name="startYear">
-                                <option selected>Anio</option>
-                              </select>
+                              <//form:input type="text" path="datedesde" name="datadesde" placeholder="YY/MM/DD"/>
                             </div>
                           </div>
                           <div class="row">
@@ -130,37 +102,47 @@
                               <label class="endDate">Hasta</label>
                             </div>
                             <div class="col-9">
-                              <select class="list-dt" id="endMonth" name="endMonth">
-                                <option selected>Mes</option>
-                                <option>Enero</option>
-                                <option>Febrero</option>
-                                <option>Marzo</option>
-                                <option>Abril</option>
-                                <option>Mayo</option>
-                                <option>Junio</option>
-                                <option>Julio</option>
-                                <option>Agosto</option>
-                                <option>Septiembre</option>
-                                <option>Octubre</option>
-                                <option>Noviembre</option>
-                                <option>Diciembre</option>
-                              </select>
-                              <select class="list-dt" id="endyear" name="endyear">
-                                <option selected>Anio</option>
-                              </select>
+                              <//form:input type="text" path="datehasta" name="datahasta" placeholder="YY/MM/DD"/>
+                            </div>
+                          </div>-->
+                        </div>
+                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
+                        <button type="button" name="next" class="btn next action-button">Continuar</button>
+                      </fieldset>
+                      <fieldset>
+                        <!--<//c:forEach begin = "1" end = "3">
+                        <div class="form-card">
+                          <h2 class="fs-title">Experiencia</h2>
+                          <//form:input type="text" path="company" name="company" placeholder="Empresa"/>
+                          <//form:input type="text" path="job" name="position" placeholder="Puesto"/>
+                          <//form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
+                          <div class="row">
+                            <div class="col-3">
+                              <label class="startDate">Desde</label>
+                            </div>
+                            <div class="col-9">
+                              <//form:input type="text" path="dated" name="datad" placeholder="YY/MM/DD"/>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-3">
+                              <label class="endDate">Hasta</label>
+                            </div>
+                            <div class="col-9">
+                              <//form:input type="text" path="dateh" name="datah" placeholder="YY/MM/DD"/>
                             </div>
                           </div>
                         </div>
-                        </c:forEach>
+                        <///c:forEach>-->
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Aptitudes</h2>
-                          <form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
-                          <form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
-                          <form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>
+                          <!--<//form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
+                          <//form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
+                          <//form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>-->
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="submit" name="end" class="btn action-button">Finalizar</button>

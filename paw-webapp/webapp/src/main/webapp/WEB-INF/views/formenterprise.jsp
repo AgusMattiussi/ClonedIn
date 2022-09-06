@@ -33,8 +33,6 @@
                         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
                             <h2><strong>Contactarse con el (nombre-usuario)</strong></h2>
                             <p>Asegurate de llenar todos los campos antes de avanzar</p>
-                            <c:url value="/createEnterprise" var="postPath"/>
-                            <form:form modelAttribute="companyForm" action="${postPath}" method="post">
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <form id="msform">
@@ -43,7 +41,8 @@
                                             <li class="active" id="personal"><strong>Informacion Basica</strong></li>
                                             <li id="experience"><strong>Oferta Laboral</strong></li>
                                         </ul>
-
+                                        <c:url value="/createEnterprise" var="postPath"/>
+                                        <form:form modelAttribute="companyForm" action="${postPath}" method="post">
                                         <fieldset>
                                             <div class="form-card">
                                                 <h2 class="fs-title">Informacion Basica</h2>
@@ -61,7 +60,7 @@
                                                 </div>-->
                                                 <form:input type="text" path="ccity" name="location" placeholder="Ubicacion"/>
                                                 <form:input type="text" path="cdesc" name="description" placeholder="Descripcion"/>
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
                                                             <label class="area">Rubro Empresarial</label>
@@ -80,7 +79,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <button type="button" name="next" class="btn next action-button">Continuar</button>
                                         </fieldset>
                                         <fieldset>
@@ -89,7 +88,7 @@
                                                 <form:input type="text" path="cjob" name="position" placeholder="Puesto"/>
                                                 <form:input type="text" path="cjobdesc" name="description" placeholder="Descripcion"/>
                                                 <form:input type="text" path="salary" name="salary" placeholder="Salario"/>
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
                                                             <label class="area">Rubro Laboral</label>
@@ -106,7 +105,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                                             <button type="button" name="end" class="btn next action-button">Finalizar</button>
                                         </fieldset>
