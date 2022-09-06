@@ -65,9 +65,9 @@ public class WebController {
 
     @RequestMapping(value = "/create", method = { RequestMethod.POST })
     public ModelAndView register(@Valid @ModelAttribute("simpleUserForm") UserForm form, final BindingResult errors) {
-//        if (errors.hasErrors()) {
-//            return registerForm(form);
-//        }
+        if (errors.hasErrors()) {
+            return registerForm(form);
+        }
         final User u = us.register(form.getEmail(), "superPassword", form.getName(), "CABA", "Alguna Categoria", "CEO", form.getDescription(), "ITBA");
         return new ModelAndView("redirect:/profile/" + u.getId());
 

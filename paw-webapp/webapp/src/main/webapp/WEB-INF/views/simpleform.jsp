@@ -34,7 +34,7 @@
                     <p>Asegurate de llenar todos los campos antes de avanzar</p>
                     <div class="row">
                         <div class="col-md-12 mx-0">
-                            <form id="msform">
+                            <div id="msform">
                                 <c:url value="/create" var="postPath"/>
                                 <form:form modelAttribute="simpleUserForm" action="${postPath}" method="post">
                                     <fieldset>
@@ -51,7 +51,7 @@
                                         </div>
                                     </fieldset>
                                 </form:form>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
