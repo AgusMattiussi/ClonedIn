@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.CategoryService;
+import ar.edu.itba.paw.interfaces.services.SkillService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.models.Enterprise;
@@ -22,16 +24,24 @@ public class WebController {
 
     private UserService us;
     private EnterpriseService es;
+    private CategoryService cs;
+    private SkillService ss;
+
+
 
     @Autowired
-    public WebController(final UserService us){
+    public WebController(final UserService us, final CategoryService cs, final SkillService ss){
         this.us = us;
+        this.cs = cs;
+        this.ss = ss;
     }
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-         mav.addObject("users", us.getAllUsers());
+        mav.addObject("users", us.getAllUsers());
+        mav.addObject("categories", cs.getAllCategories());
+        mav.addObject("skills", ss.getAllSkills());
         return mav;
     }
 
@@ -50,19 +60,16 @@ public class WebController {
 
     @RequestMapping(value ="/create", method = { RequestMethod.GET })
     public ModelAndView registerForm(@ModelAttribute("simpleUserForm") final UserForm form) {
-//        return new ModelAndView("formuser");
         return new ModelAndView("simpleform");
     }
 
     @RequestMapping(value = "/create", method = { RequestMethod.POST })
-    public ModelAndView register(@Valid @ModelAttribute("simpleUserForm") final UserForm form, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return registerForm(form);
-        }
-//        final User u = us.register(form.getEmail(), form.getPassword(), form.getName(), form.getCity(), "Alguna Categoria", form.getJob(), form.getDesc(), form.getCollege());
-        final User u = us.register(form.getEmail(), "superPassword", form.getName(), form.getCity(), "Alguna Categoria", "CEO", form.getDesc(), "ITBA");
-//        return new ModelAndView("redirect:/profile/" + u.getId());
-        return new ModelAndView("redirect:/");
+    public ModelAndView register(@Valid @ModelAttribute("simpleUserForm") UserForm form, final BindingResult errors) {
+//        if (errors.hasErrors()) {
+//            return registerForm(form);
+//        }
+        final User u = us.register(form.getEmail(), "superPassword", form.getName(), "CABA", "Alguna Categoria", "CEO", form.getDescription(), "ITBA");
+        return new ModelAndView("redirect:/profile/" + u.getId());
 
     }
 

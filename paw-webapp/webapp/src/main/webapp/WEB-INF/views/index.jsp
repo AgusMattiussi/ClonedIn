@@ -27,18 +27,18 @@
                 <div class="dropdown-group">
                     <div class="dropdown ml-2 mt-2">
                         <select class="form-select" aria-label="false">
-                            <option selected>Area de conocimiento</option>
-                            <option value="1">Area 1</option>
-                            <option value="2">Area 2</option>
-                            <option value="3">Area 3</option>
+                            <option selected>Rubro</option>
+                            <c:forEach var="cs" items="${categories}">
+                                <option value="<c:out value="${cs.id}"/>"><c:out value="${cs.name}"/></option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
                         <select class="form-select" aria-label="false">
                             <option selected>Aptitudes</option>
-                            <option value="1">Aptitud 1</option>
-                            <option value="2">Aptitud 2</option>
-                            <option value="3">Aptitud 3</option>
+                            <c:forEach var="ss" items="${skills}">
+                                <option value="<c:out value="${ss.id}"/>"><c:out value="${ss.description}"/></option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
@@ -69,7 +69,8 @@
                     <h3>Descubrir Perfiles</h3>
                     <a href="<c:url value="/create"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
-                    <div class="row row-cols-1 row-cols-md-4 g-4 m-2" style="background: #F2F2F2">
+                <div class="container-fluid">
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" style="background: #F2F2F2">
                         <c:forEach var="us" items="${users}">
                             <div class="col mb-4">
                                 <div class="card h-100 mt-1">
@@ -88,6 +89,7 @@
                         </c:forEach>
                     </div>
                 </div>
+            </div>
         </div>
     </body>
 </html>

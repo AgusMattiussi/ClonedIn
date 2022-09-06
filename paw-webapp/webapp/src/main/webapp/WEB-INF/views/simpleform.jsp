@@ -19,7 +19,7 @@
     <!-- BootStrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Script -->
-    <script src="<c:url value="/assets/js/steps.js"/>"></script>
+<%--    <script src="<c:url value="/assets/js/steps.js"/>"></script>--%>
     <title>Agrega tu perfil | ClonedIn</title>
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
@@ -37,21 +37,23 @@
                             <form id="msform">
                                 <c:url value="/create" var="postPath"/>
                                 <form:form modelAttribute="simpleUserForm" action="${postPath}" method="post">
-                                <fieldset>
-                                    <div class="form-card">
-                                        <h2 class="fs-title">Informacion Personal</h2>
-                                        <form:input type="email" path="email" name="email" placeholder="Email"/>
-                                        <form:errors path="email" cssClass="formError" element="p"/>
-                                        <form:input type="text" path="name" name="name" placeholder="Nombre"/>
-                                        <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
-                                        <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
-                                        <button type="submit" name="end" class="btn action-button">Finalizar</button>
-                                    </div>
-                                </fieldset>
+                                    <fieldset>
+                                        <div class="form-card">
+                                            <h2 class="fs-title">Informacion Personal</h2>
+                                            <form:input type="text" path="email" placeholder="Email"/>
+                                            <form:errors path="email" cssClass="formError" element="p"/>
+                                            <form:input type="text" path="name" placeholder="Nombre"/>
+                                            <form:input type="text" path="description" placeholder="Descripcion"/>
+                                            <div>
+                                                <input type="submit" value="Finalizar!"/>
+                                            </div>
+    <%--                                        <button type="submit" class="btn action-button">Finalizar</button>--%>
+                                        </div>
+                                    </fieldset>
+                                </form:form>
                             </form>
                         </div>
                     </div>
-                    </form:form>
                 </div>
             </div>
         </div>
