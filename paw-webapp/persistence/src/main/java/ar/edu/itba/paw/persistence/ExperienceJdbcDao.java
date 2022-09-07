@@ -49,8 +49,9 @@ public class ExperienceJdbcDao implements ExperienceDao {
     public Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description) {
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
-        values.put(FROM, from);
-        values.put(TO, to);
+        //FIXME: Cambiar esto para manejar fechas de verdad
+        values.put(FROM, "2022-11-22");
+        values.put(TO, "2022-12-22");
         values.put(ENTERPRISE_NAME, enterpriseName);
         values.put(POSITION, position);
         values.put(DESCRIPTION, description);

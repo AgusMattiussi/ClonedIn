@@ -37,7 +37,7 @@
                 <div class="row mr-2">
                 <div class="card mt-2">
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Experiencia</h5>
+                        <h5 class="card-title">Experiencia en <c:out value="${experience.enterpriseName}"/></h5>
                     </div>
                     <div class="card-footer bg-white text-left">
                         <p class="card-text">9</p>

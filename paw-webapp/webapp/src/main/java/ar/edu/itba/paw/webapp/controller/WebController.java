@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
 
+import ar.edu.itba.paw.webapp.exceptions.ExperienceNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CompanyForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
@@ -27,8 +28,10 @@ public class WebController {
     private ExperienceService ex;
 
     @Autowired
-    public WebController(final UserService us){
+    public WebController(final UserService us, ExperienceService ex, EnterpriseService es){
         this.us = us;
+        this.ex = ex;
+        this.es = es;
     }
 
     @RequestMapping("/")
@@ -50,7 +53,7 @@ public class WebController {
     public ModelAndView profile(@PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
-//        mav.addObject("experience", ex.findById(userId).orElseThrow(ExperienceNotFoundException::new));
+        mav.addObject("experience", ex.findByUserId(userId).orElseThrow(ExperienceNotFoundException::new));
         return mav;
     }
 
@@ -65,7 +68,7 @@ public class WebController {
             return formUser(userForm);
         }
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), userForm.getCollege());
-        //final Experience e = ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
