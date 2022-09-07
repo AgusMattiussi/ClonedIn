@@ -73,7 +73,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), userForm.getCollege());
+        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(),  "Institucion: " +  userForm.getCollege() + " - Titutlo: " + userForm.getDegree());
         ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
 
