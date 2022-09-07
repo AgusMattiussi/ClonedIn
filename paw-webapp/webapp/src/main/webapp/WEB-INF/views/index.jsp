@@ -75,14 +75,15 @@
                         <c:forEach var="us" items="${users}">
                             <div class="card">
                                     <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Profile picture" width="100" height="200">
-                                    <div class="card-body">
+                                    <div class="card-body" style="position:relative">
                                         <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                         <p class="card-text"><c:out value="${us.description}"/></p>
+                                        <a href="<c:url value="/profile/${us.id}"/>" class="stretched-link"></a>
                                     </div>
                                 <div class="card-footer second bg-white text-right">
                                     <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
-                                    <a href="<c:url value="/profile/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Ver Perfil</button></a>
-                                    <a href="<c:url value="/formenterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
+<%--                                    <a href="<c:url value="/profile/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Ver Perfil</button></a>--%>
+                                    <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                 </div>
                             </div>
                         </c:forEach>
