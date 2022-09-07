@@ -30,18 +30,19 @@
     <div class="row justify-content-center mt-0">
       <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-          <h2><strong>Contactate</strong></h2>
+          <h2><strong>Contactate con <c:url value="${user.name}"/></strong></h2>
           <p>Asegurate de llenar todos los campos antes de avanzar</p>
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
-                <c:url value="/contact" var="postPath"/>
+                <c:url value="/contact/${user.id}" var="postPath"/>
                 <form:form modelAttribute="simpleContactForm" action="${postPath}" method="post">
                   <fieldset>
                     <div class="form-card">
                       <h2 class="fs-title">Informacion Personal</h2>
                       <form:input type="text" path="subject" placeholder="Asunto"/>
                       <form:input type="text" path="message" placeholder="Mensaje"/>
+                      <form:input type="text" path="contactInfo" placeholder="Informacion de contacto"/>
                       <div>
                         <input type="submit" value="Enviar"/>
                       </div>

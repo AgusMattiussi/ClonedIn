@@ -79,17 +79,19 @@ public class WebController {
 
     }
 
-    @RequestMapping(value ="/contact", method = { RequestMethod.GET })
-    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form) {
-        return new ModelAndView("simpleContactForm");
+    @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("simpleContactForm");
+        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
 
     }
-    @RequestMapping(value = "/contact", method = { RequestMethod.POST })
-    public ModelAndView contact(@Valid @ModelAttribute("companyForm") final ContactForm form, final BindingResult errors) {
+    @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView contact(@Valid @ModelAttribute("contactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            return contactForm(form);
+            return contactForm(form, userId);
         }
-        emailService.sendEmail(form.getSubject(), form.getMessage());
+        emailService.sendEmail(us.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
         return new ModelAndView("redirect:/");
     }
 

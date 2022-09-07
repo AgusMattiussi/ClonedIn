@@ -82,7 +82,7 @@
                                         </div>
                                     </a>
                                     <div class="card-footer second bg-white text-right">
-                                        <a href="<c:url value="/contact"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
+                                        <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                     </div>
                                 </div>
                             </div>

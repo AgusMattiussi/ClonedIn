@@ -14,12 +14,16 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendEmail(String subject, String body) {
+    public void sendEmail(String to, String subject, String body, String contactInfo) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@clonedin.com");
-        message.setTo("agusmattiussi@gmail.com"); // TODO: mail usuario
+        message.setTo(to);
+
+        StringBuilder str = new StringBuilder();
+        str.append(body).append("\n\n").append("Contactate con: ").append(contactInfo);
+
         message.setSubject(subject);
-        message.setText(body);
+        message.setText(str.toString());
         mailSender.send(message);
     }
 }

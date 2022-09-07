@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
 public class ContactForm {
-
     private String subject;
     private String message;
+    private String contactInfo;
 
     public String getSubject() {
         return subject;
@@ -19,5 +19,13 @@ public class ContactForm {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }
