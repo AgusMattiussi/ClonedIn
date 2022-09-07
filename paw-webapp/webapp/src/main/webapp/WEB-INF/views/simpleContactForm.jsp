@@ -39,7 +39,7 @@
                 <form:form modelAttribute="simpleContactForm" action="${postPath}" method="post">
                   <fieldset>
                     <div class="form-card">
-                      <h2 class="fs-title">Informacion Personal</h2>
+                      <h2 class="fs-title">Mensaje</h2>
                       <form:input type="text" path="subject" placeholder="Asunto"/>
                       <form:input type="text" path="message" placeholder="Mensaje"/>
                       <form:input type="text" path="contactInfo" placeholder="Informacion de contacto"/>

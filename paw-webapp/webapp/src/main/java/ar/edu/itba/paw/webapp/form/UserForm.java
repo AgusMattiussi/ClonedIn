@@ -18,11 +18,11 @@ public class UserForm {
     //@Size(min = 6, max = 100)
     private String repeatPassword;
 
-   // @NotEmpty
-    //@Email
+    @NotEmpty
+    @Email
     private String email;
 
-    //@NotEmpty
+    @NotEmpty
     private String name;
 
     //FIX: no estoy segura como validar la foto o si va aca
