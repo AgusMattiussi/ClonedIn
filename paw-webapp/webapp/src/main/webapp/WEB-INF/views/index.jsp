@@ -77,7 +77,7 @@
                                     <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Profile picture" width="100" height="200">
                                     <div class="card-body">
                                         <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                        <p class="card-text"><c:out value="${us.description}"/></p>
                                     </div>
                                 <div class="card-footer second bg-white text-right">
                                     <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->

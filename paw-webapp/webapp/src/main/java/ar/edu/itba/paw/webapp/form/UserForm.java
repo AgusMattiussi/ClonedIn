@@ -8,18 +8,19 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class UserForm {
-    @Size(min = 6, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
+    //@Size(min = 6, max = 100)
+    //@Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
-    @Size(min = 6, max = 100)
+    //@Size(min = 6, max = 100)
     private String password;
-    @Size(min = 6, max = 100)
+    //@Size(min = 6, max = 100)
     private String repeatPassword;
 
-    @NotEmpty
-    @Email
+   // @NotEmpty
+    //@Email
     private String email;
-    @NotEmpty private String name;
+    //@NotEmpty
+    private String name;
     //FIX: no estoy segura como validar la foto o si va aca
     private String city;
     private String position;
@@ -27,7 +28,7 @@ public class UserForm {
     private String rubro;
     private String college;
     private String degree;
-    @Pattern(regexp = "[0-9]+")
+    //@Pattern(regexp = "[0-9]+")
     private String years;
     private String company;
     private String job;

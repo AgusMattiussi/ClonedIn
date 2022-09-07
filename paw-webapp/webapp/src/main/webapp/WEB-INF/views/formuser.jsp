@@ -35,24 +35,24 @@
                 <p>Asegurate de llenar todos los campos antes de avanzar</p>
                 <div class="row">
                   <div class="col-md-12 mx-0">
-                    <form id="msform">
+                    <div id="msform">
                       <!-- progressbar -->
-                      <ul id="progressbar">
-                        <li class="active" id="personal"><strong>Personal</strong></li>
-                        <li id="education"><strong>Educacion</strong></li>
-                        <li id="experience"><strong>Experiencia</strong></li>
-                        <li id="skills"><strong>Aptitudes</strong></li>
-                      </ul>
+<%--                      <ul id="progressbar">--%>
+<%--                        <li class="active" id="personal"><strong>Personal</strong></li>--%>
+<%--                        <li id="education"><strong>Educacion</strong></li>--%>
+<%--                        <li id="experience"><strong>Experiencia</strong></li>--%>
+<%--                        <li id="skills"><strong>Aptitudes</strong></li>--%>
+<%--                      </ul>--%>
                       <!-- fieldsets -->
                       <c:url value="/createUser" var="postPath"/>
                       <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
-                          <form:input type="email" path="email" name="email" placeholder="Email"/>
-                          <!-- para customizar los errores -->
-                          <form:errors path="email" cssClass="formError" element="p"/>
-                          <form:input type="text" path="name" name="name" placeholder="Nombre"/>
+                          <form:input type="email" path="email" placeholder="Email"/>
+                          <!-- para customizar los errores
+                          <//form:errors path="email" cssClass="formError" element="p"/>-->
+                          <form:input type="text" path="name" placeholder="Nombre"/>
                           <!--<div class="row">
                             <div class="col-6">
                               agregar form:
@@ -62,9 +62,9 @@
                               <input type="file" class="form-control-file" id="ControlFile">
                             </div>
                           </div>-->
-                          <form:input type="text" path="city" name="location" placeholder="Ubicacion"/>
-                          <form:input type="text" path="position" name="position" placeholder="Puesto Actual"/>
-                          <form:input type="text" path="desc" name="description" placeholder="Descripcion"/>
+                          <form:input type="text" path="city" placeholder="Ubicacion"/>
+                          <form:input type="text" path="position" placeholder="Puesto Actual"/>
+                          <form:input type="text" path="desc" placeholder="Descripcion"/>
                           <!--<div class="row">
                             <div class="col-6">
                               agregar form:
@@ -81,14 +81,14 @@
                               </select>
                             </div>
                           </div>
-                        </div>-->
+                        </div>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
-                        <div class="form-card">
+                        <div class="form-card">-->
                           <h2 class="fs-title">Educacion</h2>
-                          <form:input type="text" path="college" name="school" placeholder="Institución"/>
-                          <form:input type="text" path="degree" name="degree" placeholder="Titulo"/>
+                          <form:input type="text" path="college" placeholder="Institución"/>
+                          <form:input type="text" path="degree"   placeholder="Titulo"/>
                           <!--<div class="row">
                             <div class="col-3">
                               <label class="startDate">Desde</label>
@@ -104,50 +104,50 @@
                             <div class="col-9">
                               <//form:input type="text" path="datehasta" name="datahasta" placeholder="YY/MM/DD"/>
                             </div>
-                          </div>-->
+                          </div>
                         </div>
                         <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
                         <button type="button" name="next" class="btn next action-button">Continuar</button>
                       </fieldset>
                       <fieldset>
-                        <!--<//c:forEach begin = "1" end = "3">
-                        <div class="form-card">
-                          <h2 class="fs-title">Experiencia</h2>
-                          <//form:input type="text" path="company" name="company" placeholder="Empresa"/>
-                          <//form:input type="text" path="job" name="position" placeholder="Puesto"/>
-                          <//form:input type="text" path="jobdesc" name="description" placeholder="Descripcion"/>
-                          <div class="row">
-                            <div class="col-3">
-                              <label class="startDate">Desde</label>
-                            </div>
-                            <div class="col-9">
-                              <//form:input type="text" path="dated" name="datad" placeholder="YY/MM/DD"/>
-                            </div>
+                      <//c:forEach begin = "1" end = "3">
+                      <div class="form-card">-->
+                        <h2 class="fs-title">Experiencia</h2>
+                        <form:input type="text" path="company" placeholder="Empresa"/>
+                        <form:input type="text" path="job" placeholder="Puesto"/>
+                        <form:input type="text" path="jobdesc" placeholder="Descripcion"/>
+                        <!--<div class="row">
+                          <div class="col-3">
+                            <label class="startDate">Desde</label>
                           </div>
-                          <div class="row">
-                            <div class="col-3">
-                              <label class="endDate">Hasta</label>
-                            </div>
-                            <div class="col-9">
-                              <//form:input type="text" path="dateh" name="datah" placeholder="YY/MM/DD"/>
-                            </div>
+                          <div class="col-9">
+                            <//form:input type="text" path="dated" placeholder="YY/MM/DD"/>
                           </div>
                         </div>
-                        <///c:forEach>-->
-                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="button" name="next" class="btn next action-button">Continuar</button>
-                      </fieldset>
-                      <fieldset>
-                        <div class="form-card">
-                          <h2 class="fs-title">Aptitudes</h2>
-                          <!--<//form:input type="text" path="lang" name="languages" placeholder="Idiomas"/>
-                          <//form:input type="text" path="hability" name="skills" placeholder="Habilidades"/>
-                          <//form:input type="text" path="more" name="otherSkills" placeholder="Comentarios Adicionales"/>-->
+                        <div class="row">
+                          <div class="col-3">
+                            <label class="endDate">Hasta</label>
+                          </div>
+                          <div class="col-9">
+                            <//form:input type="text" path="dateh" placeholder="YY/MM/DD"/>
+                          </div>
                         </div>
-                        <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                        <button type="submit" name="end" class="btn action-button">Finalizar</button>
-                      </fieldset>
-                    </form>
+                      </div>
+                      <///c:forEach>
+                      <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
+                      <button type="button" name="next" class="btn next action-button">Continuar</button>
+                    </fieldset>
+                    <fieldset>
+                      <div class="form-card">-->
+                        <h2 class="fs-title">Aptitudes</h2>
+                        <form:input type="text" path="lang"  placeholder="Idiomas"/>
+                        <form:input type="text" path="hability"  placeholder="Habilidades"/>
+                        <form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
+                      </div>
+                      <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
+                      <button type="submit" name="end" class="btn action-button">Finalizar</button>
+                    </fieldset>
+                    </div>
                   </div>
                 </div>
                 </form:form>

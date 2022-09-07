@@ -60,7 +60,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getJob(), userForm.getDesc(), userForm.getCollege());
+        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), userForm.getCollege());
         return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
