@@ -44,7 +44,7 @@
                       <form:input type="text" path="message" placeholder="Mensaje"/>
                       <form:input type="text" path="contactInfo" placeholder="Informacion de contacto"/>
                       <div>
-                        <input type="submit" value="Enviar"/>
+                        <button type="submit" class="btn action-button">Enviar</button>
                       </div>
                     </div>
                   </fieldset>
