@@ -40,9 +40,8 @@
                   <fieldset>
                     <div class="form-card">
                       <h2 class="fs-title">Informacion Personal</h2>
-                      <form:input type="text" path="enterpriseName" placeholder="Email"/>
-                      <form:errors path="enterpriseName" cssClass="formError" element="p"/>
-                      <form:input type="text" path="enterpriseMessage" placeholder="Mensaje"/>
+                      <form:input type="text" path="subject" placeholder="Asunto"/>
+                      <form:input type="text" path="message" placeholder="Mensaje"/>
                       <div>
                         <input type="submit" value="Enviar"/>
                       </div>

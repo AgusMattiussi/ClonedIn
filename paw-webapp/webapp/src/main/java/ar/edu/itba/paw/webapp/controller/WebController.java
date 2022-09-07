@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.CategoryService;
-import ar.edu.itba.paw.interfaces.services.SkillService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.EnterpriseService;
-import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.EnterpriseForm;
+import ar.edu.itba.paw.webapp.form.ContactForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,14 +22,16 @@ public class WebController {
     private EnterpriseService es;
     private CategoryService cs;
     private SkillService ss;
+    private EmailService emailService;
 
 
 
     @Autowired
-    public WebController(final UserService us, final CategoryService cs, final SkillService ss){
+    public WebController(final UserService us, final CategoryService cs, final SkillService ss, final EmailService emailService){
         this.us = us;
         this.cs = cs;
         this.ss = ss;
+        this.emailService = emailService;
     }
 
     @RequestMapping("/")
@@ -74,15 +72,16 @@ public class WebController {
     }
 
     @RequestMapping(value ="/contact", method = { RequestMethod.GET })
-    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final EnterpriseForm form) {
+    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form) {
         return new ModelAndView("simpleContactForm");
 
     }
     @RequestMapping(value = "/contact", method = { RequestMethod.POST })
-    public ModelAndView contact(@Valid @ModelAttribute("companyForm") final EnterpriseForm form, final BindingResult errors) {
+    public ModelAndView contact(@Valid @ModelAttribute("companyForm") final ContactForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
             return contactForm(form);
         }
+        emailService.sendEmail(form.getSubject(), form.getMessage());
         return new ModelAndView("redirect:/");
     }
 
