@@ -8,7 +8,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.CompanyForm;
+import ar.edu.itba.paw.webapp.form.EnterpriseForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,17 +73,16 @@ public class WebController {
 
     }
 
-    @RequestMapping("/formenterprise")
-    public ModelAndView formenterprise(@ModelAttribute("companyForm") final CompanyForm form) {
-        final ModelAndView mav = new ModelAndView("formenterprise");
-        return mav;
+    @RequestMapping(value ="/contact", method = { RequestMethod.GET })
+    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final EnterpriseForm form) {
+        return new ModelAndView("simpleContactForm");
+
     }
-    @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
+    @RequestMapping(value = "/contact", method = { RequestMethod.POST })
+    public ModelAndView contact(@Valid @ModelAttribute("companyForm") final EnterpriseForm form, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formenterprise(form);
+            return contactForm(form);
         }
-        final Enterprise e = es.create(form.getCemail(), form.getCname(), form.getCpassword(), form.getCcity(), 0, form.getCdesc());
         return new ModelAndView("redirect:/");
     }
 
