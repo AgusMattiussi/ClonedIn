@@ -35,21 +35,19 @@
                             <p>Asegurate de llenar todos los campos antes de avanzar</p>
                             <div class="row">
                                 <div class="col-md-12 mx-0">
-                                    <form id="msform">
-
-                                        <ul id="progressbar">
-                                            <li class="active" id="personal"><strong>Informacion Basica</strong></li>
-                                            <li id="experience"><strong>Oferta Laboral</strong></li>
-                                        </ul>
+                                    <div id="msform">
+<%--                                        <ul id="progressbar">--%>
+<%--                                            <li class="active" id="personal"><strong>Informacion Basica</strong></li>--%>
+<%--                                            <li id="experience"><strong>Oferta Laboral</strong></li>--%>
+<%--                                        </ul>--%>
                                         <c:url value="/createEnterprise" var="postPath"/>
                                         <form:form modelAttribute="companyForm" action="${postPath}" method="post">
                                         <fieldset>
                                             <div class="form-card">
                                                 <h2 class="fs-title">Informacion Basica</h2>
-                                                <form:input type="email" path="cemail" name="email" placeholder="Email"/>
-
-                                                <form:errors path="cemail" cssClass="formError" element="p"/>
-                                                <form:input type="text" path="cname" name="name" placeholder="Nombre"/>
+                                                <form:input type="email" path="cemail" placeholder="Email"/>
+<%--                                                <form:errors path="cemail" cssClass="formError" element="p"/>--%>
+                                                <form:input type="text" path="cname" placeholder="Nombre"/>
                                                 <!--<div class="row">
                                                     <div class="col-6">
                                                         <label for="ControlFile">Elegir foto de perfil</label>
@@ -58,8 +56,8 @@
                                                         <input type="file" class="form-control-file" id="ControlFile">
                                                     </div>
                                                 </div>-->
-                                                <form:input type="text" path="ccity" name="location" placeholder="Ubicacion"/>
-                                                <form:input type="text" path="cdesc" name="description" placeholder="Descripcion"/>
+                                                <form:input type="text" path="ccity" placeholder="Ubicacion"/>
+                                                <form:input type="text" path="cdesc" placeholder="Descripcion"/>
                                                 <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
@@ -79,15 +77,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>-->
+                                            </div>
                                             <button type="button" name="next" class="btn next action-button">Continuar</button>
                                         </fieldset>
                                         <fieldset>
-                                            <div class="form-card">
+                                            <div class="form-card">-->
                                                 <h2 class="fs-title">Oferta de trabajo</h2>
-                                                <form:input type="text" path="cjob" name="position" placeholder="Puesto"/>
-                                                <form:input type="text" path="cjobdesc" name="description" placeholder="Descripcion"/>
-                                                <form:input type="text" path="salary" name="salary" placeholder="Salario"/>
+                                                <form:input type="text" path="cjob" placeholder="Puesto"/>
+                                                <form:input type="text" path="cjobdesc" placeholder="Descripcion"/>
+                                                <form:input type="text" path="salary" placeholder="Salario"/>
                                                 <!--<div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="pl-2">
@@ -105,11 +103,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>-->
-                                            <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>
-                                            <button type="button" name="end" class="btn next action-button">Finalizar</button>
+                                            </div>
+                                            <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
+                                            <button type="submit" name="end" class="btn next action-button">Finalizar</button>
                                         </fieldset>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                             </form:form>

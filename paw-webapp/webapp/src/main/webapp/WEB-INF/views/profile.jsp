@@ -28,6 +28,7 @@
                         <h5 class="card-title">Descripcion de <c:out value="${user.name}"/></h5>
                     </div>
                     <div class="card-footer bg-white text-center">
+                        <p class="card-text">Actualmente: <c:out value="${user.currentPosition}"/></p>
                         <p class="card-text"><c:out value="${user.description}"/></p>
                     </div>
                 </div>
@@ -39,7 +40,7 @@
                         <h5 class="card-title">Experiencia</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text"><c:out value="${user.currentPosition}"/></p>
+                        <p class="card-text">9</p>
                     </div>
                 </div>
                 </div>

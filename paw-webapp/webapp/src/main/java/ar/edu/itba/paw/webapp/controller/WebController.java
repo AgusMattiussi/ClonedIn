@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.ExperienceService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
@@ -22,6 +24,7 @@ public class WebController {
 
     private UserService us;
     private EnterpriseService es;
+    private ExperienceService ex;
 
     @Autowired
     public WebController(final UserService us){
@@ -62,21 +65,21 @@ public class WebController {
             return formUser(userForm);
         }
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), userForm.getCollege());
+        //final Experience e = ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
-    @RequestMapping("/formenterprise")
-    public ModelAndView formenterprise(@ModelAttribute("companyForm") final CompanyForm form) {
-        final ModelAndView mav = new ModelAndView("formenterprise");
-        return mav;
+    @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
+    public ModelAndView formEnterprise(@ModelAttribute("companyForm") final CompanyForm companyForm) {
+        return new ModelAndView("formenterprise");
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView create(@Valid @ModelAttribute("companyForm") final CompanyForm form, final BindingResult errors) {
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("companyForm") final CompanyForm companyForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formenterprise(form);
+            return formEnterprise(companyForm);
         }
-        final Enterprise e = es.create(form.getCemail(), form.getCname(), form.getCpassword(), form.getCcity(), 0, form.getCdesc());
+        final Enterprise e = es.create(companyForm.getCemail(), companyForm.getCname(), companyForm.getCpassword(), companyForm.getCcity(), 0, companyForm.getCdesc());
         return new ModelAndView("redirect:/");
     }
 
