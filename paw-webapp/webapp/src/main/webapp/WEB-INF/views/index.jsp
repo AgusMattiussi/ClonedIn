@@ -27,18 +27,18 @@
                 <div class="dropdown-group">
                     <div class="dropdown ml-2 mt-2">
                         <select class="form-select" aria-label="false">
-                            <option selected>Area de conocimiento</option>
-                            <option value="1">Area 1</option>
-                            <option value="2">Area 2</option>
-                            <option value="3">Area 3</option>
+                            <option selected>Rubro</option>
+                            <c:forEach var="cs" items="${categories}">
+                                <option value="<c:out value="${cs.id}"/>"><c:out value="${cs.name}"/></option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
                         <select class="form-select" aria-label="false">
                             <option selected>Aptitudes</option>
-                            <option value="1">Aptitud 1</option>
-                            <option value="2">Aptitud 2</option>
-                            <option value="3">Aptitud 3</option>
+                            <c:forEach var="ss" items="${skills}">
+                                <option value="<c:out value="${ss.id}"/>"><c:out value="${ss.description}"/></option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
@@ -67,23 +67,23 @@
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">
                     <h3>Descubrir Perfiles</h3>
-                    <!--<button type="button" class="btn btn-outline-secondary waves-effect"><i class="bi bi-star pr-2"></i>Destacados</button>-->
                     <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
-                <div class="card w-100 mt-2 d-flex flex-wrap" style="background: #F2F2F2">
-                    <div class="card-deck m-2">
+                <div class="container-fluid">
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" style="background: #F2F2F2">
                         <c:forEach var="us" items="${users}">
-                            <div class="card">
-                                    <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Profile picture" width="100" height="200">
-                                    <div class="card-body" style="position:relative">
-                                        <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                        <p class="card-text"><c:out value="${us.description}"/></p>
-                                        <a href="<c:url value="/profile/${us.id}"/>" class="stretched-link"></a>
+                            <div class="col mb-4">
+                                <div class="card h-100 mt-1">
+                                    <a class="text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
+                                        <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><c:out value="${us.name}"/></h5>
+                                            <p class="card-text"><c:out value="${us.description}"/></p>
+                                        </div>
+                                    </a>
+                                    <div class="card-footer second bg-white text-right">
+                                        <a href="<c:url value="/contact"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                     </div>
-                                <div class="card-footer second bg-white text-right">
-                                    <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-star pr-2" aria-hidden="true"></i></button> -->
-<%--                                    <a href="<c:url value="/profile/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Ver Perfil</button></a>--%>
-                                    <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
                                 </div>
                             </div>
                         </c:forEach>
