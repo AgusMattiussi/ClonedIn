@@ -9,4 +9,6 @@ public interface ExperienceDao {
     Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description);
 
     Optional<Experience> findById(long experienceId);
+
+    Optional<Experience> findByUserId(long userID);
 }

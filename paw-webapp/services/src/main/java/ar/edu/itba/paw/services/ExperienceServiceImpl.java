@@ -29,4 +29,9 @@ public class ExperienceServiceImpl implements ExperienceService {
     public Optional<Experience> findById(long experienceId) {
         return experienceDao.findById(experienceId);
     }
+
+    @Override
+    public Optional<Experience> findByUserId(long userID) {
+        return experienceDao.findByUserId(userID);
+    }
 }
