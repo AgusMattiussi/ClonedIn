@@ -42,40 +42,11 @@ public class UserForm {
     private Date datedesde;
     private Date datehasta;
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    @Size(min = 6, max = 100)
+    private String name;
 
-    // TODO: Cambiar esto
-    public String getPassword() {
-        return "contraseniaDificil";
-        //return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-    }
+    private String description;
 
-    public String getCity() {
-        return city;
-    }
-    public String getCollege() {
-        return college;
-    }
-    public String getDegree() {
-        return degree;
-    }
-    public String getDesc() {
-        return desc;
-    }
     public String getEmail() {
         return email;
     }
@@ -122,44 +93,24 @@ public class UserForm {
         return position;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-    public void setCollege(String college) {
-        this.college = college;
-    }
-    public void setCompany(String company) {
-        this.company = company;
-    }
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setJob(String job) {
-        this.job = job;
+
+    public String getName() {
+        return name;
     }
-    public void setHability(String hability) {
-        this.hability = hability;
-    }
-    public void setJobdesc(String jobdesc) {
-        this.jobdesc = jobdesc;
-    }
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
+
     public void setName(String name) {
         this.name = name;
     }
-    public void setMore(String more) {
-        this.more = more;
+
+    public String getDescription() {
+        return description;
     }
-    public void setRubro(String rubro) {
-        this.rubro = rubro;
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     public void setYears(String years) {
         this.years = years;

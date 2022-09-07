@@ -44,7 +44,7 @@
 <%--                        <li id="skills"><strong>Aptitudes</strong></li>--%>
 <%--                      </ul>--%>
                       <!-- fieldsets -->
-                      <c:url value="/createUser" var="postPath"/>
+                      <c:url value="/create" var="postPath"/>
                       <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">

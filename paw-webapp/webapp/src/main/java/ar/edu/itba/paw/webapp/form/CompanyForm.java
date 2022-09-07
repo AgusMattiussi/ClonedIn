@@ -7,19 +7,18 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CompanyForm {
-    //@Size(min = 6, max = 100)
-    //@Pattern(regexp = "[a-zA-Z0-9]+")
+    @Size(min = 6, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9]+")
     private String cusername;
-    //@Size(min = 6, max = 100)
+    @Size(min = 6, max = 100)
     private String cpassword;
-    //@Size(min = 6, max = 100)
+    @Size(min = 6, max = 100)
     private String crepeatPassword;
 
-    //@NotEmpty
-    //@Email
+    @NotEmpty
+    @Email
     private String cemail;
-    //@NotEmpty
-    private String cname;
+    @NotEmpty private String cname;
     //FIX: no estoy segura como validar la foto o si va aca
     private String ccity;
     private String cdesc;

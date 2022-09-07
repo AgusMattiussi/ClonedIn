@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ExperienceService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.EnterpriseService;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.Experience;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.CompanyForm;
+import ar.edu.itba.paw.webapp.form.ContactForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,24 +20,32 @@ public class WebController {
 
     private UserService us;
     private EnterpriseService es;
+    private CategoryService cs;
+    private SkillService ss;
+    private EmailService emailService;
     private ExperienceService ex;
 
+
+
     @Autowired
-    public WebController(final UserService us){
+    public WebController(final UserService us, final CategoryService cs, final SkillService ss, final EmailService emailService){
         this.us = us;
+        this.cs = cs;
+        this.ss = ss;
+        this.emailService = emailService;
     }
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-//        final User user = us.register("paw@itba.edu.ar", "secret");
-//        mav.addObject("user", user);
-         mav.addObject("users", us.getAllUsers());
+        mav.addObject("users", us.getAllUsers());
+        mav.addObject("categories", cs.getAllCategories());
+        mav.addObject("skills", ss.getAllSkills());
         return mav;
     }
 
     @RequestMapping("/register")
-    public ModelAndView register(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
+    public ModelAndView create(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
         final User user = us.register(email, password, name, null, category, null, null, null);
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
@@ -67,9 +71,24 @@ public class WebController {
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), userForm.getCollege());
         //final Experience e = ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
+
     }
 
-    @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
+    @RequestMapping(value ="/contact", method = { RequestMethod.GET })
+    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form) {
+        return new ModelAndView("simpleContactForm");
+
+    }
+    @RequestMapping(value = "/contact", method = { RequestMethod.POST })
+    public ModelAndView contact(@Valid @ModelAttribute("companyForm") final ContactForm form, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return contactForm(form);
+        }
+        emailService.sendEmail(form.getSubject(), form.getMessage());
+        return new ModelAndView("redirect:/");
+    }
+
+     @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
     public ModelAndView formEnterprise(@ModelAttribute("companyForm") final CompanyForm companyForm) {
         return new ModelAndView("formenterprise");
     }

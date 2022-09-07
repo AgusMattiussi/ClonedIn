@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
-                    <img class="card-img-top small" src="<c:url value="/assets/images/noimagen.jpeg"/>" alt="Card image cap">
+                    <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap">
                     <div class="card-body pb-0">
                         <h5 class="card-title">Descripcion de <c:out value="${user.name}"/></h5>
                     </div>
@@ -60,7 +60,7 @@
                         <h5 class="card-title">Aptitudes</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">a</p>
+                        <p class="card-text">Aptitudes del usuario</p>
                     </div>
                 </div>
                 </div>
