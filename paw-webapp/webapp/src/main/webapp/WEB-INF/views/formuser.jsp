@@ -94,7 +94,7 @@
                               <label class="startDate">Desde</label>
                             </div>
                             <div class="col-9">
-                              <//form:input type="text" path="datedesde" name="datadesde" placeholder="YY/MM/DD"/>
+                              <//form:input type="text" path="datedesde"  placeholder="YY/MM/DD"/>
                             </div>
                           </div>
                           <div class="row">
