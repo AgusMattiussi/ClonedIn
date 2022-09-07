@@ -67,7 +67,7 @@
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">
                     <h3>Descubrir Perfiles</h3>
-                    <a href="<c:url value="/create"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
+                    <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
                 <div class="container-fluid">
                     <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" style="background: #F2F2F2">
