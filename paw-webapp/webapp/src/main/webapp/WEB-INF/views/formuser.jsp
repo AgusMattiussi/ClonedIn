@@ -138,13 +138,13 @@
                       <button type="button" name="next" class="btn next action-button">Continuar</button>
                     </fieldset>
                     <fieldset>
-                      <div class="form-card">-->
+                      <div class="form-card">
                         <h2 class="fs-title">Aptitudes</h2>
-                        <form:input type="text" path="lang"  placeholder="Idiomas"/>
-                        <form:input type="text" path="hability"  placeholder="Habilidades"/>
-                        <form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
+                        <//form:input type="text" path="lang"  placeholder="Idiomas"/>
+                        <//form:input type="text" path="hability"  placeholder="Habilidades"/>
+                        <//form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
                       </div>
-                      <!--<button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
+                      <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
                       <button type="submit" name="end" class="btn action-button">Finalizar</button>
                     </fieldset>
                     </div>
