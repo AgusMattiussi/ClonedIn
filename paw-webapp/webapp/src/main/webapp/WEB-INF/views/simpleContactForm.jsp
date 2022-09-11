@@ -39,12 +39,15 @@
                 <form:form modelAttribute="simpleContactForm" action="${postPath}" method="post">
                   <fieldset>
                     <div class="form-card">
-                      <h2 class="fs-title">Informacion Personal</h2>
+                      <h2 class="fs-title">Mensaje</h2>
                       <form:input type="text" path="subject" placeholder="Asunto"/>
+                      <form:errors path="subject" cssClass="formError" element="p"/>
                       <form:input type="text" path="message" placeholder="Mensaje"/>
+                      <form:errors path="message" cssClass="formError" element="p"/>
                       <form:input type="text" path="contactInfo" placeholder="Informacion de contacto"/>
+                      <form:errors path="contactInfo" cssClass="formError" element="p"/>
                       <div>
-                        <input type="submit" value="Enviar"/>
+                        <button type="submit" class="btn action-button">Enviar</button>
                       </div>
                     </div>
                   </fieldset>
