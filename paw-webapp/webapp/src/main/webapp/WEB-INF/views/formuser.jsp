@@ -50,9 +50,10 @@
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
                           <form:input type="email" path="email" placeholder="Email"/>
-                          <!-- para customizar los errores
-                          <//form:errors path="email" cssClass="formError" element="p"/>-->
+                          <!-- para customizar los errores -->
+                          <form:errors path="email" cssClass="formError" element="p"/>
                           <form:input type="text" path="name" placeholder="Nombre"/>
+                          <form:errors path="name" cssClass="formError" element="p"/>
                           <!--<div class="row">
                             <div class="col-6">
                               agregar form:

@@ -70,10 +70,10 @@
                     <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
                 <div class="container-fluid">
-                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" style="background: #F2F2F2">
+                    <div class="row justify-content-center" style="background: #F2F2F2">
                         <c:forEach var="us" items="${users}">
-                            <div class="col mb-4">
-                                <div class="card h-100 mt-1">
+                            <div class="col-auto mb-3">
+                                <div class="card mt-1 h-100" style="width: 14rem;">
                                     <a class="text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                         <div class="card-body">
