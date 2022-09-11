@@ -70,8 +70,7 @@
                     <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
                 <div class="jumbotron jumbotron-fluid" style="padding: 0">
-                    <div class="container">
-                        <div class="card-deck">
+                        <div class="card-deck justify-content-center mt-2 pt-2" >
                             <c:forEach var="us" items="${users}">
                                 <div class="col-auto mb-3">
                                     <div class="card mt-1 h-100 mx-0" style="width: 13.5rem;">
@@ -89,7 +88,6 @@
                                 </div>
                             </c:forEach>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
