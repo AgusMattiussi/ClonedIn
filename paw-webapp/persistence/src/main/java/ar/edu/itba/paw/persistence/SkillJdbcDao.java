@@ -15,11 +15,8 @@ import java.util.*;
 public class SkillJdbcDao implements SkillDao {
 
     private static final String SKILL_TABLE = "aptitud";
-    private static final String USER_SKILL_TABLE = "aptitudUsuario";
 
     private static final String ID = "id";
-    private static final String SKILL_ID = "idAptitud";
-    private static final String USER_ID = "idUsuario";
 
     private static final String DESCRIPTION = "descripcion";
 
@@ -30,7 +27,6 @@ public class SkillJdbcDao implements SkillDao {
     private final JdbcTemplate template;
 
     private final SimpleJdbcInsert skillInsert;
-    private final SimpleJdbcInsert userSkillInsert;
 
     @Autowired
     public SkillJdbcDao(final DataSource ds){
@@ -38,8 +34,6 @@ public class SkillJdbcDao implements SkillDao {
         this.skillInsert = new SimpleJdbcInsert(ds)
                 .withTableName(SKILL_TABLE)
                 .usingGeneratedKeyColumns(ID);
-        this.userSkillInsert = new SimpleJdbcInsert(ds)
-                .withTableName(USER_SKILL_TABLE);
     }
 
     @Override
@@ -64,6 +58,7 @@ public class SkillJdbcDao implements SkillDao {
                 new Object[]{ description.toLowerCase() }, SKILL_MAPPER).stream().findFirst();
     }
 
+    // FIXME: Revisar que este metodo funcione
     @Override
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);
@@ -79,18 +74,4 @@ public class SkillJdbcDao implements SkillDao {
         return allSkills;
     }
 
-    @Override
-    public boolean addSkillToUser(String skillDescription, long userID) {
-        Skill skill = findByDescriptionOrCreate(skillDescription);
-        return addSkillToUser(skill.getId(), userID);
-    }
-
-    @Override
-    public boolean addSkillToUser(long skillID, long userID) {
-        final Map<String, Object> values = new HashMap<>();
-        values.put(SKILL_ID, skillID);
-        values.put(USER_ID, userID);
-
-        return userSkillInsert.execute(values) > 0;
-    }
 }

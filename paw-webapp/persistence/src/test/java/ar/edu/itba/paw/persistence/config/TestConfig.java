@@ -27,6 +27,8 @@ public class TestConfig {
     private Resource schemaSql;
     @Value("classpath:init.sql")
     private Resource initSql;
+    @Value("classpath:category.sql")
+    private Resource categorySql;
 
 
     @Bean
@@ -62,6 +64,7 @@ public class TestConfig {
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
         dbp.addScript(initSql);
+        //dbp.addScript(categorySql);
         /* Puedo agregar script de inserts iniciales para la DB */
 
         return dbp;

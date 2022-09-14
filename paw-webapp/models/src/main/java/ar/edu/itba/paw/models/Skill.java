@@ -32,4 +32,12 @@ public class Skill {
     public int hashCode() {
         return Objects.hash(id, description);
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

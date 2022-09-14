@@ -45,14 +45,4 @@ public class SkillServiceImpl implements SkillService {
     public List<Skill> getAllSkills() {
         return skillDao.getAllSkills();
     }
-
-    @Override
-    public boolean addSkillToUser(String skillDescription, long userID) {
-        return skillDao.addSkillToUser(skillDescription, userID);
-    }
-
-    @Override
-    public boolean addSkillToUser(long skillID, long userID) {
-        return skillDao.addSkillToUser(skillID, userID);
-    }
 }

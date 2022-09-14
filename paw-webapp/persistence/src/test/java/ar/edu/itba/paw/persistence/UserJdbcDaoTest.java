@@ -68,7 +68,9 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final User newUser = dao.create(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION) ;
+        final User newUser = dao.create(TEST_EMAIL,
+                TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME,
+                TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION) ;
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(TEST_EMAIL, newUser.getEmail());
