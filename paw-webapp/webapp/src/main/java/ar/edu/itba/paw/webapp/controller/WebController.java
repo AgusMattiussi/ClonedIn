@@ -87,7 +87,7 @@ public class WebController {
 
     }
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(@Valid @ModelAttribute("contactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView contact(@Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return contactForm(form, userId);
         }

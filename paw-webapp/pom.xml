@@ -134,7 +134,7 @@
     <module>interfaces</module>
     <module>persistence</module>
   </modules>
-        
+
    <build>
     <plugins>
       <plugin>

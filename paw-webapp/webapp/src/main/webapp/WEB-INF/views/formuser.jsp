@@ -147,17 +147,17 @@
                       </div>
                       <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
                           <p>(*) Los campos son requeridos</p>
-
                           <button type="submit" name="end" class="btn action-button">Finalizar</button>
-                    </fieldset>
-                    </div>
+                        </div>
+                      </fieldset>
+                      </form:form>
+                      </div>
                   </div>
                 </div>
-                </form:form>
               </div>
             </div>
           </div>
         </div>
-    </div>
+      </div>
   </body>
 </html>

@@ -18,8 +18,8 @@ public class UserForm {
     @Size(min = 6, max = 100)
     private String repeatPassword;
 
-    @NotEmpty
     @Email
+    @NotEmpty
     private String email;
 
     @NotEmpty
