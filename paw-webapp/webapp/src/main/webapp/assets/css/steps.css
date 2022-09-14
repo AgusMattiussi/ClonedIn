@@ -56,12 +56,12 @@ html {
 }
 
 #msform input, #msform textarea {
-    padding: 0px 8px 4px 8px;
+    padding: 0 8px 4px 8px;
     border: none;
     border-bottom: 1px solid #ccc;
-    border-radius: 0px;
-    margin-bottom: 25px;
-    margin-top: 2px;
+    border-radius: 0;
+    margin-bottom: 0 ;
+    margin-top: 20px;
     width: 100%;
     box-sizing: border-box;
     font-family: FontAwesome;
@@ -134,7 +134,8 @@ select.list-dt:focus {
 .fs-title {
     font-size: 25px;
     color: #2C3E50;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 0;
     font-weight: bold;
     text-align: left;
 }
