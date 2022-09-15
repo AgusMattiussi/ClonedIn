@@ -8,18 +8,18 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class UserForm {
-    //@Size(min = 6, max = 100)
-    //@Pattern(regexp = "[a-zA-Z0-9]+")
+    @Size(min = 6, max = 20)
+    @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
 
-    //@Size(min = 6, max = 100)
+    @Size(min = 6, max = 100)
     private String password;
 
-    //@Size(min = 6, max = 100)
+    @Size(min = 6, max = 100)
     private String repeatPassword;
 
-    @NotEmpty
     @Email
+    @NotEmpty
     private String email;
 
     @NotEmpty
@@ -29,16 +29,17 @@ public class UserForm {
 
     private String city;
     private String position;
+    @NotEmpty
     private String desc;
     private String rubro;
     private String college;
     private String degree;
-
-    //@Pattern(regexp = "[0-9]+")
+    @Pattern(regexp = "[0-9]+")
     private String years;
     private String company;
     private String job;
     private String jobdesc;
+
     //FIX: no estoy segura como poner el desde y el hasta
     private String lang;
     private String hability;

@@ -36,23 +36,22 @@
                 <div class="row">
                   <div class="col-md-12 mx-0">
                     <div id="msform">
-                      <!-- progressbar -->
-<%--                      <ul id="progressbar">--%>
-<%--                        <li class="active" id="personal"><strong>Personal</strong></li>--%>
-<%--                        <li id="education"><strong>Educacion</strong></li>--%>
-<%--                        <li id="experience"><strong>Experiencia</strong></li>--%>
-<%--                        <li id="skills"><strong>Aptitudes</strong></li>--%>
-<%--                      </ul>--%>
-                      <!-- fieldsets -->
+                      <!-- progressbar
+                      <ul id="progressbar">
+                        <li class="active" id="personal"><strong>Personal</strong></li>
+                        <li id="education"><strong>Educacion</strong></li>
+                        <li id="experience"><strong>Experiencia</strong></li>
+                        <li id="skills"><strong>Aptitudes</strong></li>
+                      </ul>
+                      fieldsets -->
                       <c:url value="/createUser" var="postPath"/>
                       <form:form modelAttribute="userForm" action="${postPath}" method="post">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title">Informacion Personal</h2>
-                          <form:input type="email" path="email" placeholder="Email"/>
-                          <!-- para customizar los errores -->
+                          <form:input type="email" path="email" placeholder="Email *"/>
                           <form:errors path="email" cssClass="formError" element="p"/>
-                          <form:input type="text" path="name" placeholder="Nombre"/>
+                          <form:input type="text" path="name" placeholder="Nombre *"/>
                           <form:errors path="name" cssClass="formError" element="p"/>
                           <!--<div class="row">
                             <div class="col-6">
@@ -65,7 +64,8 @@
                           </div>-->
                           <form:input type="text" path="city" placeholder="Ubicacion"/>
                           <form:input type="text" path="position" placeholder="Puesto Actual"/>
-                          <form:input type="text" path="desc" placeholder="Descripcion"/>
+                          <form:input type="text" path="desc" placeholder="Descripcion *"/>
+                          <form:errors path="name" cssClass="formError" element="p"/>
                           <!--<div class="row">
                             <div class="col-6">
                               agregar form:
@@ -146,16 +146,18 @@
                         <//form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
                       </div>
                       <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
-                      <button type="submit" name="end" class="btn action-button">Finalizar</button>
-                    </fieldset>
-                    </div>
+                          <p>(*) Los campos son requeridos</p>
+                          <button type="submit" name="end" class="btn action-button">Finalizar</button>
+                        </div>
+                      </fieldset>
+                      </form:form>
+                      </div>
                   </div>
                 </div>
-                </form:form>
               </div>
             </div>
           </div>
         </div>
-    </div>
+      </div>
   </body>
 </html>
