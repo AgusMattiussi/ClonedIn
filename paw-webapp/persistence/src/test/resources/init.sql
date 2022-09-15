@@ -7,7 +7,12 @@ INSERT INTO aptitudUsuario (idAptitud, idUsuario)
     SELECT a.id, u.id
     FROM aptitud a, usuario u
     WHERE a.descripcion = 'testskill'
-        AND u.nombre = 'John Lennon';
+        AND u.email = 'johnlennon@gmail.com';
+INSERT INTO contactado (idEmpresa, idUsuario)
+    SELECT e.id, u.id
+    FROM empresa e, usuario u
+    WHERE e.email = 'empresaurio@gmail.com'
+        AND u.email = 'johnlennon@gmail.com';
 -- INSERT INTO experienca (idEmpresa, fechaDesde, fechaHasta, empresa, posicion, descipcion) VALUES (1, '2010-10-10', null, null, 'CEO', null);
 
 

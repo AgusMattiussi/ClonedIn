@@ -24,7 +24,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private static final String CATEGORY_ID_FK = "idRubro";
     private static final String DESCRIPTION = "descripcion";
 
-    private static final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) ->
+    protected static final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) ->
             new Enterprise(resultSet.getLong(ID),
                     resultSet.getString(NAME),
                     resultSet.getString(EMAIL),

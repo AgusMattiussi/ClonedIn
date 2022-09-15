@@ -33,7 +33,7 @@ public class UserJdbcDao implements UserDao {
     private static final String DESCRIPTION = "descripcion";
     private static final String EDUCATION = "educacion";
 
-    private static final RowMapper<User> USER_MAPPER = (resultSet, rowNum) ->
+    protected static final RowMapper<User> USER_MAPPER = (resultSet, rowNum) ->
             new User(resultSet.getLong(ID),
                     resultSet.getString(EMAIL),
                     resultSet.getString(PASSWORD),

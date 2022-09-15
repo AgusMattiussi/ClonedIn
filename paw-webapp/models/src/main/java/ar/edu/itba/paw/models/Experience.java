@@ -48,4 +48,18 @@ public class Experience {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "Experience{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", from=" + from +
+                ", to=" + to +
+                ", enterpriseName='" + enterpriseName + '\'' +
+                ", position='" + position + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
 }
