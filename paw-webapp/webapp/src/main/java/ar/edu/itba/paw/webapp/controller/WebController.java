@@ -109,6 +109,11 @@ public class WebController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping("/login")
+    public ModelAndView login() {
+        return new ModelAndView("login");
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView userNotFound() {
