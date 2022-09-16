@@ -32,11 +32,11 @@ public class Education {
         return userId;
     }
 
-    public Date getFrom() {
+    public Date getDateFrom() {
         return from;
     }
 
-    public Date getTo() {
+    public Date getDateTo() {
         return to;
     }
 
@@ -51,6 +51,7 @@ public class Education {
     public String getDescription() {
         return description;
     }
+
 
     @Override
     public String toString() {

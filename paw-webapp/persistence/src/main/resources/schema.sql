@@ -43,6 +43,17 @@ CREATE TABLE IF NOT EXISTS experiencia (
     FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS educacion (
+    id SERIAL PRIMARY KEY,
+    idUsuario INTEGER NOT NULL,
+    fechaDesde DATE NOT NULL,
+    fechaHasta DATE,
+    titulo TEXT NOT NULL,
+    institucion VARCHAR(100),
+    descripcion TEXT,
+    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS ofertaLaboral (
     id SERIAL PRIMARY KEY,
     idEmpresa INTEGER,
