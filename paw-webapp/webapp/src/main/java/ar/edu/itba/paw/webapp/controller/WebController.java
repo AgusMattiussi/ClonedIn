@@ -53,6 +53,7 @@ public class WebController {
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
