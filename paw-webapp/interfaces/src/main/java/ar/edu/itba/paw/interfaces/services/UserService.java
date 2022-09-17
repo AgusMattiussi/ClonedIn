@@ -13,4 +13,9 @@ public interface UserService {
     Optional<User> findById(long userId);
 
     List<User> getAllUsers();
+
+    Optional<Integer> getUsersCount();
+
+    List<User> getUsersList(int page, int pageSize);
+
 }

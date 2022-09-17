@@ -17,49 +17,57 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class WebController {
 
-    private UserService us;
-    private EnterpriseService es;
-    private CategoryService cs;
-    private SkillService ss;
-    private EmailService emailService;
-    private ExperienceService ex;
+    private final UserService userService;
+    private final EnterpriseService enterpriseService;
+    private final CategoryService categoryService;
+    private final SkillService skillService;
+    private final EmailService emailService;
+    private final ExperienceService experienceService;
 
-
+    private static final int itemsPerPage = 8;
 
     @Autowired
-    public WebController(final UserService us, final ExperienceService ex, final EnterpriseService es, final CategoryService cs, final SkillService ss, final EmailService emailService){
-        this.us = us;
-        this.ex = ex;
-        this.es = es;
-        this.cs = cs;
-        this.ss = ss;
+    public WebController(final UserService userService, final ExperienceService experienceService, final EnterpriseService enterpriseService, final CategoryService categoryService, final SkillService skillService, final EmailService emailService){
+        this.userService = userService;
+        this.experienceService = experienceService;
+        this.enterpriseService = enterpriseService;
+        this.categoryService = categoryService;
+        this.skillService = skillService;
         this.emailService = emailService;
     }
 
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("users", us.getAllUsers());
-        mav.addObject("categories", cs.getAllCategories());
-        mav.addObject("skills", ss.getAllSkills());
+
+        final List<User> usersList = userService.getUsersList(page - 1, itemsPerPage);
+        final Integer usersCount = userService.getUsersCount().orElse(0);
+
+//        mav.addObject("users", userService.getAllUsers());
+        mav.addObject("users", usersList);
+        mav.addObject("categories", categoryService.getAllCategories());
+        mav.addObject("skills", skillService.getAllSkills());
+        mav.addObject("pages", usersCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
     @RequestMapping("/register")
     public ModelAndView create(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
-        final User user = us.register(email, password, name, null, category, null, null, null);
+        final User user = userService.register(email, password, name, null, category, null, null, null);
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
 
     @RequestMapping("/profile/{userId:[0-9]+}")
     public ModelAndView profile(@PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profile");
-        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("experience", ex.findByUserId(userId).orElseThrow(ExperienceNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("experience", experienceService.findByUserId(userId).orElseThrow(ExperienceNotFoundException::new));
         return mav;
     }
 
@@ -73,8 +81,8 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(),  "Institucion: " +  userForm.getCollege() + " - Titulo: " + userForm.getDegree());
-        ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(),  "Institucion: " +  userForm.getCollege() + " - Titulo: " + userForm.getDegree());
+        experienceService.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
 
     }
@@ -82,7 +90,7 @@ public class WebController {
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("simpleContactForm");
-        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
 
     }
@@ -91,7 +99,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return contactForm(form, userId);
         }
-        emailService.sendEmail(us.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
+        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
         return new ModelAndView("redirect:/");
     }
 
@@ -105,7 +113,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formEnterprise(companyForm);
         }
-        final Enterprise e = es.create(companyForm.getCemail(), companyForm.getCname(), companyForm.getCpassword(), companyForm.getCcity(), 0, companyForm.getCdesc());
+        final Enterprise e = enterpriseService.create(companyForm.getCemail(), companyForm.getCname(), companyForm.getCpassword(), companyForm.getCcity(), 0, companyForm.getCdesc());
         return new ModelAndView("redirect:/");
     }
 

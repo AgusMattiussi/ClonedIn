@@ -1,23 +1,12 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
     <head>
-        <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <%@include file="../components/imports.jsp"%>
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
-        <!-- Icons -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-        <!-- JQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <!-- Popper -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <!-- BootStrap JS -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <!-- Script -->
-        <script src="<c:url value="/assets/js/script.js"/>"></script>
         <title>ClonedIn</title>
-        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
     </head>
     <body>
         <jsp:include page="../components/navbar.jsp"/>
@@ -88,6 +77,36 @@
                                 </div>
                             </c:forEach>
                         </div>
+                        <nav class="d-flex justify-content-center align-items-center">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">
+                                        <spring:message code="index.pagination.first"/>
+                                    </a>
+                                </li>
+                                <c:forEach var="i" begin="1" end="${pages}">
+                                    <li class="page-item">
+                                        <c:choose>
+                                            <c:when test="${currentPage == i}">
+                                                <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/?page=${i}"/>">
+                                                    <c:out value="${i}"/>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">
+                                                    <c:out value="${i}"/>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
+                                </c:forEach>
+                                <li class="page-item">
+                                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">
+                                        <spring:message code="index.pagination.end"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                 </div>
             </div>
         </div>
