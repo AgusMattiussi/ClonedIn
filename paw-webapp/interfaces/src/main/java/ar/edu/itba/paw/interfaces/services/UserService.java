@@ -13,4 +13,6 @@ public interface UserService {
     Optional<User> findById(long userId);
 
     List<User> getAllUsers();
+
+    void changePassword(String email, String password);
 }

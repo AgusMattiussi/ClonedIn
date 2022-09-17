@@ -29,7 +29,6 @@ public class WebController {
     private ExperienceService ex;
 
 
-
     @Autowired
     public WebController(final UserService us, final ExperienceService ex, final EnterpriseService es, final CategoryService cs, final SkillService ss, final EmailService emailService){
         this.us = us;

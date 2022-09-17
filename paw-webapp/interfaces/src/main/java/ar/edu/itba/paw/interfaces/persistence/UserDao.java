@@ -14,6 +14,8 @@ public interface UserDao {
 
     List<User> getAllUsers();
 
+    void changePassword(String email, String password);
+
     /* TODO:
         - findByLocation
         - findByCategory

@@ -99,4 +99,9 @@ public class UserJdbcDao implements UserDao {
             return new ArrayList<>();
         return allUsers;
     }
+
+    @Override
+    public void changePassword(String email, String password) {
+        template.update("UPDATE " + USER_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+    }
 }
