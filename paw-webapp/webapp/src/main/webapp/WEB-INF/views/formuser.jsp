@@ -44,8 +44,10 @@
                           <form:errors path="email" cssClass="formError" element="p"/>
                           <form:input type="text" path="name" placeholder="Nombre *"/>
                           <form:errors path="name" cssClass="formError" element="p"/>
-                          <form:input type="email" path="password" placeholder="Password *"/>
-                          <form:input type="email" path="repeatPassword" placeholder="Repeat Password *"/>
+                          <form:input type="text" path="password" placeholder="Password *"/>
+                          <form:errors path="password" cssClass="formError" element="p"/>
+                          <form:input type="text" path="repeatPassword" placeholder="Repeat Password *"/>
+                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                           <div class="row">
                             <div class="col-4">
                               <label for="ControlFile">Elegir foto de perfil</label>
@@ -57,7 +59,7 @@
                           <form:input type="text" path="city" placeholder="Ubicacion"/>
                           <form:input type="text" path="position" placeholder="Puesto Actual"/>
                           <form:input type="text" path="desc" placeholder="Descripcion *"/>
-                          <form:errors path="name" cssClass="formError" element="p"/>
+                          <form:errors path="desc" cssClass="formError" element="p"/>
                           <div class="row">
                             <div class="col-4">
                               <label class="Rubro">Rubro Laboral</label>

@@ -43,8 +43,11 @@
                                                 <form:input type="email" path="cemail" placeholder="Email *"/>
                                                 <form:errors path="cemail" cssClass="formError" element="p"/>
                                                 <form:input type="text" path="cname" placeholder="Nombre *"/>
-                                                <form:input type="email" path="cpassword" placeholder="Password *"/>
-                                                <form:input type="email" path="crepeatPassword" placeholder="Repeat Password *"/>
+                                                <form:errors path="cname" cssClass="formError" element="p"/>
+                                                <form:input type="text" path="cpassword" placeholder="Password *"/>
+                                                <form:errors path="cpassword" cssClass="formError" element="p"/>
+                                                <form:input type="text" path="crepeatPassword" placeholder="Repeat Password *"/>
+                                                <form:errors path="crepeatPassword" cssClass="formError" element="p"/>
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <label for="ControlFile">Elegir foto de perfil</label>
@@ -55,6 +58,7 @@
                                                 </div>
                                                 <form:input type="text" path="ccity" placeholder="Ubicacion"/>
                                                 <form:input type="text" path="cdesc" placeholder="Descripcion *"/>
+                                                <form:errors path="cdesc" cssClass="formError" element="p"/>
                                                 <div class="row">
                                                     <div class="col-4">
                                                             <label class="area">Rubro</label>

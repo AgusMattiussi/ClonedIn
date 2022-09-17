@@ -5,17 +5,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 public class UserForm {
     @Size(min = 6, max = 20)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
 
-    @Size(min = 6, max = 8)
+    @Size(min = 6, max = 20)
     private String password;
 
-    @Size(min = 6, max = 8)
+    @Size(min = 6, max = 20)
     private String repeatPassword;
 
     @Email
@@ -25,8 +24,6 @@ public class UserForm {
     @NotEmpty
     private String name;
 
-    //FIX: no estoy segura como validar la foto o si va aca
-
     private String city;
     private String position;
     @NotEmpty
@@ -34,20 +31,21 @@ public class UserForm {
     private String rubro;
     private String college;
     private String degree;
-    @Pattern(regexp = "[0-9]+")
-    private String years;
     private String company;
     private String job;
     private String jobdesc;
-
-    //FIX: no estoy segura como poner el desde y el hasta
     private String lang;
     private String hability;
+    private String comment;
     private String more;
-    private Date dated;
-    private Date dateh;
-    private Date datedesde;
-    private Date datehasta;
+    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    private String dated;
+    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    private String dateh;
+    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    private String datedesde;
+    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    private String datehasta;
     private String description;
 
     public String getUsername() {
@@ -139,14 +137,6 @@ public class UserForm {
         this.degree = degree;
     }
 
-    public String getYears() {
-        return years;
-    }
-
-    public void setYears(String years) {
-        this.years = years;
-    }
-
     public String getCompany() {
         return company;
     }
@@ -195,35 +185,35 @@ public class UserForm {
         this.more = more;
     }
 
-    public Date getDated() {
+    public String getDated() {
         return dated;
     }
 
-    public void setDated(Date dated) {
+    public void setDated(String dated) {
         this.dated = dated;
     }
 
-    public Date getDateh() {
+    public String getDateh() {
         return dateh;
     }
 
-    public void setDateh(Date dateh) {
+    public void setDateh(String dateh) {
         this.dateh = dateh;
     }
 
-    public Date getDatedesde() {
+    public String getDatedesde() {
         return datedesde;
     }
 
-    public void setDatedesde(Date datedesde) {
+    public void setDatedesde(String datedesde) {
         this.datedesde = datedesde;
     }
 
-    public Date getDatehasta() {
+    public String getDatehasta() {
         return datehasta;
     }
 
-    public void setDatehasta(Date datehasta) {
+    public void setDatehasta(String datehasta) {
         this.datehasta = datehasta;
     }
 
@@ -233,5 +223,13 @@ public class UserForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

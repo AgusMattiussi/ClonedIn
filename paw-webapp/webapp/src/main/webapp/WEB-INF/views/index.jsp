@@ -67,7 +67,6 @@
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">
                     <h3>Descubrir Perfiles</h3>
-                    <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Perfil</button></a>
                 </div>
                 <div class="jumbotron jumbotron-fluid" style="padding: 0">
                         <div class="card-deck justify-content-center mt-2 pt-2" >

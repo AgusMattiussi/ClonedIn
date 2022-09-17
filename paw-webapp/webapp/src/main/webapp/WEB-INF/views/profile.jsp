@@ -23,12 +23,14 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
-                    <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap">
+                    <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap"/>
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Descripcion de <c:out value="${user.name}"/></h5>
+                        <h6 class="card-title">Descripcion de <c:out value="${user.name}"/></h6>
                     </div>
                     <div class="card-footer bg-white text-center">
-                        <p class="card-text">Actualmente: <c:out value="${user.currentPosition}"/></p>
+                        <c:if test="${experience != null}">
+                            <p class="card-text"> Actualmente soy: <c:out value="${user.currentPosition}"/></p>
+                        </c:if>
                         <p class="card-text"><c:out value="${user.description}"/></p>
                     </div>
                 </div>
@@ -37,11 +39,25 @@
                 <div class="row mr-2">
                 <div class="card mt-2">
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Experiencia</h5>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h5 class="card-title">Experiencia</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="<c:url value="/createEx/${user.id}"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Experiencia</button></a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">Trabaje en <c:out value="${experience.enterpriseName}"/>,
-                            como <c:out value="${experience.position}"/>. <c:out value="${experience.description}"/>
+                        <p class="card-text">
+                            <c:if test="${experience != null}">
+                                <c:out value="${experience.enterpriseName}"/>,
+                                <c:out value="${experience.position}"/>
+                                <c:out value="${experience.description}"/>
+                            </c:if>
+                            <c:if test="${experience == null}">
+                                <p class="card-text"><b>Experiencias no especificadas</b></p>
+                            </c:if>
                         </p>
                     </div>
                 </div>
@@ -49,13 +65,27 @@
                 <div class="row mr-2">
                 <div class="card mt-2">
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Educacion</h5>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h5 class="card-title">Educacion</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="<c:url value="/createEd/${user.id}"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Educacion</button></a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text"><c:out value="${user.education}"/></p>
+                        <c:if test="${education != null}">
+                            <c:out value="${education.title}"/>,
+                            <c:out value="${education.institutionName}"/>
+                            <c:out value="${education.description}"/>
+                        </c:if>
+                        <c:if test="${experience == null}">
+                            <p class="card-text"><b>Educacion no especificada</b></p>
+                        </c:if>
                     </div>
                 </div>
-<%--                </div>--%>
+                </div>
 <%--                <div class="row mr-2">--%>
 <%--                <div class="card mt-2">--%>
 <%--                    <div class="card-body pb-0">--%>
@@ -66,7 +96,7 @@
 <%--                    </div>--%>
 <%--                </div>--%>
 <%--                </div>--%>
-<%--            </div>--%>
+            </div>
         </div>
     </div>
     </div>

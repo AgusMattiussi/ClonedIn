@@ -61,7 +61,7 @@
                                         <div class="row">
                                             <div class="col">
                                                 <p>Registrarse como usuario buscando trabajo</p>
-                                                <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px"><i class="bi bi-person-bounding-box large"></i></button></a>
+                                                <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px"><i class="bi bi-person large"></i></button></a>
                                             </div>
                                             <div class="col">
                                                 <p>Registrarse como empresa reclutando</p>

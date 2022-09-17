@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 
-import ar.edu.itba.paw.webapp.exceptions.ExperienceNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.CompanyForm;
 import ar.edu.itba.paw.webapp.form.ContactForm;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.sql.Date;
+import java.util.Optional;
 
 @Controller
 public class WebController {
@@ -27,15 +28,20 @@ public class WebController {
     private SkillService ss;
     private EmailService emailService;
     private ExperienceService ex;
+    private EducationService ed;
+
+    private UserSkillService uss;
 
 
     @Autowired
-    public WebController(final UserService us, final ExperienceService ex, final EnterpriseService es, final CategoryService cs, final SkillService ss, final EmailService emailService){
+    public WebController(final UserService us, final ExperienceService ex, final EducationService ed, final EnterpriseService es, final CategoryService cs, final SkillService ss, final EmailService emailService, final UserSkillService uss) {
         this.us = us;
         this.ex = ex;
         this.es = es;
         this.cs = cs;
         this.ss = ss;
+        this.uss = uss;
+        this.ed = ed;
         this.emailService = emailService;
     }
 
@@ -58,7 +64,9 @@ public class WebController {
     public ModelAndView profile(@PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("experience", ex.findByUserId(userId).orElseThrow(ExperienceNotFoundException::new));
+        mav.addObject("experience", ex.findByUserId(userId).orElse(null));
+        mav.addObject("education", ed.findByUserId(userId).orElse(null));
+        mav.addObject("skills", uss.getSkillsForUser(userId));
         return mav;
     }
 
@@ -73,8 +81,57 @@ public class WebController {
             return formUser(userForm);
         }
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
-//        ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
+
+    }
+
+    @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEx(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("experianceform");
+        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createEx(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEx(userForm, userId);
+        }
+        ex.create(us.findById(userId).get().getId(), Date.valueOf(userForm.getDated()), Date.valueOf(userForm.getDateh()), userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
+
+    }
+
+    @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEd(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("educationform");
+        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createEd(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEd(userForm, userId);
+        }
+        ed.add(us.findById(userId).get().getId(), Date.valueOf(userForm.getDatedesde()), Date.valueOf(userForm.getDatehasta()), userForm.getDegree(), userForm.getCollege(), userForm.getComment());
+        return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
+
+    }
+
+    @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formSkill(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("skillsform");
+        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createSkill(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formSkill(userForm, userId);
+        }
+        return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
 
     }
 
