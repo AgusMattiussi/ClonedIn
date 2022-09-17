@@ -10,9 +10,9 @@ public class CompanyForm {
     @Size(min = 6, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String cusername;
-    @Size(min = 6, max = 100)
+    @Size(min = 6, max = 8)
     private String cpassword;
-    @Size(min = 6, max = 100)
+    @Size(min = 6, max = 8)
     private String crepeatPassword;
 
     @NotEmpty

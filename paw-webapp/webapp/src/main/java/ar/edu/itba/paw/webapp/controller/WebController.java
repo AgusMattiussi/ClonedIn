@@ -73,8 +73,8 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(),  "Institucion: " +  userForm.getCollege() + " - Titulo: " + userForm.getDegree());
-        ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
+//        ex.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + u.getId());
 
     }
@@ -109,8 +109,8 @@ public class WebController {
         return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping("/login")
-    public ModelAndView login() {
+    @RequestMapping(value = "/login", method = { RequestMethod.GET })
+    public ModelAndView login(@ModelAttribute("loginForm") final UserForm userForm) {
         return new ModelAndView("login");
     }
 
