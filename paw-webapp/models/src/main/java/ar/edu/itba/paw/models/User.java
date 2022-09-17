@@ -39,9 +39,9 @@ public class User {
         return email;
     }
 
-    /*public String getPassword() {
+    public String getPassword() {
         return password;
-    }*/
+    }
 
     public String getLocation() {
         return location;

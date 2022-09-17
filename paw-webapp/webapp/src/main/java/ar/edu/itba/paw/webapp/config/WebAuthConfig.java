@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PawUserDetailsService userDetailsService;
-    @Override
+    /*@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
-    }
+    }*/
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement()
