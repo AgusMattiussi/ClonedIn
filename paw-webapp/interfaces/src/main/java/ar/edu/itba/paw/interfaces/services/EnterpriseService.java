@@ -10,4 +10,6 @@ public interface EnterpriseService {
     Optional<Enterprise> findByEmail(String email);
 
     Optional<Enterprise> findById(long enterpriseId);
+
+    void changePassword(String email, String password);
 }

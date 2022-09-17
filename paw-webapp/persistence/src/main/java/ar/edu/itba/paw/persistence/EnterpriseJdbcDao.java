@@ -71,4 +71,9 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
         return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ enterpriseId }, ENTERPRISE_MAPPER).stream().findFirst();
     }
+
+    @Override
+    public void changePassword(String email, String password) {
+        template.update("UPDATE " + ENTERPRISE_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+    }
 }

@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import com.sun.tools.javac.comp.Enter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
@@ -23,21 +23,32 @@ public class AuthUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserService us;
+    @Autowired
+    private EnterpriseService es;
 
     @Autowired
-    public AuthUserDetailsService(final UserService us){
+    public AuthUserDetailsService(final UserService us, final EnterpriseService es){
         this.us = us;
+        this.es = es;
     }
 
     // Username = email
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final User user = us.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("No user by the email " + username));
-
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        // Puede ser usuario normal
+        final Optional<User> optUser = us.findByEmail(email);
+        if(optUser.isPresent())
+            return defaultUserDetails(optUser.get());
+        
+        // Puede ser empresa. Si no, no existe el usuario
+        final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user by the email " + email));
+        return enterpriseUserDetails(enterprise);
+    }
+    
+    private UserDetails defaultUserDetails(User user){
         if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()){
             us.changePassword(user.getEmail(), user.getPassword());
-            return loadUserByUsername(username);
+            return loadUserByUsername(user.getEmail());
         }
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
@@ -45,6 +56,18 @@ public class AuthUserDetailsService implements UserDetailsService {
         //TODO: Este rol para la empresa
         //authorities.add(new SimpleGrantedAuthority("ROLE_ENTERPRISE"));
 
-        return new AuthUser(username, user.getPassword(), authorities);
+        return new AuthUser(user.getEmail(), user.getPassword(), authorities);
+    }
+    
+    private UserDetails enterpriseUserDetails(Enterprise enterprise){
+        if(!BCRYPT_PATTERN.matcher(enterprise.getPassword()).matches()){
+            es.changePassword(enterprise.getEmail(), enterprise.getPassword());
+            return loadUserByUsername(enterprise.getEmail());
+        }
+
+        final Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_ENTERPRISE"));
+
+        return new AuthUser(enterprise.getEmail(), enterprise.getPassword(), authorities);
     }
 }
