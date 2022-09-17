@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 
 <html>
     <head>
@@ -88,6 +90,27 @@
                                 </div>
                             </c:forEach>
                         </div>
+                        <nav class="d-flex justify-content-center align-items-center">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">
+                                        <spring:message code="index.pagination.first"/>
+                                    </a>
+                                </li>
+                                <c:forEach var="i" begin="1" end="${pages}">
+                                    <li class="page-item">
+                                        <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">
+                                            <c:out value="${i}"/>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                                <li class="page-item">
+                                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">
+                                        <spring:message code="index.pagination.end"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                 </div>
             </div>
         </div>

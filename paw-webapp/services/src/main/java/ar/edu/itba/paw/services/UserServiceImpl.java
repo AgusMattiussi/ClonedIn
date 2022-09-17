@@ -40,4 +40,14 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
+
+    @Override
+    public Optional<Integer> getUsersCount() {
+        return userDao.getUsersCount();
+    }
+
+    @Override
+    public List<User> getUsersList(int page, int pageSize) {
+        return userDao.getUsersList(page, pageSize);
+    }
 }

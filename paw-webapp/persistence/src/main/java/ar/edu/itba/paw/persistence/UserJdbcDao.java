@@ -44,6 +44,8 @@ public class UserJdbcDao implements UserDao {
                     resultSet.getString(DESCRIPTION),
                     resultSet.getString(EDUCATION));
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
+
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
@@ -98,5 +100,16 @@ public class UserJdbcDao implements UserDao {
         if(allUsers == null)
             return new ArrayList<>();
         return allUsers;
+    }
+
+    @Override
+    public Optional<Integer> getUsersCount() {
+        return template.query("SELECT COUNT(*) as count FROM " +  USER_TABLE, COUNT_ROW_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public List<User> getUsersList(int page, int pageSize) {
+        return template.query("SELECT * FROM " +  USER_TABLE + " OFFSET ? LIMIT ? ",
+                new Object[]{ pageSize * page, pageSize }, USER_MAPPER);
     }
 }
