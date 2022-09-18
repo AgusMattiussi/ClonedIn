@@ -94,6 +94,11 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public boolean userExists(String email) {
+        return findByEmail(email).isPresent();
+    }
+
+    @Override
     public List<User> getAllUsers() {
         List<User> allUsers = template.query("SELECT * FROM " + USER_TABLE, USER_MAPPER);
         // Fixme: Es necesario?

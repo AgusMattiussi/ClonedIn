@@ -12,6 +12,8 @@ public interface UserDao {
 
     Optional<User> findById(long userId);
 
+    boolean userExists(String email);
+
     List<User> getAllUsers();
 
     Optional<Integer> getUsersCount();
