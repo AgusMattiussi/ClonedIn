@@ -39,13 +39,13 @@
                 <div class="row mr-2">
                 <div class="card mt-2">
                     <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h5 class="card-title">Experiencia</h5>
-                            </div>
-                            <div class="col-sm-4">
-                                <a href="<c:url value="/createEx/${user.id}"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Experiencia</button></a>
-                            </div>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">Experiencia</h5>
+                            <a href="<c:url value="/createEx/${user.id}"/>">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem">
+                                    <i class="bi bi-plus-square pr-2"></i>Agregar Experiencia
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <div class="card-footer bg-white text-left">
@@ -65,13 +65,13 @@
                 <div class="row mr-2">
                 <div class="card mt-2">
                     <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h5 class="card-title">Educacion</h5>
-                            </div>
-                            <div class="col-sm-4">
-                                <a href="<c:url value="/createEd/${user.id}"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white"><i class="bi bi-plus-square pr-2"></i>Agregar Educacion</button></a>
-                            </div>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">Educacion</h5>
+                            <a href="<c:url value="/createEd/${user.id}"/>">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem">
+                                <i class="bi bi-plus-square pr-2"></i>Agregar Educacion
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <div class="card-footer bg-white text-left">

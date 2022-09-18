@@ -36,18 +36,19 @@
             <div class="col-md-12 mx-0">
               <div id="msform">
                 <c:url value="/createEd/${user.id}" var="postPath"/>
-                <form:form modelAttribute="userForm" action="${postPath}" method="post">
+                <form:form modelAttribute="educationForm" action="${postPath}" method="post">
                   <fieldset>
                     <div class="form-card">
                       <h2 class="fs-title">Educacion</h2>
                       <form:input type="text" path="college" placeholder="Institución"/>
-                      <form:input type="text" path="degree"   placeholder="Titulo"/>
+                      <form:input type="text" path="degree" placeholder="Titulo"/>
                       <div class="row">
                         <div class="col-4">
                           <label class="startDate">Desde</label>
                         </div>
                         <div class="col-8">
-                          <form:input type="text" path="datedesde" placeholder="YYYY-MM-DD"/>
+                          <form:input type="text" path="dateFrom" placeholder="YYYY-MM-DD"/>
+                          <form:errors path="dateTo" cssClass="formError" element="p"/>
                         </div>
                       </div>
                       <div class="row">
@@ -55,10 +56,11 @@
                           <label class="endDate">Hasta</label>
                         </div>
                         <div class="col-8">
-                          <form:input type="text" path="datehasta" name="datahasta" placeholder="YYYY-MM-DD"/>
+                          <form:input type="text" path="dateTo" placeholder="YYYY-MM-DD"/>
+                          <form:errors path="dateTo" cssClass="formError" element="p"/>
                         </div>
                       </div>
-                      <form:input type="text" path="comment"   placeholder="Comentario"/>
+                      <form:input type="text" path="comment" placeholder="Comentario"/>
                     </div>
                     <p>(*) Los campos son requeridos</p>
                     <button type="submit" name="end" class="btn action-button">Finalizar</button>

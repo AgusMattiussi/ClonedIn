@@ -36,19 +36,19 @@
             <div class="col-md-12 mx-0">
               <div id="msform">
                 <c:url value="/createEx/${user.id}" var="postPath"/>
-                <form:form modelAttribute="userForm" action="${postPath}" method="post">
+                <form:form modelAttribute="experienceForm" action="${postPath}" method="post">
                     <fieldset>
                     <div class="form-card">
                       <h2 class="fs-title">Experiencia</h2>
                       <form:input type="text" path="company" placeholder="Empresa"/>
                       <form:input type="text" path="job" placeholder="Puesto"/>
-                      <form:input type="text" path="jobdesc" placeholder="Descripcion"/>
+                      <form:input type="text" path="jobDesc" placeholder="Descripcion"/>
                       <div class="row">
                         <div class="col-4">
                           <label class="startDate">Desde</label>
                         </div>
                         <div class="col-8">
-                          <form:input type="text" path="dated" placeholder="YYYY-MM-DD"/>
+                          <form:input type="text" path="dateFrom" placeholder="YYYY-MM-DD"/>
                         </div>
                       </div>
                       <div class="row">
@@ -56,7 +56,7 @@
                           <label class="endDate">Hasta</label>
                         </div>
                         <div class="col-8">
-                          <form:input type="text" path="dateh" placeholder="YYYY-MM-DD"/>
+                          <form:input type="text" path="dateTo" placeholder="YYYY-MM-DD"/>
                         </div>
                       </div>
                     </div>

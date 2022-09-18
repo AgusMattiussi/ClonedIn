@@ -5,9 +5,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.CompanyForm;
-import ar.edu.itba.paw.webapp.form.ContactForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.sql.Date;
-import java.util.Optional;
 
 @Controller
 public class WebController {
@@ -82,60 +79,55 @@ public class WebController {
         }
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
         return new ModelAndView("redirect:/profile/" + u.getId());
-//        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEx(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
-        final ModelAndView mav = new ModelAndView("experianceform");
+    public ModelAndView formEx(@ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("experienceform");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
 
     @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createEx(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createEx(@Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            System.out.println("HOLA");
-            return formEx(userForm, userId);
+            return formEx(experienceForm, userId);
         }
-        System.out.println("HOLA5");
-        ex.create(us.findById(userId).get().getId(), Date.valueOf(userForm.getDated()), Date.valueOf(userForm.getDateh()), userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        ex.create(us.findById(userId).get().getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
 
     }
 
     @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEd(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
+    public ModelAndView formEd(@ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationform");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
 
     @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createEd(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createEd(@Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            return formEd(userForm, userId);
+            return formEd(educationForm, userId);
         }
-        ed.add(us.findById(userId).get().getId(), Date.valueOf(userForm.getDatedesde()), Date.valueOf(userForm.getDatehasta()), userForm.getDegree(), userForm.getCollege(), userForm.getComment());
+        ed.add(us.findById(userId).get().getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
 
     }
 
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formSkill(@ModelAttribute("userForm") final UserForm userForm, @PathVariable("userId") final long userId) {
+    public ModelAndView formSkill(@ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsform");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
 
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createSkill(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createSkill(@Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            return formSkill(userForm, userId);
+            return formSkill(skillForm, userId);
         }
-        //use uss
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
-
     }
 
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })

@@ -48,14 +48,14 @@
                           <form:errors path="password" cssClass="formError" element="p"/>
                           <form:input type="text" path="repeatPassword" placeholder="Repeat Password *"/>
                           <form:errors path="repeatPassword" cssClass="formError" element="p"/>
-                          <div class="row">
-                            <div class="col-4">
-                              <label for="ControlFile">Elegir foto de perfil</label>
-                            </div>
-                            <div class="col-8">
-                              <input type="file" class="form-control-file" id="ControlFile">
-                            </div>
-                          </div>
+<%--                          <div class="row">--%>
+<%--                            <div class="col-4">--%>
+<%--                              <label for="ControlFile">Elegir foto de perfil</label>--%>
+<%--                            </div>--%>
+<%--                            <div class="col-8">--%>
+<%--                              <input type="file" class="form-control-file" id="ControlFile">--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
                           <form:input type="text" path="city" placeholder="Ubicacion"/>
                           <form:input type="text" path="position" placeholder="Puesto Actual"/>
                           <form:input type="text" path="desc" placeholder="Descripcion *"/>

@@ -36,12 +36,12 @@
             <div class="col-md-12 mx-0">
               <div id="msform">
                 <c:url value="/createSkill/${user.id}" var="postPath"/>
-                <form:form modelAttribute="userForm" action="${postPath}" method="post">
+                <form:form modelAttribute="skillForm" action="${postPath}" method="post">
                   <fieldset>
                   <div class="form-card">
                   <h2 class="fs-title">Aptitudes</h2>
                     <form:input type="text" path="lang"  placeholder="Idiomas"/>
-                    <form:input type="text" path="hability"  placeholder="Habilidades"/>
+                    <form:input type="text" path="skill" placeholder="Habilidades"/>
                     <form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
                   </div>
                     <button type="submit" name="end" class="btn action-button">Finalizar</button>
