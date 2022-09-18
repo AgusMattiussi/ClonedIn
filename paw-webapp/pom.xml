@@ -24,6 +24,7 @@
     <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
     <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
     <javax.mail.version>1.4.7</javax.mail.version>
+    <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
   </properties>
     
   <dependencyManagement>
@@ -122,6 +123,18 @@
         <groupId>javax.mail</groupId>
         <artifactId>mail</artifactId>
         <version>${javax.mail.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf</artifactId>
+        <version>${thymeleaf.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf-spring4</artifactId>
+        <version>${thymeleaf.version}</version>
       </dependency>
 
     </dependencies>

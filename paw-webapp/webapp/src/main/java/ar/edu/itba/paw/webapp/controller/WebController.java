@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class WebController {
@@ -99,7 +101,17 @@ public class WebController {
         if (errors.hasErrors()) {
             return contactForm(form, userId);
         }
-        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
+
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", userService.findById(userId).get().getName());
+        mailMap.put("message", form.getMessage());
+        mailMap.put("contactInfo", form.getContactInfo());
+
+//        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
+        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(),"contactEmail.html", mailMap);
+
+
         return new ModelAndView("redirect:/");
     }
 

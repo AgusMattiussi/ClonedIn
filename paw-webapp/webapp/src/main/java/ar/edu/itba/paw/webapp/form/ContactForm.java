@@ -8,7 +8,6 @@ public class ContactForm {
     private String subject;
     @NotEmpty
     private String message;
-    @Email
     @NotEmpty
     private String contactInfo;
 

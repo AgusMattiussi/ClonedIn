@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <div>
+            <div>
+                <h2><span th:text="${username}"/>,</h2>
+                <p>Parece que <span th:text="${contactInfo}"/> se ha interesado en ti:</p>
+                <br>
+                <p><i th:text="${message}"/></p>
+                <br>
+                <p>Para mas informacion visita nuestra pagina en <span th:text="${baseUrl}"/></p>
+            </div>
+            <div style="margin: auto">
+                <a th:href="${baseUrl}">
+                    <img style="max-width: 800px;" src="https://i.ibb.co/fdLhpHQ/logoaa.png" alt="ClonedIn ogo"/>
+                </a>
+            </div>
+        </div>
+    </body>
+</html>
