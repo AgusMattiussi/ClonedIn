@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
-import com.sun.tools.javac.comp.Enter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

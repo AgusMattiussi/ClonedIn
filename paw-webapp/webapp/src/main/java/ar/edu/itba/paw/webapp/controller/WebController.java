@@ -82,7 +82,7 @@ public class WebController {
         }
         final User u = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
         return new ModelAndView("redirect:/profile/" + u.getId());
-
+//        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.GET })
