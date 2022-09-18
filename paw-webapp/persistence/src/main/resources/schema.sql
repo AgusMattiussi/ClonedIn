@@ -92,7 +92,9 @@ CREATE TABLE IF NOT EXISTS solicitud (
 CREATE TABLE IF NOT EXISTS contactado (
     idEmpresa INTEGER NOT NULL,
     idUsuario INTEGER NOT NULL,
-    PRIMARY KEY (idEmpresa, idUsuario),
+    idOferta INTEGER NOT NULL,
+    PRIMARY KEY (idUsuario, idOferta),
     FOREIGN KEY (idEmpresa) REFERENCES empresa ON DELETE CASCADE,
-    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE
+    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
+    FOREIGN KEY (idOferta) REFERENCES ofertaLaboral ON DELETE CASCADE
 );

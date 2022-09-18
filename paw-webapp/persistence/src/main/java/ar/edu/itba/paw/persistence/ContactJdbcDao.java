@@ -2,8 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,19 +21,22 @@ public class ContactJdbcDao implements ContactDao {
     private static final String CONTACT_TABLE = "contactado";
     private static final String ENTERPRISE_ID = "idEmpresa";
     private static final String USER_ID = "idUsuario";
+    private static final String JOB_OFFER_ID = "idOferta";
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
     private final UserDao userDao;
     private final EnterpriseDao enterpriseDao;
+    private final JobOfferDao jobOfferDao;
 
     @Autowired
-    public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao){
+    public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(CONTACT_TABLE);
         this.userDao = userDao;
         this.enterpriseDao = enterpriseDao;
+        this.jobOfferDao = jobOfferDao;
     }
 
     private List<Long> getEnterpriseIDsForUser(long userID){
@@ -72,12 +77,32 @@ public class ContactJdbcDao implements ContactDao {
         return userList;
     }
 
+    private List<Long> getJobOfferIDsForUser(long userId){
+        return template.query("SELECT " + JOB_OFFER_ID + " FROM " + CONTACT_TABLE + " WHERE " + USER_ID + " = ?",
+                new Object[]{ userId }, (resultSet, rowNum) ->
+            resultSet.getLong(JOB_OFFER_ID));
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersForUser(long userId) {
+        List<Long> jobOfferIDs = getJobOfferIDsForUser(userId);
+        List<JobOffer> jobOfferList = new ArrayList<>();
+
+        for (long id : jobOfferIDs) {
+            Optional<JobOffer> optJobOffer = jobOfferDao.findById(id);
+            optJobOffer.ifPresent(jobOfferList::add);
+        }
+
+        return jobOfferList;
+    }
+
     //TODO: Manejar el caso en que ya exista el par
     @Override
-    public void addContact(long enterpriseID, long userID) {
+    public void addContact(long enterpriseID, long userID, long jobOfferID) {
         final Map<String, Object> values = new HashMap<>();
         values.put(ENTERPRISE_ID, enterpriseID);
         values.put(USER_ID, userID);
+        values.put(JOB_OFFER_ID, jobOfferID);
 
         insert.execute(values);
     }

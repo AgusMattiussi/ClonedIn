@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
@@ -51,9 +53,10 @@ public class ContactJdbcDaoTest {
     private ContactJdbcDao contactJdbcDao;
     @Autowired
     private EnterpriseDao enterpriseDao;
-
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private JobOfferDao jobOfferDao;
 
     @Autowired
     private DataSource ds;
@@ -64,12 +67,14 @@ public class ContactJdbcDaoTest {
     private User newUser;
     private Enterprise testEnterprise;
     private Enterprise newEnterprise;
+    private JobOffer testJobOffer;
 
     @Before
     public void setUp() {
         jdbctemplate = new JdbcTemplate(ds);
         testUser = userDao.findByEmail(TEST_USER_EMAIL).get();
         testEnterprise = enterpriseDao.findByEmail(TEST_ENTERPRISE_EMAIL).get();
+        testJobOffer = jobOfferDao.findById(1).get();
         newEnterprise = enterpriseDao.create(NEW_ENTERPRISE_EMAIL, NEW_ENTERPRISE_PASSWORD, NEW_ENTERPRISE_NAME, NEW_ENTERPRISE_LOCATION, NEW_ENTERPRISE_CATEGORY_ID_FK, NEW_ENTERPRISE_DESCRIPTION);
         newUser = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, NEW_USER_LOCATION, NEW_USER_CATEGORY_NAME, NEW_USER_CURRENT_POSITION, NEW_USER_DESCRIPTION, NEW_USER_EDUCATION) ;
     }
@@ -92,7 +97,7 @@ public class ContactJdbcDaoTest {
 
     @Test
     public void addContactTest() {
-        contactJdbcDao.addContact(newEnterprise.getId(), newUser.getId());
+        contactJdbcDao.addContact(newEnterprise.getId(), newUser.getId(), testEnterprise.getId());
 
         final List<Enterprise> enterpriseList = contactJdbcDao.getEnterprisesForUser(newUser.getId());
         final List<User> userList = contactJdbcDao.getUsersForEnterprise(newEnterprise.getId());
@@ -101,5 +106,15 @@ public class ContactJdbcDaoTest {
         Assert.assertTrue(enterpriseList.contains(newEnterprise));
         Assert.assertEquals(1, userList.size());
         Assert.assertTrue(userList.contains(newUser));
+    }
+
+    @Test
+    public void testGetJobOffersForUser() {
+        final List<JobOffer> jobOfferList = contactJdbcDao.getJobOffersForUser(testUser.getId());
+
+        Assert.assertNotNull(jobOfferList);
+        Assert.assertFalse(jobOfferList.isEmpty());
+        Assert.assertEquals(1, jobOfferList.size());
+        Assert.assertTrue(jobOfferList.contains(testJobOffer));
     }
 }
