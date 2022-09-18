@@ -16,6 +16,8 @@ public interface UserService {
 
     List<User> getAllUsers();
 
+    void changePassword(String email, String password);
+
     Optional<Integer> getUsersCount();
 
     List<User> getUsersList(int page, int pageSize);

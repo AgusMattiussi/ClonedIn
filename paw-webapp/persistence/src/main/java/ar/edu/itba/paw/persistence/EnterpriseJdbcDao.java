@@ -45,7 +45,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     }
 
     @Override
-    public Enterprise create(String email, String password, String name, String location, long categoryId_fk, String description) {
+    public Enterprise create(String email, String name, String password, String location, long categoryId_fk, String description) {
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
         values.put(EMAIL, email);
@@ -70,6 +70,11 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     public Optional<Enterprise> findById(final long enterpriseId) {
         return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ enterpriseId }, ENTERPRISE_MAPPER).stream().findFirst();
+    }
+
+    @Override
+    public void changePassword(String email, String password) {
+        template.update("UPDATE " + ENTERPRISE_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
     }
 
     @Override

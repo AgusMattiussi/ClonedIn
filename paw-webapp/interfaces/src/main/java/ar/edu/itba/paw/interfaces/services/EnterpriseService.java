@@ -12,4 +12,6 @@ public interface EnterpriseService {
     Optional<Enterprise> findById(long enterpriseId);
 
     boolean enterpriseExists(String email);
+
+    void changePassword(String email, String password);
 }
