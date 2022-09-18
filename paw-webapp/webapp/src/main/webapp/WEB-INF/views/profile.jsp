@@ -33,7 +33,7 @@
                             <h5 class="card-title">Experiencia</h5>
                             <sec:authorize access="hasRole('USER')">
                             <a href="<c:url value="/createEx/${user.id}"/>">
-                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
                                     <i class="bi bi-plus-square pr-2"></i>Agregar Experiencia
                                 </button>
                             </a>
@@ -62,7 +62,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">Educacion</h5>
                             <a href="<c:url value="/createEd/${user.id}"/>">
-                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
                                 <i class="bi bi-plus-square pr-2"></i>Agregar Educacion
                                 </button>
                             </a>
@@ -86,7 +86,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">Aptitudes</h5>
                             <a href="<c:url value="/createSkill/${user.id}"/>">
-                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
                                     <i class="bi bi-plus-square pr-2"></i>Agregar aptitud
                                 </button>
                             </a>
