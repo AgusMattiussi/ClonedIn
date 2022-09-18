@@ -34,8 +34,7 @@ public class UserForm {
     }
 
     public String getPassword() {
-        return "muydificil";
-        //return password;
+        return password;
     }
 
     public void setPassword(String password) {
