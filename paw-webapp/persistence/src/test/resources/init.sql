@@ -18,4 +18,9 @@ INSERT INTO ofertaLaboral (idEmpresa, posicion, descripcion, salario, idRubro)
     FROM empresa e, rubro r
     WHERE e.email = 'empresaurio@gmail.com'
         AND r.nombre = 'testCategory';
+INSERT INTO aptitudOfertaLaboral (idAptitud, idOferta)
+    SELECT a.id, o.id
+    FROM aptitud a, ofertaLaboral o
+    WHERE a.descripcion = 'testskill'
+        AND o.posicion = 'testPosition';
 -- INSERT INTO experiencia (idEmpresa, fechaDesde, fechaHasta, empresa, posicion, descipcion) VALUES (1, '2010-10-10', null, null, 'CEO', null);
