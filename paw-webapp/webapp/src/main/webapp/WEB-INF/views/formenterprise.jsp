@@ -36,74 +36,48 @@
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
                                         <c:url value="/createEnterprise" var="postPath"/>
-                                        <form:form modelAttribute="companyForm" action="${postPath}" method="post">
-                                        <fieldset>
-                                            <div class="form-card">
-                                                <h2 class="fs-title">Informacion Basica</h2>
-                                                <form:input type="email" path="cemail" placeholder="Email *"/>
-                                                <form:errors path="cemail" cssClass="formError" element="p"/>
-                                                <form:input type="text" path="cname" placeholder="Nombre *"/>
-                                                <form:errors path="cname" cssClass="formError" element="p"/>
-                                                <form:input type="text" path="cpassword" placeholder="Password *"/>
-                                                <form:errors path="cpassword" cssClass="formError" element="p"/>
-                                                <form:input type="text" path="crepeatPassword" placeholder="Repeat Password *"/>
-                                                <form:errors path="crepeatPassword" cssClass="formError" element="p"/>
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <label for="ControlFile">Elegir foto de perfil</label>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <input type="file" class="form-control-file" id="ControlFile">
+                                        <form:form modelAttribute="enterpriseForm" action="${postPath}" method="post">
+                                            <fieldset>
+                                                <div class="form-card">
+                                                    <h2 class="fs-title">Informacion Basica</h2>
+                                                    <form:input type="email" path="email" placeholder="Email *"/>
+                                                    <form:errors path="email" cssClass="formError" element="p"/>
+                                                    <form:input type="text" path="name" placeholder="Nombre *"/>
+                                                    <form:errors path="name" cssClass="formError" element="p"/>
+                                                    <form:input type="text" path="password" placeholder="Password *"/>
+                                                    <form:errors path="password" cssClass="formError" element="p"/>
+                                                    <form:input type="text" path="repeatPassword" placeholder="Repeat Password *"/>
+                                                    <form:errors path="repeatPassword" cssClass="formError" element="p"/>
+    <%--                                                <div class="row">--%>
+    <%--                                                    <div class="col-4">--%>
+    <%--                                                        <label for="ControlFile">Elegir foto de perfil</label>--%>
+    <%--                                                    </div>--%>
+    <%--                                                    <div class="col-8">--%>
+    <%--                                                        <input type="file" class="form-control-file" id="ControlFile">--%>
+    <%--                                                    </div>--%>
+    <%--                                                </div>--%>
+                                                    <form:input type="text" path="city" placeholder="Ubicacion"/>
+                                                    <form:input type="text" path="description" placeholder="Descripcion *"/>
+                                                    <form:errors path="description" cssClass="formError" element="p"/>
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                                <label class="area">Rubro</label>
+                                                            </div>
+                                                        <div class="col-8">
+                                                                <select class="list-dt ml-auto" id="area" name="area">
+                                                                    <option selected>Ninguno</option>
+                                                                    <option>Otro</option>
+                                                                </select>
+                                                            </div>
                                                     </div>
                                                 </div>
-                                                <form:input type="text" path="ccity" placeholder="Ubicacion"/>
-                                                <form:input type="text" path="cdesc" placeholder="Descripcion *"/>
-                                                <form:errors path="cdesc" cssClass="formError" element="p"/>
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                            <label class="area">Rubro</label>
-                                                        </div>
-                                                    <div class="col-8">
-                                                            <select class="list-dt ml-auto" id="area" name="area">
-                                                                <option selected>Ninguno</option>
-                                                                <option>Otro</option>
-                                                            </select>
-                                                        </div>
-                                                </div>
-                                            </div>
-                                            <p>(*) Los campos son requeridos</p>
-                                            <button type="submit" name="end" class="btn next action-button">REGISTRAR</button>
-                                        </fieldset>
-<%--                                        <fieldset>--%>
-<%--                                            <div class="form-card">--%>
-<%--                                                <h2 class="fs-title">Oferta de trabajo</h2>--%>
-<%--                                                <form:input type="text" path="cjob" placeholder="Puesto"/>--%>
-<%--                                                <form:input type="text" path="cjobdesc" placeholder="Descripcion"/>--%>
-<%--                                                <form:input type="text" path="salary" placeholder="Salario"/>--%>
-<%--                                                <div class="row">--%>
-<%--                                                    <div class="d-flex justify-content-between">--%>
-<%--                                                        <div class="pl-2">--%>
-<%--                                                            <label class="area">Rubro Laboral</label>--%>
-<%--                                                        </div>--%>
-<%--                                                        <div>--%>
-<%--                                                            <select class="list-dt ml-auto" id="area1" name="area1">--%>
-<%--                                                                <option selected>Ninguno</option>--%>
-<%--                                                                <option>IT</option>--%>
-<%--                                                                <option>RRHH</option>--%>
-<%--                                                                <option>Secretaria</option>--%>
-<%--                                                                <option>Investigacion</option>--%>
-<%--                                                                <option>Otro</option>--%>
-<%--                                                            </select>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-<%--                                            </div>--%>
-<%--                                            <button type="submit" name="end" class="btn next action-button">Finalizar</button>--%>
-<%--                                        </fieldset>--%>
+                                                <p>(*) Los campos son requeridos</p>
+                                                <button type="submit" name="end" class="btn next action-button">REGISTRAR</button>
+                                            </fieldset>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>
-                            </form:form>
                         </div>
                     </div>
                 </div>

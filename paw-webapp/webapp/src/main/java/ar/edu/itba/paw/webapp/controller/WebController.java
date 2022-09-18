@@ -147,16 +147,16 @@ public class WebController {
     }
 
      @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
-    public ModelAndView formEnterprise(@ModelAttribute("companyForm") final CompanyForm companyForm) {
+    public ModelAndView formEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
         return new ModelAndView("formenterprise");
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView createEnterprise(@Valid @ModelAttribute("companyForm") final CompanyForm companyForm, final BindingResult errors) {
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formEnterprise(companyForm);
+            return formEnterprise(enterpriseForm);
         }
-        final Enterprise e = es.create(companyForm.getCemail(), companyForm.getCname(), companyForm.getCpassword(), companyForm.getCcity(), 0, companyForm.getCdesc());
+        final Enterprise e = es.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), 0, enterpriseForm.getDescription());
         return new ModelAndView("redirect:/");
     }
 

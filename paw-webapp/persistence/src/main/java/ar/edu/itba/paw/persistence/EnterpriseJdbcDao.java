@@ -45,7 +45,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     }
 
     @Override
-    public Enterprise create(String email, String password, String name, String location, long categoryId_fk, String description) {
+    public Enterprise create(String email, String name, String password, String location, long categoryId_fk, String description) {
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
         values.put(EMAIL, email);
