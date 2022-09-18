@@ -127,6 +127,9 @@ public class WebController {
         if (errors.hasErrors()) {
             return formSkill(skillForm, userId);
         }
+        uss.addSkillToUser(skillForm.getLang(), us.findById(userId).get().getId());
+        uss.addSkillToUser(skillForm.getMore(), us.findById(userId).get().getId());
+        uss.addSkillToUser(skillForm.getSkill(), us.findById(userId).get().getId());
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
     }
 

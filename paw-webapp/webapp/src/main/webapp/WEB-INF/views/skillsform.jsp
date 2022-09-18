@@ -20,7 +20,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Script -->
   <script src="<c:url value="/assets/js/steps.js"/>"></script>
-  <title>Agrega tu perfil | ClonedIn</title>
+  <title>Agrega tus aptitudes | ClonedIn</title>
   <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
 <body>
@@ -41,8 +41,11 @@
                   <div class="form-card">
                   <h2 class="fs-title">Aptitudes</h2>
                     <form:input type="text" path="lang"  placeholder="Idiomas"/>
+                    <form:errors path="lang" cssClass="formError" element="p"/>
                     <form:input type="text" path="skill" placeholder="Habilidades"/>
+                    <form:errors path="skill" cssClass="formError" element="p"/>
                     <form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
+                    <form:errors path="more" cssClass="formError" element="p"/>
                   </div>
                     <button type="submit" name="end" class="btn action-button">Finalizar</button>
                   </fieldset>
