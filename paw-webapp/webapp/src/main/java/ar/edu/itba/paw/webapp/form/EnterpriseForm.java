@@ -32,8 +32,7 @@ public class EnterpriseForm {
     }
 
     public String getPassword() {
-        return "muydificil";
-//        return password;
+        return password;
     }
 
     public void setPassword(String password) {
@@ -41,8 +40,7 @@ public class EnterpriseForm {
     }
 
     public String getRepeatPassword() {
-        return "muydificil";
-//        return repeatPassword;
+        return repeatPassword;
     }
 
     public void setRepeatPassword(String repeatPassword) {
