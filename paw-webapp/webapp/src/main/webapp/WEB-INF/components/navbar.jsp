@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
     <head>
@@ -16,9 +17,16 @@
             </a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="/"/>">Descubrir Perfiles<span class="sr-only">(current)</span></a>
+                    <sec:authorize access="hasRole('ENTERPRISE')">
+                    <a class="nav-link" href="<c:url value="/"/>">DESCUBRIR PERFILES<span class="sr-only">(current)</span></a>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('USER')">
+<%--                        <a class="nav-link" href="<c:url value="/"/>">MI PERFIL<span class="sr-only">(current)</span></a>--%>
+                    </sec:authorize>
                 </li>
             </ul>
+            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">
+            <button type="button" class="btn btn-outline-success waves-effect" style="color: white; font-size:20px"><i class="bi bi-box-arrow-right"></i></button>
 <%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
 <%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
 <%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>
