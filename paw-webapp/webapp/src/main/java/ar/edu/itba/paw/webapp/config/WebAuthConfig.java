@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.MySimpleUrlAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                     .usernameParameter("email")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/", false)
+                    .successHandler(myAuthenticationSuccessHandler())
                     .loginPage("/login")
                 .and().rememberMe()
                     .rememberMeParameter("j_rememberme")
@@ -75,5 +77,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        return new MySimpleUrlAuthenticationSuccessHandler();
     }
 }

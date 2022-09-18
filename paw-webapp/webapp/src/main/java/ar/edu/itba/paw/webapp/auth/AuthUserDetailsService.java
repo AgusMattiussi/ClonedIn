@@ -52,9 +52,6 @@ public class AuthUserDetailsService implements UserDetailsService {
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        //TODO: Este rol para la empresa
-        //authorities.add(new SimpleGrantedAuthority("ROLE_ENTERPRISE"));
-
         return new AuthUser(user.getEmail(), user.getPassword(), authorities);
     }
     
@@ -66,7 +63,6 @@ public class AuthUserDetailsService implements UserDetailsService {
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_ENTERPRISE"));
-
         return new AuthUser(enterprise.getEmail(), enterprise.getPassword(), authorities);
     }
 }

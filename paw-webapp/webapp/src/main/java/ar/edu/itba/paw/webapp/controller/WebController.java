@@ -95,8 +95,10 @@ public class WebController {
     @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEx(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
+            System.out.println("HOLA");
             return formEx(userForm, userId);
         }
+        System.out.println("HOLA5");
         ex.create(us.findById(userId).get().getId(), Date.valueOf(userForm.getDated()), Date.valueOf(userForm.getDateh()), userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
 
@@ -131,6 +133,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formSkill(userForm, userId);
         }
+        //use uss
         return new ModelAndView("redirect:/profile/" + us.findById(userId).get().getId());
 
     }
