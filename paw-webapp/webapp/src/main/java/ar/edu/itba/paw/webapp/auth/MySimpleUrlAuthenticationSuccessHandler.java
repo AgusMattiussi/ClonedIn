@@ -21,7 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class MySimpleUrlAuthenticationSuccessHandler
+        implements AuthenticationSuccessHandler {
 
     protected Log logger = LogFactory.getLog(this.getClass());
 
@@ -59,10 +60,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
 
     protected String determineTargetUrl(final Authentication authentication) {
-
-        Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/profile/{userId:[0-9]+}");
-        roleTargetUrlMap.put("ROLE_ENTERPRISE", "/");
+        String accountEmail = authentication.getName();
+        String redirectURL = "/";
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
