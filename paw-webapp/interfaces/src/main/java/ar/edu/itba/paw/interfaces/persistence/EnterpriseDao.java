@@ -12,6 +12,8 @@ public interface EnterpriseDao {
 
     Optional<Enterprise> findById(long enterpriseId);
 
+    boolean enterpriseExists(String email);
+
     /* TODO:
         - findByLocation
         - findByCategory

@@ -34,4 +34,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public Optional<Enterprise> findById(long enterpriseId) {
         return enterpriseDao.findById(enterpriseId);
     }
+
+    @Override
+    public boolean enterpriseExists(String email) {
+        return enterpriseDao.enterpriseExists(email);
+    }
 }

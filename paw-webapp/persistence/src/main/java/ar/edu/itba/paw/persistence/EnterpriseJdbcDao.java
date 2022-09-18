@@ -71,4 +71,9 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
         return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + ID + " = ?",
                 new Object[]{ enterpriseId }, ENTERPRISE_MAPPER).stream().findFirst();
     }
+
+    @Override
+    public boolean enterpriseExists(String email) {
+        return findByEmail(email).isPresent();
+    }
 }
