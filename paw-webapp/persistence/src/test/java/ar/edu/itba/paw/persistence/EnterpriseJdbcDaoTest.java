@@ -59,7 +59,7 @@ public class EnterpriseJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION);
+        final Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION);
 
         Assert.assertNotNull(newEnterprise);
         Assert.assertEquals(TEST_EMAIL, newEnterprise.getEmail());
