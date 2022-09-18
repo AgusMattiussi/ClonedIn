@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Education;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface EducationDao {
@@ -11,5 +12,5 @@ public interface EducationDao {
 
     Optional<Education> findById(long educationID);
 
-    Optional<Education> findByUserId(long userID);
+    List<Education> findByUserId(long userID);
 }

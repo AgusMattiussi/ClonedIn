@@ -69,14 +69,14 @@
                         </div>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <c:if test="${education != null}">
+                       <%-- <c:if test="${education != null}">
                             <c:out value="${education.title}"/>,
                             <c:out value="${education.institutionName}"/>
                             <c:out value="${education.description}"/>
                         </c:if>
                         <c:if test="${education == null}">
                             <p class="card-text"><b>Educacion no especificada</b></p>
-                        </c:if>
+                        </c:if>--%>
                     </div>
                 </div>
                 </div>

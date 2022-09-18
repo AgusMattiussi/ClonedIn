@@ -74,7 +74,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("experiences", experienceService.findByUserId(userId));
-        mav.addObject("education", educationService.findByUserId(userId).orElse(null));
+        mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
         return mav;
     }
