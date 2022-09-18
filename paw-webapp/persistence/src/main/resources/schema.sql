@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS ofertaLaboral (
     idEmpresa INTEGER,
     posicion TEXT NOT NULL,
     descripcion TEXT,
-    salario DECIMAL(12,2), /* Equivalente a DECIMAL(10,2). Limite: 999.999.999,99 */
+    salario DECIMAL(12,2),
     idRubro INTEGER,
     FOREIGN KEY (idEmpresa) REFERENCES empresa ON DELETE CASCADE,
     FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL

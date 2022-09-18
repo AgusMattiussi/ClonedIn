@@ -48,8 +48,8 @@ public class UserSkillJdbcDao implements UserSkillDao {
     @Override
     public boolean addSkillToUser(long skillID, long userID) {
         final Map<String, Object> values = new HashMap<>();
-        values.put(SKILL_ID, skillID);
         values.put(USER_ID, userID);
+        values.put(SKILL_ID, skillID);
 
         return insert.execute(values) > 0;
     }

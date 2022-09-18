@@ -13,6 +13,9 @@ INSERT INTO contactado (idEmpresa, idUsuario)
     FROM empresa e, usuario u
     WHERE e.email = 'empresaurio@gmail.com'
         AND u.email = 'johnlennon@gmail.com';
--- INSERT INTO experienca (idEmpresa, fechaDesde, fechaHasta, empresa, posicion, descipcion) VALUES (1, '2010-10-10', null, null, 'CEO', null);
-
-
+INSERT INTO ofertaLaboral (idEmpresa, posicion, descripcion, salario, idRubro)
+    SELECT e.id, 'testPosition', 'testdescription', 1000.99, r.id
+    FROM empresa e, rubro r
+    WHERE e.email = 'empresaurio@gmail.com'
+        AND r.nombre = 'testCategory';
+-- INSERT INTO experiencia (idEmpresa, fechaDesde, fechaHasta, empresa, posicion, descipcion) VALUES (1, '2010-10-10', null, null, 'CEO', null);
