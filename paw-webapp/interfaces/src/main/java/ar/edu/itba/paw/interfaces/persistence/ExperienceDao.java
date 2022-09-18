@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Experience;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface ExperienceDao {
@@ -10,5 +11,5 @@ public interface ExperienceDao {
 
     Optional<Experience> findById(long experienceId);
 
-    Optional<Experience> findByUserId(long userID);
+    List<Experience> findByUserId(long userID);
 }

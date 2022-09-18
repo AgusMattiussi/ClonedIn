@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -67,8 +68,8 @@ public class ExperienceJdbcDao implements ExperienceDao {
     }
 
     @Override
-    public Optional<Experience> findByUserId(long userID) {
+    public List<Experience> findByUserId(long userID) {
         return template.query("SELECT * FROM " +  EXPERIENCE_TABLE + " WHERE " + USER_ID + " = ?",
-                new Object[]{ userID }, EXPERIENCE_MAPPER).stream().findFirst();
+                new Object[]{ userID }, EXPERIENCE_MAPPER);
     }
 }

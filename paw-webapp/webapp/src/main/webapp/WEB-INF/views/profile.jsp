@@ -31,9 +31,10 @@
                         <h5 class="card-title">Experiencia</h5>
                     </div>
                     <div class="card-footer bg-white text-left">
-                        <p class="card-text">Trabaje en <c:out value="${experience.enterpriseName}"/>,
+                        <!-- cambiar a un forEach de experienceS -->
+                        <%--<p class="card-text">Trabaje en <c:out value="${experience.enterpriseName}"/>,
                             como <c:out value="${experience.position}"/>. <c:out value="${experience.description}"/>
-                        </p>
+                        </p>--%>
                     </div>
                 </div>
                 </div>

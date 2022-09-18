@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -95,5 +96,19 @@ public class ExperienceJdbcDaoTest {
         Assert.assertEquals(EXISTING_ENTERPRISE_NAME, newExperience.get().getEnterpriseName());
         Assert.assertEquals(EXISTING_POSITION, newExperience.get().getPosition());
         Assert.assertEquals(EXISTING_DESCRIPTION, newExperience.get().getDescription());
+    }
+
+    @Test
+    public void testFindByUserID() {
+        final List<Experience> experienceList = dao.findByUserId(testUser.getId());
+
+        Assert.assertNotNull(experienceList);
+        Assert.assertEquals(1, experienceList.size());
+        Assert.assertEquals(EXISTING_USER_ID, experienceList.get(0).getUserId());
+        Assert.assertEquals(EXISTING_FROM, experienceList.get(0).getFrom());
+        Assert.assertNull(experienceList.get(0).getTo());
+        Assert.assertEquals(EXISTING_ENTERPRISE_NAME, experienceList.get(0).getEnterpriseName());
+        Assert.assertEquals(EXISTING_POSITION, experienceList.get(0).getPosition());
+        Assert.assertEquals(EXISTING_DESCRIPTION, experienceList.get(0).getDescription());
     }
 }

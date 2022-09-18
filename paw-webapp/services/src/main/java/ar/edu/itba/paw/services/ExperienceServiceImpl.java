@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -31,7 +32,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public Optional<Experience> findByUserId(long userID) {
+    public List<Experience> findByUserId(long userID) {
         return experienceDao.findByUserId(userID);
     }
 }

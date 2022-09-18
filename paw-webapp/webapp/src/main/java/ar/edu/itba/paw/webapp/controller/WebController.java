@@ -69,7 +69,7 @@ public class WebController {
     public ModelAndView profile(@PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("experience", experienceService.findByUserId(userId).orElseThrow(ExperienceNotFoundException::new));
+        mav.addObject("experiences", experienceService.findByUserId(userId));
         return mav;
     }
 
