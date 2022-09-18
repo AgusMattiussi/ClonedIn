@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -22,6 +26,9 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     protected Log logger = LogFactory.getLog(this.getClass());
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -50,6 +57,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
+
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
@@ -57,10 +65,20 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         roleTargetUrlMap.put("ROLE_ENTERPRISE", "/");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        // Deberia haber solo una authority
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            if(roleTargetUrlMap.containsKey(authorityName)) {
-                return roleTargetUrlMap.get(authorityName);
+
+            switch (authorityName) {
+                case "ROLE_USER":
+                    //TODO: Cambiar por getIdForEmail()
+                    User user = userService.findByEmail(accountEmail).orElseThrow(UserNotFoundException::new);
+                    return redirectURL + "profile/" + user.getId();
+                case "ROLE_ENTERPRISE":
+                    return redirectURL;
+                default:
+                    return redirectURL;
             }
         }
 
@@ -74,6 +92,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
+
+
 
 }
 
