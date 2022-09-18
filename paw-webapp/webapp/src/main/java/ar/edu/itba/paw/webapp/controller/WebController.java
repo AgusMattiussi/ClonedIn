@@ -4,11 +4,8 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 
-import ar.edu.itba.paw.webapp.exceptions.ExperienceNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.CompanyForm;
-import ar.edu.itba.paw.webapp.form.ContactForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -20,6 +17,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Date;
 
 @Controller
 public class WebController {
@@ -30,16 +28,22 @@ public class WebController {
     private final SkillService skillService;
     private final EmailService emailService;
     private final ExperienceService experienceService;
+    private final EducationService educationService;
+    private final UserSkillService userSkillService;
 
     private static final int itemsPerPage = 8;
 
     @Autowired
-    public WebController(final UserService userService, final ExperienceService experienceService, final EnterpriseService enterpriseService, final CategoryService categoryService, final SkillService skillService, final EmailService emailService){
+    public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
+                         final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
+                         final EmailService emailService){
         this.userService = userService;
-        this.experienceService = experienceService;
         this.enterpriseService = enterpriseService;
+        this.experienceService = experienceService;
+        this.educationService = educationService;
         this.categoryService = categoryService;
         this.skillService = skillService;
+        this.userSkillService = userSkillService;
         this.emailService = emailService;
     }
 
@@ -70,6 +74,8 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("experiences", experienceService.findByUserId(userId));
+        mav.addObject("education", educationService.findByUserId(userId).orElse(null));
+        mav.addObject("skills", userSkillService.getSkillsForUser(userId));
         return mav;
     }
 
@@ -83,10 +89,60 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(),  "Institucion: " +  userForm.getCollege() + " - Titulo: " + userForm.getDegree());
-        experienceService.create(u.getId(), null,null, userForm.getCompany(), userForm.getJob(), userForm.getJobdesc());
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
         return new ModelAndView("redirect:/profile/" + u.getId());
+    }
 
+    @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEx(@ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("experienceform");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEx/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createEx(@Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEx(experienceForm, userId);
+        }
+        experienceService.create(userService.findById(userId).get().getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+
+    }
+
+    @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEd(@ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("educationform");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEd/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createEd(@Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEd(educationForm, userId);
+        }
+        educationService.add(userService.findById(userId).get().getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+
+    }
+
+    @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formSkill(@ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("skillsform");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createSkill(@Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formSkill(skillForm, userId);
+        }
+        userSkillService.addSkillToUser(skillForm.getLang(), userService.findById(userId).get().getId());
+        userSkillService.addSkillToUser(skillForm.getMore(), userService.findById(userId).get().getId());
+        userSkillService.addSkillToUser(skillForm.getSkill(), userService.findById(userId).get().getId());
+        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
     }
 
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
@@ -116,17 +172,22 @@ public class WebController {
     }
 
      @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
-    public ModelAndView formEnterprise(@ModelAttribute("companyForm") final CompanyForm companyForm) {
+    public ModelAndView formEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
         return new ModelAndView("formenterprise");
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView createEnterprise(@Valid @ModelAttribute("companyForm") final CompanyForm companyForm, final BindingResult errors) {
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formEnterprise(companyForm);
+            return formEnterprise(enterpriseForm);
         }
-        final Enterprise e = enterpriseService.create(companyForm.getCemail(), companyForm.getCname(), companyForm.getCpassword(), companyForm.getCcity(), 0, companyForm.getCdesc());
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), 0, enterpriseForm.getDescription());
         return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/login", method = { RequestMethod.GET })
+    public ModelAndView login(@ModelAttribute("loginForm") final UserForm userForm) {
+        return new ModelAndView("login");
     }
 
     @ExceptionHandler(UserNotFoundException.class)

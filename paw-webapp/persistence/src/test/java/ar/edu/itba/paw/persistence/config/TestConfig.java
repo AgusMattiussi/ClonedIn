@@ -12,10 +12,7 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
-
 import javax.sql.DataSource;
-
-
 
 @ComponentScan({ "ar.edu.itba.paw.persistence" })
 @Configuration
@@ -29,7 +26,6 @@ public class TestConfig {
     private Resource initSql;
     @Value("classpath:category.sql")
     private Resource categorySql;
-
 
     @Bean
     public DataSource dataSource(){
@@ -69,4 +65,20 @@ public class TestConfig {
 
         return dbp;
     }
+
+    /*@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence charSequence) {
+                return charSequence.toString();
+            }
+
+            @Override
+            public boolean matches(CharSequence charSequence, String s) {
+                return s.equals(charSequence.toString());
+            }
+        };
+    }*/
+
 }

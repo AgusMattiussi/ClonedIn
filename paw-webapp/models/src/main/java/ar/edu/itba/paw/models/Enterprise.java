@@ -35,9 +35,9 @@ public class Enterprise {
         return email;
     }
 
-//    public String getPassword() {
-//        return password;
-//    }
+    public String getPassword() {
+        return password;
+    }
 
     public String getLocation() {
         return location;

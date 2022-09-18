@@ -6,24 +6,22 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserForm {
-    @Size(min = 6, max = 20)
+public class EnterpriseForm {
+    @Size(min = 6, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
-    @Size(min = 6, max = 20)
+    @Size(min = 8)
     private String password;
-    @Size(min = 6, max = 20)
+    @Size(min = 8)
     private String repeatPassword;
-    @Email
     @NotEmpty
+    @Email
     private String email;
     @NotEmpty
     private String name;
     private String city;
-    private String position;
-    @NotEmpty
-    private String desc;
-    private String category;
+
+    private String description;
 
     public String getUsername() {
         return username;
@@ -35,7 +33,7 @@ public class UserForm {
 
     public String getPassword() {
         return "muydificil";
-        //return password;
+//        return password;
     }
 
     public void setPassword(String password) {
@@ -43,7 +41,8 @@ public class UserForm {
     }
 
     public String getRepeatPassword() {
-        return repeatPassword;
+        return "muydificil";
+//        return repeatPassword;
     }
 
     public void setRepeatPassword(String repeatPassword) {
@@ -74,27 +73,11 @@ public class UserForm {
         this.city = city;
     }
 
-    public String getPosition() {
-        return position;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

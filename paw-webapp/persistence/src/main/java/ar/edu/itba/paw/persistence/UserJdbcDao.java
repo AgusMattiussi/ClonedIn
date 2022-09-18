@@ -117,4 +117,9 @@ public class UserJdbcDao implements UserDao {
         return template.query("SELECT * FROM " +  USER_TABLE + " OFFSET ? LIMIT ? ",
                 new Object[]{ pageSize * page, pageSize }, USER_MAPPER);
     }
+
+    @Override
+    public void changePassword(String email, String password) {
+        template.update("UPDATE " + USER_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+    }
 }

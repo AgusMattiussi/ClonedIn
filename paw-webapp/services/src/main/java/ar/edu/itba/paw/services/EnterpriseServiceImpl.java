@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.models.Enterprise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,8 +17,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final EnterpriseDao enterpriseDao;
 
     @Autowired
-    public EnterpriseServiceImpl(EnterpriseDao enterpriseDao) {
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public EnterpriseServiceImpl(EnterpriseDao enterpriseDao, PasswordEncoder passwordEncoder) {
         this.enterpriseDao = enterpriseDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -38,5 +43,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public boolean enterpriseExists(String email) {
         return enterpriseDao.enterpriseExists(email);
+    }
+
+    @Override
+    public void changePassword(String email, String password) {
+        enterpriseDao.changePassword(email, passwordEncoder.encode(password));
     }
 }
