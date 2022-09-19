@@ -57,7 +57,8 @@
                 <div class="d-flex justify-content-between mt-2">
                     <h3>Descubrir Perfiles</h3>
                 </div>
-                <div class="jumbotron jumbotron-fluid" style="padding: 0">
+                <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+                    <div class="container">
                         <div class="card-deck justify-content-center mt-2 pt-2" >
                             <c:forEach var="us" items="${users}">
                                 <div class="col-auto mb-3">
@@ -106,6 +107,7 @@
                                 </li>
                             </ul>
                         </nav>
+                    </div>
                 </div>
             </div>
         </div>
