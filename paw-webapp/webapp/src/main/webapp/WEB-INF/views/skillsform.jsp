@@ -40,6 +40,9 @@
                     <form:errors path="more" cssClass="formError" element="p"/>
                   </div>
                     <p><spring:message code="expform_requiredmsg"/></p>
+                    <a href="<c:url value="/profile/${user.id}"/>">
+                      <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
+                    </a>
                     <button type="submit" name="end" class="btn action-button"><spring:message code="skillsform_buttonmsg"/></button>
                   </fieldset>
                 </form:form>

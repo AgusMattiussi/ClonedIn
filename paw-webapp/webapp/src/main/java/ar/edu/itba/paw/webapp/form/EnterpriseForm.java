@@ -24,7 +24,7 @@ public class EnterpriseForm {
     @NotEmpty
     private String name;
     private String city;
-
+    @NotEmpty
     private String description;
 
     public String getUsername() {

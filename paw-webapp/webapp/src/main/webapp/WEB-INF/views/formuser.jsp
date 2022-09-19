@@ -67,6 +67,9 @@
 <%--                          </div>--%>
                         </div>
                         <p><spring:message code="register_requiredmsg"/></p>
+                        <a href="<c:url value="/login"/>">
+                          <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
+                        </a>
                         <button type="submit" name="end" class="btn action-button"><spring:message code="register_buttonmsg"/></button>
                       </fieldset>
                       </form:form>
