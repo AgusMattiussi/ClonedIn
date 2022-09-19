@@ -42,7 +42,7 @@
             <a href="<c:url value="/logout"/>">
                 <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
                     <i class="bi bi-box-arrow-right pr-2"></i>
-                    CERRAR SESION
+                    <spring:message code="navbar_session"/>
                 </button>
             </a>
 <%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
