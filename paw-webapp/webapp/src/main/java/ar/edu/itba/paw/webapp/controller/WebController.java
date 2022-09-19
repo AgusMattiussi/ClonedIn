@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,8 @@ public class WebController {
 
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
+
+    private long loggedUserID;
 
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
@@ -66,13 +67,12 @@ public class WebController {
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
-        long userID;
         if(loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            userID = user.getId();
+            loggedUserID = user.getId();
         } else {
             Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            userID = enterprise.getId();
+            loggedUserID = enterprise.getId();
         }
 
         mav.addObject("users", usersList);
@@ -80,7 +80,7 @@ public class WebController {
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        mav.addObject("loggedUserID", userID);
+        mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
 
@@ -97,6 +97,7 @@ public class WebController {
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
+        mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
 
@@ -105,6 +106,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
         mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
 
@@ -207,8 +209,12 @@ public class WebController {
     public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-        return mav;
 
+//        System.out.println("\n\n\n\n\n\n" + jobOfferService.findByEnterpriseId(userId) + "\n\n\n\n\n\n");
+
+        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID));
+        mav.addObject("loggedUserID", loggedUserID);
+        return mav;
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
@@ -216,8 +222,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return contactForm(form, userId);
         }
-
-        long jobOfferId = 2;
+        long jobOfferId = form.getCategory();
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
 
         Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
@@ -226,15 +231,13 @@ public class WebController {
         final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
         mailMap.put(EmailService.USERNAME_FIELD, user.getName());
-        /*mailMap.put(EmailService.MESSAGE_FIELD, form.getMessage());
-        mailMap.put(EmailService.CONTACT_INFO_FIELD, form.getContactInfo());*/
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
         mailMap.put("enterpriseName", enterprise.getName());
         mailMap.put("enterpriseEmail", enterprise.getEmail());
+        mailMap.put("message", form.getMessage());
         String subject = "Oferta laboral de " + enterprise.getName();
 
-//        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
 
         return new ModelAndView("redirect:/");

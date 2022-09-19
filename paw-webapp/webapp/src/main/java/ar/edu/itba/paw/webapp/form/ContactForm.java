@@ -4,12 +4,14 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class ContactForm {
-    @NotEmpty
+//    @NotEmpty
     private String subject;
-    @NotEmpty
+//    @NotEmpty
     private String message;
-    @NotEmpty
+//    @NotEmpty
     private String contactInfo;
+//    @NotEmpty
+    private long category;
 
     public String getSubject() {
         return subject;
@@ -33,5 +35,13 @@ public class ContactForm {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public long getCategory() {
+        return category;
+    }
+
+    public void setCategory(long category) {
+        this.category = category;
     }
 }

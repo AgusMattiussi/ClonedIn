@@ -9,7 +9,9 @@
         <title>ClonedIn</title>
     </head>
     <body>
-        <jsp:include page="../components/navbar.jsp"/>
+        <jsp:include page="../components/navbar.jsp">
+            <jsp:param name="id" value="${loggedUserID}" />
+        </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
                     <h5 class="ml-2 mt-2"><spring:message code="index_filter"/></h5>
