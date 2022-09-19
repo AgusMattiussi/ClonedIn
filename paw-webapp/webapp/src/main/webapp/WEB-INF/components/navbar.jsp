@@ -13,38 +13,55 @@
     <body>
     <nav class="navbar navbar-dark mb-auto nav-fill w-100" style="background-color: #04704C; font-size: large;">
         <div class="container-fluid">
+            <div class="d-flex">
             <sec:authorize access="hasRole('ENTERPRISE')">
-            <a class="navbar-brand" href="<c:url value="/"/>">
-                <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
-            </a>
+                <a class="navbar-brand" href="<c:url value="/"/>">
+                    <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
+                </a>
             </sec:authorize>
+
             <sec:authorize access="hasRole('USER')">
                 <a class="navbar-brand" href="<c:url value="/profile/${param.id}"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
                 </a>
             </sec:authorize>
-            <ul class="navbar-nav mr-auto">
-                <sec:authorize access="hasRole('ENTERPRISE')">
-                <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="/"/>"><spring:message code="navbar_profiles"/><span class="sr-only">(current)</span></a>
-                </li>
-                    <li class="nav-item active">
-                    <a class="nav-link" href="<c:url value="/profileE/${param.id}"/>"><spring:message code="navbar_myprofile"/><span class="sr-only">(current)</span></a>
-                    </li>
-                </sec:authorize>
-                <sec:authorize access="hasRole('USER')">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="<c:url value="/profile/${param.id}"/>"><spring:message code="navbar_myprofile"/><span class="sr-only">(current)</span></a>
-                </li>
-                </sec:authorize>
-            </ul>
+
+            <sec:authorize access="hasRole('ENTERPRISE')">
+                <div class="d-flex">
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/"/>">
+                            <spring:message code="navbar_profiles"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/profileE/${param.id}"/>">
+                            <spring:message code="navbar_myprofile"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                </div>
+            </sec:authorize>
+
+            <sec:authorize access="hasRole('USER')">
+                <div class="d-flex">
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/profile/${param.id}"/>">
+                            <spring:message code="navbar_myprofile"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                </div>
+            </sec:authorize>
+            </div>
 <%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>
-            <a href="<c:url value="/logout"/>">
-                <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
-                    <i class="bi bi-box-arrow-right pr-2"></i>
-                    CERRAR SESION
-                </button>
-            </a>
+
+                    <a href="<c:url value="/logout"/>">
+                        <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
+                            <i class="bi bi-box-arrow-right pr-2"></i>
+                            CERRAR SESION
+                        </button>
+                    </a>
 <%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
 <%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
 <%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>
