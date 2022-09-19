@@ -38,10 +38,10 @@ public class UserSkillJdbcDao implements UserSkillDao {
 
     @Override
     public boolean addSkillToUser(String skillDescription, long userID) {
-        Optional<Skill> skill = skillDao.findByDescription(skillDescription);
-        //Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-        if(skill.isPresent())
-            return addSkillToUser(skill.get().getId(), userID);
+        // Optional<Skill> skill = skillDao.findByDescription(skillDescription);
+        Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
+        if(skill != null)
+            return addSkillToUser(skill.getId(), userID);
         return false;
     }
 

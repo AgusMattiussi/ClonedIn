@@ -87,17 +87,15 @@ public class UserSkillJdbcDaoTest {
 
     @Test
     public void addSkillToUserUsingIDTest() {
-        final User user = userDao.create(TEST_EMAIL,
-                TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME,
-                TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final Skill skill = skillDao.create(TEST_SKILL);
+        final User user = userDao.findByEmail("johnlennon@gmail.com").get();
+        final Skill skill = skillDao.create("aaaaa");
 
         final boolean added = userSkillDao.addSkillToUser(skill.getId(), user.getId());
         final List<Skill> skillList = userSkillDao.getSkillsForUser(user.getId());
         final List<User> userList = userSkillDao.getUsersWithSkill(skill.getId());
 
         Assert.assertTrue(added);
-        Assert.assertEquals(1, skillList.size());
+        Assert.assertEquals(2, skillList.size());
         Assert.assertTrue(skillList.contains(skill));
         Assert.assertEquals(1, userList.size());
         Assert.assertTrue(userList.contains(user));
@@ -106,17 +104,15 @@ public class UserSkillJdbcDaoTest {
     @Test
     public void addSkillToUserUsingDescriptionTest() {
         //JdbcTestUtils.deleteFromTables(jdbctemplate, USER_SKILL_TABLE);
-        final User user = userDao.create(TEST_EMAIL + "2",
-                TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME,
-                TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final Skill skill = skillDao.create(TEST_SKILL + "2");
+        final User user = userDao.findByEmail("johnlennon@gmail.com").get();
+        final Skill skill = skillDao.create("bbbbb");
 
         final boolean added = userSkillDao.addSkillToUser(skill.getDescription(), user.getId());
         final List<Skill> skillList = userSkillDao.getSkillsForUser(user.getId());
         final List<User> userList = userSkillDao.getUsersWithSkill(skill.getDescription());
 
         Assert.assertTrue(added);
-        Assert.assertEquals(1, skillList.size());
+        Assert.assertEquals(2, skillList.size());
         Assert.assertTrue(skillList.contains(skill));
         Assert.assertEquals(1, userList.size());
         Assert.assertTrue(userList.contains(user));

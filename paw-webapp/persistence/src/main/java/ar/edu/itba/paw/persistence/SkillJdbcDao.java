@@ -62,7 +62,10 @@ public class SkillJdbcDao implements SkillDao {
     @Override
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);
-        return optSkill.orElse(create(description));
+
+        if(optSkill.isPresent())
+            return optSkill.get();
+        return create(description);
     }
 
     @Override
