@@ -117,8 +117,9 @@ public class WebController {
         if (errors.hasErrors()) {
             return formEx(experienceForm, userId);
         }
-        experienceService.create(userService.findById(userId).get().getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
-        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        experienceService.create(user.getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+        return new ModelAndView("redirect:/profile/" + user.getId());
 
     }
 
@@ -134,8 +135,10 @@ public class WebController {
         if (errors.hasErrors()) {
             return formEd(educationForm, userId);
         }
-        educationService.add(userService.findById(userId).get().getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
-        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        educationService.add(user.getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        return new ModelAndView("redirect:/profile/" + user.getId());
 
     }
 
@@ -151,10 +154,12 @@ public class WebController {
         if (errors.hasErrors()) {
             return formSkill(skillForm, userId);
         }
-        userSkillService.addSkillToUser(skillForm.getLang(), userService.findById(userId).get().getId());
-        userSkillService.addSkillToUser(skillForm.getMore(), userService.findById(userId).get().getId());
-        userSkillService.addSkillToUser(skillForm.getSkill(), userService.findById(userId).get().getId());
-        return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
+        userSkillService.addSkillToUser(skillForm.getMore(), user.getId());
+        userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+        return new ModelAndView("redirect:/profile/" + user.getId());
     }
 
     @RequestMapping(value = "/createJO/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
@@ -197,7 +202,6 @@ public class WebController {
 
 //        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
         emailService.sendEmail(user.getEmail(), form.getSubject(), CONTACT_TEMPLATE, mailMap);
-
 
         return new ModelAndView("redirect:/");
     }
