@@ -31,20 +31,16 @@
                       <h2 class="fs-title">Educacion</h2>
                       <form:input type="text" path="college" placeholder="Institución"/>
                       <form:input type="text" path="degree" placeholder="Titulo"/>
-                      <div class="row">
-                        <div class="col-4">
-                          <label class="startDate">Desde</label>
-                        </div>
-                        <div class="col-8">
+                      <div class="d-flex">
+                        <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px">Desde</label>
+                        <div style="margin-left: 10px">
                           <form:input type="text" path="dateFrom" placeholder="YYYY-MM-DD"/>
-                          <form:errors path="dateTo" cssClass="formError" element="p"/>
+                          <form:errors path="dateFrom" cssClass="formError" element="p"/>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-4">
-                          <label class="endDate">Hasta</label>
-                        </div>
-                        <div class="col-8">
+                      <div class="d-flex">
+                        <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px">Hasta</label>
+                        <div style="margin-left: 10px">
                           <form:input type="text" path="dateTo" placeholder="YYYY-MM-DD"/>
                           <form:errors path="dateTo" cssClass="formError" element="p"/>
                         </div>

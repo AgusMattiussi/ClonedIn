@@ -30,33 +30,26 @@
                     <div class="form-card">
                       <h2 class="fs-title">Experiencia</h2>
                       <form:input type="text" path="company" placeholder="Empresa"/>
+                      <form:errors path="company" cssClass="formError" element="p"/>
                       <form:input type="text" path="job" placeholder="Puesto"/>
+                      <form:errors path="job" cssClass="formError" element="p"/>
                       <form:input type="text" path="jobDesc" placeholder="Descripcion"/>
-                      <div class="row">
-                        <div class="col-4">
-                          <label class="startDate">Desde</label>
-                        </div>
-                        <div class="col-8">
+                      <form:errors path="jobDesc" cssClass="formError" element="p"/>
+                      <div class="d-flex">
+                        <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px">Desde</label>
+                        <div style="margin-left: 10px">
                           <form:input type="text" path="dateFrom" placeholder="YYYY-MM-DD"/>
+                          <form:errors path="dateFrom" cssClass="formError" element="p"/>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-4">
-                          <label class="endDate">Hasta</label>
-                        </div>
-                        <div class="col-8">
+                      <div class="d-flex">
+                        <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px">Hasta</label>
+                        <div style="margin-left: 10px">
                           <form:input type="text" path="dateTo" placeholder="YYYY-MM-DD"/>
+                          <form:errors path="dateTo" cssClass="formError" element="p"/>
                         </div>
                       </div>
                     </div>
-                  <!--<fieldset>
-                    <div class="form-card">
-                      <h2 class="fs-title">Aptitudes</h2>
-                      <//form:input type="text" path="lang"  placeholder="Idiomas"/>
-                      <//form:input type="text" path="hability"  placeholder="Habilidades"/>
-                      <//form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
-                    </div>
-                    <button type="button" name="previous" class="btn previous action-button-previous">Volver</button>-->
                     <button type="submit" name="end" class="btn action-button">Finalizar</button>
                   </fieldset>
                 </form:form>
