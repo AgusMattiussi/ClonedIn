@@ -32,6 +32,7 @@ public class WebController {
     private final UserSkillService userSkillService;
 
     private static final int itemsPerPage = 8;
+    private static final String CONTACT_TEMPLATE = "contactEmail.html";
 
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
@@ -152,6 +153,7 @@ public class WebController {
         return mav;
 
     }
+
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(@Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -159,13 +161,14 @@ public class WebController {
         }
 
         final Map<String, Object> mailMap = new HashMap<>();
+        final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        mailMap.put("username", userService.findById(userId).get().getName());
-        mailMap.put("message", form.getMessage());
-        mailMap.put("contactInfo", form.getContactInfo());
+        mailMap.put(EmailService.USERNAME_FIELD, user.getName());
+        mailMap.put(EmailService.MESSAGE_FIELD, form.getMessage());
+        mailMap.put(EmailService.CONTACT_INFO_FIELD, form.getContactInfo());
 
 //        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
-        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(),"contactEmail.html", mailMap);
+        emailService.sendEmail(user.getEmail(), form.getSubject(), CONTACT_TEMPLATE, mailMap);
 
 
         return new ModelAndView("redirect:/");
