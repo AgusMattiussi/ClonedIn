@@ -31,13 +31,15 @@ public class WebController {
     private final EducationService educationService;
     private final UserSkillService userSkillService;
 
+    private final JobOfferService jobOfferService;
+
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
 
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
-                         final EmailService emailService){
+                         final EmailService emailService, JobOfferService jobOfferService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -46,6 +48,7 @@ public class WebController {
         this.skillService = skillService;
         this.userSkillService = userSkillService;
         this.emailService = emailService;
+        this.jobOfferService = jobOfferService;
     }
 
     @RequestMapping("/")
@@ -77,6 +80,14 @@ public class WebController {
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
+        return mav;
+    }
+
+    @RequestMapping("/profileE/{enterpriseId:[0-9]+}")
+    public ModelAndView profileEnterprise(@PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("profileEnterprise");
+        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
         return mav;
     }
 
@@ -144,6 +155,23 @@ public class WebController {
         userSkillService.addSkillToUser(skillForm.getMore(), userService.findById(userId).get().getId());
         userSkillService.addSkillToUser(skillForm.getSkill(), userService.findById(userId).get().getId());
         return new ModelAndView("redirect:/profile/" + userService.findById(userId).get().getId());
+    }
+
+    @RequestMapping(value = "/createJO/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formJO(@ModelAttribute("jobForm") final JOForm joForm, @PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("jobofferform");
+        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @RequestMapping(value = "/createJO/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView createJO(@Valid @ModelAttribute("jobForm") final JOForm joForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
+        if (errors.hasErrors()) {
+            return formJO(joForm, enterpriseId);
+        }
+        jobOfferService.create(enterpriseService.findById(enterpriseId).get().getId(), 0, joForm.getJob(), joForm.getJobdesc(), joForm.getSalary());
+        return new ModelAndView("redirect:/profile/" + userService.findById(enterpriseId).get().getId());
+
     }
 
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })

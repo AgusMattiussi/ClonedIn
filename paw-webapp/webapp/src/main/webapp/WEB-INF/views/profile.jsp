@@ -9,7 +9,9 @@
         <title><c:out value="${user.name}"/> | ClonedIn</title>
     </head>
     <body>
-    <jsp:include page="../components/navbar.jsp"/>
+    <jsp:include page="../components/navbar.jsp">
+        <jsp:param name="id" value="${user.id}" />
+    </jsp:include>
     <div class="d-flex justify-content-between mt-2">
     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
         <div class="row">
@@ -24,6 +26,7 @@
                     </div>
                     <div class="card-footer bg-white text-center">
                         <p class="card-text"><c:out value="${user.currentPosition}"/></p>
+                        <p class="card-text"><c:out value="${user.location}"/></p>
                         <p class="card-text"><c:out value="${user.description}"/></p>
                     </div>
                 </div>
@@ -50,6 +53,8 @@
                                     <c:forEach items="${experiences}" var="experience">
                                         <c:out value="${experience.enterpriseName}"/>,
                                         <c:out value="${experience.position}"/>
+                                        <c:out value="${experience.from}"/>
+                                        <c:out value="${experience.to}"/>
                                         <c:out value="${experience.description}"/>
                                     </c:forEach>
                                 </c:when>
@@ -81,6 +86,8 @@
                                    <c:forEach items="${educations}" var="education">
                                        <c:out value="${education.title}"/>,
                                        <c:out value="${education.institutionName}"/>
+                                       <c:out value="${education.dateFrom}"/>
+                                       <c:out value="${education.dateTo}"/>
                                        <c:out value="${education.description}"/>
                                    </c:forEach>
                                </c:when>
