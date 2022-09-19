@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
   <!-- Script -->
   <script src="<c:url value="/assets/js/steps.js"/>"></script>
-  <title>Agrega tus aptitudes | ClonedIn</title>
+  <title><spring:message code="skillsform_pagetitle"/></title>
   <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
 <body>
@@ -19,8 +19,11 @@
     <div class="row justify-content-center mt-0">
       <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-          <h2><strong>Agrega una experiencia</strong></h2>
-          <p>Asegurate de llenar todos los campos antes de avanzar</p>
+          <h2><strong><spring:message code="skillsform_title"/></strong></h2>
+          <p><spring:message code="skillsform_warning"/></p>
+          <spring:message code="skillsform_languages" var="languagesPlaceholder"/>
+          <spring:message code="skillsform_skills" var="skillsPlaceholder"/>
+          <spring:message code="skillsform_comments" var="commentsPlaceholder"/>
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
@@ -28,15 +31,16 @@
                 <form:form modelAttribute="skillForm" action="${postPath}" method="post">
                   <fieldset>
                   <div class="form-card">
-                  <h2 class="fs-title">Aptitudes</h2>
-                    <form:input type="text" path="lang"  placeholder="Idiomas"/>
+                  <h2 class="fs-title"><spring:message code="skillsform_subtitle"/></h2>
+                    <form:input type="text" path="lang"  placeholder="${languagesPlaceholder}"/>
                     <form:errors path="lang" cssClass="formError" element="p"/>
-                    <form:input type="text" path="skill" placeholder="Habilidades"/>
+                    <form:input type="text" path="skill" placeholder="${skillsPlaceholder}"/>
                     <form:errors path="skill" cssClass="formError" element="p"/>
-                    <form:input type="text" path="more"  placeholder="Comentarios Adicionales"/>
+                    <form:input type="text" path="more"  placeholder="${commentsPlaceholder}"/>
                     <form:errors path="more" cssClass="formError" element="p"/>
                   </div>
-                    <button type="submit" name="end" class="btn action-button">Finalizar</button>
+                    <p><spring:message code="expform_requiredmsg"/></p>
+                    <button type="submit" name="end" class="btn action-button"><spring:message code="skillsform_buttonmsg"/></button>
                   </fieldset>
                 </form:form>
               </div>

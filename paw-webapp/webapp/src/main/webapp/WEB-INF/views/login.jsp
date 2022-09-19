@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: SolChiSol
-  Date: 16/09/22
-  Time: 16:25
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -26,7 +19,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
-    <title>Login | ClonedIn</title>
+    <title><spring:message code="login_pagetitle"/></title>
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
 <body>
@@ -36,7 +29,9 @@
         <div class="row justify-content-center mt-0">
             <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                 <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-                    <h2><strong>Ingresá</strong></h2>
+                    <h2><strong><spring:message code="login_title"/></strong></h2>
+                    <spring:message code="login_mail" var="emailPlaceholder"/>
+                    <spring:message code="login_pass" var="passPlaceholder"/>
                     <div class="row">
                         <div class="col-md-12 mx-0">
                             <div id="msform">
@@ -44,9 +39,9 @@
                                 <form:form modelAttribute="loginForm" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
                                 <fieldset>
                                     <div class="form-card">
-                                        <form:input type="email" path="email" placeholder="Ingresá tu email"/>
+                                        <form:input type="email" path="email" placeholder="${emailPlaceholder}"/>
                                         <form:errors path="email" cssClass="formError" element="p"/>
-                                        <form:input type="password" path="password" placeholder="Ingresá tu contraseña"/>
+                                        <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
                                         <label>
 <%--                                           <form:checkbox path="remember_me" type="checkbox"/>--%>
@@ -54,18 +49,18 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <button type="submit" name="end" class="btn action-button">INGRESAR</button>
+                                        <button type="submit" name="end" class="btn action-button"><spring:message code="login_buttonmsg"/></button>
                                     </div>
                                     <div>
-                                        <p>Aun no tenes cuenta? Elegi tu tipo de usuario para registrarte</p>
+                                        <p><spring:message code="login_message"/></p>
                                         <div class="row">
                                             <div class="col">
                                                 <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-person large"></i></button></a>
-                                                <p>Registrarse como usuario buscando trabajo</p>
+                                                <p><spring:message code="login_user"/></p>
                                             </div>
                                             <div class="col">
                                                 <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-building large"></i></button></a>
-                                                <p>Registrarse como empresa reclutando</p>
+                                                <p><spring:message code="login_company"/></p>
                                             </div>
                                         </div>
                                     </div>

@@ -10,12 +10,12 @@ import javax.validation.constraints.Size;
 
 @StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
 public class EnterpriseForm {
-    @Size(min = 6, max = 100)
+    @Size(min = 6, max = 20)
     @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
-    @Size(min = 8)
+    @Size(min = 6, max = 20)
     private String password;
-    @Size(min = 8)
+    @Size(min = 6, max = 20)
     private String repeatPassword;
     @NotEmpty
     @Email
