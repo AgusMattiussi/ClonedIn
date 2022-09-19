@@ -12,6 +12,7 @@
     <body>
     <nav class="navbar navbar-dark mb-auto nav-fill w-100" style="background-color: #04704C; font-size: large;">
         <div class="container-fluid">
+            <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
             <sec:authorize access="hasRole('ENTERPRISE')">
                 <a class="navbar-brand" href="<c:url value="/"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
