@@ -175,9 +175,12 @@ public class WebController {
         }
 
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
-        userSkillService.addSkillToUser(skillForm.getMore(), user.getId());
-        userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+        if(!skillForm.getLang().isEmpty())
+            userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
+        if(!skillForm.getMore().isEmpty())
+            userSkillService.addSkillToUser(skillForm.getMore(), user.getId());
+        if(!skillForm.getSkill().isEmpty())
+            userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
         return new ModelAndView("redirect:/profile/" + user.getId());
     }
 
