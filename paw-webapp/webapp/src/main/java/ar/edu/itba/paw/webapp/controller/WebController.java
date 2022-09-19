@@ -165,19 +165,20 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createJO/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formJO(@ModelAttribute("jobForm") final JOForm joForm, @PathVariable("enterpriseId") final long enterpriseId) {
-        final ModelAndView mav = new ModelAndView("jobofferform");
+    public ModelAndView formJO(@ModelAttribute("joForm") final JOForm joForm, @PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("formjoboffer");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
 
     @RequestMapping(value = "/createJO/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createJO(@Valid @ModelAttribute("jobForm") final JOForm joForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView createJO(@Valid @ModelAttribute("joForm") final JOForm joForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {
             return formJO(joForm, enterpriseId);
         }
-        jobOfferService.create(enterpriseService.findById(enterpriseId).get().getId(), 0, joForm.getJob(), joForm.getJobdesc(), joForm.getSalary());
-        return new ModelAndView("redirect:/profile/" + userService.findById(enterpriseId).get().getId());
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        jobOfferService.create(enterprise.getId(), 0, joForm.getJobposition(), joForm.getJobdescription(), joForm.getSalary());
+        return new ModelAndView("redirect:/profileE/" + enterprise.getId());
 
     }
 

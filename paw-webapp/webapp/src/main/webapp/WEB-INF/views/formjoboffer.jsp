@@ -9,7 +9,7 @@
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
-    <title>Registrate | ClonedIn</title>
+    <title>Oferta de trabajo | ClonedIn</title>
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
@@ -24,26 +24,26 @@
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
-                                        <c:url value="/createJO" var="postPath"/>
+                                        <c:url value="/createJO/${enterprise.id}" var="postPath"/>
                                         <form:form modelAttribute="JOForm" action="${postPath}" method="post">
                                             <fieldset>
                                                 <div class="form-card">
-                                                    <h2 class="fs-title">Informacion Basica</h2>
-                                                        <form:input type="text" path="job" placeholder="Puesto"/>
-                                                        <form:errors path="job" cssClass="formError" element="p"/>
-                                                        <form:input type="text" path="jobdesc" placeholder="Descripcion"/>
-                                                    <form:errors path="jobdesc" cssClass="formError" element="p"/>
+                                                    <h2 class="fs-title">Oferta de Trabajo</h2>
+                                                        <form:input type="text" path="jobposition" placeholder="Puesto"/>
+                                                        <form:errors path="jobposition" cssClass="formError" element="p"/>
+                                                        <form:input type="text" path="jobdescription" placeholder="Descripcion"/>
+                                                        <form:errors path="jobdescription" cssClass="formError" element="p"/>
                                                         <form:input type="text" path="salary" placeholder="Salario"/>
-                                                    <form:errors path="salary" cssClass="formError" element="p"/>
-                                                    <div class="d-flex">
-                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px">Rubro</label>
-                                                        <div style="margin-left: 15px">
-                                                            <select class="list-dt ml-auto" id="area" name="area">
-                                                                <option selected>Ninguno</option>
-                                                                <option>Otro</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                        <form:errors path="salary" cssClass="formError" element="p"/>
+<%--                                                    <div class="d-flex">--%>
+<%--                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px">Rubro</label>--%>
+<%--                                                        <div style="margin-left: 15px">--%>
+<%--                                                            <select class="list-dt ml-auto" id="area" name="area">--%>
+<%--                                                                <option selected>Ninguno</option>--%>
+<%--                                                                <option>Otro</option>--%>
+<%--                                                            </select>--%>
+<%--                                                        </div>--%>
+<%--                                                    </div>--%>
                                                 </div>
                                                 <p>(*) Los campos son requeridos</p>
                                                 <button type="submit" name="end" class="btn next action-button">Finalizar</button>
