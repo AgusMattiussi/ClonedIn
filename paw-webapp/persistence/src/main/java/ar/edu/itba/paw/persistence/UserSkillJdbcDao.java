@@ -22,7 +22,6 @@ public class UserSkillJdbcDao implements UserSkillDao {
     private static final String SKILL_ID = "idAptitud";
     private static final String USER_ID = "idUsuario";
     private final SkillDao skillDao;
-
     private final UserDao userDao;
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;

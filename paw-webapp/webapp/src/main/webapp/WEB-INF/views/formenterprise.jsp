@@ -54,15 +54,17 @@
                                                     <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                                                     <form:input type="text" path="description" placeholder="${descriptionPlaceholder}"/>
                                                     <form:errors path="description" cssClass="formError" element="p"/>
-<%--                                                    <div class="d-flex">--%>
-<%--                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>--%>
-<%--                                                        <div style="margin-left: 15px">--%>
-<%--                                                            <select class="list-dt ml-auto" id="area" name="area">--%>
-<%--                                                                <option selected>Ninguno</option>--%>
-<%--                                                                <option>Otro</option>--%>
-<%--                                                            </select>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
+                                                    <div class="d-flex">
+                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
+                                                        <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                            <form:select path="category" cssClass="list-dt ml-auto" >
+                                                                <form:option value="NONE">Selecciona</form:option>
+                                                                <c:forEach items="${categories}" var="category">
+                                                                    <form:option value="${category.name}">${category.name}</form:option>
+                                                                </c:forEach>
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <p><spring:message code="register_requiredmsg"/></p>
                                                 <a href="<c:url value="/login"/>">

@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
+//@StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
 public class EnterpriseForm {
     @Size(min = 6, max = 20)
     @Pattern(regexp = "[a-zA-Z0-9]+")
@@ -26,6 +26,9 @@ public class EnterpriseForm {
     private String city;
     @NotEmpty
     private String description;
+
+    @NotEmpty
+    private String category;
 
     public String getUsername() {
         return username;
@@ -81,5 +84,13 @@ public class EnterpriseForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

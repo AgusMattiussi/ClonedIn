@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,28 +38,34 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
+    private final CategoryDao categoryDao;
+
     @Autowired
-    public EnterpriseJdbcDao(final DataSource ds){
+    public EnterpriseJdbcDao(final DataSource ds, final CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(ENTERPRISE_TABLE)
                 .usingGeneratedKeyColumns(ID);
+        this.categoryDao = categoryDao;
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, long categoryId_fk, String description) {
+    public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
         values.put(LOCATION, location);
         //TODO: Chequear si esta validacion se hace aca
-        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
+//        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
         values.put(DESCRIPTION, description);
+
+        Category category = categoryDao.findByNameOrCreate(categoryName);
+        values.put(CATEGORY_ID_FK, category.getId());
 
         Number enterpriseId = insert.executeAndReturnKey(values);
 
-        return new Enterprise(enterpriseId.longValue(), name, email, password, location, categoryId_fk, description);
+        return new Enterprise(enterpriseId.longValue(), name, email, password, location, category.getId(), description);
     }
 
     @Override

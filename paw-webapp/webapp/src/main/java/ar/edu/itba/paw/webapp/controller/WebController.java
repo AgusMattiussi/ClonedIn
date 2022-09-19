@@ -95,7 +95,9 @@ public class WebController {
 
     @RequestMapping(value = "/createUser", method = { RequestMethod.GET })
     public ModelAndView formUser(@ModelAttribute("userForm") final UserForm userForm) {
-        return new ModelAndView("formuser");
+        ModelAndView mav = new ModelAndView("formuser");
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
     }
 
     @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
@@ -103,7 +105,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formUser(userForm);
         }
-        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), "Alguna Categoria", userForm.getPosition(), userForm.getDesc(), null);
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getDesc(), null);
         return new ModelAndView("redirect:/profile/" + u.getId());
     }
 
@@ -210,15 +212,17 @@ public class WebController {
 
      @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
     public ModelAndView formEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
-        return new ModelAndView("formenterprise");
-    }
+         ModelAndView mav = new ModelAndView("formenterprise");
+         mav.addObject("categories", categoryService.getAllCategories());
+         return mav;
+     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
     public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
         if (errors.hasErrors()) {
             return formEnterprise(enterpriseForm);
         }
-        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), 0, enterpriseForm.getDescription());
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getDescription());
         return new ModelAndView("redirect:/");
     }
 

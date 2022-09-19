@@ -35,7 +35,8 @@ public class EnterpriseJdbcDaoTest {
     private static final String TEST_EMAIL = "empresa1@gmail.com";
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa para Empresas 123";
-    private static final long TEST_CATEGORY_ID_FK = 1;
+    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
+
     private static final String TEST_DESCRIPTION = "La mejor empresa del mundo";
     private static final long FIRST_ID = 1;
     private static final String EXISTING_NAME = "Empresaurio";
@@ -59,14 +60,14 @@ public class EnterpriseJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION);
+        final Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
 
         Assert.assertNotNull(newEnterprise);
         Assert.assertEquals(TEST_EMAIL, newEnterprise.getEmail());
         //Assert.assertEquals(TEST_PASSWORD, newEnterprise.getPassword());
         Assert.assertEquals(TEST_NAME, newEnterprise.getName());
         Assert.assertEquals(TEST_LOCATION, newEnterprise.getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, newEnterprise.getCategoryId_fk());
+//        Assert.assertEquals(TEST_CATEGORY_ID_FK, newEnterprise.getCategoryId_fk());
         Assert.assertEquals(TEST_DESCRIPTION, newEnterprise.getDescription());
 
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, ENTERPRISE_TABLE, EMAIL + " = '" + TEST_EMAIL + "'"));

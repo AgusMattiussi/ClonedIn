@@ -23,6 +23,8 @@ public class EnterpriseServiceImplTest {
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa para Empresas 123";
     private static final long TEST_CATEGORY_ID_FK = 1;
+    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
+
     private static final String TEST_DESCRIPTION = "La mejor empresa del mundo";
 
     @InjectMocks
@@ -38,10 +40,10 @@ public class EnterpriseServiceImplTest {
 
     @Test
     public void testCreate() {
-        Mockito.when(enterpriseDao.create(eq(TEST_EMAIL), eq(TEST_NAME), eq(TEST_PASSWORD), eq(TEST_LOCATION), eq(TEST_CATEGORY_ID_FK), eq(TEST_DESCRIPTION)))
+        Mockito.when(enterpriseDao.create(eq(TEST_EMAIL), eq(TEST_NAME), eq(TEST_PASSWORD), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_DESCRIPTION)))
                 .thenReturn(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION));
 
-        final Enterprise newEnterprise = enterpriseService.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION);
+        final Enterprise newEnterprise = enterpriseService.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
 
         Assert.assertNotNull(newEnterprise);
         Assert.assertEquals(TEST_EMAIL, newEnterprise.getEmail());

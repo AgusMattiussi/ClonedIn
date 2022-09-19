@@ -26,8 +26,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, long categoryId_fk, String description) {
-        return enterpriseDao.create(email, name, password, location, categoryId_fk, description);
+    public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
+        return enterpriseDao.create(email, name, password, location, categoryName, description);
     }
 
     @Override
