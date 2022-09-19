@@ -13,7 +13,7 @@
   <title><spring:message code="contactform_pagetitle"/></title>
 </head>
 <body>
-  <jsp:include page="../components/navbar.jsp">
+  <jsp:include page="../components/navbar0.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
   </jsp:include>
   <div class="d-flex justify-content-between mt-2">
@@ -52,6 +52,9 @@
                         </div>
                         <p><spring:message code="contactform_requiredmsg"/></p>
                         <div>
+                          <a href="<c:url value="/"/>">
+                            <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
+                          </a>
                           <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <spring:message code="contactform_buttonmsg"/>
                           </button>
