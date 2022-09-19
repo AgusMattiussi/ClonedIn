@@ -12,7 +12,7 @@
     </head>
     <body>
     <jsp:include page="../components/navbar.jsp">
-        <jsp:param name="id" value="${user.id}" />
+        <jsp:param name="id" value="${loggedUserID}" />
     </jsp:include>
     <div class="d-flex justify-content-between mt-2">
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">

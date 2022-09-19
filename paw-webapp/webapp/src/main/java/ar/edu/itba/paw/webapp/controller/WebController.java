@@ -41,6 +41,8 @@ public class WebController {
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
 
+    private long userID;
+
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
@@ -66,7 +68,6 @@ public class WebController {
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
-        long userID;
         if(loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
             userID = user.getId();
@@ -97,6 +98,7 @@ public class WebController {
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
+        mav.addObject("loggedUserID", userID);
         return mav;
     }
 
@@ -105,6 +107,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
         mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("loggedUserID", userID);
         return mav;
     }
 
@@ -205,7 +208,6 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
-
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })

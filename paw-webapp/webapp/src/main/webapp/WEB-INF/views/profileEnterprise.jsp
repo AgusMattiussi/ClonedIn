@@ -11,7 +11,7 @@
     </head>
     <body>
     <jsp:include page="../components/navbar.jsp">
-        <jsp:param name="id" value="${enterprise.id}" />
+        <jsp:param name="id" value="${loggedUserID}"/>
     </jsp:include>
     <div class="d-flex justify-content-between mt-2">
     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
@@ -34,7 +34,7 @@
             <div class="col-sm-9">
                 <div class="row mr-2">
                     <sec:authorize access="hasRole('ENTERPRISE')">
-                        <div class="d-flex justify-content-center mt-2">
+                        <div class="d-flex justify-content-center mt-3">
                             <a href="<c:url value="/createJO/${enterprise.id}"/>">
                                 <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
                                     <i class="bi bi-plus-square pr-2"></i><spring:message code="addJobOffer_button"/>
