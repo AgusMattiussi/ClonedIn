@@ -7,27 +7,30 @@ import java.math.BigDecimal;
 public class JOForm {
 
     @NotEmpty
-    private String jobposition;
+    private String jobPosition;
 
     @NotEmpty
-    private String jobdescription;
+    private String jobDescription;
 
     private BigDecimal salary;
 
-    public String getJobposition() {
-        return jobposition;
+    @NotEmpty
+    private String category;
+
+    public String getJobPosition() {
+        return jobPosition;
     }
 
-    public void setJobposition(String jobposition) {
-        this.jobposition = jobposition;
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
-    public String getJobdescription() {
-        return jobdescription;
+    public String getJobDescription() {
+        return jobDescription;
     }
 
-    public void setJobdescription(String jobdescription) {
-        this.jobdescription = jobdescription;
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
     }
 
     public BigDecimal getSalary() {
@@ -38,5 +41,11 @@ public class JOForm {
         this.salary = salary;
     }
 
+    public String getCategory() {
+        return category;
+    }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

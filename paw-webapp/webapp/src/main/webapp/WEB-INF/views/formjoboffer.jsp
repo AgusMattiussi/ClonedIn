@@ -9,7 +9,7 @@
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
-    <title>Oferta de trabajo | ClonedIn</title>
+    <title><spring:message code="jobOfferForm_pagetitle"/></title>
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
@@ -19,8 +19,7 @@
                 <div class="row justify-content-center mt-0">
                     <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-                            <h2><strong>Registrarse</strong></h2>
-                            <p>Asegurate de llenar todos los campos antes de avanzar</p>
+                            <h2><strong></strong></h2>
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
@@ -28,25 +27,29 @@
                                         <form:form modelAttribute="joForm" action="${postPath}" method="post">
                                             <fieldset>
                                                 <div class="form-card">
-                                                    <h2 class="fs-title">Oferta de Trabajo</h2>
-                                                        <form:input type="text" path="jobposition" placeholder="Puesto"/>
-                                                        <form:errors path="jobposition" cssClass="formError" element="p"/>
-                                                        <form:input type="text" path="jobdescription" placeholder="Descripcion"/>
-                                                        <form:errors path="jobdescription" cssClass="formError" element="p"/>
+                                                    <h2 class="fs-title"><spring:message code="jobOffer.title"/></h2>
+                                                        <form:input type="text" path="jobPosition" placeholder="Puesto"/>
+                                                        <form:errors path="jobPosition" cssClass="formError" element="p"/>
+                                                        <form:input type="text" path="jobDescription" placeholder="Descripcion"/>
+                                                        <form:errors path="jobDescription" cssClass="formError" element="p"/>
                                                         <form:input type="text" path="salary" placeholder="Salario"/>
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
-<%--                                                    <div class="d-flex">--%>
-<%--                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px">Rubro</label>--%>
-<%--                                                        <div style="margin-left: 15px">--%>
-<%--                                                            <select class="list-dt ml-auto" id="area" name="area">--%>
-<%--                                                                <option selected>Ninguno</option>--%>
-<%--                                                                <option>Otro</option>--%>
-<%--                                                            </select>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
+                                                        <div class="d-flex">
+                                                            <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
+                                                            <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                                <form:select path="category" cssClass="list-dt ml-auto">
+                                                                    <form:option value="NONE">Selecciona</form:option>
+                                                                    <c:forEach items="${categories}" var="category">
+                                                                        <form:option value="${category.name}">${category.name}</form:option>
+                                                                    </c:forEach>
+                                                                </form:select>
+                                                            </div>
+                                                        </div>
                                                 </div>
-                                                <p>(*) Los campos son requeridos</p>
-                                                <button type="submit" name="end" class="btn next action-button">Finalizar</button>
+                                                <p><spring:message code="register_requiredmsg"/></p>
+                                                <button type="submit" name="end" class="btn next action-button">
+                                                    <spring:message code="skillsform_buttonmsg"/>
+                                                </button>
                                             </fieldset>
                                         </form:form>
                                     </div>

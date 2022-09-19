@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +171,7 @@ public class WebController {
     public ModelAndView formJO(@ModelAttribute("joForm") final JOForm joForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("formjoboffer");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("categories", categoryService.getAllCategories());
         return mav;
     }
 
@@ -179,7 +181,7 @@ public class WebController {
             return formJO(joForm, enterpriseId);
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        jobOfferService.create(enterprise.getId(), 0, joForm.getJobposition(), joForm.getJobdescription(), joForm.getSalary());
+        jobOfferService.create(enterprise.getId(), 1, joForm.getJobPosition(), joForm.getJobDescription(), null);
         return new ModelAndView("redirect:/profileE/" + enterprise.getId());
 
     }

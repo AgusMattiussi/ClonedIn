@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
     <head>
@@ -33,11 +34,13 @@
             <div class="col-sm-9">
                 <div class="row mr-2">
                     <sec:authorize access="hasRole('ENTERPRISE')">
-                        <a href="<c:url value="/createJO/${enterprise.id}"/>">
-                            <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 300px">
-                                <i class="bi bi-plus-square pr-2"></i>Agregar Oferta de Trabajo
-                            </button>
-                        </a>
+                        <div class="d-flex justify-content-center mt-2">
+                            <a href="<c:url value="/createJO/${enterprise.id}"/>">
+                                <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="addJobOffer_button"/>
+                                </button>
+                            </a>
+                        </div>
                     </sec:authorize>
                     <c:choose>
                         <c:when test="${joboffers.size() > 0}">
@@ -58,7 +61,9 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <p class="card-text"><b>Ofertas laborales no especificadas</b></p>
+                            <div class="d-flex justify-content-center">
+                                <p class="card-text"><b><spring:message code="profileEnterprise_noJobOffers"/></b></p>
+                            </div>
                         </c:otherwise>
                     </c:choose>
                 </div>
