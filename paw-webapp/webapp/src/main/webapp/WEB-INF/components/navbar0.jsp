@@ -14,15 +14,6 @@
             <a class="navbar-brand" href="<c:url value="/"/>">
                 <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
             </a>
-<%--            <ul class="navbar-nav mr-auto">--%>
-<%--                <li class="nav-item active">--%>
-<%--                    <a class="nav-link" href="<c:url value="/"/>">Descubrir Perfiles<span class="sr-only">(current)</span></a>--%>
-<%--                </li>--%>
-<%--            </ul>--%>
-<%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
-<%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
-<%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>
-<%--            </form>--%>
         </div>
     </nav>
         <!-- JavaScript Bundle with Popper -->

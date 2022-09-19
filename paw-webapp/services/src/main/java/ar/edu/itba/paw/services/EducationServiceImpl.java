@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -32,7 +33,7 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public Optional<Education> findByUserId(long userID) {
+    public List<Education> findByUserId(long userID) {
         return educationDao.findByUserId(userID);
     }
 }

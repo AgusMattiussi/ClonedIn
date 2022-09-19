@@ -48,10 +48,10 @@
                                         <form:errors path="email" cssClass="formError" element="p"/>
                                         <form:input type="password" path="password" placeholder="Ingresá tu contraseña"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
-<%--                                            <label>--%>
-<%--                                                <form:checkbox path="remember_me" type="checkbox"/>--%>
-<%--                                                <spring:message code="remember_me"/>--%>
-<%--                                            </label>--%>
+                                        <label>
+<%--                                           <form:checkbox path="remember_me" type="checkbox"/>--%>
+                                           <spring:message code="remember_me"/>
+                                        </label>
                                     </div>
                                     <div>
                                         <button type="submit" name="end" class="btn action-button">INGRESAR</button>

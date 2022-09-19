@@ -28,3 +28,7 @@ INSERT INTO experiencia (idUsuario, fechaDesde, fechaHasta, empresa, posicion, d
     SELECT u.id, '2011-11-11', null, 'Paw Inc.', 'Ceo de Paw Inc.', 'Era el CEO :)'
     FROM usuario u
     WHERE u.email = 'johnlennon@gmail.com';
+INSERT INTO educacion (idUsuario, fechaDesde, fechaHasta, titulo, institucion, descripcion)
+    SELECT u.id, '2011-11-11', null, 'Licenciado en Paw', 'PAW University', 'Una linda facultad'
+    FROM usuario u
+    WHERE u.email = 'johnlennon@gmail.com';

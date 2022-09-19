@@ -12,6 +12,5 @@ public interface ExperienceService {
 
     Optional<Experience> findById(long experienceId);
 
-    //TODO: Cambiar a List<Experience>
     List<Experience> findByUserId(long userID);
 }
