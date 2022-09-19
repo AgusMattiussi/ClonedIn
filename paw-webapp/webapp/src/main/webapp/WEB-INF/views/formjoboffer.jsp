@@ -25,7 +25,7 @@
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
                                         <c:url value="/createJO/${enterprise.id}" var="postPath"/>
-                                        <form:form modelAttribute="JOForm" action="${postPath}" method="post">
+                                        <form:form modelAttribute="joForm" action="${postPath}" method="post">
                                             <fieldset>
                                                 <div class="form-card">
                                                     <h2 class="fs-title">Oferta de Trabajo</h2>

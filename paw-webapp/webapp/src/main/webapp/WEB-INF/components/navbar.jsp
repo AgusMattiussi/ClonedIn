@@ -29,13 +29,13 @@
             <sec:authorize access="hasRole('ENTERPRISE')">
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
-                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/"/>">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/"/>">
                             <spring:message code="navbar_profiles"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
                     <div class="nav-item" style="color: #F2F2F2">
-                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/profileE/${param.id}"/>">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileE/${param.id}"/>">
                             <spring:message code="navbar_myprofile"/>
                             <span class="sr-only">(current)</span>
                         </a>
