@@ -9,13 +9,17 @@
                 <p><span th:text="${username}"/>,</p>
                 <p>La empresa <span th:text="${enterpriseName}"/> te ha enviado la siguiente oferta de trabajo:</p>
                 <br>
-                <h5><u>Posicion</u></h5>
+                <h4><u>Posicion</u></h4>
                 <p><i th:text="${jobPos}"/></p>
                 <br>
-                <h5><u>Descripcion</u></h5>
+                <h4><u>Descripcion</u></h4>
                 <p><i th:text="${jobDesc}"/></p>
                 <br>
                 <p> En caso de estar interesado, puedes contactarte con <span th:text="${enterpriseEmail}"/></p>
+                <br>
+                <p>Comentarios adicionales:</p>
+                <p><i th:text="${message}"/></p>
+                <br>
                 <p>Para mas informacion visita nuestra pagina en <span th:text="${baseUrl}"/></p>
             </div>
             <div style="margin: auto">

@@ -13,7 +13,9 @@
   <title><spring:message code="contactform_pagetitle"/></title>
 </head>
 <body>
-  <jsp:include page="../components/navbar.jsp"/>
+  <jsp:include page="../components/navbar.jsp">
+    <jsp:param name="id" value="${loggedUserID}" />
+  </jsp:include>
   <div class="d-flex justify-content-between mt-2">
     <div class="container-fluid">
       <div class="row justify-content-center mt-0">
@@ -32,12 +34,22 @@
                     <fieldset>
                       <div class="form-card">
                         <h2 class="fs-title"><spring:message code="contactform_subtitle"/></h2>
-                        <form:input type="text" path="subject" placeholder="${subjectPlaceholder}"/>
-                        <form:errors path="subject" cssClass="formError" element="p"/>
+<%--                        <form:input type="text" path="subject" placeholder="${subjectPlaceholder}"/>--%>
+<%--                        <form:errors path="subject" cssClass="formError" element="p"/>--%>
                         <form:input type="text" path="message" placeholder="${messagePlaceholder}"/>
                         <form:errors path="message" cssClass="formError" element="p"/>
-                        <form:input type="text" path="contactInfo" placeholder="${informationPlaceholder}"/>
-                        <form:errors path="contactInfo" cssClass="formError" element="p"/>
+<%--                        <form:input type="text" path="contactInfo" placeholder="${informationPlaceholder}"/>--%>
+<%--                        <form:errors path="contactInfo" cssClass="formError" element="p"/>--%>
+                        <div class="d-flex">
+                          <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOffer_select"/></label>
+                          <div style="margin-left: 15px; margin-top: 1.2rem;">
+                            <form:select path="category" cssClass="list-dt ml-auto">
+                              <c:forEach items="${jobOffers}" var="jobOffer">
+                                <form:option value="${jobOffer.id}">${jobOffer.position}</form:option>
+                              </c:forEach>
+                            </form:select>
+                          </div>
+                        </div>
                         <p><spring:message code="contactform_requiredmsg"/></p>
                         <div>
                           <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
