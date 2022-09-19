@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validators.ExistingEmail;
+import ar.edu.itba.paw.webapp.validators.StringMatching;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
 public class EnterpriseForm {
     @Size(min = 6, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9]+")
@@ -16,6 +19,7 @@ public class EnterpriseForm {
     private String repeatPassword;
     @NotEmpty
     @Email
+    @ExistingEmail
     private String email;
     @NotEmpty
     private String name;

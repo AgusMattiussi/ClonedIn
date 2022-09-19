@@ -60,12 +60,12 @@
                                         <p>Aun no tenes cuenta? Elegi tu tipo de usuario para registrarte</p>
                                         <div class="row">
                                             <div class="col">
+                                                <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-person large"></i></button></a>
                                                 <p>Registrarse como usuario buscando trabajo</p>
-                                                <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px"><i class="bi bi-person large"></i></button></a>
                                             </div>
                                             <div class="col">
+                                                <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-building large"></i></button></a>
                                                 <p>Registrarse como empresa reclutando</p>
-                                                <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px"><i class="bi bi-building large"></i></button></a>
                                             </div>
                                         </div>
                                     </div>
