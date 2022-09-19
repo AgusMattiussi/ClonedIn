@@ -12,7 +12,7 @@
         <jsp:include page="../components/navbar.jsp"/>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
-                    <h5 class="ml-2 mt-2">Filtrar por rubro:</h5>
+                    <h5 class="ml-2 mt-2"><spring:message code="index_filter"/></h5>
                     <div class="d-flex flex-wrap justify-content-center">
                         <c:forEach items="${categories}" var="category">
                             <a href="<c:url value="/?page=${currentPage}&category=${category.id}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">
@@ -30,7 +30,7 @@
                     <div class="dropdown ml-2 mt-2">
                         <a href="<c:url value="/?page=1"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
-                                Limpiar filtros
+                                <spring:message code="index_clearfilter"/>
                             </button>
                         </a>
                     </div>
@@ -76,7 +76,7 @@
 
                 <div class="col mr-2">
                     <div class="d-flex justify-content-between mt-2">
-                        <h3>Descubrir Perfiles</h3>
+                        <h3><spring:message code="navbar_profiles"/></h3>
                     </div>
                     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                         <div class="container">
@@ -92,7 +92,7 @@
                                                 </div>
                                             </a>
                                             <div class="card-footer second bg-white text-right">
-                                                <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
+                                                <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark"><spring:message code="profile_contactbutton"/></button></a>
                                             </div>
                                         </div>
                                     </div>
