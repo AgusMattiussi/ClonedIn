@@ -43,10 +43,14 @@
                                         <form:errors path="email" cssClass="formError" element="p"/>
                                         <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
-<%--                                        <label>--%>
-<%--                                           <form:checkbox path="remember_me" type="checkbox"/>--%>
-<%--                                           <spring:message code="remember_me"/>--%>
-<%--                                        </label>--%>
+                                        <div class="row">
+                                           <div class="col-2">
+                                           <form:checkbox path="remember_me"/>
+                                           </div>
+                                           <div class="col-10">
+                                           <spring:message code="remember_me"/>
+                                           </div>
+                                        </div>
                                     </div>
                                     <div>
                                         <button type="submit" name="end" class="btn action-button" style="width: fit-content"><spring:message code="login_buttonmsg"/></button>

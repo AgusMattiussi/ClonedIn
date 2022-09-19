@@ -242,7 +242,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
-    public ModelAndView login(@ModelAttribute("loginForm") final UserForm userForm) {
+    public ModelAndView login(@ModelAttribute("loginForm") final LoginForm loginForm) {
         return new ModelAndView("login");
     }
 
