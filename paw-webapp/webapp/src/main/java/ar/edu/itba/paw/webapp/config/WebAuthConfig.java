@@ -44,7 +44,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(myAuthenticationSuccessHandler())
                     .loginPage("/login")
                 .and().rememberMe()
-                    .rememberMeParameter("j_rememberme")
+                    .rememberMeParameter("remember_me")
                     .userDetailsService(userDetailsService)
                     .key(loadRememberMeKey())
                                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
