@@ -39,7 +39,12 @@
                 </sec:authorize>
             </ul>
 <%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>
-            <button type="button" class="btn btn-outline-success waves-effect" style="color: white"><i class="bi bi-box-arrow-right pr-2"></i>CERRAR SESION</button>
+            <a href="<c:url value="/logout"/>">
+                <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
+                    <i class="bi bi-box-arrow-right pr-2"></i>
+                    CERRAR SESION
+                </button>
+            </a>
 <%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
 <%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
 <%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>
