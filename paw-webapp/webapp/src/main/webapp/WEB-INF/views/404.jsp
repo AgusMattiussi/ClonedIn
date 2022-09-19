@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <html>
     <head>
         <!-- Bootstrap -->
@@ -14,11 +16,11 @@
         <div class="d-flex align-items-center justify-content-center vh-100">
             <div class="text-center">
                 <h1 class="display-1 fw-bold">404</h1>
-                <p class="fs-3"><span class="text-danger">Ups!</span>Pagina no encontrada.</p>
+                <p class="fs-3"><span class="text-danger"><spring:message code="error404_titlespan"/></span> <spring:message code="error404_title"/></p>
                 <p class="lead">
-                    La pagina que buscas no existe.
+                    <spring:message code="error404_message"/>
                 </p>
-                <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C">Vuelve a la pagina principal</a>
+                <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>
             </div>
         </div>
     </body>
