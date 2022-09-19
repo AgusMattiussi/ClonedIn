@@ -44,10 +44,10 @@
                                         <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
                                         <div class="row">
-                                           <div class="col-2">
+                                           <div class="col-1">
                                            <form:checkbox path="remember_me"/>
                                            </div>
-                                           <div class="col-10">
+                                           <div class="col-11 mt-3">
                                            <spring:message code="remember_me"/>
                                            </div>
                                         </div>
