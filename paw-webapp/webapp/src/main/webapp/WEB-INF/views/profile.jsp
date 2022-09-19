@@ -21,10 +21,18 @@
                         <div class="card ml-2 mt-2 mb-2 h-70">
                             <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap"/>
                             <div class="card-body pb-0">
-                                <h5 class="card-title"><c:out value="${user.name}"/></h5>
-                                <sec:authorize access="hasRole('ENTERPRISE')">
-                                <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>
-                                </sec:authorize>
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title" style="padding-top: 5px">
+                                        <c:out value="${user.name}"/>
+                                    </h5>
+                                    <sec:authorize access="hasRole('ENTERPRISE')">
+                                        <a href="<c:url value="/contact/${user.id}"/>">
+                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem">
+                                                Contactar
+                                            </button>
+                                        </a>
+                                    </sec:authorize>
+                                </div>
                             </div>
                             <div class="card-footer bg-white text-center">
                                 <p class="card-text"><c:out value="${user.currentPosition}"/></p>
@@ -58,6 +66,7 @@
                                                 <c:out value="${experience.from}"/>
                                                 <c:out value="${experience.to}"/>
                                                 <c:out value="${experience.description}"/>
+                                                <br>
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
@@ -91,6 +100,7 @@
                                                <c:out value="${education.dateFrom}"/>
                                                <c:out value="${education.dateTo}"/>
                                                <c:out value="${education.description}"/>
+                                               <br>
                                            </c:forEach>
                                        </c:when>
                                        <c:otherwise>
@@ -119,6 +129,7 @@
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
                                             <c:out value="${skill.description}"/>
+                                            <br>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>

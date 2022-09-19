@@ -12,10 +12,14 @@
         <jsp:include page="../components/navbar.jsp"/>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
-                    <h5 class="ml-2 mt-2">Filtrar por:</h5>
-                    <c:forEach items="${categories}" var="category">
-                        <a href="<c:url value="/${category.name}"/>" class="btn btn-secondary">${category.name}</a>
-                    </c:forEach>
+                    <h5 class="ml-2 mt-2">Filtrar por rubro:</h5>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <c:forEach items="${categories}" var="category">
+                            <a href="<c:url value="/${category.name}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">
+                                    ${category.name}
+                            </a>
+                        </c:forEach>
+                    </div>
     <%--                <div class="dropdown-group">--%>
     <%--                    <div class="dropdown ml-2 mt-2">--%>
     <%--                        <select class="form-select" aria-label="false">--%>

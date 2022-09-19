@@ -42,8 +42,8 @@
                           <form:errors path="name" cssClass="formError" element="p"/>
                           <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                           <form:errors path="password" cssClass="formError" element="p"/>
-                          <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
-                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>
+<%--                          <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>--%>
+<%--                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>--%>
 <%--                          <div class="row">--%>
 <%--                            <div class="col-4">--%>
 <%--                              <label for="ControlFile">Elegir foto de perfil</label>--%>
@@ -56,15 +56,15 @@
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
                           <form:input type="text" path="desc" placeholder="${descriptionPlaceholder}"/>
                           <form:errors path="desc" cssClass="formError" element="p"/>
-                          <div class="d-flex">
-                            <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
-                            <div style="margin-left: 15px; margin-top: 1.2rem;">
-                              <select class="list-dt ml-auto" id="area" name="area">
-                                <option selected>Ninguno</option>
-                                <option>Otro</option>
-                              </select>
-                            </div>
-                          </div>
+<%--                          <div class="d-flex">--%>
+<%--                            <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>--%>
+<%--                            <div style="margin-left: 15px; margin-top: 1.2rem;">--%>
+<%--                              <select class="list-dt ml-auto" id="area" name="area">--%>
+<%--                                <option selected>Ninguno</option>--%>
+<%--                                <option>Otro</option>--%>
+<%--                              </select>--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
                         </div>
                         <p><spring:message code="register_requiredmsg"/></p>
                         <button type="submit" name="end" class="btn action-button"><spring:message code="register_buttonmsg"/></button>
