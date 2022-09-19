@@ -8,6 +8,8 @@ import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,7 @@ public class WebController {
     }
 
     @RequestMapping("/")
-    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page,
+    public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
         final ModelAndView mav = new ModelAndView("index");
 
@@ -62,11 +64,21 @@ public class WebController {
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
+        long userID;
+        if(loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            userID = user.getId();
+        } else {
+            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            userID = enterprise.getId();
+        }
+
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
+        mav.addObject("loggedUserID", userID);
         return mav;
     }
 
