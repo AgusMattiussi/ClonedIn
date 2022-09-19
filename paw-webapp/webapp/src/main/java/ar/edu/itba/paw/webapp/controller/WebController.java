@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 
+import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,20 +211,30 @@ public class WebController {
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(@Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return contactForm(form, userId);
         }
+
+        long jobOfferId = 2;
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
+
+        Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
 
         final Map<String, Object> mailMap = new HashMap<>();
         final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
         mailMap.put(EmailService.USERNAME_FIELD, user.getName());
-        mailMap.put(EmailService.MESSAGE_FIELD, form.getMessage());
-        mailMap.put(EmailService.CONTACT_INFO_FIELD, form.getContactInfo());
+        /*mailMap.put(EmailService.MESSAGE_FIELD, form.getMessage());
+        mailMap.put(EmailService.CONTACT_INFO_FIELD, form.getContactInfo());*/
+        mailMap.put("jobDesc", jobOffer.getDescription());
+        mailMap.put("jobPos", jobOffer.getPosition());
+        mailMap.put("enterpriseName", enterprise.getName());
+        mailMap.put("enterpriseEmail", enterprise.getEmail());
+        String subject = "Oferta laboral de " + enterprise.getName();
 
 //        emailService.sendEmail(userService.findById(userId).get().getEmail(), form.getSubject(), form.getMessage(), form.getContactInfo());
-        emailService.sendEmail(user.getEmail(), form.getSubject(), CONTACT_TEMPLATE, mailMap);
+        emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
 
         return new ModelAndView("redirect:/");
     }
@@ -244,7 +256,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
-    public ModelAndView login(@ModelAttribute("loginForm") final UserForm userForm) {
+    public ModelAndView login(@ModelAttribute("loginForm") final LoginForm loginForm) {
         return new ModelAndView("login");
     }
 

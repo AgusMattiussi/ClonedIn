@@ -6,16 +6,21 @@
     <body>
         <div>
             <div>
-                <h2><span th:text="${username}"/>,</h2>
-                <p>Parece que <span th:text="${contactInfo}"/> se ha interesado en ti:</p>
+                <p><span th:text="${username}"/>,</p>
+                <p>La empresa <span th:text="${enterpriseName}"/> te ha enviado la siguiente oferta de trabajo:</p>
                 <br>
-                <p><i th:text="${message}"/></p>
+                <h5><u>Posicion</u></h5>
+                <p><i th:text="${jobPos}"/></p>
                 <br>
+                <h5><u>Descripcion</u></h5>
+                <p><i th:text="${jobDesc}"/></p>
+                <br>
+                <p> En caso de estar interesado, puedes contactarte con <span th:text="${enterpriseEmail}"/></p>
                 <p>Para mas informacion visita nuestra pagina en <span th:text="${baseUrl}"/></p>
             </div>
             <div style="margin: auto">
                 <a th:href="${baseUrl}">
-                    <img style="max-width: 800px;" src="https://i.ibb.co/fdLhpHQ/logoaa.png" alt="ClonedIn ogo"/>
+                    <img style="max-width: 400px;" src="https://i.ibb.co/fdLhpHQ/logoaa.png" alt="ClonedIn logo"/>
                 </a>
             </div>
         </div>

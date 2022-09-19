@@ -58,6 +58,7 @@
 
                     <a href="<c:url value="/logout"/>">
                         <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
+                            <i class="bi bi-box-arrow-right pr-2"></i>
                         <spring:message code="navbar_session"/>
                         </button>
                     </a>
