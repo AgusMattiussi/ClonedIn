@@ -22,7 +22,7 @@ public interface UserDao {
 
     List<User> getUsersList(int page, int pageSize);
 
-
+    List<User> getUsersListByCategory(int page, int pageSize, int categoryId);
 
     /* TODO:
         - findByLocation

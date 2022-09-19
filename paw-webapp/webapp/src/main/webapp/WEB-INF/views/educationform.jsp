@@ -33,7 +33,9 @@
                     <div class="form-card">
                       <h2 class="fs-title"><spring:message code="edform_subtitle"/></h2>
                       <form:input type="text" path="college" placeholder="${insitutionPlaceholder}"/>
+                      <form:errors path="college" cssClass="formError" element="p"/>
                       <form:input type="text" path="degree" placeholder="${degreePlaceholder}"/>
+                      <form:errors path="degree" cssClass="formError" element="p"/>
                       <div class="d-flex">
                         <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_startdate"/></label>
                         <div style="margin-left: 10px">

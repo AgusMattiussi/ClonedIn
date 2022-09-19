@@ -15,10 +15,24 @@
                     <h5 class="ml-2 mt-2">Filtrar por rubro:</h5>
                     <div class="d-flex flex-wrap justify-content-center">
                         <c:forEach items="${categories}" var="category">
-                            <a href="<c:url value="/${category.name}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">
+                            <a href="<c:url value="/?page=${currentPage}&category=${category.id}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">
                                     ${category.name}
                             </a>
                         </c:forEach>
+<%--                        <br>--%>
+<%--                        <h6>Aptitud</h6>--%>
+<%--                        <c:forEach items="${skills}" var="skill">--%>
+<%--                            <a href="<c:url value="/?query=${skill.description}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">--%>
+<%--                                    ${skill.description}--%>
+<%--                            </a>--%>
+<%--                        </c:forEach>--%>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <a href="<c:url value="/?page=1"/>">
+                            <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
+                                Limpiar filtros
+                            </button>
+                        </a>
                     </div>
     <%--                <div class="dropdown-group">--%>
     <%--                    <div class="dropdown ml-2 mt-2">--%>

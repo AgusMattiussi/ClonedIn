@@ -52,13 +52,15 @@ public class WebController {
     }
 
     @RequestMapping("/")
-    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView home(@RequestParam(value = "page", defaultValue = "1") final int page,
+                             @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
         final ModelAndView mav = new ModelAndView("index");
 
-        final List<User> usersList = userService.getUsersList(page - 1, itemsPerPage);
+        final List<User> usersList = categoryId == 7? userService.getUsersList(page - 1, itemsPerPage) :
+                userService.getUsersListByCategory(page - 1, itemsPerPage, categoryId);
+
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
-//        mav.addObject("users", userService.getAllUsers());
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());

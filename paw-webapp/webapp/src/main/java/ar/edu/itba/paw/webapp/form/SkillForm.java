@@ -3,11 +3,11 @@ package ar.edu.itba.paw.webapp.form;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class SkillForm {
-    @NotEmpty
+//    @NotEmpty
     private String lang;
     @NotEmpty
     private String skill;
-    @NotEmpty
+//    @NotEmpty
     private String more;
 
     public String getLang() {
