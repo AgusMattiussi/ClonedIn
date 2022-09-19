@@ -34,7 +34,7 @@
                 <div class="row mr-2">
                     <sec:authorize access="hasRole('ENTERPRISE')">
                         <a href="<c:url value="/createJO/${enterprise.id}"/>">
-                            <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
+                            <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 300px">
                                 <i class="bi bi-plus-square pr-2"></i>Agregar Oferta de Trabajo
                             </button>
                         </a>
