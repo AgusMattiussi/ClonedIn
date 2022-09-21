@@ -86,11 +86,11 @@
                                 <c:forEach var="us" items="${users}">
                                     <div class="col-auto mb-3">
                                         <div class="card mt-1 h-100 mx-0" style="width: 13.5rem;">
-                                            <a class="text-decoration-none" href="<c:url value="/profile/${us.id}"/>" style="color: inherit">
+                                            <a class="text-decoration-none" href="<c:url value="/profileUser/${us.id}"/>" style="color: inherit">
                                                 <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                    <p class="card-text"><c:out value="${us.description}"/></p>
+<%--                                                    <p class="card-text"><c:out value="${us.description}"/></p>--%>
                                                 </div>
                                             </a>
                                             <div class="card-footer second bg-white text-right">

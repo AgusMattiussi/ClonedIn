@@ -23,7 +23,7 @@
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
 <body>
-<jsp:include page="../components/navbar0.jsp"/>
+<jsp:include page="../components/navbarEmpty.jsp"/>
 <div class="d-flex justify-content-between mt-2">
     <div class="container-fluid">
         <div class="row justify-content-center mt-0">
@@ -43,13 +43,13 @@
                                         <form:errors path="email" cssClass="formError" element="p"/>
                                         <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
-                                        <div class="row">
-                                           <div class="col-1">
-                                           <form:checkbox path="remember_me"/>
-                                           </div>
-                                           <div class="col-11 mt-3">
-                                           <spring:message code="remember_me"/>
-                                           </div>
+                                        <div class="d-flex">
+                                            <div style="margin-top: 0.4rem; margin-left: 10px">
+                                                <form:checkbox path="remember_me"/>
+                                            </div>
+                                            <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                <spring:message code="remember_me"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div>

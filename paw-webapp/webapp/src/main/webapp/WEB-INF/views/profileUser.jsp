@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%--<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>--%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
@@ -49,7 +48,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h5 class="card-title"><spring:message code="profile_experience"/></h5>
                                     <sec:authorize access="hasRole('USER')">
-                                    <a href="<c:url value="/createEx/${user.id}"/>">
+                                    <a href="<c:url value="/createExperience/${user.id}"/>">
                                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
                                             <i class="bi bi-plus-square pr-2"></i><spring:message code="profile_experiencebutton"/>
                                         </button>
@@ -84,7 +83,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h5 class="card-title"><spring:message code="profile_education"/></h5>
                                     <sec:authorize access="hasRole('USER')">
-                                    <a href="<c:url value="/createEd/${user.id}"/>">
+                                    <a href="<c:url value="/createEducation/${user.id}"/>">
                                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
                                         <i class="bi bi-plus-square pr-2"></i><spring:message code="profile_educationbutton"/>
                                         </button>

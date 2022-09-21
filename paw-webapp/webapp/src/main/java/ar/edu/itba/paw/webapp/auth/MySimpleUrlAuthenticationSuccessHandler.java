@@ -73,7 +73,7 @@ public class MySimpleUrlAuthenticationSuccessHandler
                 case "ROLE_USER":
                     //TODO: Cambiar por getIdForEmail()
                     User user = userService.findByEmail(accountEmail).orElseThrow(UserNotFoundException::new);
-                    return redirectURL + "profile/" + user.getId();
+                    return redirectURL + "profileUser/" + user.getId();
                 case "ROLE_ENTERPRISE":
                     return redirectURL;
                 default:

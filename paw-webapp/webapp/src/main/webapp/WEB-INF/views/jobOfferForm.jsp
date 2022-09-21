@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
-        <jsp:include page="../components/navbar0.jsp"/>
+        <jsp:include page="../components/navbarEmpty.jsp"/>
         <div class="d-flex justify-content-between mt-2">
             <div class="container-fluid">
                 <div class="row justify-content-center mt-0">
@@ -26,8 +26,8 @@
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
-                                        <c:url value="/createJO/${enterprise.id}" var="postPath"/>
-                                        <form:form modelAttribute="joForm" action="${postPath}" method="post">
+                                        <c:url value="/createJobOffer/${enterprise.id}" var="postPath"/>
+                                        <form:form modelAttribute="jobOfferForm" action="${postPath}" method="post">
                                             <fieldset>
                                                 <div class="form-card">
                                                     <h2 class="fs-title"><spring:message code="jobOfferForm_title"/></h2>

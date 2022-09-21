@@ -13,7 +13,9 @@
     <nav class="navbar navbar-dark mb-auto nav-fill w-100" style="background-color: #04704C; font-size: large;">
         <div class="container-fluid">
             <sec:authorize access="isAnonymous()">
-            <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
+                <a class="navbar-brand" href="<c:url value="/login"/>">
+                    <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
+                </a>
             </sec:authorize>
             <sec:authorize access="hasRole('ENTERPRISE')">
                 <a class="navbar-brand" href="<c:url value="/"/>">
@@ -21,7 +23,7 @@
                 </a>
             </sec:authorize>
             <sec:authorize access="hasRole('USER')">
-                <a class="navbar-brand" href="<c:url value="/profile/${param.id}"/>">
+                <a class="navbar-brand" href="<c:url value="/profileUser/${param.id}"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
                 </a>
             </sec:authorize>

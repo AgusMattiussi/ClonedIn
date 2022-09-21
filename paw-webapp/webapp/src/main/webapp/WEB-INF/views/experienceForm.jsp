@@ -13,7 +13,7 @@
   <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
 <body>
-<jsp:include page="../components/navbar0.jsp"/>
+<jsp:include page="../components/navbarEmpty.jsp"/>
 <div class="d-flex justify-content-between mt-2">
   <div class="container-fluid">
     <div class="row justify-content-center mt-0">
@@ -28,7 +28,7 @@
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
-                <c:url value="/createEx/${user.id}" var="postPath"/>
+                <c:url value="/createExperience/${user.id}" var="postPath"/>
                 <form:form modelAttribute="experienceForm" action="${postPath}" method="post">
                     <fieldset>
                     <div class="form-card">

@@ -35,7 +35,7 @@
                 <div class="row mr-2">
                     <sec:authorize access="hasRole('ENTERPRISE')">
                         <div class="d-flex justify-content-center mt-3">
-                            <a href="<c:url value="/createJO/${enterprise.id}"/>">
+                            <a href="<c:url value="/createJobOffer/${enterprise.id}"/>">
                                 <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
                                     <i class="bi bi-plus-square pr-2"></i><spring:message code="addJobOffer_button"/>
                                 </button>
