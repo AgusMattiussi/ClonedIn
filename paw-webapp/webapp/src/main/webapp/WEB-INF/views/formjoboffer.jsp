@@ -20,6 +20,9 @@
                     <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
                             <h2><strong></strong></h2>
+                            <spring:message code="jobOfferForm_position" var="positionPlaceholder"/>
+                            <spring:message code="jobOfferForm_description" var="descriptionPlaceholder"/>
+                            <spring:message code="jobOfferForm_salary" var="salaryPlaceholder"/>
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
@@ -27,12 +30,12 @@
                                         <form:form modelAttribute="joForm" action="${postPath}" method="post">
                                             <fieldset>
                                                 <div class="form-card">
-                                                    <h2 class="fs-title"><spring:message code="jobOffer.title"/></h2>
-                                                        <form:input type="text" path="jobPosition" placeholder="Puesto"/>
+                                                    <h2 class="fs-title"><spring:message code="jobOfferForm_title"/></h2>
+                                                        <form:input type="text" path="jobPosition" placeholder="${positionPlaceholder}"/>
                                                         <form:errors path="jobPosition" cssClass="formError" element="p"/>
-                                                        <form:input type="text" path="jobDescription" placeholder="Descripcion"/>
+                                                        <form:input type="text" path="jobDescription" placeholder="${descriptionPlaceholder}"/>
                                                         <form:errors path="jobDescription" cssClass="formError" element="p"/>
-                                                        <form:input type="text" path="salary" placeholder="Salario"/>
+                                                        <form:input type="text" path="salary" placeholder="${salaryPlaceholder}"/>
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
                                                         <div class="d-flex">
                                                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
