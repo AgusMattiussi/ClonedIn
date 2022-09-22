@@ -34,12 +34,8 @@
                     <fieldset>
                       <div class="form-card">
                         <h2 class="fs-title"><spring:message code="contactform_subtitle"/></h2>
-<%--                        <form:input type="text" path="subject" placeholder="${subjectPlaceholder}"/>--%>
-<%--                        <form:errors path="subject" cssClass="formError" element="p"/>--%>
                         <form:input type="text" path="message" placeholder="${messagePlaceholder}"/>
                         <form:errors path="message" cssClass="formError" element="p"/>
-<%--                        <form:input type="text" path="contactInfo" placeholder="${informationPlaceholder}"/>--%>
-<%--                        <form:errors path="contactInfo" cssClass="formError" element="p"/>--%>
                         <div class="d-flex">
                           <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOffer_select"/></label>
                           <div style="margin-left: 15px; margin-top: 1.2rem;">

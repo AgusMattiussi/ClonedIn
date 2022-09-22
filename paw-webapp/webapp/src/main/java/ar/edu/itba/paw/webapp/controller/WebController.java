@@ -34,12 +34,9 @@ public class WebController {
     private final ExperienceService experienceService;
     private final EducationService educationService;
     private final UserSkillService userSkillService;
-
     private final JobOfferService jobOfferService;
-
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
-
     private long loggedUserID;
 
     @Autowired
@@ -107,7 +104,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createUser", method = { RequestMethod.GET })
-    public ModelAndView formUser(@ModelAttribute("userForm") final UserForm userForm) {
+    public ModelAndView formRegisterUser(@ModelAttribute("userForm") final UserForm userForm) {
         ModelAndView mav = new ModelAndView("userRegisterForm");
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
@@ -116,14 +113,14 @@ public class WebController {
     @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
     public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formUser(userForm);
+            return formRegisterUser(userForm);
         }
-        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getDesc(), null);
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), null);
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEx(@ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
+    public ModelAndView formExperience(@ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("experienceForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
@@ -132,7 +129,7 @@ public class WebController {
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(@Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            return formEx(experienceForm, userId);
+            return formExperience(experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         experienceService.create(user.getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
@@ -148,7 +145,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createEd(@Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createEducation(@Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formEducation(educationForm, userId);
         }
@@ -183,7 +180,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formJobOffer(@ModelAttribute("jobOfferForm") final JOForm joForm, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView formJobOffer(@ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("jobOfferForm");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
         mav.addObject("categories", categoryService.getAllCategories());
@@ -191,12 +188,12 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createJobOffer(@Valid @ModelAttribute("jobOfferForm") final JOForm joForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView createJobOffer(@Valid @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {
-            return formJobOffer(joForm, enterpriseId);
+            return formJobOffer(jobOfferForm, enterpriseId);
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        jobOfferService.create(enterprise.getId(), 1, joForm.getJobPosition(), joForm.getJobDescription(), null);
+        jobOfferService.create(enterprise.getId(), 1, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), null);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }
@@ -205,7 +202,6 @@ public class WebController {
     public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-
         mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
@@ -238,7 +234,7 @@ public class WebController {
     }
 
      @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
-    public ModelAndView formEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
+    public ModelAndView formRegisterEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
          ModelAndView mav = new ModelAndView("enterpriseRegisterForm");
          mav.addObject("categories", categoryService.getAllCategories());
          return mav;
@@ -247,9 +243,9 @@ public class WebController {
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
     public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            return formEnterprise(enterpriseForm);
+            return formRegisterEnterprise(enterpriseForm);
         }
-        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getDescription());
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
         return new ModelAndView("redirect:/");
     }
 
@@ -273,5 +269,4 @@ public class WebController {
             loggedUserID = enterprise.getId();
         }
     }
-
 }

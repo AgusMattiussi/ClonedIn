@@ -2,12 +2,18 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 public class SkillForm {
-//    @NotEmpty
+
+    @Size(max=50)
     private String lang;
+
     @NotEmpty
+    @Size(max=50)
     private String skill;
-//    @NotEmpty
+
+    @Size(max=50)
     private String more;
 
     public String getLang() {

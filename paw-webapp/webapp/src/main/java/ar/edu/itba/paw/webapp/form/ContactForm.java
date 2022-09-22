@@ -3,23 +3,14 @@ package ar.edu.itba.paw.webapp.form;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 public class ContactForm {
-//    @NotEmpty
-    private String subject;
-//    @NotEmpty
+    @Size(max=100)
     private String message;
-//    @NotEmpty
-    private String contactInfo;
+
 //    @NotEmpty
     private long category;
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
 
     public String getMessage() {
         return message;
@@ -27,14 +18,6 @@ public class ContactForm {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
     }
 
     public long getCategory() {

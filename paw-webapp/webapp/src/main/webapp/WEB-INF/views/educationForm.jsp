@@ -52,9 +52,10 @@
                         </div>
                       </div>
                       <form:input type="text" path="comment" placeholder="${commentPlaceholder}"/>
+                      <form:errors path="comment" cssClass="formError" element="p"/>
                     </div>
                     <p><spring:message code="edform_requiredmsg"/></p>
-                    <a href="<c:url value="/profile/${user.id}"/>">
+                    <a href="<c:url value="/profileUser/${user.id}"/>">
                       <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
                     </a>
                     <button type="submit" name="end" class="btn action-button"><spring:message code="edform_button"/></button>

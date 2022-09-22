@@ -50,7 +50,7 @@
                                                         </div>
                                                 </div>
                                                 <p><spring:message code="register_requiredmsg"/></p>
-                                                <a href="<c:url value="/profileE/${enterprise.id}"/>">
+                                                <a href="<c:url value="/profileEnterprise/${enterprise.id}"/>">
                                                     <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
                                                 </a>
                                                 <button type="submit" name="end" class="btn next action-button">

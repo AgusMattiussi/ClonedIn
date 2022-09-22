@@ -1,42 +1,39 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.validators.ExistingEmail;
-import ar.edu.itba.paw.webapp.validators.StringMatching;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
+
 import javax.validation.constraints.Size;
 
 //@StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
 public class EnterpriseForm {
-    @Size(min = 6, max = 20)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
-    private String username;
-    @Size(min = 6, max = 20)
-    private String password;
-    @Size(min = 6, max = 20)
-    private String repeatPassword;
     @NotEmpty
     @Email
     @ExistingEmail
+    @Size(max=100)
     private String email;
+
+    @Size(min = 6, max = 20)
+    private String password;
+
+    @Size(min = 6, max = 20)
+    private String repeatPassword;
+
     @NotEmpty
+    @Size(max=50)
     private String name;
+
+    @Size(max=50)
     private String city;
+
     @NotEmpty
-    private String description;
+    @Size(max=200)
+    private String aboutUs;
 
     @NotEmpty
     private String category;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
@@ -78,12 +75,12 @@ public class EnterpriseForm {
         this.city = city;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAboutUs() {
+        return aboutUs;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAboutUs(String aboutUs) {
+        this.aboutUs = aboutUs;
     }
 
     public String getCategory() {

@@ -1,42 +1,40 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.validators.ExistingEmail;
-import ar.edu.itba.paw.webapp.validators.StringMatching;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 //@StringMatching(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
-    @Size(min = 6, max = 20)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
-    private String username;
-    @Size(min = 6, max = 20)
-    private String password;
-    @Size(min = 6, max = 20)
-    private String repeatPassword;
     @ExistingEmail
     @Email
     @NotEmpty
+    @Size(max=100)
     private String email;
+
+    @Size(min = 6, max = 20)
+    private String password;
+
+    @Size(min = 6, max = 20)
+    private String repeatPassword;
+
     @NotEmpty
+    @Size(max=100)
     private String name;
+
+    @Size(max=50)
     private String city;
+
+    @Size(max=50)
     private String position;
-    @NotEmpty
-    private String desc;
+
+    @Size(max=200)
+    private String aboutMe;
+
     @NotEmpty
     private String category;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
@@ -86,12 +84,12 @@ public class UserForm {
         this.position = position;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getAboutMe() {
+        return aboutMe;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     public String getCategory() {

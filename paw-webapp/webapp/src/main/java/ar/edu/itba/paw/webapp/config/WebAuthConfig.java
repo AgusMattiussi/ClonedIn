@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -54,14 +56,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .rememberMeParameter("remember_me")
                     .userDetailsService(userDetailsService)
                     .key(loadRememberMeKey())
-                                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                                .and().logout()
-                                .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login")
-                                .and().exceptionHandling()
-                                .accessDeniedPage("/403")
-                                .and().csrf().disable()
-                .logout();
+                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+                .and().logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login")
+                .and().exceptionHandling()
+                    .accessDeniedPage("/403")
+                .and().csrf().disable();
     }
 
     private String loadRememberMeKey() {

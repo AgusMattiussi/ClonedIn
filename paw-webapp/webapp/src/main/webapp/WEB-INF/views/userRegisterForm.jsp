@@ -53,14 +53,16 @@
 <%--                            </div>--%>
 <%--                          </div>--%>
                           <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
+                          <form:errors path="city" cssClass="formError" element="p"/>
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
-                          <form:input type="text" path="desc" placeholder="${descriptionPlaceholder}"/>
-                          <form:errors path="desc" cssClass="formError" element="p"/>
+                          <form:errors path="position" cssClass="formError" element="p"/>
+                          <form:input type="text" path="aboutMe" placeholder="${descriptionPlaceholder}"/>
+                          <form:errors path="aboutMe" cssClass="formError" element="p"/>
                           <div class="d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="category" cssClass="list-dt ml-auto">
-                                <form:option value="NONE">Selecciona</form:option>
+                                <form:option value="NONE"><spring:message code="register_category_select"/></form:option>
                                 <c:forEach items="${categories}" var="category">
                                   <form:option value="${category.name}">${category.name}</form:option>
                                 </c:forEach>

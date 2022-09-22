@@ -3,18 +3,26 @@ package ar.edu.itba.paw.webapp.form;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class EducationForm {
     @NotEmpty
+    @Size(max=50)
     private String college;
+
     @NotEmpty
+    @Size(max=50)
     private String degree;
+
     @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
     @NotEmpty
     private String dateFrom;
+
     @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
     @NotEmpty
     private String dateTo;
+
+    @Size(max=100)
     private String comment;
 
     public String getCollege() {

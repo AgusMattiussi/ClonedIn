@@ -9,6 +9,7 @@ public class LoginForm {
 
     @Email
     @NotEmpty
+    @Size(max=100)
     private String email;
 
     @Size(min = 6, max = 20)

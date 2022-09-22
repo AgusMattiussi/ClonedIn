@@ -19,7 +19,6 @@
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
                 </a>
             </sec:authorize>
-
             <sec:authorize access="hasRole('USER')">
                 <a class="navbar-brand" href="<c:url value="/profileUser/${param.id}"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
@@ -42,7 +41,6 @@
                     </div>
                 </div>
             </sec:authorize>
-
             <sec:authorize access="hasRole('USER')">
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
@@ -55,12 +53,12 @@
             </sec:authorize>
             </div>
 <%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>
-                    <a href="<c:url value="/logout"/>">
-                        <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
-                            <i class="bi bi-box-arrow-right pr-2"></i>
-                        <spring:message code="navbar_session"/>
-                        </button>
-                    </a>
+            <a href="<c:url value="/logout"/>">
+                <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
+                    <i class="bi bi-box-arrow-right pr-2"></i>
+                    <spring:message code="navbar_session"/>
+                </button>
+            </a>
 <%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
 <%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
 <%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>

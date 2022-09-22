@@ -2,19 +2,26 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-public class JOForm {
+public class JobOfferForm {
 
     @NotEmpty
+    @Size(max=50)
     private String jobPosition;
 
     @NotEmpty
+    @Size(max=200)
     private String jobDescription;
 
+    @Min(0)
     private BigDecimal salary;
 
-    @NotEmpty
+//    @NotEmpty
     private String category;
 
     public String getJobPosition() {
