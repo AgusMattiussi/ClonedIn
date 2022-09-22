@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -20,7 +19,8 @@
                 <p class="lead">
                     <spring:message code="error404_message"/>
                 </p>
-                <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>
+                <!-- TODO: Revisar redireccionamiento para usuarios -->
+                <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error404_button"/></a>
             </div>
         </div>
     </body>
