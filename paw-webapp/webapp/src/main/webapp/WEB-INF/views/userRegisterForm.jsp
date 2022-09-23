@@ -42,9 +42,11 @@
                           <form:errors path="name" cssClass="formError" element="p"/>
                           <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                           <form:errors path="password" cssClass="formError" element="p"/>
-<%--                          <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>--%>
-<%--                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>--%>
-<%--                          <div class="row">--%>
+                          <form:errors cssClass="formError" element="p"/>
+                          <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
+                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>
+                          <form:errors cssClass="formError" element="p"/>
+                        <%--                          <div class="row">--%>
 <%--                            <div class="col-4">--%>
 <%--                              <label for="ControlFile">Elegir foto de perfil</label>--%>
 <%--                            </div>--%>

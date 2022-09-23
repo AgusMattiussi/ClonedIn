@@ -5,12 +5,13 @@ import org.springframework.beans.BeanWrapperImpl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class StringMatchingValidator implements ConstraintValidator<StringMatching, Object> {
+public class StringMatchesValidator implements ConstraintValidator<StringMatches, Object> {
+
     private String string1;
     private String string2;
 
     @Override
-    public void initialize(StringMatching constraintAnnotation) {
+    public void initialize(StringMatches constraintAnnotation) {
         this.string1 = constraintAnnotation.string1();
         this.string2 = constraintAnnotation.string2();
     }
@@ -30,3 +31,4 @@ public class StringMatchingValidator implements ConstraintValidator<StringMatchi
         return string1Value.equals(string2Value);
     }
 }
+

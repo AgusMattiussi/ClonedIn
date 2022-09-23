@@ -1,13 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.validators.ExistingEmail;
+import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 
 import javax.validation.constraints.Size;
 
-//@StringMatching(string1 = "password", string2 = "repeatPassword") // TODO: fix
+@StringMatches(string1 = "password", string2 = "repeatPassword")
 public class EnterpriseForm {
     @NotEmpty
     @Email
@@ -28,7 +29,6 @@ public class EnterpriseForm {
     @Size(max=50)
     private String city;
 
-    @NotEmpty
     @Size(max=200)
     private String aboutUs;
 

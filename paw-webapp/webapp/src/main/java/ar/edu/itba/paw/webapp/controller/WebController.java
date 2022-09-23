@@ -83,22 +83,12 @@ public class WebController {
     }
 
     @RequestMapping("/profileUser/{userId:[0-9]+}")
-    public ModelAndView profile(Authentication loggedUser, @PathVariable("userId") final long userId) {
+    public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profileUser");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
-        getLoggerUserId(loggedUser);
-        mav.addObject("loggedUserID", loggedUserID);
-        return mav;
-    }
-
-    @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
-    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
-        final ModelAndView mav = new ModelAndView("profileEnterprise");
-        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
         getLoggerUserId(loggedUser);
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
@@ -181,6 +171,33 @@ public class WebController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
+    @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
+    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("profileEnterprise");
+        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        getLoggerUserId(loggedUser);
+        mav.addObject("loggedUserID", loggedUserID);
+        return mav;
+    }
+
+    @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
+    public ModelAndView formRegisterEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
+        ModelAndView mav = new ModelAndView("enterpriseRegisterForm");
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return formRegisterEnterprise(enterpriseForm);
+        }
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
+        sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
+        return new ModelAndView("redirect:/");
+    }
+
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formJobOffer(@ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("jobOfferForm");
@@ -241,23 +258,6 @@ public class WebController {
 
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
 
-        return new ModelAndView("redirect:/");
-    }
-
-     @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
-    public ModelAndView formRegisterEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
-         ModelAndView mav = new ModelAndView("enterpriseRegisterForm");
-         mav.addObject("categories", categoryService.getAllCategories());
-         return mav;
-     }
-
-    @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return formRegisterEnterprise(enterpriseForm);
-        }
-        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
-        sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
         return new ModelAndView("redirect:/");
     }
 
