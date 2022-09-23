@@ -43,6 +43,11 @@
                                         <form:errors path="email" cssClass="formError" element="p"/>
                                         <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
                                         <form:errors path="password" cssClass="formError" element="p"/>
+                                        <c:if test="${param.error != null}">
+                                            <div id="error" class="formError" style="color: red">
+                                                <spring:message code="message.badCredentials"/>
+                                            </div>
+                                        </c:if>
                                         <div class="d-flex">
                                             <div style="margin-top: 0.4rem; margin-left: 10px">
                                                 <form:checkbox path="remember_me"/>
