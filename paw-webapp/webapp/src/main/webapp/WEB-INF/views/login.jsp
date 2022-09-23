@@ -53,7 +53,9 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button type="submit" name="end" class="btn action-button" style="width: fit-content"><spring:message code="login_buttonmsg"/></button>
+                                        <button type="submit" name="end" class="btn action-button" style="width: fit-content">
+                                            <spring:message code="login_buttonmsg"/>
+                                        </button>
                                     </div>
                                     <div>
                                         <p><spring:message code="login_message"/></p>

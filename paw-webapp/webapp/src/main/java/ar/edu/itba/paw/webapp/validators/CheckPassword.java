@@ -7,11 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = ExistingEmailValidator.class)
+@Constraint(validatedBy = CheckPasswordValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExistingEmail {
-    String message() default "This email is already registered.";
+public @interface CheckPassword {
+    String message() default "The password is not correct";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
