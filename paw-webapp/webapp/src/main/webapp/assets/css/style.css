@@ -47,3 +47,14 @@ input.invalid {
 .tab {
     display: none;
 }
+
+.chip-pill {
+    display: inline-block;
+    padding: 0 5px;
+    height: 20px;
+    width: fit-content;
+    font-size: 14px;
+    border-radius: 20px;
+    background-color: #459F78;
+    color: white;
+}
