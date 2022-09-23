@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.sql.Date;
 
@@ -38,6 +39,8 @@ public class WebController {
     private final JobOfferService jobOfferService;
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
+    private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
+
     private long loggedUserID;
 
     @Autowired
@@ -79,12 +82,6 @@ public class WebController {
         return mav;
     }
 
-    @RequestMapping("/register")
-    public ModelAndView create(@RequestParam("email") final String email, @RequestParam("password") final String password, @RequestParam("name") final String name, @RequestParam("category") final String category) {
-        final User user = userService.register(email, password, name, null, category, null, null, null);
-        return new ModelAndView("redirect:/profileUser/" + user.getId());
-    }
-
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profile(Authentication loggedUser, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profileUser");
@@ -120,6 +117,7 @@ public class WebController {
             return formRegisterUser(userForm);
         }
         final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), null);
+        sendRegisterEmail(userForm.getEmail(), userForm.getName());
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
@@ -230,7 +228,16 @@ public class WebController {
         mailMap.put("enterpriseName", enterprise.getName());
         mailMap.put("enterpriseEmail", enterprise.getEmail());
         mailMap.put("message", form.getMessage());
-        String subject = "Oferta laboral de " + enterprise.getName();
+
+        mailMap.put("congratulationsMsg", messageSource.getMessage("contactMail.congrats", null, Locale.getDefault()));
+        mailMap.put("enterpriseMsg", messageSource.getMessage("contactMail.enterprise", null, Locale.getDefault()));
+        mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, Locale.getDefault()));
+        mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, Locale.getDefault()));
+        mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, Locale.getDefault()));
+        mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, Locale.getDefault()));
+        mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
+
+        String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
 
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
 
@@ -250,6 +257,7 @@ public class WebController {
             return formRegisterEnterprise(enterpriseForm);
         }
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
+        sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
         return new ModelAndView("redirect:/");
     }
 
@@ -272,5 +280,17 @@ public class WebController {
             Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
             loggedUserID = enterprise.getId();
         }
+    }
+
+    private void sendRegisterEmail(String email, String username){
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", username);
+        mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, Locale.getDefault()));
+        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, Locale.getDefault()));
+
+        String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
+
+        emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
     }
 }

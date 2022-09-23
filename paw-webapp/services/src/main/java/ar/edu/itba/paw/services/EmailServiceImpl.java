@@ -31,15 +31,6 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(to);
-//
-//        StringBuilder str = new StringBuilder();
-//        str.append(body).append("\n\n").append("Contactate con: ").append(contactInfo);
-//
-//        message.setSubject(subject);
-//        message.setText(str.toString());
-//        mailSender.send(message);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MULTIPART_MODE, ENCODING);
