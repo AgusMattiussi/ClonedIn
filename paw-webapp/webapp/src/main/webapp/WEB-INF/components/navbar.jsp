@@ -50,6 +50,14 @@
                         </a>
                     </div>
                 </div>
+                <div class="d-flex">
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/notificationsUser/${param.id}"/>">
+                            <spring:message code="navbar_notifications"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                </div>
             </sec:authorize>
             </div>
 <%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>

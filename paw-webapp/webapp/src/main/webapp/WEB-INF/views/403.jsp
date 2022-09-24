@@ -19,7 +19,16 @@
                 <p class="lead">
                     <spring:message code="error403_message"/>
                 </p>
-                <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>
+                <!-- TODO: Revisar redireccionamiento para usuarios -->
+                <sec:authorize access="isAnonymous()">
+                    <a href="<c:url value="/login"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ENTERPRISE')">
+                    <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>
+                </sec:authorize>
+                <sec:authorize access="hasRole('USER')">
+                    <%--                    <a href="<c:url value="/profileUser/${param.id}"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error403_button"/></a>--%>
+                </sec:authorize>
             </div>
         </div>
     </body>

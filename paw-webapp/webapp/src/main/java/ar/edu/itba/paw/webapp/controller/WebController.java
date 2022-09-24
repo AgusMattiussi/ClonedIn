@@ -94,6 +94,15 @@ public class WebController {
         return mav;
     }
 
+    @RequestMapping("/notificationsUser/{userId:[0-9]+}")
+    public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("userNotifications");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        getLoggerUserId(loggedUser);
+        mav.addObject("loggedUserID", loggedUserID);
+        return mav;
+    }
+
     @RequestMapping(value = "/createUser", method = { RequestMethod.GET })
     public ModelAndView formRegisterUser(@ModelAttribute("userForm") final UserForm userForm) {
         ModelAndView mav = new ModelAndView("userRegisterForm");

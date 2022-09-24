@@ -9,12 +9,12 @@
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
         <title><c:out value="${user.name}"/> | ClonedIn</title>
     </head>
-    <body>
+    <body style="background: #F2F2F2" >
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="id" value="${loggedUserID}" />
     </jsp:include>
     <div class="d-flex justify-content-between mt-2">
-        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+<%--        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
            <div class="container">
                 <div class="row">
                     <div class="col-sm-3">
@@ -34,10 +34,18 @@
                                     </sec:authorize>
                                 </div>
                             </div>
-                            <div class="card-footer bg-white text-center">
-                                <p class="card-text"><c:out value="${user.currentPosition}"/></p>
-                                <p class="card-text"><c:out value="${user.location}"/></p>
+                            <div class="card-footer bg-white">
+                                <c:if test="${user.currentPosition != null}">
+                                <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                </c:if>
+                                <c:if test="${user.location != null}">
+                                <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
+                                </c:if>
+                                <c:if test="${user.description != null}">
+                                <h6 class="card-text"><b><spring:message code="register_description"/></b></h6>
                                 <p class="card-text"><c:out value="${user.description}"/></p>
+                                </c:if>
+
                             </div>
                         </div>
                     </div>
@@ -57,23 +65,19 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white text-left">
-                                <p class="card-text">
                                     <c:choose>
                                         <c:when test="${experiences.size() > 0}">
                                             <c:forEach items="${experiences}" var="experience">
-                                                <c:out value="${experience.enterpriseName}"/>,
-                                                <c:out value="${experience.position}"/>
-                                                <c:out value="${experience.from}"/>
-                                                <c:out value="${experience.to}"/>
-                                                <c:out value="${experience.description}"/>
-                                                <br>
+                                <h6 class="card-text"><b> <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/> </b></h6>
+                                <p style="font-max-size: 10pt"> <c:out value="${experience.from}"/> - <c:out value="${experience.to}"/></p>
+                                                <p><c:out value="${experience.description}"/></p>
+                                                <hr>
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
                                              <p class="card-text"><b><spring:message code="profile_noexperience"/></b></p>
                                         </c:otherwise>
                                     </c:choose>
-                                </p>
                             </div>
                         </div>
                         </div>
@@ -95,12 +99,10 @@
                                    <c:choose>
                                        <c:when test="${educations.size() > 0}">
                                            <c:forEach items="${educations}" var="education">
-                                               <c:out value="${education.title}"/>,
-                                               <c:out value="${education.institutionName}"/>
-                                               <c:out value="${education.dateFrom}"/>
-                                               <c:out value="${education.dateTo}"/>
-                                               <c:out value="${education.description}"/>
-                                               <br>
+                                               <h6 class="card-text"><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
+                                               <p style="font-size: 10pt"><c:out value="${education.dateFrom}"/> - <c:out value="${education.dateTo}"/></p>
+                                               <p><c:out value="${education.description}"/></p>
+                                               <hr>
                                            </c:forEach>
                                        </c:when>
                                        <c:otherwise>
@@ -128,8 +130,7 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
-                                            <c:out value="${skill.description}"/>
-                                            <br>
+                                            <span class="badge badge-pill badge-success"><c:out value="${skill.description}"/></span>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
@@ -142,7 +143,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+<%--        </div>--%>
     </div>
     </body>
 </html>
