@@ -11,13 +11,20 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +52,9 @@ public class WebController {
 
     @Autowired
     MessageSource messageSource;
+
+    @Autowired
+    protected AuthenticationManager authenticationManager;
 
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
@@ -111,12 +121,15 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
-    public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors) {
+    public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             return formRegisterUser(userForm);
         }
         final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), null);
         sendRegisterEmail(userForm.getEmail(), userForm.getName());
+
+        authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
+
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
@@ -204,6 +217,7 @@ public class WebController {
         }
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
         sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
+
         return new ModelAndView("redirect:/");
     }
 
@@ -301,5 +315,14 @@ public class WebController {
         String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
 
         emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
+    }
+
+    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authToken.setDetails(new WebAuthenticationDetails(request));
+
+        Authentication authentication = authenticationManager.authenticate(authToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
