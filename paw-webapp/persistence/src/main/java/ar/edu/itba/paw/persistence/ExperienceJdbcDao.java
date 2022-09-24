@@ -49,7 +49,7 @@ public class ExperienceJdbcDao implements ExperienceDao {
 
     @Override
     public Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description) {
-        if(to.before(from))
+        if(to != null && to.before(from))
             throw new InvalidParameterException("La fecha 'hasta' no puede ser anterior a la fecha 'desde'");
 
         final Map<String, Object> values = new HashMap<>();
