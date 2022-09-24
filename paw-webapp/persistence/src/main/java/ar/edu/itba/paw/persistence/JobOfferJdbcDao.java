@@ -51,8 +51,10 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
     @Override
     public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary) {
-        if(salary.compareTo(BigDecimal.valueOf(0)) <= 0)
-            throw new InvalidParameterException("El salario no puede <= 0");
+        if(salary != null) {
+            if (salary.compareTo(BigDecimal.valueOf(0)) <= 0)
+                throw new InvalidParameterException("El salario no puede <= 0");
+        }
 
         final Map<String, Object> values = new HashMap<>();
         values.put(ENTERPRISE_ID, enterpriseID);

@@ -19,6 +19,19 @@ import java.util.regex.Pattern;
 public class AuthUserDetailsService implements UserDetailsService {
 
     private static final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
+    public static final String USER_ROLE = "ROLE_USER";
+    public static final String ENTERPRISE_ROLE = "ROLE_ENTERPRISE";
+
+    private static final GrantedAuthority userSimpleGrantedAuthority  = new SimpleGrantedAuthority(USER_ROLE);
+    private static final GrantedAuthority enterpriseSimpleGrantedAuthority  = new SimpleGrantedAuthority(ENTERPRISE_ROLE);
+
+    public static GrantedAuthority getUserSimpleGrantedAuthority() {
+        return userSimpleGrantedAuthority;
+    }
+
+    public static GrantedAuthority getEnterpriseSimpleGrantedAuthority() {
+        return enterpriseSimpleGrantedAuthority;
+    }
 
     @Autowired
     private UserService us;
@@ -51,7 +64,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(userSimpleGrantedAuthority);
         return new AuthUser(user.getEmail(), user.getPassword(), authorities);
     }
     
@@ -62,7 +75,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_ENTERPRISE"));
+        authorities.add(enterpriseSimpleGrantedAuthority);
         return new AuthUser(enterprise.getEmail(), enterprise.getPassword(), authorities);
     }
 }

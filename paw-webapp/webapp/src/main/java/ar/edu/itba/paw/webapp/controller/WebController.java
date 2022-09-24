@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 
+import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -48,8 +49,6 @@ public class WebController {
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
 
-    private long loggedUserID;
-
     @Autowired
     MessageSource messageSource;
 
@@ -81,14 +80,12 @@ public class WebController {
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
-        getLoggerUserId(loggedUser);
-
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        mav.addObject("loggedUserID", loggedUserID);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -101,8 +98,7 @@ public class WebController {
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
-        getLoggerUserId(loggedUser);
-        mav.addObject("loggedUserID", loggedUserID);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -110,8 +106,7 @@ public class WebController {
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-        getLoggerUserId(loggedUser);
-        mav.addObject("loggedUserID", loggedUserID);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -202,8 +197,7 @@ public class WebController {
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategoryId_fk()));
         mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
-        getLoggerUserId(loggedUser);
-        mav.addObject("loggedUserID", loggedUserID);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -250,13 +244,14 @@ public class WebController {
             return formJobOffer(jobOfferForm, enterpriseId);
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        jobOfferService.create(enterprise.getId(), 1, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), null);
+        jobOfferService.create(enterprise.getId(), 1, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary());
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }
 
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView contactForm(@ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
+    public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
+        long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID));
@@ -267,7 +262,7 @@ public class WebController {
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
-            return contactForm(form, userId);
+            return contactForm(loggedUser, form, userId);
         }
         long jobOfferId = form.getCategory();
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
@@ -310,13 +305,13 @@ public class WebController {
         return new ModelAndView("404");
     }
 
-    private void getLoggerUserId(Authentication loggedUser){
-        if(loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+    private long getLoggerUserId(Authentication loggedUser){
+        if(loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority())) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            loggedUserID = user.getId();
+            return user.getId();
         } else {
             Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            loggedUserID = enterprise.getId();
+            return enterprise.getId();
         }
     }
 

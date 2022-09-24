@@ -52,7 +52,7 @@ public class EducationJdbcDao implements EducationDao {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public Education add(long userId, Date from, Date to, String title, String institutionName, String description) {
-        if(to.before(from))
+        if(to != null && to.before(from))
             throw new InvalidParameterException("La fecha 'hasta' no puede ser anterior a la fecha 'desde'");
 
         final Map<String, Object> values = new HashMap<>();
