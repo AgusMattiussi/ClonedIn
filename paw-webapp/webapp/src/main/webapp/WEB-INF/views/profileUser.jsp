@@ -36,14 +36,17 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <c:if test="${user.currentPosition != null}">
-                                <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                    <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                </c:if>
+                                <c:if test="${category.present}">
+                                    <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
                                 </c:if>
                                 <c:if test="${user.location != null}">
-                                <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
+                                    <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
                                 </c:if>
                                 <c:if test="${user.description != null}">
-                                <h6 class="card-text"><b><spring:message code="register_description"/></b></h6>
-                                <p class="card-text"><c:out value="${user.description}"/></p>
+                                    <h6 class="card-text"><b><spring:message code="register_description"/></b></h6>
+                                    <p class="card-text"><c:out value="${user.description}"/></p>
                                 </c:if>
 
                             </div>

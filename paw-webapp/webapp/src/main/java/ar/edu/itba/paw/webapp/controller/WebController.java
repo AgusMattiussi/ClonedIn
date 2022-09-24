@@ -95,7 +95,9 @@ public class WebController {
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profileUser");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", user);
+        mav.addObject("category", categoryService.findById(user.getCategoryId_fk()));
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
@@ -196,8 +198,19 @@ public class WebController {
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
-        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("enterprise", enterprise);
+        mav.addObject("category", categoryService.findById(enterprise.getCategoryId_fk()));
         mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        getLoggerUserId(loggedUser);
+        mav.addObject("loggedUserID", loggedUserID);
+        return mav;
+    }
+
+    @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
+    public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("contacts");
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         getLoggerUserId(loggedUser);
         mav.addObject("loggedUserID", loggedUserID);
         return mav;

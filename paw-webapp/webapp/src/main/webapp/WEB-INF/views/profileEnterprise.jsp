@@ -9,12 +9,13 @@
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
         <title><c:out value="${enterprise.name}"/> | ClonedIn</title>
     </head>
-    <body>
+    <body style="background: #F2F2F2">
     <jsp:include page="../components/navbar.jsp">
         <jsp:param name="id" value="${loggedUserID}"/>
     </jsp:include>
     <div class="d-flex justify-content-between mt-2">
-    <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+<%--    <div class="card w-100 mt-2 mr-2 ml-2" >--%>
+    <div class="container">
         <div class="row">
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
@@ -26,8 +27,17 @@
 <%--                        </sec:authorize>--%>
                     </div>
                     <div class="card-footer bg-white text-center">
-                        <p class="card-text"><c:out value="${enterprise.location}"/></p>
-                        <p class="card-text"><c:out value="${enterprise.description}"/></p>
+                        <c:if test="${category.present}">
+                            <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
+                        </c:if>
+                        <c:if test="${enterprise.location != null}">
+                        <p class="card-text"><spring:message code="register_location"/>: <c:out value="${enterprise.location}"/></p>
+                        </c:if>
+                        <c:if test="${enterprise.description!= null}">
+                            <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
+                            <p class="card-text"><spring:message code="register_description2"/></p>
+                            <p class="card-text"><c:out value="${enterprise.description}"/></p>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -53,8 +63,8 @@
                                     </div>
                                     <div class="card-footer bg-white text-left">
                                         <p class="card-text">
-                                            <c:out value="${joboffer.salary}"/>
-                                            <c:out value="${joboffer.description}"/>
+                                        <h6 class="card-text"><b> <c:out value="${joboffer.salary}"/> </b></h6>
+                                        <p> <c:out value="${joboffer.description}"/> </p>
                                         </p>
                                     </div>
                                 </div>
@@ -70,6 +80,7 @@
             </div>
         </div>
     </div>
+<%--    </div>--%>
     </div>
     </body>
 </html>

@@ -26,7 +26,7 @@
                             <spring:message code="register_pass" var="passPlaceholder"/>
                             <spring:message code="register_repeatpass" var="repeatpassPlaceholder"/>
                             <spring:message code="register_location" var="locationPlaceholder"/>
-                            <spring:message code="register_description" var="descriptionPlaceholder"/>
+                            <spring:message code="register_description2" var="descriptionPlaceholder"/>
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">

@@ -91,15 +91,14 @@
                                     <c:otherwise>
                                         <c:forEach var="us" items="${users}">
                                             <div class="col-auto mb-3">
-                                                <div class="card mt-1 h-100 mx-0" style="width: 13.5rem;">
+                                                <div class="card mt-1 h-100 mx-0" style="width: 15rem;">
                                                     <a class="text-decoration-none" href="<c:url value="/profileUser/${us.id}"/>" style="color: inherit">
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                            <div style="display: inline-block; padding: 0 5px; height: 20px; width: fit-content; font-size: 14px; border-radius: 20px; background-color: #459F78; color: white;">
-                                                                <p><c:out value="${us.categoryId_fk}"/></p>
-                                                            </div>
-<%--                                                                <p class="card-text"><c:out value="${us.description}"/></p>--%>
+                                                                <p><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${us.categoryId_fk}"/></span></p>
+                                                                <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>
+                                                                <p class="card-text"><spring:message code="register_location"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>
                                                     <div class="card-footer second bg-white text-right">

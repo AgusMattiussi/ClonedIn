@@ -35,7 +35,13 @@
                     </div>
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileEnterprise/${param.id}"/>">
-                            <spring:message code="navbar_myprofile"/>
+                            <spring:message code="navbar_myjoboffers"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/contactsEnterprise/${param.id}"/>">
+                            <spring:message code="navbar_mycontacts"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
@@ -60,17 +66,18 @@
                 </div>
             </sec:authorize>
             </div>
-<%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>
+            <sec:authorize access="hasRole('ENTERPRISE')">
+            <form class="form-inline my-2 my-lg-0 d-flex">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+            </sec:authorize>
             <a href="<c:url value="/logout"/>">
                 <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
                     <i class="bi bi-box-arrow-right pr-2"></i>
                     <spring:message code="navbar_session"/>
                 </button>
             </a>
-<%--            <form class="form-inline my-2 my-lg-0 d-flex">--%>
-<%--                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">--%>
-<%--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>--%>
-<%--            </form>--%>
         </div>
     </nav>
         <!-- JavaScript Bundle with Popper -->
