@@ -211,12 +211,14 @@ public class WebController {
     }
 
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
-    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors) {
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             return formRegisterEnterprise(enterpriseForm);
         }
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
         sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
+
+        authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
 
         return new ModelAndView("redirect:/");
     }
