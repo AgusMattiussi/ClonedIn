@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,9 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
     @Override
     public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary) {
+        if(salary.compareTo(BigDecimal.valueOf(0)) <= 0)
+            throw new InvalidParameterException("El salario no puede <= 0");
+
         final Map<String, Object> values = new HashMap<>();
         values.put(ENTERPRISE_ID, enterpriseID);
         values.put(CATEGORY_ID, categoryID);

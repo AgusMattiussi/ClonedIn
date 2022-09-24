@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS experiencia (
     empresa VARCHAR(100),
     posicion TEXT NOT NULL,
     descripcion TEXT,
-    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE
+    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
+    CHECK((fechaHasta IS NULL) OR (fechaHasta >= fechaDesde))
 );
 
 CREATE TABLE IF NOT EXISTS educacion (
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS educacion (
     titulo TEXT NOT NULL,
     institucion VARCHAR(100),
     descripcion TEXT,
-    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE
+    FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
+    CHECK((fechaHasta IS NULL) OR (fechaHasta >= fechaDesde))
 );
 
 CREATE TABLE IF NOT EXISTS ofertaLaboral (
@@ -62,7 +64,8 @@ CREATE TABLE IF NOT EXISTS ofertaLaboral (
     salario DECIMAL(12,2),
     idRubro INTEGER,
     FOREIGN KEY (idEmpresa) REFERENCES empresa ON DELETE CASCADE,
-    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
+    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
+    CHECK(salario > 0)
 );
 
 CREATE TABLE IF NOT EXISTS aptitudOfertaLaboral (

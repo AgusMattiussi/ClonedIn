@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,6 +74,12 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(NEW_DESCRIPTION, newJobOffer.getDescription());
         Assert.assertEquals(NEW_SALARY, newJobOffer.getSalary());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, JOB_OFFER_TABLE,  POSITION + " = '" + NEW_POSITION + "'"));
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void testInvalidCreate() {
+        BigDecimal invalidSalary = BigDecimal.valueOf(-1000);
+        jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, invalidSalary);
     }
 
     @Test
