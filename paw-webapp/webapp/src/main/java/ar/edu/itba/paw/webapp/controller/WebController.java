@@ -71,13 +71,18 @@ public class WebController {
         this.jobOfferService = jobOfferService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
+                             @Valid @ModelAttribute("filterForm") final FilterForm userForm,
+                             @RequestParam(value = "category", defaultValue = "") final String category,
+                             @RequestParam(value = "location", defaultValue = "") final String location,
+                             @RequestParam(value = "educationLevel", defaultValue = "") final String educationLevel) {
         final ModelAndView mav = new ModelAndView("index");
 
-        final List<User> usersList = categoryId == 7? userService.getUsersList(page - 1, itemsPerPage) :
-                userService.getUsersListByCategory(page - 1, itemsPerPage, categoryId);
+//        final List<User> usersList = categoryId == 7? userService.getUsersList(page - 1, itemsPerPage) :
+//                userService.getUsersListByCategory(page - 1, itemsPerPage, categoryId);
+        
+        final List<User> usersList = userService.getUsersList(page - 1, itemsPerPage);
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
