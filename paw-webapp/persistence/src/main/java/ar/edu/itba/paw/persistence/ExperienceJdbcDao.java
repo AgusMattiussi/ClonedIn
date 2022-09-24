@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.security.InvalidParameterException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,9 @@ public class ExperienceJdbcDao implements ExperienceDao {
 
     @Override
     public Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description) {
+        if(to.before(from))
+            throw new InvalidParameterException("La fecha 'hasta' no puede ser anterior a la fecha 'desde'");
+
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
         values.put(FROM, from);

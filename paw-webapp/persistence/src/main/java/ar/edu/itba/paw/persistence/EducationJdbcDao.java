@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.security.InvalidParameterException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,9 @@ public class EducationJdbcDao implements EducationDao {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public Education add(long userId, Date from, Date to, String title, String institutionName, String description) {
+        if(to.before(from))
+            throw new InvalidParameterException("La fecha 'hasta' no puede ser anterior a la fecha 'desde'");
+
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
         //FIXME: Cambiar esto para manejar fechas de verdad
