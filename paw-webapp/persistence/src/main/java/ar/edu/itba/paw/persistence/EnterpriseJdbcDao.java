@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,16 +52,14 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
     @Override
     public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
+        Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
+
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
         values.put(LOCATION, location);
-        //TODO: Chequear si esta validacion se hace aca
-//        values.put(CATEGORY_ID_FK, categoryId_fk != 0 ? categoryId_fk : null);
         values.put(DESCRIPTION, description);
-
-        Category category = categoryDao.findByNameOrCreate(categoryName);
         values.put(CATEGORY_ID_FK, category.getId());
 
         Number enterpriseId = insert.executeAndReturnKey(values);

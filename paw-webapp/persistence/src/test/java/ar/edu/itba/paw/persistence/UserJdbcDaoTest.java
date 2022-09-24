@@ -42,7 +42,7 @@ public class UserJdbcDaoTest {
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa 123";
     //private static final long TEST_CATEGORY_ID_FK = 1;
-    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
+    private static final String TEST_CATEGORY_NAME = "testCategory";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
     private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";

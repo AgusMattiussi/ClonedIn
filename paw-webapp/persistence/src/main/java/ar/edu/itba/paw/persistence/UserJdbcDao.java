@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,6 +64,8 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
+        Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
+
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
@@ -71,9 +74,6 @@ public class UserJdbcDao implements UserDao {
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
-
-        //TODO: Chequear si esta validacion se hace aca
-        Category category = categoryDao.findByNameOrCreate(categoryName);
         values.put(CATEGORY_ID_FK, category.getId());
 
         Number userId = insert.executeAndReturnKey(values);
