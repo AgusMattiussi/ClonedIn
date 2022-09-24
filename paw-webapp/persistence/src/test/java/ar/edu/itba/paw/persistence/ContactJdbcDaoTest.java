@@ -43,7 +43,7 @@ public class ContactJdbcDaoTest {
     private static final String NEW_USER_EMAIL = "johndoe@gmail.com";
     private static final String NEW_USER_PASSWORD = "pass123";
     private static final String NEW_USER_LOCATION = "Calle Falsa 123";
-    private static final String NEW_USER_CATEGORY_NAME = "AlgunaCategoria";
+    private static final String NEW_USER_CATEGORY_NAME = "testCategory";
     private static final String NEW_USER_CURRENT_POSITION = "CEO de PAW";
     private static final String NEW_USER_DESCRIPTION = "Un tipo muy laburante";
     private static final String NEW_USER_EDUCATION = "Licenciado en la Universidad de la Calle";

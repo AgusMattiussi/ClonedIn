@@ -11,7 +11,7 @@ public interface CategoryDao {
 
     Optional<Category> findByName(String name);
 
-    Category findByNameOrCreate(String name);
+    // Category findByNameOrCreate(String name);
 
     Optional<Category> findById(long id);
 

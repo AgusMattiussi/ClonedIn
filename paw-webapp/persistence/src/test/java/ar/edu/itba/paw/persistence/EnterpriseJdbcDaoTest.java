@@ -35,7 +35,7 @@ public class EnterpriseJdbcDaoTest {
     private static final String TEST_EMAIL = "empresa1@gmail.com";
     private static final String TEST_PASSWORD = "pass123";
     private static final String TEST_LOCATION = "Calle Falsa para Empresas 123";
-    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
+    private static final String TEST_CATEGORY_NAME = "testCategory";
 
     private static final String TEST_DESCRIPTION = "La mejor empresa del mundo";
     private static final long FIRST_ID = 1;
