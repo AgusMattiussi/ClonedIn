@@ -14,8 +14,6 @@ public class EducationForm {
     @Size(max=50)
     private String degree;
 
-    private String level;
-
     @NotEmpty
     @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearFrom;
@@ -53,14 +51,6 @@ public class EducationForm {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public String getMonthFrom() {

@@ -47,7 +47,7 @@
                                                     <form:errors cssClass="formError" element="p"/>
                                                     <div class="d-flex">
                                                             <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="register_photomsg"/></label>
-                                                        <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                        <div style="margin-left: 15px">
                                                             <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
                                                         </div>
                                                     </div>

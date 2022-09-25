@@ -40,24 +40,10 @@
                       <form:input type="text" path="degree" placeholder="${degreePlaceholder}"/>
                       <form:errors path="degree" cssClass="formError" element="p"/>
                       <div class="d-flex">
-                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_level"/></label>
-                        <div style="margin-left: 15px; margin-top: 1.2rem;">
-                        <form:select path="level" cssClass="list-dt ml-auto">
-                          <form:option value="NONE"><spring:message code="select_none"/></form:option>
-                          <form:option value="Primario"><spring:message code="select_level1"/></form:option>
-                          <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
-                          <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
-                          <form:option value="Graduado"><spring:message code="select_level4"/></form:option>
-                          <form:option value="Postgrado"><spring:message code="select_level5"/></form:option>
-                        </form:select>
-                        </div>
-                      </div>
-                      <div class="d-flex">
                         <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_startdate"/></label>
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                             <form:select path="monthFrom" cssClass="list-dt ml-auto">
-                                <form:option value="NONE"><spring:message code="select_none"/></form:option>
                                 <form:option value="Enero"><spring:message code="select_m1"/></form:option>
                                 <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
                                 <form:option value="Marzo"><spring:message code="select_m3"/></form:option>
@@ -83,7 +69,6 @@
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                           <form:select path="monthTo" cssClass="list-dt ml-auto">
-                            <form:option value="NONE"><spring:message code="select_none"/></form:option>
                             <form:option value="Enero"><spring:message code="select_m1"/></form:option>
                             <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
                             <form:option value="Marzo"><spring:message code="select_m3"/></form:option>

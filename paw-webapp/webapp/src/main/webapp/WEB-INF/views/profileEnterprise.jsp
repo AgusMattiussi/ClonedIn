@@ -27,14 +27,9 @@
 <%--                        </sec:authorize>--%>
                     </div>
                     <div class="card-footer bg-white text-center">
-                        <c:if test="${category.present}">
                             <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
-                        </c:if>
-                        <c:if test="${enterprise.location != null}">
                         <p class="card-text"><spring:message code="register_location"/>: <c:out value="${enterprise.location}"/></p>
-                        </c:if>
-                        <c:if test="${enterprise.description!= null}">
-                            <p class="card-text"><b></b><spring:message code="register_description2"/><b></b></p>
+                            <p class="card-text"><b><spring:message code="register_description2"/></b></p>
                             <p class="card-text"><c:out value="${enterprise.description}"/></p>
                         </c:if>
                     </div>
@@ -61,9 +56,9 @@
                                         </div>
                                     </div>
                                     <div class="card-footer bg-white text-left">
-                                        <p class="card-text"> <c:out value="${joboffer.salary}"/> </p>
-                                            <%--                                        <p class="card-text"> <c:out value="${joboffer.mode}"/> </p>--%>
-                                        <p> <c:out value="${joboffer.description}"/> </p>
+                                        <p class="card-text"><spring:message code="jobOfferForm_salary"/>: <c:out value="${joboffer.salary}"/> </p>
+                                            <%--                                        <p class="card-text"> <spring:message code="jobOfferForm_mode"/><c:out value="${joboffer.mode}"/> </p>--%>
+                                        <p><c:out value="${joboffer.description}"/> </p>
                                     </div>
                                 </div>
                             </c:forEach>
