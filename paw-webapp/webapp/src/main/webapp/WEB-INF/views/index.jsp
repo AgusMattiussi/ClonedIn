@@ -76,10 +76,15 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                            <div style="display: inline-block; padding: 0 5px; height: 20px; width: fit-content; font-size: 14px; border-radius: 20px; background-color: #459F78; color: white;">
-                                                                <p><c:out value="${us.categoryId_fk}"/></p>
+                                                            <!-- TODO: add filter to chip-->
+                                                            <div style="display: inline-block; padding: 0 8px; height: 20px; width: fit-content; font-size: 14px; border-radius: 20px;background-color: #459F78; color: white;">
+                                                                <c:forEach items="${categories}" var="cat">
+                                                                    <c:set var="categoryId" value="${cat.id}"/>
+                                                                    <c:if test="${us.categoryId_fk == categoryId}">
+                                                                        <p><c:out value="${cat.name}"/></p>
+                                                                    </c:if>
+                                                                </c:forEach>
                                                             </div>
-<%--                                                                <p class="card-text"><c:out value="${us.description}"/></p>--%>
                                                         </div>
                                                     </a>
                                                     <div class="card-footer second bg-white text-right">
