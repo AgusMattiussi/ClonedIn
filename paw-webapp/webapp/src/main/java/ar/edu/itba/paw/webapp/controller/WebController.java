@@ -143,7 +143,7 @@ public class WebController {
             return formExperience(experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+        experienceService.create(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -162,7 +162,7 @@ public class WebController {
         }
 
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        educationService.add(user.getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        educationService.add(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }

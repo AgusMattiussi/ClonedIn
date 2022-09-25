@@ -40,19 +40,32 @@
                       <form:input type="text" path="degree" placeholder="${degreePlaceholder}"/>
                       <form:errors path="degree" cssClass="formError" element="p"/>
                       <div class="d-flex">
-                        <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_startdate"/></label>
-                        <div style="margin-left: 10px">
-                          <form:input type="text" path="dateFrom" placeholder="${datePlaceholder}"/>
-                          <form:errors path="dateFrom" cssClass="formError" element="p"/>
+                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_level"/></label>
+                        <div style="margin-left: 15px; margin-top: 1.2rem;">
+                        <form:select path="level" cssClass="list-dt ml-auto">
+                          <form:option value="NONE"><spring:message code="select_none"/></form:option>
+                          <form:option value="Primario"><spring:message code="select_level1"/></form:option>
+                          <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
+                          <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
+                          <form:option value="Graduado"><spring:message code="select_level4"/></form:option>
+                          <form:option value="Postgrado"><spring:message code="select_level5"/></form:option>
+                        </form:select>
                         </div>
                       </div>
-                      <div class="d-flex">
-                        <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_enddate"/></label>
-                        <div style="margin-left: 10px">
-                          <form:input type="text" path="dateTo" placeholder="${datePlaceholder}"/>
-                          <form:errors path="dateTo" cssClass="formError" element="p"/>
-                        </div>
-                      </div>
+<%--                      <div class="d-flex">--%>
+<%--                        <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_startdate"/></label>--%>
+<%--                        <div style="margin-left: 10px">--%>
+<%--                          <form:input type="text" path="dateFrom" placeholder="${datePlaceholder}"/>--%>
+<%--                          <form:errors path="dateFrom" cssClass="formError" element="p"/>--%>
+<%--                        </div>--%>
+<%--                      </div>--%>
+<%--                      <div class="d-flex">--%>
+<%--                        <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_enddate"/></label>--%>
+<%--                        <div style="margin-left: 10px">--%>
+<%--                          <form:input type="text" path="dateTo" placeholder="${datePlaceholder}"/>--%>
+<%--                          <form:errors path="dateTo" cssClass="formError" element="p"/>--%>
+<%--                        </div>--%>
+<%--                      </div>--%>
                       <form:input type="text" path="comment" placeholder="${commentPlaceholder}"/>
                       <form:errors path="comment" cssClass="formError" element="p"/>
                     </div>

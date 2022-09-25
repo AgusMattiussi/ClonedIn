@@ -62,10 +62,9 @@
                                         </div>
                                     </div>
                                     <div class="card-footer bg-white text-left">
-                                        <p class="card-text">
-                                        <h6 class="card-text"><b> <c:out value="${joboffer.salary}"/> </b></h6>
+                                        <p class="card-text"> <c:out value="${joboffer.salary}"/> </p>
+                                            <%--                                        <p class="card-text"> <c:out value="${joboffer.mode}"/> </p>--%>
                                         <p> <c:out value="${joboffer.description}"/> </p>
-                                        </p>
                                     </div>
                                 </div>
                             </c:forEach>

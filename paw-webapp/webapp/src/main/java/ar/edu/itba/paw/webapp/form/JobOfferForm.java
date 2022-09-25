@@ -24,6 +24,8 @@ public class JobOfferForm {
 //    @NotEmpty
     private String category;
 
+    private String mode;
+
     public String getJobPosition() {
         return jobPosition;
     }
@@ -54,5 +56,13 @@ public class JobOfferForm {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

@@ -45,14 +45,14 @@
                                                     <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                                                     <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                                                     <form:errors cssClass="formError" element="p"/>
-                                                <%--                                                <div class="row">--%>
-    <%--                                                    <div class="col-4">--%>
-    <%--                                                        <label for="ControlFile">Elegir foto de perfil</label>--%>
-    <%--                                                    </div>--%>
-    <%--                                                    <div class="col-8">--%>
-    <%--                                                        <input type="file" class="form-control-file" id="ControlFile">--%>
-    <%--                                                    </div>--%>
-    <%--                                                </div>--%>
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <label for="ControlFile"><spring:message code="register_photomsg"/></label>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
+                                                        </div>
+                                                    </div>
                                                     <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                                                     <form:errors path="city" cssClass="formError" element="p"/>
                                                     <form:input type="text" path="aboutUs" placeholder="${descriptionPlaceholder}"/>

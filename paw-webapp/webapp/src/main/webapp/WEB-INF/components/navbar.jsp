@@ -69,7 +69,7 @@
             <sec:authorize access="hasRole('ENTERPRISE')">
             <form class="form-inline my-2 my-lg-0 d-flex">
                 <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><spring:message code="navbar_search"/></button>
             </form>
             </sec:authorize>
             <a href="<c:url value="/logout"/>">
