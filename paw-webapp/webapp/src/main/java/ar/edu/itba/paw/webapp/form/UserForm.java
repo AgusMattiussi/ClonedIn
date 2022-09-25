@@ -40,6 +40,8 @@ public class UserForm {
     @NotEmpty
     private String category;
 
+    private String level;
+
     public String getPassword() {
         return password;
     }
@@ -110,5 +112,13 @@ public class UserForm {
 
     public void setImage(File image) {
         this.image = image;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

@@ -38,24 +38,26 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                <c:if test="${user.currentPosition != null}">
                                     <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
-                                </c:if>
-                                <c:if test="${category.present}">
                                     <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
-                                </c:if>
-                                <c:if test="${user.location != null}">
+<%--                                    <p class="card-text"><spring:message code="edform_level"/>: <c:out value="${user.level}"/></p>--%>
                                     <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
-                                </c:if>
-                                <c:if test="${user.description != null}">
-                                    <h6 class="card-text"><b><spring:message code="register_description"/></b></h6>
-                                    <p class="card-text"><c:out value="${user.description}"/></p>
-                                </c:if>
-
                             </div>
                         </div>
                     </div>
                     <div class="col-9">
+                        <div class="row mr-2">
+                            <div class="card mt-2">
+                                <div class="card-body pb-0">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title"><spring:message code="register_description"/></h5>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white text-left">
+                                    <p class="card-text"><c:out value="${user.description}"/></p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mr-2">
                         <div class="card mt-2">
                             <div class="card-body pb-0">

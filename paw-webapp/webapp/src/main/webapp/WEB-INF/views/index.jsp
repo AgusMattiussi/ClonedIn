@@ -98,6 +98,7 @@
                                                                     </span>
                                                                 </p>
                                                                 <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>
+<%--                                                            <p class="card-text"><spring:message code="edform_level"/>: <c:out value="${user.level}"/></p>--%>
                                                                 <p class="card-text"><spring:message code="register_location"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>

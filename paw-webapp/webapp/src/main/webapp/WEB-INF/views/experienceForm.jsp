@@ -46,7 +46,6 @@
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                             <form:select path="monthFrom" cssClass="list-dt ml-auto">
-                              <form:option value="NONE"><spring:message code="select_none"/></form:option>
                               <form:option value="Enero"><spring:message code="select_m1"/></form:option>
                               <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
                               <form:option value="Marzo"><spring:message code="select_m3"/></form:option>
@@ -72,7 +71,6 @@
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                             <form:select path="monthTo" cssClass="list-dt ml-auto">
-                              <form:option value="NONE"><spring:message code="select_none"/></form:option>
                               <form:option value="Enero"><spring:message code="select_m1"/></form:option>
                               <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
                               <form:option value="Marzo"><spring:message code="select_m3"/></form:option>
