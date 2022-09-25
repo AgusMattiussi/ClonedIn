@@ -125,6 +125,14 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public List<User> getUsersListByName(int page, int pageSize, String term) {
+        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + NAME + " LIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
+                new Object[]{ term, pageSize * page, pageSize }, USER_MAPPER);
+//        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + "LOWER(?) " + " LIKE CONCAT('%', LOWER(?), '%')" + " OFFSET ? LIMIT ? ",
+//                new Object[]{ NAME, term, pageSize * page, pageSize }, USER_MAPPER);
+    }
+
+    @Override
     public void changePassword(String email, String password) {
         template.update("UPDATE " + USER_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
     }

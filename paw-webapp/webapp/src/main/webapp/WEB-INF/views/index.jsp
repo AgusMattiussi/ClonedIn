@@ -10,11 +10,22 @@
         <title>ClonedIn</title>
     </head>
     <body>
+        <c:set var="searchFormModel" value="${searchForm}" scope="request" />
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="id" value="${loggedUserID}" />
+            <jsp:param name="model" value="searchFormModel"/>
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
+                    <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>
+                    <c:url value="/" var="getPath"/>
+                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">
+                        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+                            <spring:message code="navbar_search" var="searchBarPlaceholder"/>
+                            <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
+                            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form:form>
                     <h5 class="ml-2 mt-2"><spring:message code="index_filter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="filterForm" action="${getPath}" method="get">
@@ -23,7 +34,7 @@
                                 <form:option value=""><spring:message code="categoryFilter"/></form:option>
                                 <c:forEach items="${categories}" var="category">
                                     <%--                                <spring:message code="${category.name}"/>--%>
-                                    <form:option value="${category.name}">${category.name}</form:option>
+                                    <form:option value="${category.id}">${category.name}</form:option>
                                 </c:forEach>
                             </form:select>
                         </div>
