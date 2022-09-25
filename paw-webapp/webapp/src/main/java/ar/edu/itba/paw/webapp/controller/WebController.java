@@ -7,11 +7,16 @@ import ar.edu.itba.paw.models.User;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.webapp.exceptions.UserIsNotProfileOwnerException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -88,6 +93,11 @@ public class WebController {
         }
     }
 
+    private boolean isLoggedUserProfile(Authentication loggedUser, long profileID) {
+        long loggedUserId = getLoggerUserId(loggedUser);
+        return loggedUserId == profileID;
+    }
+
     @RequestMapping("/")
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
@@ -106,9 +116,11 @@ public class WebController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
-
+    
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
+
+
         final ModelAndView mav = new ModelAndView("profileUser");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
@@ -320,6 +332,12 @@ public class WebController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView userNotFound() {
         return new ModelAndView("404");
+    }
+
+    @ExceptionHandler(UserIsNotProfileOwnerException.class)
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public ModelAndView userIsNotProfileOwner() {
+        return new ModelAndView("403");
     }
 
     private void sendRegisterEmail(String email, String username){
