@@ -116,10 +116,10 @@ public class WebController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
-    
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
-
 
         final ModelAndView mav = new ModelAndView("profileUser");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -220,6 +220,7 @@ public class WebController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
