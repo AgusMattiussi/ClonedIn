@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
     <head>
@@ -9,74 +10,64 @@
         <title>ClonedIn</title>
     </head>
     <body>
+        <c:set var="searchFormModel" value="${searchForm}" scope="request" />
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="id" value="${loggedUserID}" />
+            <jsp:param name="model" value="searchFormModel"/>
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
+                    <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>
+                    <c:url value="/" var="getPath"/>
+                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">
+                        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+                            <spring:message code="navbar_search" var="searchBarPlaceholder"/>
+                            <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
+                            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form:form>
                     <h5 class="ml-2 mt-2"><spring:message code="index_filter"/></h5>
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <c:forEach items="${categories}" var="category">
-                            <a href="<c:url value="/?page=1&category=${category.id}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">
-<%--                                <spring:message code="${category.name}"/>--%>
-                                ${category.name}
+                    <c:url value="/" var="getPath"/>
+                    <form:form modelAttribute="filterForm" action="${getPath}" method="get">
+                        <div class="d-flex flex-wrap justify-content-center ml-2">
+                            <form:select path="category" cssClass="form-select">
+                                <form:option value=""><spring:message code="categoryFilter"/></form:option>
+                                <c:forEach items="${categories}" var="category">
+                                    <%--                                <spring:message code="${category.name}"/>--%>
+                                    <form:option value="${category.id}">${category.name}</form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                        <br>
+                        <div class="d-flex flex-wrap justify-content-center ml-2">
+                            <spring:message code="register_location" var="locationFilterPlaceholder"/>
+                            <form:input type="text" path="location" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
+                        </div>
+                        <br>
+                        <div class="d-flex flex-wrap justify-content-center ml-2">
+                            <form:select path="educationLevel" cssClass="form-select">
+                                <form:option value=""><spring:message code="educationLevelFilter"/></form:option>
+<%--                                <c:forEach items="${educationLevels}" var="educationLevel">--%>
+<%--                                    <form:option value="${educationLevel.name}">--%>
+<%--                                        <spring:message code="${educationLevel.name}"/>--%>
+<%--                                    </form:option>--%>
+<%--                                </c:forEach>--%>
+                            </form:select>
+                        </div>
+                        <div class="dropdown ml-2 mt-2">
+                            <a href="<c:url value="/?page=1"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
+                                    <spring:message code="index_clearfilter"/>
+                                </button>
                             </a>
-                        </c:forEach>
-<%--                        <br>--%>
-<%--                        <h6>Aptitud</h6>--%>
-<%--                        <c:forEach items="${skills}" var="skill">--%>
-<%--                            <a href="<c:url value="/?query=${skill.description}"/>" class="btn btn-secondary" style="margin-left: 2px; margin-top: 2px">--%>
-<%--                                    ${skill.description}--%>
-<%--                            </a>--%>
-<%--                        </c:forEach>--%>
-                    </div>
-                    <div class="dropdown ml-2 mt-2">
-                        <a href="<c:url value="/?page=1"/>">
-                            <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
-                                <spring:message code="index_clearfilter"/>
+                        </div>
+                        <div class="dropdown ml-2 mt-2">
+                            <button class="btn btn-secondary filterbtn btn-outline-dark" type="submit">
+                                <spring:message code="filterBtn"/>
                             </button>
-                        </a>
-                    </div>
-    <%--                <div class="dropdown-group">--%>
-    <%--                    <div class="dropdown ml-2 mt-2">--%>
-    <%--                        <select class="form-select" aria-label="false">--%>
-    <%--                            <option selected>Rubro</option>--%>
-    <%--                            <c:forEach var="cs" items="${categories}">--%>
-    <%--                                <option value="<c:out value="${cs.id}"/>"><c:out value="${cs.name}"/></option>--%>
-    <%--                            </c:forEach>--%>
-    <%--                        </select>--%>
-    <%--                    </div>--%>
-    <%--                    <div class="dropdown ml-2 mt-2">--%>
-    <%--                        <select class="form-select" aria-label="false">--%>
-    <%--                            <option selected>Aptitudes</option>--%>
-    <%--                            <c:forEach var="ss" items="${skills}">--%>
-    <%--                                <option value="<c:out value="${ss.id}"/>"><c:out value="${ss.description}"/></option>--%>
-    <%--                            </c:forEach>--%>
-    <%--                        </select>--%>
-    <%--                    </div>--%>
-    <%--                    <div class="dropdown ml-2 mt-2">--%>
-    <%--                        <select class="form-select" aria-label="false">--%>
-    <%--                            <option selected>Experiencia Laboral</option>--%>
-    <%--                            <option value="1">Exp 1</option>--%>
-    <%--                            <option value="2">Exp 2</option>--%>
-    <%--                            <option value="3">Exp 3</option>--%>
-    <%--                        </select>--%>
-    <%--                    </div>--%>
-    <%--                    <div class="dropdown ml-2 mt-2">--%>
-    <%--                        <select class="form-select" aria-label="false">--%>
-    <%--                            <option selected>Graduado de</option>--%>
-    <%--                            <option value="1">Universidad A</option>--%>
-    <%--                            <option value="2">Universidad B</option>--%>
-    <%--                            <option value="3">Universidad C</option>--%>
-    <%--                        </select>--%>
-    <%--                    </div>--%>
-    <%--                    <div class="dropdown ml-2 mt-2">--%>
-    <%--                        <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">--%>
-    <%--                            Filtrar--%>
-    <%--                        </button>--%>
-    <%--                    </div>--%>
-                    </div>
-
+                        </div>
+                    </form:form>
+                </div>
                 <div class="col mr-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h3><spring:message code="navbar_profiles"/></h3>
@@ -96,7 +87,16 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                                <p><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${us.categoryId_fk}"/></span></p>
+                                                                <p><spring:message code="register_category"/>:
+                                                                    <span class="badge badge-pill badge-success">
+                                                                        <c:forEach items="${categories}" var="cat">
+                                                                            <c:set var="categoryId" value="${cat.id}"/>
+                                                                            <c:if test="${us.categoryId_fk == categoryId}">
+                                                                                <c:out value="${cat.name}"/>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </span>
+                                                                </p>
                                                                 <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>
                                                                 <p class="card-text"><spring:message code="register_location"/>: <c:out value="${us.location}"/></p>
                                                         </div>

@@ -70,13 +70,19 @@ public class WebController {
         this.jobOfferService = jobOfferService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
+                             @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm, HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("index");
 
-        final List<User> usersList = categoryId == 7? userService.getUsersList(page - 1, itemsPerPage) :
-                userService.getUsersListByCategory(page - 1, itemsPerPage, categoryId);
+        final List<User> usersList;
+        String p = request.getParameter("term");
+
+        if(p==null)
+            usersList = userService.getUsersList(page - 1, itemsPerPage);
+        else
+            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 

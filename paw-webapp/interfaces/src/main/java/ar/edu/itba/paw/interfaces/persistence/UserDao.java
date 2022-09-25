@@ -24,6 +24,8 @@ public interface UserDao {
 
     List<User> getUsersListByCategory(int page, int pageSize, int categoryId);
 
+    List<User> getUsersListByName(int page, int pageSize, String term);
+
     /* TODO:
         - findByLocation
         - findByCategory
