@@ -205,8 +205,7 @@ public class WebController {
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("contacts");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        getLoggerUserId(loggedUser);
-        mav.addObject("loggedUserID", loggedUserID);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
