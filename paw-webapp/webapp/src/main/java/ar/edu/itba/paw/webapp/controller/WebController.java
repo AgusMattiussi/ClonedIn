@@ -70,6 +70,24 @@ public class WebController {
         this.jobOfferService = jobOfferService;
     }
 
+     private boolean isUser(Authentication loggedUser){
+        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
+    }
+
+    private boolean isEnterprise(Authentication loggedUser){
+        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getEnterpriseSimpleGrantedAuthority());
+    }
+
+    private long getLoggerUserId(Authentication loggedUser){
+        if(isUser(loggedUser)) {
+            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            return user.getId();
+        } else {
+            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            return enterprise.getId();
+        }
+    }
+
     @RequestMapping("/")
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
@@ -302,16 +320,6 @@ public class WebController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView userNotFound() {
         return new ModelAndView("404");
-    }
-
-    private long getLoggerUserId(Authentication loggedUser){
-        if(loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority())) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            return user.getId();
-        } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-            return enterprise.getId();
-        }
     }
 
     private void sendRegisterEmail(String email, String username){
