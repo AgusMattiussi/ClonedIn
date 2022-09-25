@@ -45,6 +45,7 @@ public class WebController {
     private final EducationService educationService;
     private final UserSkillService userSkillService;
     private final JobOfferService jobOfferService;
+    private final ContactService contactService;
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
@@ -58,7 +59,7 @@ public class WebController {
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
-                         final EmailService emailService, JobOfferService jobOfferService){
+                         final EmailService emailService, final JobOfferService jobOfferService, final ContactService contactService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -68,6 +69,7 @@ public class WebController {
         this.userSkillService = userSkillService;
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
+        this.contactService = contactService;
     }
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
@@ -293,8 +295,9 @@ public class WebController {
         mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
-
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
+        contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
+
 
         return new ModelAndView("redirect:/");
     }
