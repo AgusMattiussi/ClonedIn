@@ -58,3 +58,7 @@ input.invalid {
     background-color: #459F78;
     color: white;
 }
+
+.form-search {
+    border-radius: 5px !important;
+}

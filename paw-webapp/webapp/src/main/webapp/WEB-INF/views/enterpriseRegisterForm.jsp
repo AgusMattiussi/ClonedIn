@@ -45,14 +45,12 @@
                                                     <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                                                     <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                                                     <form:errors cssClass="formError" element="p"/>
-                                                <%--                                                <div class="row">--%>
-    <%--                                                    <div class="col-4">--%>
-    <%--                                                        <label for="ControlFile">Elegir foto de perfil</label>--%>
-    <%--                                                    </div>--%>
-    <%--                                                    <div class="col-8">--%>
-    <%--                                                        <input type="file" class="form-control-file" id="ControlFile">--%>
-    <%--                                                    </div>--%>
-    <%--                                                </div>--%>
+                                                    <div class="d-flex">
+                                                            <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="register_photomsg"/></label>
+                                                        <div style="margin-left: 15px">
+                                                            <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
+                                                        </div>
+                                                    </div>
                                                     <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                                                     <form:errors path="city" cssClass="formError" element="p"/>
                                                     <form:input type="text" path="aboutUs" placeholder="${descriptionPlaceholder}"/>
@@ -60,10 +58,9 @@
                                                     <div class="d-flex">
                                                         <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                                                         <div style="margin-left: 15px; margin-top: 1.2rem;">
-                                                            <form:select path="category" cssClass="list-dt ml-auto" >
-                                                                <form:option value="NONE"><spring:message code="register_category_select"/></form:option>
+                                                            <form:select path="category" cssClass="list-dt ml-auto">
                                                                 <c:forEach items="${categories}" var="category">
-                                                                    <form:option value="${category.name}">${category.name}</form:option>
+                                                                    <form:option value="${category.name}"><spring:message code="${category.name}"/></form:option>
                                                                 </c:forEach>
                                                             </form:select>
                                                         </div>

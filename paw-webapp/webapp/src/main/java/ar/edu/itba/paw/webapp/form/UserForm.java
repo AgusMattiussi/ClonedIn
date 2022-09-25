@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
+import java.io.File;
 
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
@@ -25,6 +26,8 @@ public class UserForm {
     @Size(max=100)
     private String name;
 
+    private File image;
+
     @Size(max=50)
     private String city;
 
@@ -36,6 +39,8 @@ public class UserForm {
 
     @NotEmpty
     private String category;
+
+    private String level;
 
     public String getPassword() {
         return password;
@@ -99,5 +104,21 @@ public class UserForm {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public File getImage() {
+        return image;
+    }
+
+    public void setImage(File image) {
+        this.image = image;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

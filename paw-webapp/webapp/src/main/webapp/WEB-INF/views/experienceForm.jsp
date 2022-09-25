@@ -43,16 +43,52 @@
                       <form:errors path="jobDesc" cssClass="formError" element="p"/>
                       <div class="d-flex">
                         <label class="startDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="expform_startdate"/></label>
-                        <div style="margin-left: 10px">
-                          <form:input type="text" path="dateFrom" placeholder="${datePlaceholder}"/>
-                          <form:errors path="dateFrom" cssClass="formError" element="p"/>
+                        <div class="row" style="margin-left: 10px">
+                          <div class="col-sm-6" style="margin-top: 1.2rem;">
+                            <form:select path="monthFrom" cssClass="list-dt ml-auto">
+                              <form:option value="Enero"><spring:message code="select_m1"/></form:option>
+                              <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
+                              <form:option value="Marzo"><spring:message code="select_m3"/></form:option>
+                              <form:option value="Abril"><spring:message code="select_m4"/></form:option>
+                              <form:option value="Mayo"><spring:message code="select_m5"/></form:option>
+                              <form:option value="Junio"><spring:message code="select_m6"/></form:option>
+                              <form:option value="Julio"><spring:message code="select_m7"/></form:option>
+                              <form:option value="Agosto"><spring:message code="select_m8"/></form:option>
+                              <form:option value="Septiembre"><spring:message code="select_m9"/></form:option>
+                              <form:option value="Octubre"><spring:message code="select_m10"/></form:option>
+                              <form:option value="Noviembre"><spring:message code="select_m11"/></form:option>
+                              <form:option value="Diciembre"><spring:message code="select_m12"/></form:option>
+                            </form:select>
+                          </div>
+                          <div class="col-sm-6">
+                            <form:input type="text" path="yearFrom" placeholder="${datePlaceholder}"/>
+                            <form:errors path="yearFrom" cssClass="formError" element="p"/>
+                          </div>
                         </div>
                       </div>
                       <div class="d-flex">
                         <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="expform_enddate"/></label>
-                        <div style="margin-left: 10px">
-                          <form:input type="text" path="dateTo" placeholder="${datePlaceholder}"/>
-                          <form:errors path="dateTo" cssClass="formError" element="p"/>
+                        <div class="row" style="margin-left: 10px">
+                          <div class="col-sm-6" style="margin-top: 1.2rem;">
+                            <form:select path="monthTo" cssClass="list-dt ml-auto">
+                              <form:option value="Enero"><spring:message code="select_m1"/></form:option>
+                              <form:option value="Febrero"><spring:message code="select_m2"/></form:option>
+                              <form:option value="Marzo"><spring:message code="select_m3"/></form:option>
+                              <form:option value="Abril"><spring:message code="select_m4"/></form:option>
+                              <form:option value="Mayo"><spring:message code="select_m5"/></form:option>
+                              <form:option value="Junio"><spring:message code="select_m6"/></form:option>
+                              <form:option value="Julio"><spring:message code="select_m7"/></form:option>
+                              <form:option value="Agosto"><spring:message code="select_m8"/></form:option>
+                              <form:option value="Septiembre"><spring:message code="select_m9"/></form:option>
+                              <form:option value="Octubre"><spring:message code="select_m10"/></form:option>
+                              <form:option value="Noviembre"><spring:message code="select_m11"/></form:option>
+                              <form:option value="Diciembre"><spring:message code="select_m12"/></form:option>
+                            </form:select>
+                          </div>
+                          <div class="col-sm-6">
+                            <form:input type="text" path="yearTo" placeholder="${datePlaceholder}"/>
+                            <form:errors path="yearTo" cssClass="formError" element="p"/>
+                          </div>
                         </div>
                       </div>
                     </div>

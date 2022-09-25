@@ -69,4 +69,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersListByCategory(int page, int pageSize, int categoryId) {
         return userDao.getUsersListByCategory(page, pageSize, categoryId);
     }
+
+    @Override
+    public List<User> getUsersListByName(int page, int pageSize, String term) {
+        return userDao.getUsersListByName(page, pageSize, term);
+    }
 }

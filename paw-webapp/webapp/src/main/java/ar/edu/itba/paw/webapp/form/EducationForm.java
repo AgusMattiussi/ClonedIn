@@ -15,12 +15,16 @@ public class EducationForm {
     private String degree;
 
     @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
-    private String dateFrom;
+    @Pattern(regexp = "(19|20)([0-9]{2})")
+    private String yearFrom;
+
+    private String monthFrom;
 
     @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
-    private String dateTo;
+    @Pattern(regexp = "(19|20)([0-9]{2})")
+    private String yearTo;
+
+    private String monthTo;
 
     @Size(max=100)
     private String comment;
@@ -41,27 +45,43 @@ public class EducationForm {
         this.degree = degree;
     }
 
-    public String getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(String dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public String getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(String dateTo) {
-        this.dateTo = dateTo;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getMonthFrom() {
+        return monthFrom;
+    }
+
+    public void setMonthFrom(String monthFrom) {
+        this.monthFrom = monthFrom;
+    }
+
+    public String getMonthTo() {
+        return monthTo;
+    }
+
+    public void setMonthTo(String monthTo) {
+        this.monthTo = monthTo;
+    }
+
+    public String getYearFrom() {
+        return yearFrom;
+    }
+
+    public void setYearFrom(String yearFrom) {
+        this.yearFrom = yearFrom;
+    }
+
+    public String getYearTo() {
+        return yearTo;
+    }
+
+    public void setYearTo(String yearTo) {
+        this.yearTo = yearTo;
     }
 }

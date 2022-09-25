@@ -17,7 +17,7 @@
 <%--        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
            <div class="container">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-3">
                         <div class="card ml-2 mt-2 mb-2 h-70">
                             <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap"/>
                             <div class="card-body pb-0">
@@ -32,27 +32,32 @@
                                             </button>
                                         </a>
                                     </sec:authorize>
+                                    <sec:authorize access="hasRole('USER')">
+                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                                    </sec:authorize>
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                <c:if test="${user.currentPosition != null}">
                                     <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
-                                </c:if>
-                                <c:if test="${category.present}">
                                     <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
-                                </c:if>
-                                <c:if test="${user.location != null}">
+<%--                                    <p class="card-text"><spring:message code="edform_level"/>: <c:out value="${user.level}"/></p>--%>
                                     <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
-                                </c:if>
-                                <c:if test="${user.description != null}">
-                                    <h6 class="card-text"><b><spring:message code="register_description"/></b></h6>
-                                    <p class="card-text"><c:out value="${user.description}"/></p>
-                                </c:if>
-
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-9">
+                        <div class="row mr-2">
+                            <div class="card mt-2">
+                                <div class="card-body pb-0">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title"><spring:message code="register_description"/></h5>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white text-left">
+                                    <p class="card-text"><c:out value="${user.description}"/></p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mr-2">
                         <div class="card mt-2">
                             <div class="card-body pb-0">
@@ -71,10 +76,10 @@
                                     <c:choose>
                                         <c:when test="${experiences.size() > 0}">
                                             <c:forEach items="${experiences}" var="experience">
-                                <h6 class="card-text"><b> <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/> </b></h6>
-                                <p style="font-max-size: 10pt"> <c:out value="${experience.from}"/> - <c:out value="${experience.to}"/></p>
+                                <h6><b> <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/> </b></h6>
+                                <p style="font-size: 9pt"> <c:out value="${experience.from}"/> - <c:out value="${experience.to}"/></p>
                                                 <p><c:out value="${experience.description}"/></p>
-                                                <hr>
+                                                <hr style="border: 1px solid grey">
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
@@ -102,10 +107,10 @@
                                    <c:choose>
                                        <c:when test="${educations.size() > 0}">
                                            <c:forEach items="${educations}" var="education">
-                                               <h6 class="card-text"><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
-                                               <p style="font-size: 10pt"><c:out value="${education.dateFrom}"/> - <c:out value="${education.dateTo}"/></p>
+                                               <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
+                                               <p style="font-size: 9pt"><c:out value="${education.dateFrom}"/> - <c:out value="${education.dateTo}"/></p>
                                                <p><c:out value="${education.description}"/></p>
-                                               <hr>
+                                               <hr style="border: 1px solid grey">
                                            </c:forEach>
                                        </c:when>
                                        <c:otherwise>

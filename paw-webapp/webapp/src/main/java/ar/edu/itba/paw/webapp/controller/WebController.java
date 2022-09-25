@@ -50,6 +50,7 @@ public class WebController {
     private final EducationService educationService;
     private final UserSkillService userSkillService;
     private final JobOfferService jobOfferService;
+    private final ContactService contactService;
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
@@ -63,7 +64,7 @@ public class WebController {
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
-                         final EmailService emailService, JobOfferService jobOfferService){
+                         final EmailService emailService, final JobOfferService jobOfferService, final ContactService contactService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -73,6 +74,7 @@ public class WebController {
         this.userSkillService = userSkillService;
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
+        this.contactService = contactService;
     }
 
      private boolean isUser(Authentication loggedUser){
@@ -98,13 +100,19 @@ public class WebController {
         return loggedUserId == profileID;
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @RequestParam(value = "category", defaultValue = "7") final int categoryId) {
+                             @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm, HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("index");
 
-        final List<User> usersList = categoryId == 7? userService.getUsersList(page - 1, itemsPerPage) :
-                userService.getUsersListByCategory(page - 1, itemsPerPage, categoryId);
+        final List<User> usersList;
+        String p = request.getParameter("term");
+
+        if(p==null)
+            usersList = userService.getUsersList(page - 1, itemsPerPage);
+        else
+            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
         final Integer usersCount = userService.getUsersCount().orElse(0);
 
@@ -173,7 +181,7 @@ public class WebController {
             return formExperience(experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), Date.valueOf(experienceForm.getDateFrom()), Date.valueOf(experienceForm.getDateTo()), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+        experienceService.create(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -192,7 +200,7 @@ public class WebController {
         }
 
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        educationService.add(user.getId(), Date.valueOf(educationForm.getDateFrom()), Date.valueOf(educationForm.getDateTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        educationService.add(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -318,8 +326,9 @@ public class WebController {
         mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
-
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
+        contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
+
 
         return new ModelAndView("redirect:/");
     }

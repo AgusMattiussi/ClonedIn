@@ -46,27 +46,37 @@
                           <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                           <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                           <form:errors cssClass="formError" element="p"/>
-                        <%--                          <div class="row">--%>
-<%--                            <div class="col-4">--%>
-<%--                              <label for="ControlFile">Elegir foto de perfil</label>--%>
-<%--                            </div>--%>
-<%--                            <div class="col-8">--%>
-<%--                              <input type="file" class="form-control-file" id="ControlFile">--%>
-<%--                            </div>--%>
-<%--                          </div>--%>
+                          <div class="d-flex">
+                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="register_photomsg"/></label>
+                            <div style="margin-left: 15px;">
+                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
+                            </div>
+                          </div>
                           <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                           <form:errors path="city" cssClass="formError" element="p"/>
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
                           <form:errors path="position" cssClass="formError" element="p"/>
+                          <div class="d-flex">
+                            <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_level"/></label>
+                            <div style="margin-left: 15px; margin-top: 1.2rem;">
+                              <form:select path="level" cssClass="list-dt ml-auto">
+                                <form:option value="NONE"><spring:message code="select_none"/></form:option>
+                                <form:option value="Primario"><spring:message code="select_level1"/></form:option>
+                                <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
+                                <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
+                                <form:option value="Graduado"><spring:message code="select_level4"/></form:option>
+                                <form:option value="Postgrado"><spring:message code="select_level5"/></form:option>
+                              </form:select>
+                            </div>
+                          </div>
                           <form:input type="text" path="aboutMe" placeholder="${descriptionPlaceholder}"/>
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>
                           <div class="d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="category" cssClass="list-dt ml-auto">
-                                <form:option value="NONE"><spring:message code="register_category_select"/></form:option>
                                 <c:forEach items="${categories}" var="category">
-                                  <form:option value="${category.name}">${category.name}</form:option>
+                                  <form:option value="${category.name}"><spring:message code="${category.name}"/></form:option>
                                 </c:forEach>
                               </form:select>
                             </div>

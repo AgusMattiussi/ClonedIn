@@ -20,16 +20,9 @@
                 <p class="lead">
                     <spring:message code="error404_message"/>
                 </p>
-                <!-- TODO: Revisar redireccionamiento para usuarios -->
-                <sec:authorize access="isAnonymous()">
-                    <a href="<c:url value="/login"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error404_button"/></a>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ENTERPRISE')">
-                    <a href="<c:url value="/"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error404_button"/></a>
-                </sec:authorize>
-                <sec:authorize access="hasRole('USER')">
-<%--                    <a href="<c:url value="/profileUser/${param.id}"/>" class="btn btn-primary" style="background-color: #04704C"><spring:message code="error404_button"/></a>--%>
-                </sec:authorize>
+                <a onclick="history.back()" class="btn btn-primary" style="background-color: #04704C">
+                    <spring:message code="error404_button"/>
+                </a>
             </div>
         </div>
     </body>

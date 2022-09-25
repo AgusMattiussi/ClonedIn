@@ -35,17 +35,41 @@
                                                     <h2 class="fs-title"><spring:message code="jobOfferForm_title"/></h2>
                                                         <form:input type="text" path="jobPosition" placeholder="${positionPlaceholder}"/>
                                                         <form:errors path="jobPosition" cssClass="formError" element="p"/>
+                                                        <div class="d-flex">
+                                                            <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferForm_mode"/></label>
+                                                            <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                            <form:select path="mode" cssClass="list-dt ml-auto">
+                                                                <form:option value="NONE"><spring:message code="select_none"/></form:option>
+                                                                <form:option value="virtual"><spring:message code="select_mode1"/></form:option>
+                                                                <form:option value="presencial"><spring:message code="select_mode2"/></form:option>
+                                                            </form:select>
+                                                            </div>
+                                                        </div>
                                                         <form:input type="text" path="jobDescription" placeholder="${descriptionPlaceholder}"/>
                                                         <form:errors path="jobDescription" cssClass="formError" element="p"/>
                                                         <form:input type="text" path="salary" placeholder="${salaryPlaceholder}"/>
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
                                                         <div class="d-flex">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferForm_skills"/></label>
+                                                                </div>
+                                                                 <div class="col-sm-3">
+                                                                <form:input type="text" path="skill1"/>
+                                                                <form:errors path="skill1" cssClass="formError" element="p"/>
+                                                                 </div>
+                                                                     <div class="col-sm-3">
+                                                                <form:input type="text" path="skill2"/>
+                                                                <form:errors path="skill2" cssClass="formError" element="p"/>
+                                                                     </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex">
                                                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                                                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                                                                 <form:select path="category" cssClass="list-dt ml-auto">
-                                                                    <form:option value="NONE">Selecciona</form:option>
                                                                     <c:forEach items="${categories}" var="category">
-                                                                        <form:option value="${category.name}">${category.name}</form:option>
+                                                                        <form:option value="${category.name}"><spring:message code="${category.name}"/></form:option>
                                                                     </c:forEach>
                                                                 </form:select>
                                                             </div>
