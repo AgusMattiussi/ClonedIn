@@ -126,10 +126,8 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public List<User> getUsersListByName(int page, int pageSize, String term) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + NAME + " LIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + NAME + " ILIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
                 new Object[]{ term, pageSize * page, pageSize }, USER_MAPPER);
-//        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + "LOWER(?) " + " LIKE CONCAT('%', LOWER(?), '%')" + " OFFSET ? LIMIT ? ",
-//                new Object[]{ NAME, term, pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override
