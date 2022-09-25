@@ -31,7 +31,6 @@
                         <p class="card-text"><spring:message code="register_location"/>: <c:out value="${enterprise.location}"/></p>
                             <p class="card-text"><b><spring:message code="register_description2"/></b></p>
                             <p class="card-text"><c:out value="${enterprise.description}"/></p>
-                        </c:if>
                     </div>
                 </div>
             </div>
