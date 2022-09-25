@@ -17,13 +17,13 @@ public class EducationForm {
     private String level;
 
     @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearFrom;
 
     private String monthFrom;
 
     @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearTo;
 
     private String monthTo;
@@ -77,5 +77,21 @@ public class EducationForm {
 
     public void setMonthTo(String monthTo) {
         this.monthTo = monthTo;
+    }
+
+    public String getYearFrom() {
+        return yearFrom;
+    }
+
+    public void setYearFrom(String yearFrom) {
+        this.yearFrom = yearFrom;
+    }
+
+    public String getYearTo() {
+        return yearTo;
+    }
+
+    public void setYearTo(String yearTo) {
+        this.yearTo = yearTo;
     }
 }

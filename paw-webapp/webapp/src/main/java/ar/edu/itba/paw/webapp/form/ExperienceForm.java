@@ -19,13 +19,17 @@ public class ExperienceForm {
     @Size(max=200)
     private String jobDesc;
 
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
     @NotEmpty
-    private String dateFrom;
+    @Pattern(regexp = "(19|20)([0-9]{2})")
+    private String yearFrom;
 
-    @Pattern(regexp = "(19|20)([0-9]{2})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1])")
+    private String monthFrom;
+
     @NotEmpty
-    private String dateTo;
+    @Pattern(regexp = "(19|20)([0-9]{2})")
+    private String yearTo;
+
+    private String monthTo;
 
     public String getCompany() {
         return company;
@@ -51,19 +55,35 @@ public class ExperienceForm {
         this.jobDesc = jobDesc;
     }
 
-    public String getDateFrom() {
-        return dateFrom;
+    public String getMonthFrom() {
+        return monthFrom;
     }
 
-    public void setDateFrom(String dateFrom) {
-        this.dateFrom = dateFrom;
+    public void setMonthFrom(String monthFrom) {
+        this.monthFrom = monthFrom;
     }
 
-    public String getDateTo() {
-        return dateTo;
+    public String getMonthTo() {
+        return monthTo;
     }
 
-    public void setDateTo(String dateTo) {
-        this.dateTo = dateTo;
+    public void setMonthTo(String monthTo) {
+        this.monthTo = monthTo;
+    }
+
+    public String getYearFrom() {
+        return yearFrom;
+    }
+
+    public void setYearFrom(String yearFrom) {
+        this.yearFrom = yearFrom;
+    }
+
+    public String getYearTo() {
+        return yearTo;
+    }
+
+    public void setYearTo(String yearTo) {
+        this.yearTo = yearTo;
     }
 }
