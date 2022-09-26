@@ -10,7 +10,7 @@ public class User {
     private final String name;
     private final String location;
     //TODO: FK o nombre?
-    private final long categoryId_fk;
+    private final Category category;
     private final String currentPosition;
     private final String description;
     private final String education;
@@ -19,13 +19,13 @@ public class User {
     //TODO: Aniadir imagen
 
 
-    public User(long id, String email, String password, String name, String location, long categoryId_fk, String currentPosition, String description, String education) {
+    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.location = location;
-        this.categoryId_fk = categoryId_fk;
+        this.category = category;
         this.currentPosition = currentPosition;
         this.description = description;
         this.education = education;
@@ -47,8 +47,8 @@ public class User {
         return location;
     }
 
-    public long getCategoryId_fk() {
-        return categoryId_fk;
+    public Category getCategory() {
+        return category;
     }
 
     public String getCurrentPosition() {
@@ -75,7 +75,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
-                ", categoryId_fk=" + categoryId_fk +
+                ", category=" + category.toString() +
                 ", currentPosition='" + currentPosition + '\'' +
                 ", description='" + description + '\'' +
                 ", education='" + education + '\'' +

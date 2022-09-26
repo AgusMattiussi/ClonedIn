@@ -89,12 +89,12 @@
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                                                 <p><spring:message code="register_category"/>:
                                                                     <span class="badge badge-pill badge-success">
-                                                                        <c:forEach items="${categories}" var="cat">
+                                                                        <%--<c:forEach items="${categories}" var="cat">
                                                                             <c:set var="categoryId" value="${cat.id}"/>
                                                                             <c:if test="${us.categoryId_fk == categoryId}">
                                                                                 <c:out value="${cat.name}"/>
                                                                             </c:if>
-                                                                        </c:forEach>
+                                                                        </c:forEach>--%>
                                                                     </span>
                                                                 </p>
                                                                 <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>

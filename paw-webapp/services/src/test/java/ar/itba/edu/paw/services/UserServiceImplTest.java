@@ -2,6 +2,7 @@ package ar.itba.edu.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserServiceImpl;
 import org.junit.Assert;
@@ -45,11 +46,11 @@ public class UserServiceImplTest {
     @Before
     public void setUp(){
         Mockito.when(userDao.create(eq("naruto@gmail.com"), eq(TEST_PASSWORD), eq("Naruto"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
         Mockito.when(userDao.create(eq("sasuke@gmail.com"), eq(TEST_PASSWORD), eq("Sasuke"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
         Mockito.when(userDao.create(eq("sakura@gmail.com"), eq(TEST_PASSWORD), eq("Sakura"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
     }
 
     //FIXME: Al agregar la encriptacion de la contrasenia, se rompio este test
@@ -74,7 +75,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindByEmail() {
         Mockito.when(userDao.findByEmail(eq(TEST_EMAIL)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
 
         final Optional<User> optUser = userService.findByEmail(TEST_EMAIL);
 
@@ -83,7 +84,7 @@ public class UserServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, optUser.get().getName());
         Assert.assertEquals(TEST_LOCATION, optUser.get().getLocation());
-        Assert.assertEquals(0, optUser.get().getCategoryId_fk());
+        Assert.assertEquals(99, optUser.get().getCategory().getId());
         Assert.assertEquals(TEST_CURRENT_POSITION, optUser.get().getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, optUser.get().getDescription());
         Assert.assertEquals(TEST_EDUCATION, optUser.get().getEducation());
@@ -93,7 +94,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindById() {
         Mockito.when(userDao.findById(eq(TEST_ID)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, 0, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
 
 
         final Optional<User> optUser = userService.findById(TEST_ID);
@@ -103,7 +104,7 @@ public class UserServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, optUser.get().getName());
         Assert.assertEquals(TEST_LOCATION, optUser.get().getLocation());
-        Assert.assertEquals(0, optUser.get().getCategoryId_fk());
+        Assert.assertEquals(99, optUser.get().getCategory().getId());
         Assert.assertEquals(TEST_CURRENT_POSITION, optUser.get().getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, optUser.get().getDescription());
         Assert.assertEquals(TEST_EDUCATION, optUser.get().getEducation());

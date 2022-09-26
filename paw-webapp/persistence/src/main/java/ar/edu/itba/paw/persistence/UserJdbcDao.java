@@ -34,23 +34,31 @@ public class UserJdbcDao implements UserDao {
     private static final String DESCRIPTION = "descripcion";
     private static final String EDUCATION = "educacion";
 
-    protected static final RowMapper<User> USER_MAPPER = (resultSet, rowNum) ->
-            new User(resultSet.getLong(ID),
-                    resultSet.getString(EMAIL),
-                    resultSet.getString(PASSWORD),
-                    resultSet.getString(NAME),
-                    resultSet.getString(LOCATION),
-                    resultSet.getLong(CATEGORY_ID_FK),
-                    resultSet.getString(CURRENT_POSITION),
-                    resultSet.getString(DESCRIPTION),
-                    resultSet.getString(EDUCATION));
+    private CategoryDao categoryDao;
+
+    protected final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID_FK);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+
+        return new User(resultSet.getLong(ID),
+                resultSet.getString(EMAIL),
+                resultSet.getString(PASSWORD),
+                resultSet.getString(NAME),
+                resultSet.getString(LOCATION),
+                category,
+                resultSet.getString(CURRENT_POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getString(EDUCATION));
+    };
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
-
-    private final CategoryDao categoryDao;
 
 
     @Autowired
@@ -62,9 +70,15 @@ public class UserJdbcDao implements UserDao {
         this.categoryDao = categoryDao;
     }
 
+
     @Override
     public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
-        Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
+        long categoryID = 0;
+        Category category = null;
+        if(categoryName != null) {
+            category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
+            categoryID = category.getId();
+        }
 
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
@@ -74,11 +88,11 @@ public class UserJdbcDao implements UserDao {
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
-        values.put(CATEGORY_ID_FK, category.getId());
+        values.put(CATEGORY_ID_FK, categoryID);
 
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password, name, location, category.getId(), currentPosition, description, education);
+        return new User(userId.longValue(), email, password, name, location, category, currentPosition, description, education);
     }
 
     @Override

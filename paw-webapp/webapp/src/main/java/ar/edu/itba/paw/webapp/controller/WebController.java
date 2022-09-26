@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
@@ -132,7 +133,8 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profileUser");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
-        mav.addObject("category", categoryService.findById(user.getCategoryId_fk()));
+        //TODO: Pedir la category, validar que no sea null
+        //mav.addObject("category", categoryService.findById();
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
