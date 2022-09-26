@@ -316,6 +316,8 @@ public class WebController {
         mailMap.put(EmailService.USERNAME_FIELD, user.getName());
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
+        mailMap.put("salary", String.valueOf(jobOffer.getSalary()));
+        mailMap.put("modality", jobOffer.getModality());
         mailMap.put("enterpriseName", enterprise.getName());
         mailMap.put("enterpriseEmail", enterprise.getEmail());
         mailMap.put("message", form.getMessage());
@@ -325,6 +327,7 @@ public class WebController {
         mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, Locale.getDefault()));
         mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, Locale.getDefault()));
         mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, Locale.getDefault()));
+        mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, Locale.getDefault()));
         mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, Locale.getDefault()));
         mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
 

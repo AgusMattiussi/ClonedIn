@@ -33,8 +33,7 @@
                             <form:select path="category" cssClass="form-select">
                                 <form:option value=""><spring:message code="categoryFilter"/></form:option>
                                 <c:forEach items="${categories}" var="category">
-                                    <%--                                <spring:message code="${category.name}"/>--%>
-                                    <form:option value="${category.id}">${category.name}</form:option>
+                                    <form:option value="${category.id}"><spring:message code="${category.name}"/></form:option>
                                 </c:forEach>
                             </form:select>
                         </div>
@@ -89,12 +88,7 @@
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                                                 <p><spring:message code="register_category"/>:
                                                                     <span class="badge badge-pill badge-success">
-                                                                        <%--<c:forEach items="${categories}" var="cat">
-                                                                            <c:set var="categoryId" value="${cat.id}"/>
-                                                                            <c:if test="${us.categoryId_fk == categoryId}">
-                                                                                <c:out value="${cat.name}"/>
-                                                                            </c:if>
-                                                                        </c:forEach>--%>
+                                                                        <c:out value="${us.category.name}"/>
                                                                     </span>
                                                                 </p>
                                                                 <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>
