@@ -104,14 +104,18 @@ public class WebController {
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
-                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm, HttpServletRequest request) {
+                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                             HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("index");
 
         final List<User> usersList;
-        String p = request.getParameter("term");
 
-        if(p==null)
-            usersList = userService.getUsersList(page - 1, itemsPerPage);
+        //TODO: refactor
+        if(request.getParameter("term") == null)
+            if(request.getParameter("location") == null)
+                usersList = userService.getUsersList(page - 1, itemsPerPage);
+            else
+                usersList = userService.getUsersListByLocation(page-1, itemsPerPage, filterForm.getLocation());
         else
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
@@ -140,7 +144,8 @@ public class WebController {
 
     @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
-    public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId, @RequestParam(value = "page", defaultValue = "1") final int page) {
+    public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
 
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
@@ -279,7 +284,7 @@ public class WebController {
         return new ModelAndView("redirect:/");
     }
 
-//    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formJobOffer(Authentication loggedUser, @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("jobOfferForm");
@@ -288,7 +293,7 @@ public class WebController {
         return mav;
     }
 
-//    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createJobOffer(Authentication loggedUser, @Valid @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {
@@ -343,6 +348,7 @@ public class WebController {
 
         String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
         emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
+        // TODO: validar clave duplicada
         contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
 
 
