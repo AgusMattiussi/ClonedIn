@@ -8,8 +8,8 @@ INSERT INTO aptitudUsuario (idAptitud, idUsuario)
     FROM aptitud a, usuario u
     WHERE a.descripcion = 'testskill'
         AND u.email = 'johnlennon@gmail.com';
-INSERT INTO ofertaLaboral (idEmpresa, posicion, descripcion, salario, idRubro)
-    SELECT e.id, 'testPosition', 'testdescription', 1000.99, r.id
+INSERT INTO ofertaLaboral (idEmpresa, posicion, descripcion, salario, idRubro, modalidad)
+    SELECT e.id, 'testPosition', 'testdescription', 1000.99, r.id, 'Remoto'
     FROM empresa e, rubro r
     WHERE e.email = 'empresaurio@gmail.com'
         AND r.nombre = 'testCategory';

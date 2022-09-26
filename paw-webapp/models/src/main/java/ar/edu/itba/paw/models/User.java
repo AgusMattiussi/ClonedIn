@@ -9,7 +9,6 @@ public class User {
     private final String password;
     private final String name;
     private final String location;
-    //TODO: FK o nombre?
     private final Category category;
     private final String currentPosition;
     private final String description;

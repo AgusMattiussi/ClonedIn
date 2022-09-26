@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface JobOfferService {
 
-    JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary);
+    JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary, String modality);
 
     Optional<JobOffer> findById(long id);
 

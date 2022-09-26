@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS ofertaLaboral (
     descripcion TEXT,
     salario DECIMAL(12,2),
     idRubro INTEGER,
+    modalidad VARCHAR(20),
     FOREIGN KEY (idEmpresa) REFERENCES empresa ON DELETE CASCADE,
     FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
     CHECK(salario > 0)

@@ -23,8 +23,8 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary) {
-        return jobOfferDao.create(enterpriseID, categoryID, position, description, salary);
+    public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary, String modality) {
+        return jobOfferDao.create(enterpriseID, categoryID, position, description, salary, modality);
     }
 
     @Override

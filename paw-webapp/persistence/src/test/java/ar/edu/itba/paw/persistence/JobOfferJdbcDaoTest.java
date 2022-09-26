@@ -39,6 +39,7 @@ public class JobOfferJdbcDaoTest {
     private static final BigDecimal NEW_SALARY = BigDecimal.valueOf(9999999.99);
     private static final String TEST_POSITION = "testPosition";
     private static final String TEST_DESCRIPTION = "testdescription";
+    private static final String TEST_MODALITY = "Remoto";
     private static final BigDecimal TEST_SALARY = BigDecimal.valueOf(1000.99);
 
     @Autowired
@@ -65,7 +66,7 @@ public class JobOfferJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final JobOffer newJobOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY);
+        final JobOffer newJobOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
 
         Assert.assertNotNull(newJobOffer);
         Assert.assertEquals(enterprise.getId(), newJobOffer.getEnterpriseID());
@@ -74,12 +75,13 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(NEW_DESCRIPTION, newJobOffer.getDescription());
         Assert.assertEquals(NEW_SALARY, newJobOffer.getSalary());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, JOB_OFFER_TABLE,  POSITION + " = '" + NEW_POSITION + "'"));
+        Assert.assertEquals(TEST_MODALITY, newJobOffer.getModality());
     }
 
     @Test(expected = InvalidParameterException.class)
     public void testInvalidCreate() {
         BigDecimal invalidSalary = BigDecimal.valueOf(-1000);
-        jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, invalidSalary);
+        jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, invalidSalary, TEST_MODALITY);
     }
 
     @Test
@@ -93,6 +95,7 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(TEST_POSITION, existingJobOffer.getPosition());
         Assert.assertEquals(TEST_DESCRIPTION, existingJobOffer.getDescription());
         Assert.assertEquals(TEST_SALARY, existingJobOffer.getSalary());
+        Assert.assertEquals(TEST_MODALITY, existingJobOffer.getModality());
     }
 
     @Test
@@ -108,6 +111,7 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(TEST_POSITION, jobOfferList.get(0).getPosition());
         Assert.assertEquals(TEST_DESCRIPTION, jobOfferList.get(0).getDescription());
         Assert.assertEquals(TEST_SALARY, jobOfferList.get(0).getSalary());
+        Assert.assertEquals(TEST_MODALITY, jobOfferList.get(0).getModality());
     }
 
 }

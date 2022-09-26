@@ -285,7 +285,7 @@ public class WebController {
             return formJobOffer(jobOfferForm, enterpriseId);
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        jobOfferService.create(enterprise.getId(), 1, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary());
+        jobOfferService.create(enterprise.getId(), 1, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }
