@@ -377,6 +377,7 @@ public class WebController {
 
         mailMap.put("username", username);
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, Locale.getDefault()));
+        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, Locale.getDefault()));
         mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
