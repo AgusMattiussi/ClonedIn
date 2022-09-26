@@ -260,7 +260,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("contacts");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(enterpriseId));
         return mav;
     }
 
