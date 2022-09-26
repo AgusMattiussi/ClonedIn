@@ -115,12 +115,10 @@ public class WebController {
         else
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
-        final Integer usersCount = userService.getUsersCount().orElse(0);
-
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
-        mav.addObject("pages", usersCount / itemsPerPage + 1);
+        mav.addObject("pages", usersList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
@@ -133,8 +131,6 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profileUser");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
-        //TODO: Pedir la category, validar que no sea null
-        //mav.addObject("category", categoryService.findById();
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
