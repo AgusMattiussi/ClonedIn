@@ -29,9 +29,11 @@ public class UserForm {
     private File image;
 
     @Size(max=50)
+    @NotEmpty
     private String city;
 
     @Size(max=50)
+    @NotEmpty
     private String position;
 
     @Size(max=200)
@@ -40,6 +42,7 @@ public class UserForm {
     @NotEmpty
     private String category;
 
+    @NotEmpty
     private String level;
 
     public String getPassword() {

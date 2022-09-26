@@ -138,12 +138,16 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
-    public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
+    public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId, @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
+
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffer", contactService.getJobOffersForUser(userId));
+        mav.addObject("jobOffers", contactService.getJobOffersForUser(userId));
+//        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+//        mav.addObject("currentPage", page);
         return mav;
     }
 
@@ -159,7 +163,7 @@ public class WebController {
         if (errors.hasErrors()) {
             return formRegisterUser(userForm);
         }
-        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), null);
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
         sendRegisterEmail(userForm.getEmail(), userForm.getName());
 
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
@@ -167,6 +171,7 @@ public class WebController {
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(@ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("experienceForm");
@@ -174,6 +179,7 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(@Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -185,6 +191,7 @@ public class WebController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(@ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationForm");
@@ -192,6 +199,7 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(@Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -204,6 +212,7 @@ public class WebController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(@ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
@@ -211,6 +220,7 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createSkill(@Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -239,6 +249,7 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("contacts");
@@ -267,6 +278,7 @@ public class WebController {
         return new ModelAndView("redirect:/");
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formJobOffer(@ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("jobOfferForm");
@@ -275,6 +287,7 @@ public class WebController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createJobOffer(@Valid @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {

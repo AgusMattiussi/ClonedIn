@@ -39,7 +39,6 @@
                                                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferForm_mode"/></label>
                                                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                                                             <form:select path="mode" cssClass="list-dt ml-auto">
-                                                                <form:option value="None"><spring:message code="select_none"/></form:option>
                                                                 <form:option value="Remoto"><spring:message code="select_modeVirtual"/></form:option>
                                                                 <form:option value="Presencial"><spring:message code="select_modeOnSite"/></form:option>
                                                                 <form:option value="Mixto"><spring:message code="select_modeMixed"/></form:option>

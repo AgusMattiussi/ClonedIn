@@ -56,11 +56,11 @@
                           <form:errors path="city" cssClass="formError" element="p"/>
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
                           <form:errors path="position" cssClass="formError" element="p"/>
-                          <div class="d-flex">
+                          <div class="row">
+                          <div class="col-sm-6 d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_level"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="level" cssClass="list-dt ml-auto">
-                                <form:option value="NONE"><spring:message code="select_none"/></form:option>
                                 <form:option value="Primario"><spring:message code="select_level1"/></form:option>
                                 <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
                                 <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
@@ -68,10 +68,9 @@
                                 <form:option value="Postgrado"><spring:message code="select_level5"/></form:option>
                               </form:select>
                             </div>
+                            <form:errors path="level" cssClass="formError" element="p"/>
                           </div>
-                          <form:input type="text" path="aboutMe" placeholder="${descriptionPlaceholder}"/>
-                          <form:errors path="aboutMe" cssClass="formError" element="p"/>
-                          <div class="d-flex">
+                          <div class="col-sm-6 d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="category" cssClass="list-dt ml-auto">
@@ -80,7 +79,11 @@
                                 </c:forEach>
                               </form:select>
                             </div>
+                            <form:errors path="category" cssClass="formError" element="p"/>
                           </div>
+                          </div>
+                          <form:input type="text" path="aboutMe" placeholder="${descriptionPlaceholder}"/>
+                          <form:errors path="aboutMe" cssClass="formError" element="p"/>
                         </div>
                         <p><spring:message code="register_requiredmsg"/></p>
                         <a href="<c:url value="/login"/>">

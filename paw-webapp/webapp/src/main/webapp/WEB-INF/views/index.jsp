@@ -86,14 +86,14 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                                <p><spring:message code="register_category"/>:
+                                                                <p><spring:message code="profile_category"/>:
                                                                     <span class="badge badge-pill badge-success">
                                                                         <c:out value="${us.category.name}"/>
                                                                     </span>
                                                                 </p>
-                                                                <p class="card-text"><spring:message code="register_position"/>: <c:out value="${us.currentPosition}"/></p>
-<%--                                                            <p class="card-text"><spring:message code="edform_level"/>: <c:out value="${user.level}"/></p>--%>
-                                                                <p class="card-text"><spring:message code="register_location"/>: <c:out value="${us.location}"/></p>
+                                                                <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${us.currentPosition}"/></p>
+                                                                <p class="card-text"><spring:message code="profile_level"/>: <c:out value="${us.education}"/></p>
+                                                                <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>
                                                     <div class="card-footer second bg-white text-right">

@@ -38,12 +38,12 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                    <p class="card-text"><spring:message code="register_position"/>: <c:out value="${user.currentPosition}"/></p>
-                                    <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success">
+                                    <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                    <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success">
                                         <c:out value="${user.category.name}"/>
                                     </span></p>
-<%--                                    <p class="card-text"><spring:message code="edform_level"/>: <c:out value="${user.level}"/></p>--%>
-                                    <p class="card-text"><spring:message code="register_location"/>: <c:out value="${user.location}"/></p>
+                                    <p class="card-text"><spring:message code="profile_level"/>: <c:out value="${user.education}"/></p>
+                                    <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${user.location}"/></p>
                             </div>
                         </div>
                     </div>
