@@ -147,6 +147,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("userNotifications");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("jobOffer", contactService.getJobOffersForUser(userId));
         return mav;
     }
 
