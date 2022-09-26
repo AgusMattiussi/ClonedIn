@@ -26,9 +26,9 @@
 <%--                        <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark">Contactar</button></a>--%>
 <%--                        </sec:authorize>--%>
                     </div>
-                    <div class="card-footer bg-white text-center">
-                            <p class="card-text"><spring:message code="register_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
-                        <p class="card-text"><spring:message code="register_location"/>: <c:out value="${enterprise.location}"/></p>
+                    <div class="card-footer bg-white">
+                            <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
+                        <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${enterprise.location}"/></p>
                             <p class="card-text"><b><spring:message code="register_description2"/></b></p>
                             <p class="card-text"><c:out value="${enterprise.description}"/></p>
                     </div>
@@ -51,13 +51,39 @@
                                 <div class="card mt-2">
                                     <div class="card-body pb-0">
                                         <div class="d-flex justify-content-between">
+                                            <div class="row">
+                                                <div class="col-sm-8">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
+                                                </div>
+                                                    <div class="col-sm-4">
+                                            <span class="badge badge-pill badge-success"><c:out value="${joboffer.categoryID}"/></span>
+                                                    </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-footer bg-white text-left">
-                                        <p class="card-text"><spring:message code="jobOfferForm_salary"/>: <c:out value="${joboffer.salary}"/> </p>
-                                            <%--                                        <p class="card-text"> <spring:message code="jobOfferForm_mode"/><c:out value="${joboffer.mode}"/> </p>--%>
-                                        <p><c:out value="${joboffer.description}"/> </p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <h6><spring:message code="jobOfferForm_salary"/></h6>
+                                                    <p><c:out value="${joboffer.salary}"/> </p>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <h6> <spring:message code="jobOfferForm_mode2"/></h6>
+                                                    <p> <c:out value="${joboffer.modality}"/> </p>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <h6> <spring:message code="jobOfferForm_skills"/></h6>
+<%--                                                    <p><c:out value="${joboffer.skill1}"/> </p>--%>
+<%--                                                    <p><c:out value="${joboffer.skill2}"/> </p>--%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p><c:out value="${joboffer.description}"/></p>
                                     </div>
                                 </div>
                             </c:forEach>

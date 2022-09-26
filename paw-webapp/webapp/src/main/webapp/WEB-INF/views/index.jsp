@@ -39,7 +39,7 @@
                         </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-center ml-2">
-                            <spring:message code="register_location" var="locationFilterPlaceholder"/>
+                            <spring:message code="profile_location" var="locationFilterPlaceholder"/>
                             <form:input type="text" path="location" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
                         </div>
                         <br>
