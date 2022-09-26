@@ -16,6 +16,7 @@
     <h3><spring:message code="navbar_notifications"/></h3>
 </div>
     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+        <div class="container">
     <c:choose>
         <c:when test = "${currentPage > pages}">
             <h4 class="mt-5 mb-5"><spring:message code="NOnotifications"/></h4>
@@ -23,8 +24,14 @@
         <c:otherwise>
             <c:forEach var="job" items="${jobOffers}">
         <div class="card mt-2 pt-2 ml-2 mr-2 mb-2" >
+            <div class="row">
+                <div class="col-sm-8">
             <h5 class="card-header"> ${job.enterpriseID}  | ${job.position} </h5>
+                </div>
+                <div class="col-sm-4">
             <span class="badge badge-pill badge-success"><c:out value="${job.categoryID}"/></span>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col">
@@ -42,7 +49,8 @@
                     <div class="col">
                         <div class="row">
                             <h5 class="card-title"><spring:message code="notifications_skills"/></h5>
-                            <p class="card-text">HACER</p>
+                                <%-- <p class="card-text"><c:out value="${joboffer.skill1}"/> </p>--%>
+                                <%-- <p class="card-text"><c:out value="${joboffer.skill2}"/> </p>--%>
                         </div>
                     </div>
                     <div class="col">
@@ -94,6 +102,7 @@
                 </li>
             </ul>
         </nav>
+        </div>
     </div>
 </body>
 </html>

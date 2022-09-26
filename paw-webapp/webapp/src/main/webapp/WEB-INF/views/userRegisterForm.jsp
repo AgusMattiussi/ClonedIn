@@ -56,8 +56,7 @@
                           <form:errors path="city" cssClass="formError" element="p"/>
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
                           <form:errors path="position" cssClass="formError" element="p"/>
-                          <div class="row">
-                          <div class="col-sm-6 d-flex">
+                          <div class="d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="edform_level"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="level" cssClass="list-dt ml-auto">
@@ -70,7 +69,7 @@
                             </div>
                             <form:errors path="level" cssClass="formError" element="p"/>
                           </div>
-                          <div class="col-sm-6 d-flex">
+                          <div class="d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="register_category"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="category" cssClass="list-dt ml-auto">
@@ -80,7 +79,6 @@
                               </form:select>
                             </div>
                             <form:errors path="category" cssClass="formError" element="p"/>
-                          </div>
                           </div>
                           <form:input type="text" path="aboutMe" placeholder="${descriptionPlaceholder}"/>
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>

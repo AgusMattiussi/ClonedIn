@@ -51,14 +51,14 @@
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
                                                         <div class="d-flex">
                                                             <div class="row">
-                                                                <div class="col-sm-6">
+                                                                <div class="col-sm-4">
                                                                 <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferForm_skills"/></label>
                                                                 </div>
-                                                                 <div class="col-sm-3">
+                                                                 <div class="col-sm-4">
                                                                 <form:input type="text" path="skill1"/>
                                                                 <form:errors path="skill1" cssClass="formError" element="p"/>
                                                                  </div>
-                                                                     <div class="col-sm-3">
+                                                                     <div class="col-sm-4">
                                                                 <form:input type="text" path="skill2"/>
                                                                 <form:errors path="skill2" cssClass="formError" element="p"/>
                                                                      </div>

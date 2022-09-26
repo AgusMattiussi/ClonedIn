@@ -29,6 +29,7 @@ public class EnterpriseForm {
 
     private File image;
 
+    @NotEmpty
     @Size(max=50)
     private String city;
 
