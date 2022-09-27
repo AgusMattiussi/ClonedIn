@@ -86,7 +86,7 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                                <p><spring:message code="profile_category"/>:
+                                                                <p><spring:message code="index_category"/>:
                                                                     <span class="badge badge-pill badge-success">
                                                                         <c:out value="${us.category.name}"/>
                                                                     </span>
@@ -96,7 +96,7 @@
                                                                 <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>
-                                                    <div class="card-footer second bg-white text-right">
+                                                    <div class="card-footer second bg-white text-right mt-auto">
                                                         <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark"><spring:message code="profile_contactbutton"/></button></a>
                                                     </div>
                                                 </div>
