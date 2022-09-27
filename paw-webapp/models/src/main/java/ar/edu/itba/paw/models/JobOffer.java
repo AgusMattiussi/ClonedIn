@@ -23,8 +23,6 @@ public class JobOffer {
         this.modality = modality;
     }
 
-
-
     public long getId() {
         return id;
     }

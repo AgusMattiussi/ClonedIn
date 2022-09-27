@@ -9,7 +9,6 @@ public class ContactForm {
     @Size(max=100)
     private String message;
 
-    @NotEmpty
     private long category;
 
     public String getMessage() {

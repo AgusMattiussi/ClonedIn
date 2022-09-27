@@ -28,4 +28,7 @@ public interface UserService {
 
     List<User> getUsersListByLocation(int page, int pageSize, String location);
 
+    List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel);
+
+
 }
