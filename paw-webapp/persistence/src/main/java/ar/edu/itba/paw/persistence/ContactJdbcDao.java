@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.util.*;
 
 @Repository
@@ -97,6 +98,23 @@ public class ContactJdbcDao implements ContactDao {
 
         return jobOfferList;
     }
+
+    @Override
+    public boolean alreadyContacted(long userID, long jobOfferID) {
+        return template.queryForObject("SELECT COUNT(*) FROM " + CONTACT_TABLE + " WHERE " +
+                USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?", new Object[]{ userID, jobOfferID},
+                Integer.class) > 0;
+    }
+
+    /*@Override
+    public void acceptJobOffer(long userID, long jobOfferID) {
+
+    }
+
+    @Override
+    public void rejectJobOffer(long userID, long jobOfferID) {
+
+    }*/
 
     //TODO: Manejar el caso en que ya exista el par
     @Override

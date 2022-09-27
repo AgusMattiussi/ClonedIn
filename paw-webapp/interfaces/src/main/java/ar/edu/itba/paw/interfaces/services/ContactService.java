@@ -16,5 +16,11 @@ public interface ContactService {
 
     List<JobOffer> getJobOffersForUser(long userId);
 
+    boolean alreadyContacted(long userID, long jobOfferID);
+
+    /*void acceptJobOffer(long userID, long jobOfferID);
+
+    void rejectJobOffer(long userID, long jobOfferID);*/
+
     //TODO: void removeContact(long enterpriseID, long userID);
 }
