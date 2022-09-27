@@ -48,6 +48,7 @@ public class ContactJdbcDaoTest {
     private static final String NEW_USER_DESCRIPTION = "Un tipo muy laburante";
     private static final String NEW_USER_EDUCATION = "Licenciado en la Universidad de la Calle";
     private static final String TEST_SKILL = "unaskill";
+    private static final long NON_EXISTING_JOB_OFFER_ID = 777;
 
     @Autowired
     private ContactJdbcDao contactJdbcDao;
@@ -116,5 +117,17 @@ public class ContactJdbcDaoTest {
         Assert.assertFalse(jobOfferList.isEmpty());
         Assert.assertEquals(1, jobOfferList.size());
         Assert.assertTrue(jobOfferList.contains(testJobOffer));
+    }
+
+    @Test
+    public void testAlreadyContactedTrue(){
+        final boolean contacted = contactJdbcDao.alreadyContacted(testUser.getId(), testJobOffer.getId());
+        Assert.assertTrue(contacted);
+    }
+
+    @Test
+    public void testAlreadyContactedFalse(){
+        final boolean contacted = contactJdbcDao.alreadyContacted(testUser.getId(), NON_EXISTING_JOB_OFFER_ID);
+        Assert.assertFalse(contacted);
     }
 }

@@ -33,7 +33,7 @@ public class UserServiceImplTest {
     private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
-    private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
+    private static final String TEST_EDUCATION = "No especificado";
 
 
     private static final String PASSWORD = "passwordpassword";
