@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,25 +31,35 @@ public class JobOfferJdbcDao implements JobOfferDao {
     public static final String[] MODALITIES = new String[] {"remoto", "presencial", "mixto"};
     public static final Set<String> modalitiesSet = new HashSet<>(Arrays.asList(MODALITIES));
 
-    private static final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) ->
-            new JobOffer(resultSet.getLong(ID),
-                    resultSet.getLong(ENTERPRISE_ID),
-                    resultSet.getLong(CATEGORY_ID),
-                    resultSet.getString(POSITION),
-                    resultSet.getString(DESCRIPTION),
-                    resultSet.getBigDecimal(SALARY),
-                    resultSet.getString(MODALITY)));
-
     private final JdbcTemplate template;
 
     private final SimpleJdbcInsert insert;
 
+    private CategoryDao categoryDao;
+
+    private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new JobOffer(resultSet.getLong(ID),
+                resultSet.getLong(ENTERPRISE_ID),
+                category,
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getBigDecimal(SALARY),
+                resultSet.getString(MODALITY));
+    });
+
     @Autowired
-    public JobOfferJdbcDao(final DataSource ds){
+    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(JOB_OFFER_TABLE)
                 .usingGeneratedKeyColumns(ID);
+        this.categoryDao = categoryDao;
     }
 
 
@@ -56,6 +69,8 @@ public class JobOfferJdbcDao implements JobOfferDao {
             if (salary.compareTo(BigDecimal.valueOf(0)) <= 0)
                 throw new InvalidParameterException("El salario no puede <= 0");
         }
+
+        Category category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
         if(!modalitiesSet.contains(modality))
             modality = "No especificado";
@@ -70,7 +85,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
         Number jobOfferID = insert.executeAndReturnKey(values);
 
-        return new JobOffer(jobOfferID.longValue(), enterpriseID, categoryID, position, description, salary, modality);
+        return new JobOffer(jobOfferID.longValue(), enterpriseID, category, position, description, salary, modality);
     }
 
     @Override
