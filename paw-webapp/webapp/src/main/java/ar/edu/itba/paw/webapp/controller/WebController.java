@@ -133,6 +133,22 @@ public class WebController {
         return mav;
     }
 
+    @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView acceptJobOffer(@PathVariable("userId") final long userId,
+                                       @PathVariable("jobOfferId") final long jobOfferId,
+                                       @PathVariable("answer") final long answer) {
+
+        if(answer==0) {
+            contactService.rejectJobOffer(userId, jobOfferId);
+            //sendRejectEmail
+        }
+        else {
+            contactService.acceptJobOffer(userId, jobOfferId);
+            //sendAcceptEmail
+        }
+
+        return new ModelAndView("redirect:/notificationsUser/" + userId);
+    }
     @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -307,7 +323,8 @@ public class WebController {
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors,
+                                @PathVariable("userId") final long userId) {
         if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
             errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
             return contactForm(loggedUser, form, userId);
