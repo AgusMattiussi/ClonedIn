@@ -9,12 +9,12 @@ INSERT INTO aptitudUsuario (idAptitud, idUsuario)
     WHERE a.descripcion = 'testskill'
         AND u.email = 'johnlennon@gmail.com';
 INSERT INTO ofertaLaboral (idEmpresa, posicion, descripcion, salario, idRubro, modalidad)
-    SELECT e.id, 'testPosition', 'testdescription', 1000.99, r.id, 'Remoto'
+    SELECT e.id, 'testPosition', 'testdescription', 1000.99, r.id, 'remoto'
     FROM empresa e, rubro r
     WHERE e.email = 'empresaurio@gmail.com'
         AND r.nombre = 'testCategory';
-INSERT INTO contactado (idEmpresa, idUsuario, idOferta)
-    SELECT e.id, u.id, ol.id
+INSERT INTO contactado (idEmpresa, idUsuario, idOferta, estado)
+    SELECT e.id, u.id, ol.id, 'pendiente'
     FROM empresa e, usuario u, ofertaLaboral ol
     WHERE e.email = 'empresaurio@gmail.com'
         AND u.email = 'johnlennon@gmail.com'

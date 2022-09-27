@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS contactado (
     idEmpresa INTEGER NOT NULL,
     idUsuario INTEGER NOT NULL,
     idOferta INTEGER NOT NULL,
+    estado VARCHAR(20) NOT NULL,
     PRIMARY KEY (idUsuario, idOferta),
     FOREIGN KEY (idEmpresa) REFERENCES empresa ON DELETE CASCADE,
     FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
