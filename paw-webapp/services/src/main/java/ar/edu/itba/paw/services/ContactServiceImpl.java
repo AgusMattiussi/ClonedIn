@@ -56,4 +56,9 @@ public class ContactServiceImpl implements ContactService {
     public void acceptJobOffer(long userID, long jobOfferID) {
         contactDao.acceptJobOffer(userID, jobOfferID);
     }
+
+    @Override
+    public void rejectJobOffer(long userID, long jobOfferID) {
+        contactDao.rejectJobOffer(userID, jobOfferID);
+    }
 }

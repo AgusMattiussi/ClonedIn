@@ -151,4 +151,14 @@ public class ContactJdbcDaoTest {
         Assert.assertFalse(status.isEmpty());
         Assert.assertEquals(STATUS_ACCEPTED, status);
     }
+
+    @Test
+    public void testRejectJobOffer(){
+        contactJdbcDao.rejectJobOffer(testUser.getId(), testJobOffer.getId());
+        final String status = contactJdbcDao.getStatus(testUser.getId(), testJobOffer.getId());
+
+        Assert.assertNotNull(status);
+        Assert.assertFalse(status.isEmpty());
+        Assert.assertEquals(STATUS_REJECTED, status);
+    }
 }
