@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
@@ -46,15 +48,20 @@ public class EnterpriseJdbcDaoTest {
 
     @Autowired
     private EnterpriseJdbcDao dao;
-
+    @Autowired
+    private CategoryDao categoryDao;
     @Autowired
     private DataSource ds;
-
     private JdbcTemplate jdbctemplate;
+    private Category testCategory;
+
+
+
 
     @Before
     public void setUp() {
         jdbctemplate = new JdbcTemplate(ds);
+        testCategory = categoryDao.findByName(TEST_CATEGORY_NAME).get();
         //JdbcTestUtils.deleteFromTables(jdbctemplate, ENTERPRISE_TABLE);
     }
 
@@ -67,7 +74,7 @@ public class EnterpriseJdbcDaoTest {
         //Assert.assertEquals(TEST_PASSWORD, newEnterprise.getPassword());
         Assert.assertEquals(TEST_NAME, newEnterprise.getName());
         Assert.assertEquals(TEST_LOCATION, newEnterprise.getLocation());
-//        Assert.assertEquals(TEST_CATEGORY_ID_FK, newEnterprise.getCategoryId_fk());
+        Assert.assertEquals(testCategory, newEnterprise.getCategory());
         Assert.assertEquals(TEST_DESCRIPTION, newEnterprise.getDescription());
 
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbctemplate, ENTERPRISE_TABLE, EMAIL + " = '" + TEST_EMAIL + "'"));

@@ -27,19 +27,27 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private static final String CATEGORY_ID_FK = "idRubro";
     private static final String DESCRIPTION = "descripcion";
 
-    protected static final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) ->
-            new Enterprise(resultSet.getLong(ID),
-                    resultSet.getString(NAME),
-                    resultSet.getString(EMAIL),
-                    resultSet.getString(PASSWORD),
-                    resultSet.getString(LOCATION),
-                    resultSet.getLong(CATEGORY_ID_FK),
-                    resultSet.getString(DESCRIPTION));
-
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
+    private CategoryDao categoryDao;
 
-    private final CategoryDao categoryDao;
+    protected final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID_FK);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new Enterprise(resultSet.getLong(ID),
+                resultSet.getString(NAME),
+                resultSet.getString(EMAIL),
+                resultSet.getString(PASSWORD),
+                resultSet.getString(LOCATION),
+                category,
+                resultSet.getString(DESCRIPTION));
+    };
+
+
 
     @Autowired
     public EnterpriseJdbcDao(final DataSource ds, final CategoryDao categoryDao){
@@ -64,7 +72,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
         Number enterpriseId = insert.executeAndReturnKey(values);
 
-        return new Enterprise(enterpriseId.longValue(), name, email, password, location, category.getId(), description);
+        return new Enterprise(enterpriseId.longValue(), name, email, password, location, category, description);
     }
 
     @Override

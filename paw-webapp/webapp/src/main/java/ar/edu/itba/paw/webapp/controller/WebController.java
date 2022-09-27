@@ -261,7 +261,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         mav.addObject("enterprise", enterprise);
-        mav.addObject("category", categoryService.findById(enterprise.getCategoryId_fk()));
+        mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;

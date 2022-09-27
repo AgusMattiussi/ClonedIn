@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
@@ -54,15 +56,18 @@ public class UserJdbcDaoTest {
 
     @Autowired
     private UserJdbcDao dao;
-
+    @Autowired
+    private CategoryDao categoryDao;
     @Autowired
     private DataSource ds;
-
     private JdbcTemplate jdbctemplate;
+    private Category testCategory;
+
 
     @Before
     public void setUp() {
         jdbctemplate = new JdbcTemplate(ds);
+        testCategory = categoryDao.findByName(TEST_CATEGORY_NAME).get();
         //JdbcTestUtils.deleteFromTables(jdbctemplate, CATEGORY_TABLE);
     }
 
@@ -74,10 +79,9 @@ public class UserJdbcDaoTest {
 
         Assert.assertNotNull(newUser);
         Assert.assertEquals(TEST_EMAIL, newUser.getEmail());
-        //Assert.assertEquals(TEST_PASSWORD, newUser.getPassword());
         Assert.assertEquals(TEST_NAME, newUser.getName());
         Assert.assertEquals(TEST_LOCATION, newUser.getLocation());
-        //Assert.assertEquals(0, newUser.getCategoryId_fk());
+        Assert.assertEquals(testCategory, newUser.getCategory());
         Assert.assertEquals(TEST_CURRENT_POSITION, newUser.getCurrentPosition());
         Assert.assertEquals(TEST_DESCRIPTION, newUser.getDescription());
         Assert.assertEquals(TEST_EDUCATION, newUser.getEducation());
