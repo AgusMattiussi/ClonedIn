@@ -22,6 +22,8 @@ public class ContactJdbcDao implements ContactDao {
     private static final String ENTERPRISE_ID = "idEmpresa";
     private static final String USER_ID = "idUsuario";
     private static final String JOB_OFFER_ID = "idOferta";
+    private static final String STATUS = "estado";
+    private static final String PENDING_STATUS = "pendiente";
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -103,9 +105,12 @@ public class ContactJdbcDao implements ContactDao {
         values.put(ENTERPRISE_ID, enterpriseID);
         values.put(USER_ID, userID);
         values.put(JOB_OFFER_ID, jobOfferID);
+        values.put(STATUS, PENDING_STATUS);
 
         insert.execute(values);
     }
+
+
 
 
     /*@Override

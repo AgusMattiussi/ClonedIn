@@ -39,7 +39,7 @@ public class JobOfferJdbcDaoTest {
     private static final BigDecimal NEW_SALARY = BigDecimal.valueOf(9999999.99);
     private static final String TEST_POSITION = "testPosition";
     private static final String TEST_DESCRIPTION = "testdescription";
-    private static final String TEST_MODALITY = "Remoto";
+    private static final String TEST_MODALITY = "remoto";
     private static final BigDecimal TEST_SALARY = BigDecimal.valueOf(1000.99);
 
     @Autowired
