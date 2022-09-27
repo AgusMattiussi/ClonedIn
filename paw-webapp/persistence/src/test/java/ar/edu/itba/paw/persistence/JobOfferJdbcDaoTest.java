@@ -70,7 +70,7 @@ public class JobOfferJdbcDaoTest {
 
         Assert.assertNotNull(newJobOffer);
         Assert.assertEquals(enterprise.getId(), newJobOffer.getEnterpriseID());
-        Assert.assertEquals(category.getId(), newJobOffer.getCategoryID());
+        Assert.assertEquals(category, newJobOffer.getCategory());
         Assert.assertEquals(NEW_POSITION, newJobOffer.getPosition());
         Assert.assertEquals(NEW_DESCRIPTION, newJobOffer.getDescription());
         Assert.assertEquals(NEW_SALARY, newJobOffer.getSalary());
@@ -91,7 +91,7 @@ public class JobOfferJdbcDaoTest {
         Assert.assertNotNull(existingJobOffer);
         Assert.assertEquals(1, existingJobOffer.getId());
         Assert.assertEquals(enterprise.getId(), existingJobOffer.getEnterpriseID());
-        Assert.assertEquals(category.getId(), existingJobOffer.getCategoryID());
+        Assert.assertEquals(category, existingJobOffer.getCategory());
         Assert.assertEquals(TEST_POSITION, existingJobOffer.getPosition());
         Assert.assertEquals(TEST_DESCRIPTION, existingJobOffer.getDescription());
         Assert.assertEquals(TEST_SALARY, existingJobOffer.getSalary());
@@ -107,7 +107,7 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(1, jobOfferList.size());
         Assert.assertEquals(1, jobOfferList.get(0).getId());
         Assert.assertEquals(enterprise.getId(), jobOfferList.get(0).getEnterpriseID());
-        Assert.assertEquals(category.getId(), jobOfferList.get(0).getCategoryID());
+        Assert.assertEquals(category, jobOfferList.get(0).getCategory());
         Assert.assertEquals(TEST_POSITION, jobOfferList.get(0).getPosition());
         Assert.assertEquals(TEST_DESCRIPTION, jobOfferList.get(0).getDescription());
         Assert.assertEquals(TEST_SALARY, jobOfferList.get(0).getSalary());
