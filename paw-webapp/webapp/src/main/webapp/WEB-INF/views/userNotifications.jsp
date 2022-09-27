@@ -18,28 +18,28 @@
     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
         <div class="container">
     <c:choose>
-        <c:when test = "${currentPage > pages}">
+        <c:when test = "${jobOffers.size() == 0}">
             <h4 class="mt-5 mb-5"><spring:message code="NOnotifications"/></h4>
         </c:when>
         <c:otherwise>
             <c:forEach var="job" items="${jobOffers}">
                 <div class="card mt-2 pt-2 ml-2 mr-2 mb-2" >
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5> ${job.enterpriseID}  | ${job.position} </h5>
-                        <span class="badge badge-pill badge-success"><c:out value="${job.categoryID}"/></span>
+                        <h5><c:out value="${job.enterpriseID} | ${job.position}"/></h5>
+                        <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
                                 <div class="row">
                                     <h5 class="card-title"><spring:message code="notofications_mode"/></h5>
-                                    <p class="card-text">${job.modality}</p>
+                                    <p class="card-text"><c:out value="${job.modality}"/></p>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="row">
                                     <h5 class="card-title"><spring:message code="notificacions_salary"/></h5>
-                                    <p class="card-text">${job.salary}</p>
+                                    <p class="card-text"><c:out value="${job.salary}"/></p>
                                 </div>
                             </div>
                             <div class="col">
@@ -50,14 +50,17 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="row" style="margin-bottom: 5px">
-                                    <a href="#" class="btn btn-success">
-                                        <spring:message code="notifications_YES"/>
+                                <div class="d-flex flex-column align-items-center">
+                                    <h5 class="card-title"><spring:message code="notificacions_status"/></h5>
+                                    <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
+                                        <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
+                                            <spring:message code="notifications_YES"/>
+                                        </button>
                                     </a>
-                                </div>
-                                <div class="row">
-                                    <a href="#" class="btn btn-danger">
-                                        <spring:message code="notifications_NO"/>
+                                    <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
+                                        <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
+                                            <spring:message code="notifications_NO"/>
+                                        </button>
                                     </a>
                                 </div>
                             </div>
@@ -104,5 +107,7 @@
 <%--        </nav>--%>
         </div>
     </div>
+    <!-- Modal -->
+    <jsp:include page="../components/answerModal.jsp"/>
 </body>
 </html>

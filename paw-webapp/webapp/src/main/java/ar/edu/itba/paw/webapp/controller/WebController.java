@@ -48,6 +48,9 @@ public class WebController {
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
+    private static final String ANSWER_TEMPLATE = "answerEmail.html";
+    private static final String ACCEPT = "acceptMsg";
+    private static final String REJECT = "rejectMsg";
 
     @Autowired
     MessageSource messageSource;
@@ -133,23 +136,26 @@ public class WebController {
         return mav;
     }
 
-    @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView acceptJobOffer(@PathVariable("userId") final long userId,
-                                       @PathVariable("jobOfferId") final long jobOfferId,
+    @RequestMapping("/acceptJobOffer/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView acceptJobOffer(Authentication loggedUser, @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("answer") final long answer) {
 
+        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(UserNotFoundException::new);
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(UserNotFoundException::new);
+
         if(answer==0) {
-            contactService.rejectJobOffer(userId, jobOfferId);
-            //sendRejectEmail
+            contactService.rejectJobOffer(user.getId(), jobOfferId);
+            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
         }
         else {
-            contactService.acceptJobOffer(userId, jobOfferId);
-            //sendAcceptEmail
+            contactService.acceptJobOffer(user.getId(), jobOfferId);
+            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
-        return new ModelAndView("redirect:/notificationsUser/" + userId);
+        return new ModelAndView("redirect:/notificationsUser/" + user.getId());
     }
-    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -392,6 +398,18 @@ public class WebController {
         String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
 
         emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
+    }
+
+    private void sendAnswerEmail(String enterpriseEmail, String username, String jobOffer, String answerMsg){
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", username);
+        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, Locale.getDefault()));
+        mailMap.put("jobOffer", jobOffer);
+
+        String subject = messageSource.getMessage("answerMail.subject", null, Locale.getDefault());
+
+        emailService.sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
     }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {

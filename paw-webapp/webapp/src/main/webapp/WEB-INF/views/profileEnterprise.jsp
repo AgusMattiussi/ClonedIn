@@ -50,7 +50,7 @@
                                         <div class="d-flex align-items-center">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
                                             <span class="badge badge-pill badge-success mb-2 ml-5">
-                                                <c:out value="${joboffer.categoryID}"/>
+                                                <c:out value="${joboffer.category.name}"/>
                                             </span>
                                         </div>
                                     </div>

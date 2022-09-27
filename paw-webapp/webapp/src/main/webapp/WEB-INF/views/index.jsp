@@ -75,7 +75,7 @@
                         <div class="container">
                             <div class="card-deck justify-content-center mt-2 pt-2" >
                                 <c:choose>
-                                    <c:when test = "${currentPage > pages}">
+                                    <c:when test = "${currentPage > pages || users.size() == 0}">
                                         <h4 class="mt-5 mb-5"><spring:message code="index.noProfilesToShowMsg"/></h4>
                                     </c:when>
                                     <c:otherwise>
