@@ -18,9 +18,10 @@ public interface ContactService {
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
-    /*void acceptJobOffer(long userID, long jobOfferID);
+    String getStatus(long userID, long jobOfferID);
+    void acceptJobOffer(long userID, long jobOfferID);
 
-    void rejectJobOffer(long userID, long jobOfferID);*/
+    void rejectJobOffer(long userID, long jobOfferID);
 
     //TODO: void removeContact(long enterpriseID, long userID);
 }
