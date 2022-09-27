@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
@@ -13,25 +12,19 @@ import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -315,7 +308,8 @@ public class WebController {
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
+            errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
             return contactForm(loggedUser, form, userId);
         }
         long jobOfferId = form.getCategory();
