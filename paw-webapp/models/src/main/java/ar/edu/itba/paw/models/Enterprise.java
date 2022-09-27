@@ -8,18 +8,18 @@ public class Enterprise {
     private final String email;
     private final String password;
     private final String location;
-    private final long categoryId_fk;
+    private final Category category;
     private final String description;
 
     //TODO: Aniadir imagen
 
-    public Enterprise(long id, String name, String email, String password, String location, long categoryId_fk, String description) {
+    public Enterprise(long id, String name, String email, String password, String location, Category category, String description) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.location = location;
-        this.categoryId_fk = categoryId_fk;
+        this.category = category;
         this.description = description;
     }
 
@@ -43,8 +43,8 @@ public class Enterprise {
         return location;
     }
 
-    public long getCategoryId_fk() {
-        return categoryId_fk;
+    public Category getCategory() {
+        return category;
     }
 
     public String getDescription() {
@@ -58,7 +58,7 @@ public class Enterprise {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", location='" + location + '\'' +
-                ", categoryId_fk=" + categoryId_fk +
+                ", category=" + category.toString() +
                 ", description='" + description + '\'' +
                 '}';
     }

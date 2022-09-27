@@ -1,9 +1,11 @@
 package ar.itba.edu.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.services.EnterpriseServiceImpl;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,6 +28,7 @@ public class EnterpriseServiceImplTest {
     private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
 
     private static final String TEST_DESCRIPTION = "La mejor empresa del mundo";
+    private static final Category TEST_CATEGORY = new Category(1, TEST_CATEGORY_NAME);
 
     @InjectMocks
     private EnterpriseServiceImpl enterpriseService;
@@ -33,15 +36,14 @@ public class EnterpriseServiceImplTest {
     @Mock
     private EnterpriseDao enterpriseDao;
 
-    @Test
-    public void easy() {
-        Assert.assertTrue(true);
+    @Before
+    public void setUp(){
     }
 
     @Test
     public void testCreate() {
         Mockito.when(enterpriseDao.create(eq(TEST_EMAIL), eq(TEST_NAME), eq(TEST_PASSWORD), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_DESCRIPTION)))
-                .thenReturn(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION));
+                .thenReturn(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION));
 
         final Enterprise newEnterprise = enterpriseService.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
 
@@ -50,14 +52,14 @@ public class EnterpriseServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newEnterprise.getPassword());
         Assert.assertEquals(TEST_NAME, newEnterprise.getName());
         Assert.assertEquals(TEST_LOCATION, newEnterprise.getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, newEnterprise.getCategoryId_fk());
+        Assert.assertEquals(TEST_CATEGORY, newEnterprise.getCategory());
         Assert.assertEquals(TEST_DESCRIPTION, newEnterprise.getDescription());
     }
 
     @Test
     public void testFindByEmail() {
         Mockito.when(enterpriseDao.findByEmail(eq(TEST_EMAIL)))
-                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION)));
+                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION)));
 
         final Optional<Enterprise> optEnterprise = enterpriseService.findByEmail(TEST_EMAIL);
 
@@ -66,7 +68,7 @@ public class EnterpriseServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newEnterprise.getPassword());
         Assert.assertEquals(TEST_NAME, optEnterprise.get().getName());
         Assert.assertEquals(TEST_LOCATION, optEnterprise.get().getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, optEnterprise.get().getCategoryId_fk());
+        Assert.assertEquals(TEST_CATEGORY, optEnterprise.get().getCategory());
         Assert.assertEquals(TEST_DESCRIPTION, optEnterprise.get().getDescription());
 
     }
@@ -74,7 +76,7 @@ public class EnterpriseServiceImplTest {
     @Test
     public void testFindById() {
         Mockito.when(enterpriseDao.findById(eq(TEST_ID)))
-                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_ID_FK, TEST_DESCRIPTION)));
+                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION)));
 
 
         final Optional<Enterprise> optEnterprise = enterpriseService.findById(TEST_ID);
@@ -84,7 +86,7 @@ public class EnterpriseServiceImplTest {
         //Assert.assertEquals(TEST_PASSWORD, newEnterprise.getPassword());
         Assert.assertEquals(TEST_NAME, optEnterprise.get().getName());
         Assert.assertEquals(TEST_LOCATION, optEnterprise.get().getLocation());
-        Assert.assertEquals(TEST_CATEGORY_ID_FK, optEnterprise.get().getCategoryId_fk());
+        Assert.assertEquals(TEST_CATEGORY, optEnterprise.get().getCategory());
         Assert.assertEquals(TEST_DESCRIPTION, optEnterprise.get().getDescription());
     }
 }
