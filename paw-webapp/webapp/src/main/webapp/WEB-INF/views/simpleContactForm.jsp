@@ -44,6 +44,7 @@
                                 <form:option value="${jobOffer.id}">${jobOffer.position}</form:option>
                               </c:forEach>
                             </form:select>
+                            <form:errors path="category" cssClass="formError" element="p"/>
                           </div>
                         </div>
                       </div>
