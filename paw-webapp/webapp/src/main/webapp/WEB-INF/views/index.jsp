@@ -46,11 +46,11 @@
                         <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="educationLevel" cssClass="form-select">
                                 <form:option value=""><spring:message code="educationLevelFilter"/></form:option>
-<%--                                <c:forEach items="${educationLevels}" var="educationLevel">--%>
-<%--                                    <form:option value="${educationLevel.name}">--%>
-<%--                                        <spring:message code="${educationLevel.name}"/>--%>
-<%--                                    </form:option>--%>
-<%--                                </c:forEach>--%>
+                                <form:option value="Primario"><spring:message code="select_level1"/></form:option>
+                                <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
+                                <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
+                                <form:option value="Graduado"><spring:message code="select_level4"/></form:option>
+                                <form:option value="Posgrado"><spring:message code="select_level5"/></form:option>
                             </form:select>
                         </div>
                         <div class="dropdown ml-2 mt-2">

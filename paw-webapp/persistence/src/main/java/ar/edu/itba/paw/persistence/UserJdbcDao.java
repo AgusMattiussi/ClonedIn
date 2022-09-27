@@ -36,13 +36,15 @@ public class UserJdbcDao implements UserDao {
 
     private CategoryDao categoryDao;
 
+    public static final String[] EDUCATION_LEVELS = new String[] {"Primario", "Secundario", "Terciario", "Graduado", "Posgrado"};
+    public static final Set<String> educationLevelsSet = new HashSet<>(Arrays.asList(EDUCATION_LEVELS));
+
     protected final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID_FK);
         Category category = null;
 
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
-
 
         return new User(resultSet.getLong(ID),
                 resultSet.getString(EMAIL),
@@ -79,6 +81,9 @@ public class UserJdbcDao implements UserDao {
             category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
             categoryID = category.getId();
         }
+
+        if(!educationLevelsSet.contains(education))
+            education = "No especificado";
 
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
@@ -148,6 +153,39 @@ public class UserJdbcDao implements UserDao {
     public List<User> getUsersListByLocation(int page, int pageSize, String location) {
         return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + LOCATION + " ILIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
                 new Object[]{ location, pageSize * page, pageSize }, USER_MAPPER);
+    }
+
+    @Override
+    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT * FROM ").append(USER_TABLE);
+
+
+
+        if(!categoryId.isEmpty())
+            filterQuery.append(" WHERE ").append(CATEGORY_ID_FK).append(" = ").append(categoryId);
+
+
+        if(!location.isEmpty()) {
+            if (!categoryId.isEmpty())
+                filterQuery.append(" AND ");
+            else
+                filterQuery.append(" WHERE ");
+            filterQuery.append(LOCATION).append(" ILIKE CONCAT('%', '").append(location).append("', '%')");
+        }
+
+        if(!educationLevel.isEmpty()) {
+            if (categoryId.isEmpty() && location.isEmpty())
+                filterQuery.append(" WHERE ");
+            else
+                filterQuery.append(" AND ");
+            filterQuery.append(EDUCATION).append(" ILIKE CONCAT('%', '").append(educationLevel).append("', '%')");
+        }
+
+        filterQuery.append(" OFFSET ? LIMIT ? ");
+
+        return template.query(filterQuery.toString(),
+                new Object[]{ pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override

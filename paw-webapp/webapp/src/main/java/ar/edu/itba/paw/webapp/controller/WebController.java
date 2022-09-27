@@ -110,12 +110,10 @@ public class WebController {
 
         final List<User> usersList;
 
-        //TODO: refactor
+        //TODO: refactor?
         if(request.getParameter("term") == null)
-            if(request.getParameter("location") == null)
-                usersList = userService.getUsersList(page - 1, itemsPerPage);
-            else
-                usersList = userService.getUsersListByLocation(page-1, itemsPerPage, filterForm.getLocation());
+                usersList = userService.getUsersListByFilters(page-1, itemsPerPage,
+                            filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 

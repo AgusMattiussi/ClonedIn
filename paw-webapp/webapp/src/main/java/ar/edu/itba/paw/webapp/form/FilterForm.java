@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class FilterForm {
-    private String category;
-    private String location;
+    private String category="";
+    @Size(max = 50)
+    private String location="";
     private String skill;
-    private String educationLevel;
+    private String educationLevel="";
 
     public String getCategory() {
         return category;

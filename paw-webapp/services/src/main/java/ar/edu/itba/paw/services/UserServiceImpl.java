@@ -79,4 +79,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersListByLocation(int page, int pageSize, String location) {
         return userDao.getUsersListByLocation(page, pageSize, location);
     }
+
+    @Override
+    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
+        return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel);
+    }
 }
