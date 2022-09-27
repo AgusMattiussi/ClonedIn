@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.JobOfferWithStatus;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -38,8 +39,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersForUser(long userId) {
-        return contactDao.getJobOffersForUser(userId);
+    public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
+        return contactDao.getJobOffersWithStatusForUser(userId);
     }
 
     @Override

@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +21,13 @@ public class ContactJdbcDao implements ContactDao {
     private static final String USER_ID = "idUsuario";
     private static final String JOB_OFFER_ID = "idOferta";
     private static final String STATUS = "estado";
+    public static final String JOB_OFFER_TABLE = "ofertaLaboral";
+    public static final String JOB_OFFER_TABLE_ID = "id";
+    private static final String CATEGORY_ID = "idRubro";
+    private static final String POSITION = "posicion";
+    private static final String DESCRIPTION = "descripcion";
+    private static final String SALARY = "salario";
+    private static final String MODALITY = "modalidad";
     private static final String STATUS_PENDING = "pendiente";
     private static final String STATUS_ACCEPTED = "aceptada";
     private static final String STATUS_REJECTED = "rechazada";
@@ -33,15 +37,35 @@ public class ContactJdbcDao implements ContactDao {
     private final UserDao userDao;
     private final EnterpriseDao enterpriseDao;
     private final JobOfferDao jobOfferDao;
+    private CategoryDao categoryDao;
+
+    private final RowMapper<JobOfferWithStatus> JOB_OFFER_WITH_STATUS_MAPPER = ((resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new JobOfferWithStatus(resultSet.getLong(JOB_OFFER_TABLE_ID),
+                resultSet.getLong(ENTERPRISE_ID),
+                category,
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getBigDecimal(SALARY),
+                resultSet.getString(MODALITY),
+                resultSet.getString(STATUS)
+                );
+    });
 
     @Autowired
-    public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao){
+    public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao, CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(CONTACT_TABLE);
         this.userDao = userDao;
         this.enterpriseDao = enterpriseDao;
         this.jobOfferDao = jobOfferDao;
+        this.categoryDao = categoryDao;
     }
 
     private List<Long> getEnterpriseIDsForUser(long userID){
@@ -89,17 +113,15 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     @Override
-    public List<JobOffer> getJobOffersForUser(long userId) {
-        List<Long> jobOfferIDs = getJobOfferIDsForUser(userId);
-        List<JobOffer> jobOfferList = new ArrayList<>();
-
-        for (long id : jobOfferIDs) {
-            Optional<JobOffer> optJobOffer = jobOfferDao.findById(id);
-            optJobOffer.ifPresent(jobOfferList::add);
-        }
-
-        return jobOfferList;
+    public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
+        return template.query("SELECT " + JOB_OFFER_TABLE_ID + ", " + ENTERPRISE_ID + ", " + POSITION + ", " +
+                DESCRIPTION + ", " + SALARY + ", " + CATEGORY_ID + ", " + MODALITY + ", " + STATUS +
+                " FROM " + JOB_OFFER_TABLE + " JOIN "+ CONTACT_TABLE +  " ON " + JOB_OFFER_TABLE + "."+JOB_OFFER_TABLE_ID + " = "+ CONTACT_TABLE+"."+JOB_OFFER_ID +
+                " WHERE " + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
     }
+
+
+
 
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {

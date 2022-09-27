@@ -141,7 +141,7 @@ public class WebController {
 
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", contactService.getJobOffersForUser(userId));
+        mav.addObject("jobOffers", contactService.getJobOffersWithStatusForUser(userId));
 //        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
 //        mav.addObject("currentPage", page);
         return mav;
