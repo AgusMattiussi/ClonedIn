@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validators.ExistingJobOffer;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -9,6 +10,7 @@ public class ContactForm {
     @Size(max=100)
     private String message;
 
+    @ExistingJobOffer
     private long category;
 
     public String getMessage() {
