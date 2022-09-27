@@ -70,7 +70,7 @@ public class SkillJdbcDao implements SkillDao {
 
     @Override
     public List<Skill> getAllSkills() {
-        List<Skill> allSkills = template.query("SELECT * FROM " + SKILL_TABLE, SKILL_MAPPER);
+        List<Skill> allSkills = template.query("SELECT * FROM " + SKILL_TABLE + " ORDER BY " + DESCRIPTION + " DESC", SKILL_MAPPER);
         // Fixme: Es necesario?
         if(allSkills == null)
             return new ArrayList<>();
