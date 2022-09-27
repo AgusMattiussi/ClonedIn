@@ -49,6 +49,9 @@ public class ContactJdbcDaoTest {
     private static final String NEW_USER_EDUCATION = "Licenciado en la Universidad de la Calle";
     private static final String TEST_SKILL = "unaskill";
     private static final long NON_EXISTING_JOB_OFFER_ID = 777;
+    public static final String STATUS_PENDING = "pendiente";
+    public static final String STATUS_ACCEPTED = "aceptada";
+    public static final String STATUS_REJECTED = "rechazada";
 
     @Autowired
     private ContactJdbcDao contactJdbcDao;
@@ -120,6 +123,14 @@ public class ContactJdbcDaoTest {
     }
 
     @Test
+    public void testGetStatus(){
+        final String status = contactJdbcDao.getStatus(testUser.getId(), testJobOffer.getId());
+        Assert.assertNotNull(status);
+        Assert.assertFalse(status.isEmpty());
+        Assert.assertEquals(STATUS_PENDING, status);
+    }
+
+    @Test
     public void testAlreadyContactedTrue(){
         final boolean contacted = contactJdbcDao.alreadyContacted(testUser.getId(), testJobOffer.getId());
         Assert.assertTrue(contacted);
@@ -129,5 +140,15 @@ public class ContactJdbcDaoTest {
     public void testAlreadyContactedFalse(){
         final boolean contacted = contactJdbcDao.alreadyContacted(testUser.getId(), NON_EXISTING_JOB_OFFER_ID);
         Assert.assertFalse(contacted);
+    }
+
+    @Test
+    public void testAcceptJobOffer(){
+        contactJdbcDao.acceptJobOffer(testUser.getId(), testJobOffer.getId());
+        final String status = contactJdbcDao.getStatus(testUser.getId(), testJobOffer.getId());
+
+        Assert.assertNotNull(status);
+        Assert.assertFalse(status.isEmpty());
+        Assert.assertEquals(STATUS_ACCEPTED, status);
     }
 }

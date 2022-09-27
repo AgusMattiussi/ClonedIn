@@ -25,6 +25,8 @@ public class ContactJdbcDao implements ContactDao {
     private static final String JOB_OFFER_ID = "idOferta";
     private static final String STATUS = "estado";
     private static final String PENDING_STATUS = "pendiente";
+    private static final String STATUS_ACCEPTED = "aceptada";
+    private static final String STATUS_REJECTED = "rechazada";
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -106,12 +108,20 @@ public class ContactJdbcDao implements ContactDao {
                 Integer.class) > 0;
     }
 
-    /*@Override
-    public void acceptJobOffer(long userID, long jobOfferID) {
-
+    @Override
+    public String getStatus(long userID, long jobOfferID) {
+        return template.queryForObject("SELECT " + STATUS + " FROM " + CONTACT_TABLE + " WHERE " +
+                USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?", new Object[]{ userID, jobOfferID},
+                String.class);
     }
 
     @Override
+    public void acceptJobOffer(long userID, long jobOfferID) {
+        template.update("UPDATE " + CONTACT_TABLE + " SET " + STATUS + " = '" + STATUS_ACCEPTED +
+                "' WHERE " + USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?", new Object[]{ userID, jobOfferID});
+    }
+
+    /*@Override
     public void rejectJobOffer(long userID, long jobOfferID) {
 
     }*/

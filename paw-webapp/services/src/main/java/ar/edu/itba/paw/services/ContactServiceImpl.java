@@ -46,4 +46,14 @@ public class ContactServiceImpl implements ContactService {
     public boolean alreadyContacted(long userID, long jobOfferID) {
         return contactDao.alreadyContacted(userID, jobOfferID);
     }
+
+    @Override
+    public String getStatus(long userID, long jobOfferID) {
+        return contactDao.getStatus(userID, jobOfferID);
+    }
+
+    @Override
+    public void acceptJobOffer(long userID, long jobOfferID) {
+        contactDao.acceptJobOffer(userID, jobOfferID);
+    }
 }
