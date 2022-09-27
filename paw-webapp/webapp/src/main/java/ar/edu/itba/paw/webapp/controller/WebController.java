@@ -258,7 +258,7 @@ public class WebController {
         final ModelAndView mav = new ModelAndView("contacts");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(enterpriseId));
         return mav;
     }
 
@@ -375,6 +375,7 @@ public class WebController {
 
         mailMap.put("username", username);
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, Locale.getDefault()));
+        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, Locale.getDefault()));
         mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
