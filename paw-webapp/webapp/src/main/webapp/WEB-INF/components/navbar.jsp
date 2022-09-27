@@ -51,7 +51,7 @@
             <sec:authorize access="hasRole('USER')">
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
-                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
                             <spring:message code="navbar_myprofile"/>
                             <span class="sr-only">(current)</span>
                         </a>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
-                        <a class="nav-link" style="padding-top: 0.8rem" href="<c:url value="/notificationsUser/${param.id}"/>">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/notificationsUser/${param.id}"/>">
                             <spring:message code="navbar_notifications"/>
                             <span class="sr-only">(current)</span>
                         </a>

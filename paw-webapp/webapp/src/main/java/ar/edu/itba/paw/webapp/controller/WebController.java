@@ -48,6 +48,9 @@ public class WebController {
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
+    private static final String ANSWER_TEMPLATE = "answerEmail.html";
+    private static final String ACCEPT = "acceptMsg";
+    private static final String REJECT = "rejectMsg";
 
     @Autowired
     MessageSource messageSource;
@@ -133,7 +136,26 @@ public class WebController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER') OR canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping("/acceptJobOffer/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView acceptJobOffer(Authentication loggedUser, @PathVariable("jobOfferId") final long jobOfferId,
+                                       @PathVariable("answer") final long answer) {
+
+        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(UserNotFoundException::new);
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(UserNotFoundException::new);
+
+        if(answer==0) {
+            contactService.rejectJobOffer(user.getId(), jobOfferId);
+            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
+        }
+        else {
+            contactService.acceptJobOffer(user.getId(), jobOfferId);
+            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
+        }
+
+        return new ModelAndView("redirect:/notificationsUser/" + user.getId());
+    }
+    @PreAuthorize("canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -307,7 +329,8 @@ public class WebController {
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors,
+                                @PathVariable("userId") final long userId) {
         if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
             errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
             return contactForm(loggedUser, form, userId);
@@ -375,6 +398,18 @@ public class WebController {
         String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
 
         emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
+    }
+
+    private void sendAnswerEmail(String enterpriseEmail, String username, String jobOffer, String answerMsg){
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", username);
+        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, Locale.getDefault()));
+        mailMap.put("jobOffer", jobOffer);
+
+        String subject = messageSource.getMessage("answerMail.subject", null, Locale.getDefault());
+
+        emailService.sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
     }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
