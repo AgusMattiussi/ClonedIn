@@ -29,7 +29,7 @@
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
                                         <c:url value="/createJobOffer/${enterprise.id}" var="postPath"/>
-                                        <form:form modelAttribute="jobOfferForm" action="${postPath}" method="post">
+                                        <form:form modelAttribute="jobOfferForm" action="${postPath}" method="post" accept-charset="utf-8">
                                             <fieldset>
                                                 <div class="form-card">
                                                     <h2 class="fs-title"><spring:message code="jobOfferForm_title"/></h2>

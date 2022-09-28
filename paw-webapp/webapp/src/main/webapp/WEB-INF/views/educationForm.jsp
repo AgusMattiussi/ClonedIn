@@ -31,7 +31,7 @@
             <div class="col-md-12 mx-0">
               <div id="msform">
                 <c:url value="/createEducation/${user.id}" var="postPath"/>
-                <form:form modelAttribute="educationForm" action="${postPath}" method="post">
+                <form:form modelAttribute="educationForm" action="${postPath}" method="post" accept-charset="utf-8">
                   <fieldset>
                     <div class="form-card">
                       <h2 class="fs-title"><spring:message code="edform_subtitle"/></h2>
