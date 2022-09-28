@@ -88,7 +88,7 @@
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                                                 <p><spring:message code="index_category"/>:
                                                                     <span class="badge badge-pill badge-success">
-                                                                        <c:out value="${us.category.name}"/>
+                                                                        <spring:message code="${us.category.name}"/>
                                                                     </span>
                                                                 </p>
                                                                 <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${us.currentPosition}"/></p>

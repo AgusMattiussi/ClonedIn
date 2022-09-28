@@ -27,7 +27,8 @@
 <%--                        </sec:authorize>--%>
                     </div>
                     <div class="card-footer bg-white">
-                            <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
+                        <c:set var="categoryName" value="${enterprise.category.name}"/>
+                        <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span></p>
                         <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${enterprise.location}"/></p>
                             <p class="card-text"><b><spring:message code="register_description2"/></b></p>
                             <p class="card-text"><c:out value="${enterprise.description}"/></p>
@@ -52,8 +53,9 @@
                                     <div class="card-body pb-0">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
+                                            <c:set var="categoryName2" value="${joboffer.category.name}"/>
                                             <span class="badge badge-pill badge-success p-2 mb-2">
-                                                <c:out value="${joboffer.category.name}"/>
+                                                <spring:message code="${categoryName2}"/>
                                             </span>
                                         </div>
                                     </div>
@@ -62,7 +64,7 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <h6><spring:message code="jobOfferForm_salary"/></h6>
-                                                    <p><c:out value="${joboffer.salary}"/> </p>
+                                                    <p>$<c:out value="${joboffer.salary}"/> </p>
                                                 </div>
                                             </div>
                                             <div class="col">

@@ -39,8 +39,9 @@
                             </div>
                             <div class="card-footer bg-white">
                                     <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                    <c:set var="categoryName" value="${user.category.name}"/>
                                     <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success">
-                                        <c:out value="${user.category.name}"/>
+                                        <spring:message code="${categoryName}"/>
                                     </span></p>
                                     <p class="card-text"><spring:message code="profile_level"/>: <c:out value="${user.education}"/></p>
                                     <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${user.location}"/></p>
