@@ -26,27 +26,27 @@ public class JobOfferForm {
     @NotEmpty
     private String mode;
 
-    @Size(max=20)
-    private String skill1;
-
-    @Size(max=20)
-    private String skill2;
-
-    public String getSkill1() {
-        return skill1;
-    }
-
-    public void setSkill1(String skill1) {
-        this.skill1 = skill1;
-    }
-
-    public String getSkill2() {
-        return skill2;
-    }
-
-    public void setSkill2(String skill2) {
-        this.skill2 = skill2;
-    }
+//    @Size(max=20)
+//    private String skill1;
+//
+//    @Size(max=20)
+//    private String skill2;
+//
+//    public String getSkill1() {
+//        return skill1;
+//    }
+//
+//    public void setSkill1(String skill1) {
+//        this.skill1 = skill1;
+//    }
+//
+//    public String getSkill2() {
+//        return skill2;
+//    }
+//
+//    public void setSkill2(String skill2) {
+//        this.skill2 = skill2;
+//    }
 
 
     public String getJobPosition() {

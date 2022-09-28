@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
     <title><spring:message code="navbar_notifications"/> | ClonedIn</title>
 </head>
-<body>
+<body style="background: #F2F2F2">
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
 </jsp:include>
 
-</body><div class="d-flex justify-content-between mt-2 ml-4">
+<div class="d-flex justify-content-between mt-2 ml-4">
     <h3><spring:message code="navbar_notifications"/></h3>
 </div>
-<div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
+<%--<div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
     <div class="container">
         <c:choose>
             <c:when test = "${jobOffers.size() == 0}">
@@ -24,7 +24,7 @@
             </c:when>
             <c:otherwise>
                 <c:forEach var="job" items="${jobOffers}">
-                    <div class="card mt-2 pt-2 ml-2 mr-2 mb-2" >
+                    <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5><c:out value="${enterpriseMap[job.enterpriseID]} | ${job.position}"/></h5>
                             <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
@@ -43,14 +43,21 @@
                                         <p class="card-text"><c:out value="${job.salary}"/></p>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>
-                                            <c:forEach items="${skillsMap[job.id]}" var="skill">
-                                                <p class="card-text"><c:out value="${skill.value}"/></p>
-                                            </c:forEach>
-                                    </div>
-                                </div>
+<%--                                <div class="col">--%>
+<%--                                    <div class="row">--%>
+<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
+<%--                                             <p class="card-text"><c:out value="${joboffer.skill1}"/> </p>--%>
+<%--                                             <p class="card-text"><c:out value="${joboffer.skill2}"/> </p>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                                <div class="col">--%>
+<%--                                    <div class="row">--%>
+<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
+<%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
+<%--                                                <p class="card-text"><c:out value="${skill.value}"/></p>--%>
+<%--                                            </c:forEach>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">
@@ -112,7 +119,8 @@
         <%--            </ul>--%>
         <%--        </nav>--%>
     </div>
-</div>
+<%--</div>--%>
 <!-- Modal -->
 <jsp:include page="../components/answerModal.jsp"/>
+</body>
 </html>

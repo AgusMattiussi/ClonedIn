@@ -50,9 +50,9 @@
                             <c:forEach items="${joboffers}" var="joboffer">
                                 <div class="card mt-2">
                                     <div class="card-body pb-0">
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex justify-content-between">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
-                                            <span class="badge badge-pill badge-success mb-2 ml-5">
+                                            <span class="badge badge-pill badge-success">
                                                 <c:out value="${joboffer.category.name}"/>
                                             </span>
                                         </div>
@@ -71,13 +71,13 @@
                                                     <p> <c:out value="${joboffer.modality}"/> </p>
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <div class="row">
-                                                    <h6> <spring:message code="jobOfferForm_skills"/></h6>
+<%--                                            <div class="col">--%>
+<%--                                                <div class="row">--%>
+<%--                                                    <h6> <spring:message code="jobOfferForm_skills"/></h6>--%>
 <%--                                                        <p><c:out value="${joboffer.skill1}"/> </p>--%>
 <%--                                                        <p><c:out value="${joboffer.skill2}"/> </p>--%>
-                                                </div>
-                                            </div>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
                                         </div>
                                         <p><c:out value="${joboffer.description}"/></p>
                                     </div>

@@ -294,7 +294,6 @@ public class WebController {
         if (errors.hasErrors()) {
             return formSkill(loggedUser, skillForm, userId);
         }
-
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         if(!skillForm.getLang().isEmpty())
             userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
@@ -378,11 +377,12 @@ public class WebController {
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         long categoryID = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(UserNotFoundException::new).getId();
-        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-        if(!jobOfferForm.getSkill1().isEmpty())
-            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
-        if(!jobOfferForm.getSkill2().isEmpty())
-            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+        jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+//        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+//        if(!jobOfferForm.getSkill1().isEmpty())
+//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+//        if(!jobOfferForm.getSkill2().isEmpty())
+//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }

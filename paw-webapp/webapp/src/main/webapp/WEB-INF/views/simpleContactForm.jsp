@@ -49,7 +49,7 @@
                         </div>
                       </div>
                         <p><spring:message code="contactform_requiredmsg"/></p>
-                          <a href="<c:url value="/"/>">
+                          <a onclick="history.back()">
                             <button type="button" name="end" class="btn next action-button"><spring:message code="return_buttonmsg"/></button>
                           </a>
                           <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
