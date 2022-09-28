@@ -18,12 +18,14 @@ public class EducationForm {
     @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearFrom;
 
+    @NotEmpty
     private String monthFrom;
 
     @NotEmpty
     @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearTo;
 
+    @NotEmpty
     private String monthTo;
 
     @Size(max=100)

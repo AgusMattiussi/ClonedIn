@@ -44,6 +44,7 @@ public class WebController {
     private final EducationService educationService;
     private final UserSkillService userSkillService;
     private final JobOfferService jobOfferService;
+    private final JobOfferSkillService jobOfferSkillService;
     private final ContactService contactService;
     private static final int itemsPerPage = 8;
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
@@ -64,7 +65,7 @@ public class WebController {
     @Autowired
     public WebController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService, final ExperienceService experienceService,
                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
-                         final EmailService emailService, final JobOfferService jobOfferService, final ContactService contactService){
+                         final EmailService emailService, final JobOfferService jobOfferService, JobOfferSkillService jobOfferSkillService, final ContactService contactService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -74,6 +75,7 @@ public class WebController {
         this.userSkillService = userSkillService;
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
+        this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
 
         //FIXME: Se puede resolver esto de otra forma? 💀💀💀💀
@@ -350,7 +352,11 @@ public class WebController {
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         long categoryID = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(UserNotFoundException::new).getId();
-        jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+        if(!jobOfferForm.getSkill1().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+        if(!jobOfferForm.getSkill2().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }

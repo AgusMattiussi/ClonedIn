@@ -32,9 +32,9 @@
                                             </button>
                                         </a>
                                     </sec:authorize>
-                                    <sec:authorize access="hasRole('USER')">
-                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
-                                    </sec:authorize>
+<%--                                    <sec:authorize access="hasRole('USER')">--%>
+<%--                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>--%>
+<%--                                    </sec:authorize>--%>
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
