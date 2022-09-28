@@ -22,6 +22,9 @@
                     <img class="card-img-top small" src="<c:url value="/assets/images/default_profile_picture.png"/>" alt="Card image cap"/>
                     <div class="card-body pb-0">
                         <h5 class="card-title"><c:out value="${enterprise.name}"/></h5>
+<%--                        <sec:authorize access="hasRole('ENTERPRISE')">--%>
+<%--                             <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>--%>
+<%--                        </sec:authorize>--%>
                     </div>
                     <div class="card-footer bg-white">
                             <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success"><c:out value="${category.get().name}"/></span></p>
@@ -71,8 +74,8 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <h6> <spring:message code="jobOfferForm_skills"/></h6>
-<%--                                                    <p><c:out value="${joboffer.skill1}"/> </p>--%>
-<%--                                                    <p><c:out value="${joboffer.skill2}"/> </p>--%>
+<%--                                                        <p><c:out value="${joboffer.skill1}"/> </p>--%>
+<%--                                                        <p><c:out value="${joboffer.skill2}"/> </p>--%>
                                                 </div>
                                             </div>
                                         </div>
