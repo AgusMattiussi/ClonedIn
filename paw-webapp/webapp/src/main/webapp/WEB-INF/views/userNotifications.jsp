@@ -51,17 +51,21 @@
                             </div>
                             <div class="col">
                                 <div class="d-flex flex-column align-items-center">
-                                    <h5 class="card-title"><spring:message code="notificacions_status"/></h5>
-                                    <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
-                                        <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
-                                            <spring:message code="notifications_YES"/>
-                                        </button>
-                                    </a>
-                                    <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
-                                        <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
-                                            <spring:message code="notifications_NO"/>
-                                        </button>
-                                    </a>
+                                    <h5 class="card-title">
+                                        <spring:message code="notificacions_status"/><spring:message code="${job.status}"/>
+                                    </h5>
+                                    <c:if test="${job.status == 'pendiente'}">
+                                        <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
+                                            <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
+                                                <spring:message code="notifications_YES"/>
+                                            </button>
+                                        </a>
+                                        <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
+                                            <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
+                                                <spring:message code="notifications_NO"/>
+                                            </button>
+                                        </a>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
