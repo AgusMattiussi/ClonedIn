@@ -15,7 +15,7 @@
     </jsp:include>
     <div class="row h-100 w-100">
         <div class="col-sm-2 sidebar">
-            <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>
+<%--            <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>--%>
 <%--            <c:url value="/contactsEnterprise/${loggedUserID}" var="getPath"/>--%>
 <%--            <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>
 <%--                <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">--%>
@@ -32,7 +32,7 @@
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
             <div class="container">
                 <c:choose>
-                    <c:when test = "${false}">
+                    <c:when test = "${jobOffers.size() == 0}">
                         <h4 class="mt-5 mb-5"><spring:message code="NOnotifications"/></h4>
                     </c:when>
                     <c:otherwise>
@@ -40,18 +40,26 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Job Offer</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Status</th>
+                            <th scope="col"><spring:message code="contactsEnterpriseJobOffer"/></th>
+                            <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
+                            <th scope="col"><spring:message code="contactsEnterpriseName"/></th>
+                            <th scope="col"><spring:message code="contactsEnterpriseStatus"/></th>
                         </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="job" items="${jobOffers}">
-                                <th scope="row">1</th>
-                                <td>${job.position}</td>
-                                <!-- como referenciar empleado y estado -->
-                                <td>name</td>
-                                <td>status</td>
+                                <tr>
+                                    <c:if test="${usersMap[job.id] != null}">
+                                        <th><c:out value="${job.id}"/></th>
+                                        <td><c:out value="${job.position}"/></td>
+                                        <c:set var="categoryName" value="${job.category.name}"/>
+                                        <td><spring:message code="${categoryName}"/></td>
+                                        <!-- como referenciar empleado y estado -->
+                                        <td><c:out value="${usersMap[job.id]}"/></td>
+                                        <c:set var="statusName" value="${statusMap[job.id]}"/>
+                                        <td><spring:message code="${statusName}"/></td>
+                                    </c:if>
+                                </tr>
                             </c:forEach>
                         </tbody>
                     </table>

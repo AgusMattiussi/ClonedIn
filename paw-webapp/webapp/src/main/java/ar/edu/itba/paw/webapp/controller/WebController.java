@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
@@ -26,10 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.sql.Date;
 
 @Controller
@@ -308,8 +303,22 @@ public class WebController {
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("contacts");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+
+        HashMap<Long, String> usersMap = new HashMap<>();
+        HashMap<Long, String> statusMap = new HashMap<>();
+
+        //TODO: refactor
+        for (User user : contactService.getUsersForEnterprise(enterpriseId)) {
+            for (JobOfferStatusUserData jobOffer : contactService.getJobOffersWithStatusUserData(user.getId()) ) {
+                statusMap.put(jobOffer.getId(), jobOffer.getStatus());
+                usersMap.put(jobOffer.getId(), jobOffer.getUserName());
+            }
+        }
+
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("usersMap", usersMap);
+        mav.addObject("statusMap", statusMap);
         return mav;
     }
 
