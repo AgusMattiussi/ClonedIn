@@ -22,8 +22,8 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public Experience create(long userId, Date from, Date to, String enterpriseName, String position, String description) {
-        return experienceDao.create(userId, from, to, enterpriseName, position, description);
+    public Experience create(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String enterpriseName, String position, String description) {
+        return experienceDao.create(userId, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
     }
 
     @Override

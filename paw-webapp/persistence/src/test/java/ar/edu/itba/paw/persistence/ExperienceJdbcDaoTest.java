@@ -36,8 +36,10 @@ public class ExperienceJdbcDaoTest {
     private static final String DESCRIPTION = "descripcion";
 
     private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
-    private static final Date NEW_FROM = Date.valueOf("1972-09-09");
-    private static final Date NEW_TO = Date.valueOf("1974-05-31");;
+    public static final int NEW_MONTH_FROM = 11;
+    public static final int NEW_YEAR_FROM = 2000;
+    public static final int NEW_MONTH_TO = 12;
+    public static final int NEW_YEAR_TO = 2004;
     private static final String NEW_ENTERPRISE_NAME = "Empresa 1";
     private static final String NEW_POSITION = "Hokage";
     private static final String NEW_DESCRIPTION = "El admin de la aldea";
@@ -46,7 +48,10 @@ public class ExperienceJdbcDaoTest {
     private static final long EXISTING_USER_ID = 1;
 
     private static final String EXISTING_ENTERPRISE_NAME = "Paw Inc.";
-    private static final Date EXISTING_FROM = Date.valueOf("2011-11-11");
+    public static final int EXISTING_MONTH_FROM = 11;
+    public static final int EXISTING_YEAR_FROM = 2011;
+    public static final int EXISTING_MONTH_TO = 12;
+    public static final int EXISTING_YEAR_TO = 2012;
     private static final String EXISTING_POSITION = "Ceo de Paw Inc.";
     private static final String EXISTING_DESCRIPTION = "Era el CEO :)";
 
@@ -71,12 +76,14 @@ public class ExperienceJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final Experience newExperience = dao.create(testUser.getId(), NEW_FROM, NEW_TO, NEW_ENTERPRISE_NAME, NEW_POSITION, NEW_DESCRIPTION);
+        final Experience newExperience = dao.create(testUser.getId(), NEW_MONTH_FROM, NEW_YEAR_FROM, NEW_MONTH_TO, NEW_YEAR_TO, NEW_ENTERPRISE_NAME, NEW_POSITION, NEW_DESCRIPTION);
 
         Assert.assertNotNull(newExperience);
         Assert.assertEquals(1, newExperience.getUserId());
-        Assert.assertEquals(NEW_FROM, newExperience.getFrom());
-        Assert.assertEquals(NEW_TO, newExperience.getTo());
+        Assert.assertEquals(NEW_MONTH_FROM, newExperience.getMonthFrom());
+        Assert.assertEquals(NEW_YEAR_FROM, newExperience.getYearFrom());
+        Assert.assertEquals(NEW_MONTH_TO, newExperience.getMonthTo());
+        Assert.assertEquals(NEW_YEAR_TO, newExperience.getYearTo());
         Assert.assertEquals(NEW_ENTERPRISE_NAME, newExperience.getEnterpriseName());
         Assert.assertEquals(NEW_POSITION, newExperience.getPosition());
         Assert.assertEquals(NEW_DESCRIPTION, newExperience.getDescription());
@@ -91,8 +98,10 @@ public class ExperienceJdbcDaoTest {
         Assert.assertTrue(newExperience.isPresent());
         Assert.assertEquals(FIRST_ID, newExperience.get().getId());
         Assert.assertEquals(EXISTING_USER_ID, newExperience.get().getUserId());
-        Assert.assertEquals(EXISTING_FROM, newExperience.get().getFrom());
-        Assert.assertNull(newExperience.get().getTo());
+        Assert.assertEquals(EXISTING_MONTH_FROM, newExperience.get().getMonthFrom());
+        Assert.assertEquals(EXISTING_YEAR_FROM, newExperience.get().getYearFrom());
+        Assert.assertEquals(EXISTING_MONTH_TO, newExperience.get().getMonthTo());
+        Assert.assertEquals(EXISTING_YEAR_TO, newExperience.get().getYearTo());
         Assert.assertEquals(EXISTING_ENTERPRISE_NAME, newExperience.get().getEnterpriseName());
         Assert.assertEquals(EXISTING_POSITION, newExperience.get().getPosition());
         Assert.assertEquals(EXISTING_DESCRIPTION, newExperience.get().getDescription());
@@ -105,8 +114,10 @@ public class ExperienceJdbcDaoTest {
         Assert.assertNotNull(experienceList);
         Assert.assertEquals(1, experienceList.size());
         Assert.assertEquals(EXISTING_USER_ID, experienceList.get(0).getUserId());
-        Assert.assertEquals(EXISTING_FROM, experienceList.get(0).getFrom());
-        Assert.assertNull(experienceList.get(0).getTo());
+        Assert.assertEquals(EXISTING_MONTH_FROM, experienceList.get(0).getMonthFrom());
+        Assert.assertEquals(EXISTING_YEAR_FROM, experienceList.get(0).getYearFrom());
+        Assert.assertEquals(EXISTING_MONTH_TO, experienceList.get(0).getMonthTo());
+        Assert.assertEquals(EXISTING_YEAR_TO, experienceList.get(0).getYearTo());
         Assert.assertEquals(EXISTING_ENTERPRISE_NAME, experienceList.get(0).getEnterpriseName());
         Assert.assertEquals(EXISTING_POSITION, experienceList.get(0).getPosition());
         Assert.assertEquals(EXISTING_DESCRIPTION, experienceList.get(0).getDescription());

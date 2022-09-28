@@ -24,8 +24,8 @@ INSERT INTO aptitudOfertaLaboral (idAptitud, idOferta)
     FROM aptitud a, ofertaLaboral o
     WHERE a.descripcion = 'testskill'
         AND o.posicion = 'testPosition';
-INSERT INTO experiencia (idUsuario, fechaDesde, fechaHasta, empresa, posicion, descripcion)
-    SELECT u.id, '2011-11-11', null, 'Paw Inc.', 'Ceo de Paw Inc.', 'Era el CEO :)'
+INSERT INTO experiencia (idUsuario, mesDesde, anioDesde, mesHasta, anioHasta, empresa, posicion, descripcion)
+    SELECT u.id, 11, 2011, 12, 2012, 'Paw Inc.', 'Ceo de Paw Inc.', 'Era el CEO :)'
     FROM usuario u
     WHERE u.email = 'johnlennon@gmail.com';
 INSERT INTO educacion (idUsuario, fechaDesde, fechaHasta, titulo, institucion, descripcion)

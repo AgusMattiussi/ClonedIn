@@ -1,22 +1,27 @@
 package ar.edu.itba.paw.models;
 
 import java.sql.Date;
+import java.time.YearMonth;
 import java.util.Objects;
 
 public class Experience {
     private final long id;
     private final long userId;
-    private final Date from;
-    private final Date to;
+    private final int monthFrom;
+    private final int yearFrom;
+    private final int monthTo;
+    private final int yearTo;
     private final String enterpriseName;
     private final String position;
     private final String description;
 
-    public Experience(long id, long userId, Date from, Date to, String enterpriseName, String position, String description) {
+    public Experience(long id, long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String enterpriseName, String position, String description) {
         this.id = id;
         this.userId = userId;
-        this.from = from;
-        this.to = to;
+        this.monthFrom = monthFrom;
+        this.yearFrom = yearFrom;
+        this.monthTo = monthTo;
+        this.yearTo = yearTo;
         this.enterpriseName = enterpriseName;
         this.position = position;
         this.description = description;
@@ -28,14 +33,6 @@ public class Experience {
 
     public long getUserId() {
         return userId;
-    }
-
-    public Date getFrom() {
-        return from;
-    }
-
-    public Date getTo() {
-        return to;
     }
 
     public String getEnterpriseName() {
@@ -50,17 +47,20 @@ public class Experience {
         return description;
     }
 
-    @Override
-    public String toString() {
-        return "Experience{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", from=" + from +
-                ", to=" + to +
-                ", enterpriseName='" + enterpriseName + '\'' +
-                ", position='" + position + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    public int getMonthFrom() {
+        return monthFrom;
+    }
+
+    public int getYearFrom() {
+        return yearFrom;
+    }
+
+    public int getMonthTo() {
+        return monthTo;
+    }
+
+    public int getYearTo() {
+        return yearTo;
     }
 
     @Override
@@ -69,6 +69,21 @@ public class Experience {
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
         return id == that.id && userId == that.userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Experience{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", monthFrom=" + monthFrom +
+                ", yearFrom=" + yearFrom +
+                ", monthTo=" + monthTo +
+                ", yearTo=" + yearTo +
+                ", enterpriseName='" + enterpriseName + '\'' +
+                ", position='" + position + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     @Override

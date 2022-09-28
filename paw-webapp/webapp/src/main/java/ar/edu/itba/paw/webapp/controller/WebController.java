@@ -204,7 +204,9 @@ public class WebController {
             return formExperience(loggedUser, experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+        experienceService.create(user.getId(), Integer.parseInt(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+                Integer.parseInt(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
+                experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
