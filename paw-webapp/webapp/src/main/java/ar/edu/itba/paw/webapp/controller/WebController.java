@@ -51,6 +51,8 @@ public class WebController {
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
+
+    private final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
     @Autowired
@@ -216,7 +218,14 @@ public class WebController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors()) {
+        int yearFlag = experienceForm.getYearTo().compareTo(experienceForm.getYearFrom());
+        int monthFlag = monthToNumber.get(experienceForm.getMonthTo()).compareTo(monthToNumber.get(experienceForm.getMonthFrom()));
+
+        if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
+            if(yearFlag < 0)
+                errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
+            else if (yearFlag == 0 && monthFlag < 0)
+                errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
             return formExperience(loggedUser, experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -238,7 +247,15 @@ public class WebController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors()) {
+        int yearFlag = educationForm.getYearTo().compareTo(educationForm.getYearFrom());
+        int monthFlag = monthToNumber.get(educationForm.getMonthTo()).compareTo(monthToNumber.get(educationForm.getMonthFrom()));
+
+        if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
+            if(yearFlag < 0)
+                errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
+            else if (yearFlag == 0 && monthFlag < 0)
+                errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
+
             return formEducation(loggedUser, educationForm, userId);
         }
 
@@ -363,6 +380,7 @@ public class WebController {
         final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
         mailMap.put(EmailService.USERNAME_FIELD, user.getName());
+        mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
         mailMap.put("salary", String.valueOf(jobOffer.getSalary()));
