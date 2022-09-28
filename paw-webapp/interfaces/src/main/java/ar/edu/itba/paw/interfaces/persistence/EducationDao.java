@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface EducationDao {
 
-    Education add(long userId, Date from, Date to, String title, String institutionName, String description);
+    Education add(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description);
 
     Optional<Education> findById(long educationID);
 

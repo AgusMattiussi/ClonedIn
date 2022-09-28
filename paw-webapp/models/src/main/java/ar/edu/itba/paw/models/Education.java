@@ -8,17 +8,21 @@ public class Education {
     private final long id;
     private final long userId;
     //TODO: Chequear manejo de fechas
-    private final Date from;
-    private final Date to;
+    private final int monthFrom;
+    private final int yearFrom;
+    private final int monthTo;
+    private final int yearTo;
     private final String title;
     private final String institutionName;
     private final String description;
 
-    public Education(long id, long userId, Date from, Date to, String title, String institutionName, String description) {
+    public Education(long id, long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
         this.id = id;
         this.userId = userId;
-        this.from = from;
-        this.to = to;
+        this.monthFrom = monthFrom;
+        this.yearFrom = yearFrom;
+        this.monthTo = monthTo;
+        this.yearTo = yearTo;
         this.title = title;
         this.institutionName = institutionName;
         this.description = description;
@@ -32,12 +36,20 @@ public class Education {
         return userId;
     }
 
-    public Date getDateFrom() {
-        return from;
+    public int getMonthFrom() {
+        return monthFrom;
     }
 
-    public Date getDateTo() {
-        return to;
+    public int getYearFrom() {
+        return yearFrom;
+    }
+
+    public int getMonthTo() {
+        return monthTo;
+    }
+
+    public int getYearTo() {
+        return yearTo;
     }
 
     public String getTitle() {
@@ -52,14 +64,15 @@ public class Education {
         return description;
     }
 
-
     @Override
     public String toString() {
         return "Education{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", from=" + from +
-                ", to=" + to +
+                ", monthFrom=" + monthFrom +
+                ", yearFrom=" + yearFrom +
+                ", monthTo=" + monthTo +
+                ", yearTo=" + yearTo +
                 ", title='" + title + '\'' +
                 ", institutionName='" + institutionName + '\'' +
                 ", description='" + description + '\'' +

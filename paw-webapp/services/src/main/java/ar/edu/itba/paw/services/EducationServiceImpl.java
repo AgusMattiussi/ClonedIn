@@ -23,8 +23,8 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public Education add(long userId, Date from, Date to, String title, String institutionName, String description) {
-        return educationDao.add(userId, from, to, title, institutionName, description);
+    public Education add(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+        return educationDao.add(userId, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
     }
 
     @Override

@@ -53,13 +53,19 @@ CREATE TABLE IF NOT EXISTS experiencia (
 CREATE TABLE IF NOT EXISTS educacion (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER NOT NULL,
-    fechaDesde DATE NOT NULL,
-    fechaHasta DATE,
+    mesDesde INTEGER NOT NULL,
+    anioDesde INTEGER NOT NULL,
+    mesHasta INTEGER,
+    anioHasta INTEGER,
     titulo TEXT NOT NULL,
     institucion VARCHAR(100),
     descripcion TEXT,
     FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
-    CHECK((fechaHasta IS NULL) OR (fechaHasta >= fechaDesde))
+    CHECK(mesDesde BETWEEN 1 AND 12),
+    CHECK(mesHasta BETWEEN 1 AND 12),
+    CHECK(anioDesde BETWEEN 1900 AND 2100),
+    CHECK(anioHasta BETWEEN 1900 AND 2100),
+    CHECK((anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))
 );
 
 CREATE TABLE IF NOT EXISTS ofertaLaboral (

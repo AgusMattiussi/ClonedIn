@@ -76,7 +76,8 @@ public class ExperienceJdbcDaoTest {
 
     @Test
     public void testCreate() {
-        final Experience newExperience = dao.create(testUser.getId(), NEW_MONTH_FROM, NEW_YEAR_FROM, NEW_MONTH_TO, NEW_YEAR_TO, NEW_ENTERPRISE_NAME, NEW_POSITION, NEW_DESCRIPTION);
+        final Experience newExperience = dao.create(testUser.getId(), NEW_MONTH_FROM, NEW_YEAR_FROM, NEW_MONTH_TO, NEW_YEAR_TO,
+                NEW_ENTERPRISE_NAME, NEW_POSITION, NEW_DESCRIPTION);
 
         Assert.assertNotNull(newExperience);
         Assert.assertEquals(1, newExperience.getUserId());

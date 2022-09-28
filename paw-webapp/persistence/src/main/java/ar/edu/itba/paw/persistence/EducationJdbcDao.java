@@ -23,8 +23,10 @@ public class EducationJdbcDao implements EducationDao {
     private static final String EDUCATION_TABLE = "educacion";
     private static final String ID = "id";
     private static final String USER_ID = "idUsuario";
-    private static final String FROM = "fechaDesde";
-    private static final String TO = "fechaHasta";
+    private static final String MONTH_FROM = "mesDesde";
+    private static final String YEAR_FROM = "anioDesde";
+    private static final String MONTH_TO = "mesHasta";
+    private static final String YEAR_TO = "anioHasta";
     private static final String TITLE = "titulo";
     private static final String INSTITUTION_NAME = "institucion";
     private static final String DESCRIPTION = "descripcion";
@@ -32,8 +34,10 @@ public class EducationJdbcDao implements EducationDao {
     private static final RowMapper<Education> EDUCATION_MAPPER = (resultSet, rowNum) ->
             new Education(resultSet.getLong(ID),
                     resultSet.getLong(USER_ID),
-                    resultSet.getDate(FROM),
-                    resultSet.getDate(TO),
+                    resultSet.getInt(MONTH_FROM),
+                    resultSet.getInt(YEAR_FROM),
+                    resultSet.getInt(MONTH_TO),
+                    resultSet.getInt(YEAR_TO),
                     resultSet.getString(TITLE),
                     resultSet.getString(INSTITUTION_NAME),
                     resultSet.getString(DESCRIPTION));
@@ -49,24 +53,41 @@ public class EducationJdbcDao implements EducationDao {
                 .usingGeneratedKeyColumns(ID);
     }
 
+    private boolean isMonthValid(int month){
+        return month >= 1 && month <= 12;
+    }
+
+    private boolean isYearValid(int year){
+        return year >= 1900 && year <= 2100;
+    }
+
+    private boolean isDateValid(int monthFrom, int yearFrom, int monthTo, int yearTo){
+        if(!isMonthValid(monthTo) || !isMonthValid(monthFrom) || !isYearValid(yearTo) || !isYearValid(yearFrom))
+            return false;
+        return yearTo > yearFrom || (yearTo == yearFrom && monthTo >= monthFrom);
+    }
+
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public Education add(long userId, Date from, Date to, String title, String institutionName, String description) {
-        if(to != null && to.before(from))
-            throw new InvalidParameterException("La fecha 'hasta' no puede ser anterior a la fecha 'desde'");
+    public Education add(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+        if(!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
+            throw new InvalidParameterException("La fecha" + monthFrom+ "/" + yearFrom +
+                    " - " + monthTo + "/" + yearTo +  " es incorrecta");
 
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
         //FIXME: Cambiar esto para manejar fechas de verdad
-        values.put(FROM, from);
-        values.put(TO, to);
+        values.put(MONTH_FROM, monthFrom);
+        values.put(YEAR_FROM, yearFrom);
+        values.put(MONTH_TO, monthTo);
+        values.put(YEAR_TO, yearTo);
         values.put(TITLE, title);
         values.put(INSTITUTION_NAME, institutionName);
         values.put(DESCRIPTION, description);
 
         Number educationId = insert.executeAndReturnKey(values);
 
-        return new Education(educationId.longValue(), userId, from, to, title, institutionName, description);
+        return new Education(educationId.longValue(), userId, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
     }
 
     @Override

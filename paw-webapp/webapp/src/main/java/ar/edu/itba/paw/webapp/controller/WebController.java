@@ -243,7 +243,8 @@ public class WebController {
         }
 
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        educationService.add(user.getId(), Date.valueOf("2020-01-01"), Date.valueOf("2020-01-01"), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+                monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }

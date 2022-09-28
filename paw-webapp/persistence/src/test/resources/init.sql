@@ -28,7 +28,7 @@ INSERT INTO experiencia (idUsuario, mesDesde, anioDesde, mesHasta, anioHasta, em
     SELECT u.id, 11, 2011, 12, 2012, 'Paw Inc.', 'Ceo de Paw Inc.', 'Era el CEO :)'
     FROM usuario u
     WHERE u.email = 'johnlennon@gmail.com';
-INSERT INTO educacion (idUsuario, fechaDesde, fechaHasta, titulo, institucion, descripcion)
-    SELECT u.id, '2011-11-11', null, 'Licenciado en Paw', 'PAW University', 'Una linda facultad'
+INSERT INTO educacion (idUsuario, mesDesde, anioDesde, mesHasta, anioHasta, titulo, institucion, descripcion)
+    SELECT u.id, 11, 2011, 12, 2012, 'Licenciado en Paw', 'PAW University', 'Una linda facultad'
     FROM usuario u
     WHERE u.email = 'johnlennon@gmail.com';
