@@ -50,9 +50,9 @@
                             <c:forEach items="${joboffers}" var="joboffer">
                                 <div class="card mt-2">
                                     <div class="card-body pb-0">
-                                        <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
-                                            <span class="badge badge-pill badge-success">
+                                            <span class="badge badge-pill badge-success p-2 mb-2">
                                                 <c:out value="${joboffer.category.name}"/>
                                             </span>
                                         </div>
