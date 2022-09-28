@@ -26,7 +26,7 @@
                 <c:forEach var="job" items="${jobOffers}">
                     <div class="card mt-2 pt-2 ml-2 mr-2 mb-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><c:out value="${job.enterpriseID} | ${job.position}"/></h5>
+                            <h5><c:out value="${enterpriseMap[job.enterpriseID]} | ${job.position}"/></h5>
                             <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
                         </div>
                         <div class="card-body">

@@ -176,11 +176,22 @@ public class WebController {
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
 
+        HashMap<Long, String> enterpriseMap = new HashMap<>();
+
+        for (JobOfferWithStatus jobOfferWithStatus : contactService.getJobOffersWithStatusForUser(userId)) {
+            long enterpriseID = jobOfferWithStatus.getEnterpriseID();
+            Enterprise enterprise = enterpriseService.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
+            enterpriseMap.put(jobOfferWithStatus.getEnterpriseID(), enterprise.getName());
+        }
+
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", contactService.getJobOffersWithStatusForUser(userId));
+        mav.addObject("enterpriseMap", enterpriseMap);
+
 //        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
 //        mav.addObject("currentPage", page);
+
         return mav;
     }
 
