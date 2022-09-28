@@ -19,7 +19,6 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
     private static final String JOB_OFFER_SKILL_TABLE = "aptitudOfertaLaboral";
     private static final String JOB_OFFER_ID = "idOferta";
     private static final String SKILL_ID = "idAptitud";
-
     private final SkillDao skillDao;
     private final JobOfferDao jobOfferDao;
     private final JdbcTemplate template;

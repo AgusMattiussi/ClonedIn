@@ -178,16 +178,22 @@ public class WebController {
 
         HashMap<Long, String> enterpriseMap = new HashMap<>();
 
+        HashMap<Long, List<Skill>> skillsMap = new HashMap<>();
+
         for (JobOfferWithStatus jobOfferWithStatus : contactService.getJobOffersWithStatusForUser(userId)) {
             long enterpriseID = jobOfferWithStatus.getEnterpriseID();
             Enterprise enterprise = enterpriseService.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
-            enterpriseMap.put(jobOfferWithStatus.getEnterpriseID(), enterprise.getName());
+            enterpriseMap.put(enterpriseID, enterprise.getName());
+
+            long jobOfferId = jobOfferWithStatus.getId();
+            skillsMap.put(jobOfferId, jobOfferSkillService.getSkillsForJobOffer(jobOfferId));
         }
 
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", contactService.getJobOffersWithStatusForUser(userId));
         mav.addObject("enterpriseMap", enterpriseMap);
+        mav.addObject("skillsMap", skillsMap);
 
 //        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
 //        mav.addObject("currentPage", page);

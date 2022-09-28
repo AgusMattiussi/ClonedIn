@@ -9,13 +9,13 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
-        <title>Error 404 | ClonedIn</title>
+        <title>Error 500 | ClonedIn</title>
         <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
     </head>
     <body>
         <div class="d-flex align-items-center justify-content-center vh-100">
             <div class="text-center">
-                <h1 class="display-1 fw-bold">404</h1>
+                <h1 class="display-1 fw-bold">500</h1>
                 <p class="fs-3"><span class="text-danger"><spring:message code="error500_titlespan"/></span> <spring:message code="error500_title"/></p>
                 <p class="lead">
                     <spring:message code="error500_message"/>
