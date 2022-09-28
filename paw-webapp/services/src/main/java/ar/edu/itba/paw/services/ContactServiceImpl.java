@@ -2,10 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.JobOfferWithStatus;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -41,6 +38,11 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
         return contactDao.getJobOffersWithStatusForUser(userId);
+    }
+
+    @Override
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long userId) {
+        return contactDao.getJobOffersWithStatusUserData(userId);
     }
 
     @Override

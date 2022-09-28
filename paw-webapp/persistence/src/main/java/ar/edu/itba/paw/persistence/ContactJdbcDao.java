@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.persistence.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,13 +29,16 @@ public class ContactJdbcDao implements ContactDao {
     private static final String DESCRIPTION = "descripcion";
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
+    public static final String USER_TABLE = "usuario";
+    public static final String USER_TABLE_ID = "id";
+    public static final String USER_TABLE_NAME = "nombre";
     private static final String STATUS_PENDING = "pendiente";
     private static final String STATUS_ACCEPTED = "aceptada";
     private static final String STATUS_REJECTED = "rechazada";
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
-    private final UserDao userDao;
+    private UserDao userDao;
     private final EnterpriseDao enterpriseDao;
     private final JobOfferDao jobOfferDao;
     private CategoryDao categoryDao;
@@ -54,6 +58,27 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getBigDecimal(SALARY),
                 resultSet.getString(MODALITY),
                 resultSet.getString(STATUS)
+                );
+    });
+
+    private final RowMapper<JobOfferStatusUserData> JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER = ((resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        //User user = userDao.findById(resultSet.getLong(USER_ID)).orElseThrow(UserNotFoundException::new);
+
+        return new JobOfferStatusUserData(resultSet.getLong(JOB_OFFER_TABLE_ID),
+                resultSet.getLong(ENTERPRISE_ID),
+                category,
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getBigDecimal(SALARY),
+                resultSet.getString(MODALITY),
+                resultSet.getString(STATUS),
+                resultSet.getString(USER_TABLE_NAME)
                 );
     });
 
@@ -120,7 +145,14 @@ public class ContactJdbcDao implements ContactDao {
                 " WHERE c." + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
     }
 
-
+    @Override
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long userId) {
+        return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
+                DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", u." + USER_TABLE_NAME +
+                " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
+                " JOIN " + USER_TABLE + " u ON u." + USER_TABLE_ID + " = c." + USER_ID +
+                " WHERE c." + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+    }
 
 
     @Override

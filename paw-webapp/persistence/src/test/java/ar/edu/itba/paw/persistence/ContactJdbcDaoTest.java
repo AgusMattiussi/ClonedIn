@@ -3,10 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.JobOfferWithStatus;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -74,6 +71,7 @@ public class ContactJdbcDaoTest {
     private Enterprise newEnterprise;
     private JobOffer testJobOffer;
     private JobOfferWithStatus testJobOfferWithStatus;
+    private JobOfferStatusUserData testJobOfferWithStatusUserData;
 
     @Before
     public void setUp() {
@@ -83,6 +81,8 @@ public class ContactJdbcDaoTest {
         testJobOffer = jobOfferDao.findById(1).get();
         testJobOfferWithStatus = new JobOfferWithStatus(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
                 testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING);
+        testJobOfferWithStatusUserData = new JobOfferStatusUserData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testUser.getName());
         newEnterprise = enterpriseDao.create(NEW_ENTERPRISE_EMAIL, NEW_ENTERPRISE_PASSWORD, NEW_ENTERPRISE_NAME, NEW_ENTERPRISE_LOCATION, NEW_USER_CATEGORY_NAME, NEW_ENTERPRISE_DESCRIPTION);
         newUser = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, NEW_USER_LOCATION, NEW_USER_CATEGORY_NAME, NEW_USER_CURRENT_POSITION, NEW_USER_DESCRIPTION, NEW_USER_EDUCATION) ;
     }
@@ -124,6 +124,16 @@ public class ContactJdbcDaoTest {
         Assert.assertFalse(jobOfferList.isEmpty());
         Assert.assertEquals(1, jobOfferList.size());
         Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatus));
+    }
+
+    @Test
+    public void testGetJobOffersWithStatusUserData() {
+        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testUser.getId());
+
+        Assert.assertNotNull(jobOfferList);
+        Assert.assertFalse(jobOfferList.isEmpty());
+        Assert.assertEquals(1, jobOfferList.size());
+        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
     }
 
     @Test
