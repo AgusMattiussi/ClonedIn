@@ -78,8 +78,15 @@
                                     <c:choose>
                                         <c:when test="${experiences.size() > 0}">
                                             <c:forEach items="${experiences}" var="experience">
-                                <h6><b> <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/> </b></h6>
-                                <p style="font-size: 9pt"> <c:out value="${experience.from}"/> - <c:out value="${experience.to}"/></p>
+                                                <h6><b>
+                                                    <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/>
+                                                </b></h6>
+                                                <p style="font-size: 9pt">
+                                                    <c:set var="monthFromNameEx" value="select_m${experience.monthFrom}"/>
+                                                    <c:set var="monthToNameEx" value="select_m${experience.monthTo}"/>
+                                                    <spring:message code="${monthFromNameEx}"/> <c:out value="${experience.yearFrom}"/> -
+                                                    <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
+                                                </p>
                                                 <p><c:out value="${experience.description}"/></p>
                                                 <hr style="border: 1px solid grey">
                                             </c:forEach>
@@ -110,7 +117,11 @@
                                        <c:when test="${educations.size() > 0}">
                                            <c:forEach items="${educations}" var="education">
                                                <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
-                                               <p style="font-size: 9pt"><c:out value="${education.dateFrom}"/> - <c:out value="${education.dateTo}"/></p>
+                                               <p style="font-size: 9pt">
+                                                       <c:set var="monthFromNameEd" value="select_m${education.monthFrom}"/>
+                                                       <c:set var="monthToNameEd" value="select_m${education.monthTo}"/>
+                                                       <spring:message code="${monthFromNameEd}"/> <c:out value="${education.yearFrom}"/> -
+                                                       <spring:message code="${monthToNameEd}"/> <c:out value="${education.yearTo}"/>
                                                <p><c:out value="${education.description}"/></p>
                                                <hr style="border: 1px solid grey">
                                            </c:forEach>
