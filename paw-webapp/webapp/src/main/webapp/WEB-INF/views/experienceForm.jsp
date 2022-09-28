@@ -59,6 +59,7 @@
                               <form:option value="Noviembre"><spring:message code="select_m11"/></form:option>
                               <form:option value="Diciembre"><spring:message code="select_m12"/></form:option>
                             </form:select>
+                            <form:errors path="monthFrom" cssClass="formError" element="p"/>
                           </div>
                           <div class="col-sm-6">
                             <form:input type="text" path="yearFrom" placeholder="${datePlaceholder}"/>
@@ -84,6 +85,7 @@
                               <form:option value="Noviembre"><spring:message code="select_m11"/></form:option>
                               <form:option value="Diciembre"><spring:message code="select_m12"/></form:option>
                             </form:select>
+                            <form:errors path="monthTo" cssClass="formError" element="p"/>
                           </div>
                           <div class="col-sm-6">
                             <form:input type="text" path="yearTo" placeholder="${datePlaceholder}"/>
