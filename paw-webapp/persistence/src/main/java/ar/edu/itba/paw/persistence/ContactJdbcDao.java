@@ -114,10 +114,10 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
-        return template.query("SELECT " + JOB_OFFER_TABLE_ID + ", " + ENTERPRISE_ID + ", " + POSITION + ", " +
-                DESCRIPTION + ", " + SALARY + ", " + CATEGORY_ID + ", " + MODALITY + ", " + STATUS +
-                " FROM " + JOB_OFFER_TABLE + " JOIN "+ CONTACT_TABLE +  " ON " + JOB_OFFER_TABLE + "."+JOB_OFFER_TABLE_ID + " = "+ CONTACT_TABLE+"."+JOB_OFFER_ID +
-                " WHERE " + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
+        return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
+                DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS +
+                " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
+                " WHERE c." + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
     }
 
 

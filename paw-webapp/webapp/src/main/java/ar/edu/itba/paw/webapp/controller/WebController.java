@@ -155,7 +155,7 @@ public class WebController {
 
         return new ModelAndView("redirect:/notificationsUser/" + user.getId());
     }
-    @PreAuthorize("canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -189,7 +189,7 @@ public class WebController {
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("experienceForm");
@@ -197,7 +197,7 @@ public class WebController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -211,7 +211,7 @@ public class WebController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationForm");
@@ -219,7 +219,7 @@ public class WebController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
@@ -232,7 +232,7 @@ public class WebController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
@@ -240,7 +240,7 @@ public class WebController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
