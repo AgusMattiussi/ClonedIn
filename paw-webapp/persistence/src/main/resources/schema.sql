@@ -1,3 +1,5 @@
+-- SET client_encoding = 'UTF8'
+
 CREATE TABLE IF NOT EXISTS aptitud (
     id SERIAL PRIMARY KEY,
     descripcion TEXT NOT NULL UNIQUE
