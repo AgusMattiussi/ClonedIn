@@ -51,6 +51,7 @@ public class WebController {
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
+    private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
     @Autowired
     MessageSource messageSource;
@@ -72,6 +73,21 @@ public class WebController {
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
         this.contactService = contactService;
+
+        //FIXME: Se puede resolver esto de otra forma? 💀💀💀💀
+        monthToNumber.put("Enero", 1);
+        monthToNumber.put("Febrero", 2);
+        monthToNumber.put("Marzo", 3);
+        monthToNumber.put("Abril", 4);
+        monthToNumber.put("Mayo", 5);
+        monthToNumber.put("Junio", 6);
+        monthToNumber.put("Julio", 7);
+        monthToNumber.put("Agosto", 8);
+        monthToNumber.put("Septiembre", 9);
+        monthToNumber.put("Octubre", 10);
+        monthToNumber.put("Noviembre", 11);
+        monthToNumber.put("Diciembre", 12);
+
     }
 
      private boolean isUser(Authentication loggedUser){
@@ -204,8 +220,8 @@ public class WebController {
             return formExperience(loggedUser, experienceForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), Integer.parseInt(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
-                Integer.parseInt(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
+        experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+                monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
