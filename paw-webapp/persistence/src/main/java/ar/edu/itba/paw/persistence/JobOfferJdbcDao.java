@@ -28,7 +28,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
 
-    public static final String[] MODALITIES = new String[] {"remoto", "presencial", "mixto"};
+    public static final String[] MODALITIES = new String[] {"Remoto", "Presencial", "Mixto"};
     public static final Set<String> modalitiesSet = new HashSet<>(Arrays.asList(MODALITIES));
 
     private final JdbcTemplate template;
