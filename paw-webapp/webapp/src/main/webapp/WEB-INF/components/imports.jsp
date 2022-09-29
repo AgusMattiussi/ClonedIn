@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
-
 <html>
 <head>
     <!-- Bootstrap -->
@@ -17,6 +16,6 @@
     <!-- Script -->
     <script src="<c:url value="/assets/js/script.js"/>"></script>
     <!-- TabIcon -->
-    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
+    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/favicon.ico"/>">
 </head>
 </html>

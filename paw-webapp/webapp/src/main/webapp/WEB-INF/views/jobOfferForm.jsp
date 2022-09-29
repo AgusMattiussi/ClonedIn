@@ -8,9 +8,9 @@
     <%@include file="../components/imports.jsp"%>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
+    <!-- CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
     <title><spring:message code="jobOfferForm_pagetitle"/></title>
-    <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
 </head>
     <body>
         <jsp:include page="../components/navbarEmpty.jsp">

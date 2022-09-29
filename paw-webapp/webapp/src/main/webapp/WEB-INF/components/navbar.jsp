@@ -67,7 +67,7 @@
                 </div>
             </sec:authorize>
             </div>
-<%--            <img src="<c:url value="/assets/images/noimagen.jpeg"/>" height="40" class="d-inline-block align-top" alt="">--%>
+<%--            <img src="<c:url value="/assets/images/defaultProfilePicture.png"/>" height="40" class="d-inline-block align-top" alt="">--%>
 <%--            <sec:authorize access="hasRole('ENTERPRISE')">--%>
 <%--                <c:url value="/" var="getPath"/>--%>
 <%--                <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>

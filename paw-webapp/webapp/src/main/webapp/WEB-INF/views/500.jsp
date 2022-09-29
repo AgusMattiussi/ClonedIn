@@ -10,7 +10,7 @@
         <!-- CSS -->
         <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
         <title>Error 500 | ClonedIn</title>
-        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/tabLogo.png"/>">
+        <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/favicon.ico"/>">
     </head>
     <body>
         <div class="d-flex align-items-center justify-content-center vh-100">
