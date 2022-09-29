@@ -6,7 +6,7 @@
     <%@include file="../components/imports.jsp"%>
     <!-- CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
-    <title><spring:message code="navbar_notifications"/> | ClonedIn</title>
+    <title><spring:message code="navbarNotifications"/> | ClonedIn</title>
 </head>
 <body style="background: #F2F2F2">
 <jsp:include page="../components/navbar.jsp">
@@ -14,13 +14,13 @@
 </jsp:include>
 
 <div class="d-flex justify-content-between mt-2 ml-4">
-    <h3><spring:message code="navbar_notifications"/></h3>
+    <h3><spring:message code="navbarNotifications"/></h3>
 </div>
 <%--<div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
     <div class="container">
         <c:choose>
             <c:when test = "${jobOffers.size() == 0}">
-                <h5 class="mt-5 mb-5"><spring:message code="NOnotifications"/></h5>
+                <h5 class="mt-5 mb-5"><spring:message code="noNotificationsMsg"/></h5>
             </c:when>
             <c:otherwise>
                 <c:forEach var="job" items="${jobOffers}">
@@ -33,13 +33,13 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="row">
-                                        <h5 class="card-title"><spring:message code="notofications_mode"/></h5>
+                                        <h5 class="card-title"><spring:message code="notificationsMode"/></h5>
                                         <p class="card-text"><c:out value="${job.modality}"/></p>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="row">
-                                        <h5 class="card-title"><spring:message code="notificacions_salary"/></h5>
+                                        <h5 class="card-title"><spring:message code="notificationsSalary"/></h5>
                                         <p class="card-text"><c:out value="${job.salary}"/></p>
                                     </div>
                                 </div>
@@ -61,17 +61,17 @@
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">
-                                            <spring:message code="notificacions_status"/><spring:message code="${job.status}"/>
+                                            <spring:message code="notificationsStatus"/><spring:message code="${job.status}"/>
                                         </h5>
                                         <c:if test="${job.status == 'pendiente'}">
                                             <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
-                                                    <spring:message code="notifications_YES"/>
+                                                    <spring:message code="notificationsAccept"/>
                                                 </button>
                                             </a>
                                             <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
                                                 <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
-                                                    <spring:message code="notifications_NO"/>
+                                                    <spring:message code="notificationsReject"/>
                                                 </button>
                                             </a>
                                         </c:if>
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <h5 class="card-title"><spring:message code="notifications_desc"/></h5>
+                                <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                 <p class="card-text">${job.description}</p>
                             </div>
                         </div>

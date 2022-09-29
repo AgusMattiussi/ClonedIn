@@ -8,7 +8,7 @@
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
-    <title><spring:message code="login_pagetitle"/></title>
+    <title><spring:message code="loginPageTitle"/></title>
 </head>
 <body>
 <jsp:include page="../components/navbarEmpty.jsp"/>
@@ -17,9 +17,9 @@
         <div class="row justify-content-center mt-0">
             <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                 <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-                    <h2><strong><spring:message code="login_title"/></strong></h2>
-                    <spring:message code="login_mail" var="emailPlaceholder"/>
-                    <spring:message code="login_pass" var="passPlaceholder"/>
+                    <h2><strong><spring:message code="loginTitle"/></strong></h2>
+                    <spring:message code="loginMail" var="emailPlaceholder"/>
+                    <spring:message code="loginPass" var="passPlaceholder"/>
                     <div class="row">
                         <div class="col-md-12 mx-0">
                             <div id="msform">
@@ -41,25 +41,25 @@
                                                 <form:checkbox path="remember_me"/>
                                             </div>
                                             <div style="margin-left: 15px; margin-top: 1.2rem;">
-                                                <spring:message code="remember_me"/>
+                                                <spring:message code="rememberMe"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <button type="submit" name="end" class="btn action-button" style="width: fit-content">
-                                            <spring:message code="login_buttonmsg"/>
+                                            <spring:message code="loginButtonMsg"/>
                                         </button>
                                     </div>
                                     <div>
-                                        <p><spring:message code="login_message"/></p>
+                                        <p><spring:message code="loginMessage"/></p>
                                         <div class="row">
                                             <div class="col">
                                                 <a href="<c:url value="/createUser"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-person large"></i></button></a>
-                                                <p><spring:message code="login_user"/></p>
+                                                <p><spring:message code="loginUser"/></p>
                                             </div>
                                             <div class="col">
                                                 <a href="<c:url value="/createEnterprise"/>"><button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; font-size:40px; margin-top: 5px"><i class="bi bi-building large"></i></button></a>
-                                                <p><spring:message code="login_company"/></p>
+                                                <p><spring:message code="loginCompany"/></p>
                                             </div>
                                         </div>
                                     </div>

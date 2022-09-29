@@ -17,21 +17,21 @@
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
-                    <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>
+                    <h5 class="ml-2 mt-2"><spring:message code="indexSearchFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="searchForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                            <spring:message code="navbar_search" var="searchBarPlaceholder"/>
+                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
                             <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
                     </form:form>
-                    <h5 class="ml-2 mt-2"><spring:message code="index_filter"/></h5>
+                    <h5 class="ml-2 mt-2"><spring:message code="indexFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="filterForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="category" cssClass="form-select">
-                                <form:option value=""><spring:message code="categoryFilter"/></form:option>
+                                <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>
                                 <c:forEach items="${categories}" var="category">
                                     <form:option value="${category.id}"><spring:message code="${category.name}"/></form:option>
                                 </c:forEach>
@@ -39,44 +39,44 @@
                         </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-center ml-2">
-                            <spring:message code="profile_location" var="locationFilterPlaceholder"/>
+                            <spring:message code="profileLocation" var="locationFilterPlaceholder"/>
                             <form:input type="text" path="location" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
                         </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="educationLevel" cssClass="form-select">
-                                <form:option value=""><spring:message code="educationLevelFilter"/></form:option>
-                                <form:option value="Primario"><spring:message code="select_level1"/></form:option>
-                                <form:option value="Secundario"><spring:message code="select_level2"/></form:option>
-                                <form:option value="Terciario"><spring:message code="select_level3"/></form:option>
-                                <form:option value="Graduado"><spring:message code="select_level4"/></form:option>
-                                <form:option value="Posgrado"><spring:message code="select_level5"/></form:option>
+                                <form:option value=""><spring:message code="indexEducationLevelFilter"/></form:option>
+                                <form:option value="Primario"><spring:message code="selectEducationLevelPrimary"/></form:option>
+                                <form:option value="Secundario"><spring:message code="selectEducationLevelSecondary"/></form:option>
+                                <form:option value="Terciario"><spring:message code="selectEducationLevelTertiary"/></form:option>
+                                <form:option value="Graduado"><spring:message code="selectEducationLevelGraduate"/></form:option>
+                                <form:option value="Posgrado"><spring:message code="selectEducationLevelPostgraduate"/></form:option>
                             </form:select>
                         </div>
                         <div class="dropdown ml-2 mt-2">
                             <a href="<c:url value="/?page=1"/>">
                                 <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
-                                    <spring:message code="index_clearfilter"/>
+                                    <spring:message code="indexClearFilter"/>
                                 </button>
                             </a>
                         </div>
                         <div class="dropdown ml-2 mt-2">
                             <button class="btn btn-secondary filterbtn btn-outline-dark" type="submit">
-                                <spring:message code="filterBtn"/>
+                                <spring:message code="indexFilterBtn"/>
                             </button>
                         </div>
                     </form:form>
                 </div>
                 <div class="col mr-2">
                     <div class="d-flex justify-content-between mt-2">
-                        <h3><spring:message code="navbar_profiles"/></h3>
+                        <h3><spring:message code="navbarProfiles"/></h3>
                     </div>
                     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                         <div class="container">
                             <div class="card-deck justify-content-center mt-2 pt-2" >
                                 <c:choose>
                                     <c:when test = "${currentPage > pages || users.size() == 0}">
-                                        <h5 class="mt-5 mb-5"><spring:message code="index.noProfilesToShowMsg"/></h5>
+                                        <h5 class="mt-5 mb-5"><spring:message code="indexNoProfilesToShowMsg"/></h5>
                                     </c:when>
                                     <c:otherwise>
                                         <c:forEach var="us" items="${users}">
@@ -86,18 +86,18 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
-                                                                <p><spring:message code="index_category"/>:
+                                                                <p><spring:message code="indexCategory"/>:
                                                                     <span class="badge badge-pill badge-success">
                                                                         <spring:message code="${us.category.name}"/>
                                                                     </span>
                                                                 </p>
-                                                                <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${us.currentPosition}"/></p>
-                                                                <p class="card-text"><spring:message code="profile_level"/>: <c:out value="${us.education}"/></p>
-                                                                <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${us.location}"/></p>
+                                                                <p class="card-text"><spring:message code="profilePosition"/>: <c:out value="${us.currentPosition}"/></p>
+                                                                <p class="card-text"><spring:message code="profileEducationLevel"/>: <c:out value="${us.education}"/></p>
+                                                                <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>
                                                     <div class="card-footer second bg-white text-right mt-auto">
-                                                        <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark"><spring:message code="profile_contactbutton"/></button></a>
+                                                        <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark"><spring:message code="profileContactButton"/></button></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@
                                 <ul class="pagination">
                                     <li class="page-item">
                                         <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">
-                                            <spring:message code="index.pagination.first"/>
+                                            <spring:message code="indexPaginationFirst"/>
                                         </a>
                                     </li>
                                     <c:forEach var="i" begin="1" end="${pages}">
@@ -131,7 +131,7 @@
                                     </c:forEach>
                                     <li class="page-item">
                                         <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">
-                                            <spring:message code="index.pagination.end"/>
+                                            <spring:message code="indexPaginationEnd"/>
                                         </a>
                                     </li>
                                 </ul>

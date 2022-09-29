@@ -30,19 +30,19 @@
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/"/>">
-                            <spring:message code="navbar_profiles"/>
+                            <spring:message code="navbarProfiles"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileEnterprise/${param.id}"/>">
-                            <spring:message code="navbar_myjoboffers"/>
+                            <spring:message code="navbarMyJobOffers"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/contactsEnterprise/${param.id}"/>">
-                            <spring:message code="navbar_mycontacts"/>
+                            <spring:message code="navbarMyContacts"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
@@ -52,7 +52,7 @@
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
-                            <spring:message code="navbar_myprofile"/>
+                            <spring:message code="navbarMyProfile"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/notificationsUser/${param.id}"/>">
-                            <spring:message code="navbar_notifications"/>
+                            <spring:message code="navbarNotifications"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
@@ -81,7 +81,7 @@
             <a href="<c:url value="/logout"/>">
                 <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
                     <i class="bi bi-box-arrow-right pr-2"></i>
-                    <spring:message code="navbar_session"/>
+                    <spring:message code="navbarSession"/>
                 </button>
             </a>
         </div>

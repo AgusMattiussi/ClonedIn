@@ -18,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.FileCopyUtils;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -55,7 +53,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(myAuthenticationSuccessHandler())
                     .loginPage("/login")
                 .and().rememberMe()
-                    .rememberMeParameter("remember_me")
+                    .rememberMeParameter("rememberMe")
                     .userDetailsService(userDetailsService)
                     .key(loadRememberMeKey())
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))

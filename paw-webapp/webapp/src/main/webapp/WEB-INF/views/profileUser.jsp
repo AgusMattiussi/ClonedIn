@@ -28,7 +28,7 @@
                                     <sec:authorize access="hasRole('ENTERPRISE')">
                                         <a href="<c:url value="/contact/${user.id}"/>">
                                             <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem">
-                                                <spring:message code="profile_contactbutton"/>
+                                                <spring:message code="profileContactButton"/>
                                             </button>
                                         </a>
                                     </sec:authorize>
@@ -38,13 +38,13 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                    <p class="card-text"><spring:message code="profile_position"/>: <c:out value="${user.currentPosition}"/></p>
+                                    <p class="card-text"><spring:message code="profilePosition"/>: <c:out value="${user.currentPosition}"/></p>
                                     <c:set var="categoryName" value="${user.category.name}"/>
-                                    <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success">
+                                    <p class="card-text"><spring:message code="profileCategory"/>: <span class="badge badge-pill badge-success">
                                         <spring:message code="${categoryName}"/>
                                     </span></p>
-                                    <p class="card-text"><spring:message code="profile_level"/>: <c:out value="${user.education}"/></p>
-                                    <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${user.location}"/></p>
+                                    <p class="card-text"><spring:message code="profileEducationLevel"/>: <c:out value="${user.education}"/></p>
+                                    <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${user.location}"/></p>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                             <div class="card mt-2">
                                 <div class="card-body pb-0">
                                     <div class="d-flex justify-content-between">
-                                        <h5 class="card-title"><spring:message code="register_description"/></h5>
+                                        <h5 class="card-title"><spring:message code="registerDescriptionUser"/></h5>
                                     </div>
                                 </div>
                                 <div class="card-footer bg-white text-left">
@@ -65,11 +65,11 @@
                         <div class="card mt-2">
                             <div class="card-body pb-0">
                                 <div class="d-flex justify-content-between">
-                                    <h5 class="card-title"><spring:message code="profile_experience"/></h5>
+                                    <h5 class="card-title"><spring:message code="profileExperience"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createExperience/${user.id}"/>">
                                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
-                                            <i class="bi bi-plus-square pr-2"></i><spring:message code="profile_experiencebutton"/>
+                                            <i class="bi bi-plus-square pr-2"></i><spring:message code="profileExperienceButton"/>
                                         </button>
                                     </a>
                                     </sec:authorize>
@@ -93,7 +93,7 @@
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
-                                             <p class="card-text"><b><spring:message code="profile_noexperience"/></b></p>
+                                             <p class="card-text"><b><spring:message code="profileNoExperienceMsg"/></b></p>
                                         </c:otherwise>
                                     </c:choose>
                             </div>
@@ -103,11 +103,11 @@
                         <div class="card mt-2">
                             <div class="card-body pb-0">
                                 <div class="d-flex justify-content-between">
-                                    <h5 class="card-title"><spring:message code="profile_education"/></h5>
+                                    <h5 class="card-title"><spring:message code="profileEducation"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createEducation/${user.id}"/>">
                                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
-                                        <i class="bi bi-plus-square pr-2"></i><spring:message code="profile_educationbutton"/>
+                                        <i class="bi bi-plus-square pr-2"></i><spring:message code="profileEducationButton"/>
                                         </button>
                                     </a>
                                     </sec:authorize>
@@ -128,7 +128,7 @@
                                            </c:forEach>
                                        </c:when>
                                        <c:otherwise>
-                                           <p class="card-text"><b><spring:message code="profile_noeducation"/></b></p>
+                                           <p class="card-text"><b><spring:message code="profileNoEducationMsg"/></b></p>
                                        </c:otherwise>
                                    </c:choose>
                             </div>
@@ -138,11 +138,11 @@
                         <div class="card mt-2">
                             <div class="card-body pb-0">
                                 <div class="d-flex justify-content-between">
-                                    <h5 class="card-title"><spring:message code="profile_skills"/></h5>
+                                    <h5 class="card-title"><spring:message code="profileSkills"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createSkill/${user.id}"/>">
                                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: 200px">
-                                            <i class="bi bi-plus-square pr-2"></i><spring:message code="profile_skillsbutton"/>
+                                            <i class="bi bi-plus-square pr-2"></i><spring:message code="profileSkillsButton"/>
                                         </button>
                                     </a>
                                     </sec:authorize>
@@ -156,7 +156,7 @@
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        <p class="card-text"><b><spring:message code="profile_noskills"/></b></p>
+                                        <p class="card-text"><b><spring:message code="profileNoSkillsMsg"/></b></p>
                                     </c:otherwise>
                                 </c:choose>
                             </div>

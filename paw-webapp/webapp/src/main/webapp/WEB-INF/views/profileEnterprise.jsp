@@ -28,9 +28,9 @@
                     </div>
                     <div class="card-footer bg-white">
                         <c:set var="categoryName" value="${enterprise.category.name}"/>
-                        <p class="card-text"><spring:message code="profile_category"/>: <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span></p>
-                        <p class="card-text"><spring:message code="profile_location"/>: <c:out value="${enterprise.location}"/></p>
-                            <p class="card-text"><b><spring:message code="register_description2"/></b></p>
+                        <p class="card-text"><spring:message code="profileCategory"/>: <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span></p>
+                        <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${enterprise.location}"/></p>
+                            <p class="card-text"><b><spring:message code="registerDescriptionEnterprise"/></b></p>
                             <p class="card-text"><c:out value="${enterprise.description}"/></p>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                         <div class="d-flex justify-content-center mt-3">
                             <a href="<c:url value="/createJobOffer/${enterprise.id}"/>">
                                 <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
-                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="addJobOffer_button"/>
+                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="addJobOfferButton"/>
                                 </button>
                             </a>
                         </div>
@@ -63,13 +63,13 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="row">
-                                                    <h6><spring:message code="jobOfferForm_salary"/></h6>
+                                                    <h6><spring:message code="jobOfferFormSalary"/></h6>
                                                     <p>$<c:out value="${joboffer.salary}"/> </p>
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="row">
-                                                    <h6> <spring:message code="jobOfferForm_mode2"/></h6>
+                                                    <h6> <spring:message code="jobOfferFormMode"/></h6>
                                                     <p> <c:out value="${joboffer.modality}"/> </p>
                                                 </div>
                                             </div>
@@ -88,7 +88,7 @@
                         </c:when>
                         <c:otherwise>
                             <div class="d-flex justify-content-center">
-                                <p class="card-text"><b><spring:message code="profileEnterprise_noJobOffers"/></b></p>
+                                <p class="card-text"><b><spring:message code="profileEnterprise.noJobOffersMsg"/></b></p>
                             </div>
                         </c:otherwise>
                     </c:choose>

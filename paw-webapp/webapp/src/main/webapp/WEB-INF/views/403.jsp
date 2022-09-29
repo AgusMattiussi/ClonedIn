@@ -16,12 +16,12 @@
         <div class="d-flex align-items-center justify-content-center vh-100">
             <div class="text-center">
                 <h1 class="display-1 fw-bold">403</h1>
-                <p class="fs-3"> <span class="text-danger"><spring:message code="error403_titlespan"/></span> <spring:message code="error403_title"/></p>
+                <p class="fs-3"> <span class="text-danger"><spring:message code="error403TitleSpan"/></span> <spring:message code="error403Title"/></p>
                 <p class="lead">
-                    <spring:message code="error403_message"/>
+                    <spring:message code="error403Message"/>
                 </p>
                 <a onclick="history.back()" class="btn btn-primary" style="background-color: #04704C">
-                    <spring:message code="error403_button"/>
+                    <spring:message code="error403ButtonMsg"/>
                 </a>
             </div>
         </div>

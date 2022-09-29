@@ -16,12 +16,12 @@
         <div class="d-flex align-items-center justify-content-center vh-100">
             <div class="text-center">
                 <h1 class="display-1 fw-bold">500</h1>
-                <p class="fs-3"><span class="text-danger"><spring:message code="error500_titlespan"/></span> <spring:message code="error500_title"/></p>
+                <p class="fs-3"><span class="text-danger"><spring:message code="error500TitleSpan"/></span> <spring:message code="error500Title"/></p>
                 <p class="lead">
-                    <spring:message code="error500_message"/>
+                    <spring:message code="error500Message"/>
                 </p>
                 <a onclick="history.back()" class="btn btn-primary" style="background-color: #04704C">
-                    <spring:message code="error500_button"/>
+                    <spring:message code="error500ButtonMsg"/>
                 </a>
             </div>
         </div>
