@@ -1,0 +1,119 @@
+package ar.edu.itba.paw.webapp.controller;
+
+import ar.edu.itba.paw.interfaces.services.CategoryService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.EnterpriseService;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.form.EnterpriseForm;
+import ar.edu.itba.paw.webapp.form.LoginForm;
+import ar.edu.itba.paw.webapp.form.UserForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+@Controller
+public class RegisterController {
+    private final UserService userService;
+    private final EnterpriseService enterpriseService;
+    private final CategoryService categoryService;
+    private final EmailService emailService;
+    private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
+    @Autowired
+    private MessageSource messageSource;
+    @Autowired
+    protected AuthenticationManager authenticationManager;
+
+    @Autowired
+    public RegisterController(UserService userService, EnterpriseService enterpriseService,
+                              CategoryService categoryService, EmailService emailService) {
+        this.userService = userService;
+        this.enterpriseService = enterpriseService;
+        this.categoryService = categoryService;
+        this.emailService = emailService;
+    }
+
+    @RequestMapping(value = "/createUser", method = { RequestMethod.GET })
+    public ModelAndView formRegisterUser(@ModelAttribute("userForm") final UserForm userForm) {
+        ModelAndView mav = new ModelAndView("userRegisterForm");
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
+
+    @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
+    public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, HttpServletRequest request) {
+        if (errors.hasErrors()) {
+            return formRegisterUser(userForm);
+        }
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+        sendRegisterEmail(userForm.getEmail(), userForm.getName());
+
+        authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
+
+        return new ModelAndView("redirect:/profileUser/" + u.getId());
+    }
+
+    @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })
+    public ModelAndView formRegisterEnterprise(@ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm) {
+        ModelAndView mav = new ModelAndView("enterpriseRegisterForm");
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
+
+    @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
+    public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors, HttpServletRequest request) {
+        if (errors.hasErrors()) {
+            return formRegisterEnterprise(enterpriseForm);
+        }
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
+        sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
+
+        authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
+
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/login", method = { RequestMethod.GET })
+    public ModelAndView login(@ModelAttribute("loginForm") final LoginForm loginForm) {
+        return new ModelAndView("login");
+    }
+
+    private void sendRegisterEmail(String email, String username){
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", username);
+        mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, Locale.getDefault()));
+        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, Locale.getDefault()));
+        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, Locale.getDefault()));
+
+        String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
+
+        emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
+    }
+
+    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authToken.setDetails(new WebAuthenticationDetails(request));
+
+        Authentication authentication = authenticationManager.authenticate(authToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+}
