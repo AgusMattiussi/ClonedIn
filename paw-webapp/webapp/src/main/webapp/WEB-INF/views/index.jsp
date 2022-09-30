@@ -102,40 +102,14 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
+                                        </div>
+                                        <!-- Pagination -->
+                                        <jsp:include page="../components/pagination.jsp">
+                                            <jsp:param name="currentPage" value="${currentPage}" />
+                                            <jsp:param name="pages" value="${pages}" />
+                                        </jsp:include>
                                     </c:otherwise>
                                 </c:choose>
-                            </div>
-                            <!-- Pagination -->
-                            <nav class="d-flex justify-content-center align-items-center">
-                                <ul class="pagination">
-                                    <li class="page-item">
-                                        <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">
-                                            <spring:message code="indexPaginationFirst"/>
-                                        </a>
-                                    </li>
-                                    <c:forEach var="i" begin="1" end="${pages}">
-                                        <li class="page-item">
-                                            <c:choose>
-                                                <c:when test="${currentPage == i}">
-                                                    <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/?page=${i}"/>">
-                                                        <c:out value="${i}"/>
-                                                    </a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">
-                                                        <c:out value="${i}"/>
-                                                    </a>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </li>
-                                    </c:forEach>
-                                    <li class="page-item">
-                                        <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">
-                                            <spring:message code="indexPaginationEnd"/>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
