@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validators.CheckPassword;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -19,7 +18,7 @@ public class LoginForm {
 //    @CheckPassword
     private String password;
 
-    private Boolean remember_me;
+    private Boolean rememberMe;
 
     public String getEmail() {
         return email;
@@ -37,12 +36,12 @@ public class LoginForm {
         this.password = password;
     }
 
-    public Boolean getRemember_me() {
-        return remember_me;
+    public Boolean getRememberMe() {
+        return rememberMe;
     }
 
-    public void setRemember_me(Boolean remember_me) {
-        this.remember_me = remember_me;
+    public void setRememberMe(Boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 
 
