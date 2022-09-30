@@ -63,6 +63,20 @@ public class UserController {
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
 
+        monthToNumber.put("Enero", 1);
+        monthToNumber.put("Febrero", 2);
+        monthToNumber.put("Marzo", 3);
+        monthToNumber.put("Abril", 4);
+        monthToNumber.put("Mayo", 5);
+        monthToNumber.put("Junio", 6);
+        monthToNumber.put("Julio", 7);
+        monthToNumber.put("Agosto", 8);
+        monthToNumber.put("Septiembre", 9);
+        monthToNumber.put("Octubre", 10);
+        monthToNumber.put("Noviembre", 11);
+        monthToNumber.put("Diciembre", 12);
+
+
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")

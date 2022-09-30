@@ -12,10 +12,13 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.sql.DataSource;
 
 @ComponentScan({ "ar.edu.itba.paw.persistence" })
 @Configuration
+@EnableTransactionManagement
 public class TestConfig {
 
     @Value("classpath:hsqldb.sql")
