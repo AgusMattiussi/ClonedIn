@@ -38,7 +38,7 @@
                                         </c:if>
                                         <div class="d-flex">
                                             <div style="margin-top: 0.4rem; margin-left: 10px">
-                                                <form:checkbox path="remember_me"/>
+                                                <form:checkbox path="rememberMe"/>
                                             </div>
                                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                                                 <spring:message code="rememberMe"/>
