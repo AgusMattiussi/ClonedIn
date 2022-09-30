@@ -14,7 +14,6 @@
         <jsp:param name="id" value="${loggedUserID}" />
     </jsp:include>
     <div class="d-flex justify-content-between mt-2">
-<%--        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
            <div class="container">
                 <div class="row">
                     <div class="col-3">
@@ -32,9 +31,9 @@
                                             </button>
                                         </a>
                                     </sec:authorize>
-<%--                                    <sec:authorize access="hasRole('USER')">--%>
-<%--                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>--%>
-<%--                                    </sec:authorize>--%>
+                                    <sec:authorize access="hasRole('USER')">
+                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                                    </sec:authorize>
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
@@ -43,7 +42,8 @@
                                     <p class="card-text"><spring:message code="profileCategory"/>: <span class="badge badge-pill badge-success">
                                         <spring:message code="${categoryName}"/>
                                     </span></p>
-                                    <p class="card-text"><spring:message code="profileEducationLevel"/>: <c:out value="${user.education}"/></p>
+                                    <c:set var="educationLevel" value="${user.education}"/>
+                                    <p class="card-text"><spring:message code="profileEducationLevel"/>: <spring:message code="${educationLevel}"/></p>
                                     <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${user.location}"/></p>
                             </div>
                         </div>
@@ -79,14 +79,21 @@
                                     <c:choose>
                                         <c:when test="${experiences.size() > 0}">
                                             <c:forEach items="${experiences}" var="experience">
+                                                <div class="d-flex justify-content-between">
                                                 <h6><b>
                                                     <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/>
                                                 </b></h6>
+                                                    <sec:authorize access="hasRole('USER')">
+                                                        <button type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                                    </sec:authorize>
+                                                </div>
                                                 <p style="font-size: 9pt">
                                                     <c:set var="monthFromNameEx" value="selectMonth${experience.monthFrom}"/>
                                                     <c:set var="monthToNameEx" value="selectMonth${experience.monthTo}"/>
                                                     <spring:message code="${monthFromNameEx}"/> <c:out value="${experience.yearFrom}"/> -
-                                                    <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
+                                                    <c:if test="${experience.yearTo != null}">
+                                                        <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
+                                                    </c:if>
                                                 </p>
                                                 <p><c:out value="${experience.description}"/></p>
                                                 <hr style="border: 1px solid grey">
@@ -117,7 +124,12 @@
                                    <c:choose>
                                        <c:when test="${educations.size() > 0}">
                                            <c:forEach items="${educations}" var="education">
+                                       <div class="d-flex justify-content-between">
                                                <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
+                                           <sec:authorize access="hasRole('USER')">
+                                               <button type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                           </sec:authorize>
+                                       </div>
                                                <p style="font-size: 9pt">
                                                        <c:set var="monthFromNameEd" value="selectMonth${education.monthFrom}"/>
                                                        <c:set var="monthToNameEd" value="selectMonth${education.monthTo}"/>
@@ -152,7 +164,11 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
-                                            <span class="badge badge-pill badge-success"><c:out value="${skill.description}"/></span>
+                                            <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
+                                                <sec:authorize access="hasRole('USER')">
+                                                <button type="button" class="btn waves-effect btn-sm" style="color: white"><i class="bi bi-x"></i></button>
+                                                </sec:authorize>
+                                            </span>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
@@ -165,7 +181,6 @@
                     </div>
                 </div>
             </div>
-<%--        </div>--%>
     </div>
     </body>
 </html>

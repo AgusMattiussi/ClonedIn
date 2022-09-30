@@ -8,15 +8,19 @@
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
     <title><spring:message code="navbarNotifications"/> | ClonedIn</title>
 </head>
-<body style="background: #F2F2F2">
+<body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
 </jsp:include>
-
-<div class="d-flex justify-content-between mt-2 ml-4">
-    <h3><spring:message code="navbarNotifications"/></h3>
-</div>
-<%--<div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
+<div class="row h-100 w-100">
+    <div class="col-sm-2 sidebar">
+        <!-- TODO: AGREGAR FILTROS -->
+    </div>
+    <div class="col mr-2">
+        <div class="d-flex justify-content-between mt-2 ml-4">
+            <h3><spring:message code="navbarNotifications"/></h3>
+        </div>
+        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
     <div class="container">
         <c:choose>
             <c:when test = "${jobOffers.size() == 0}">
@@ -87,39 +91,10 @@
                 </c:forEach>
             </c:otherwise>
         </c:choose>
-        <!-- Pagination -->
-        <%--        <nav class="d-flex justify-content-center align-items-center">--%>
-        <%--            <ul class="pagination">--%>
-        <%--                <li class="page-item">--%>
-        <%--                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">--%>
-        <%--                        <spring:message code="index.pagination.first"/>--%>
-        <%--                    </a>--%>
-        <%--                </li>--%>
-        <%--                <c:forEach var="i" begin="1" end="${pages}">--%>
-        <%--                    <li class="page-item">--%>
-        <%--                        <c:choose>--%>
-        <%--                            <c:when test="${currentPage == i}">--%>
-        <%--                                <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/?page=${i}"/>">--%>
-        <%--                                    <c:out value="${i}"/>--%>
-        <%--                                </a>--%>
-        <%--                            </c:when>--%>
-        <%--                            <c:otherwise>--%>
-        <%--                                <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">--%>
-        <%--                                    <c:out value="${i}"/>--%>
-        <%--                                </a>--%>
-        <%--                            </c:otherwise>--%>
-        <%--                        </c:choose>--%>
-        <%--                    </li>--%>
-        <%--                </c:forEach>--%>
-        <%--                <li class="page-item">--%>
-        <%--                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">--%>
-        <%--                        <spring:message code="index.pagination.end"/>--%>
-        <%--                    </a>--%>
-        <%--                </li>--%>
-        <%--            </ul>--%>
-        <%--        </nav>--%>
     </div>
-<%--</div>--%>
+        </div>
+    </div>
+</div>
 <!-- Modal -->
 <jsp:include page="../components/answerModal.jsp"/>
 </body>

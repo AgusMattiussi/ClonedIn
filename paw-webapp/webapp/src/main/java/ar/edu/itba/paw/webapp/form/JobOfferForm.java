@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
@@ -26,27 +27,27 @@ public class JobOfferForm {
     @NotEmpty
     private String mode;
 
-//    @Size(max=20)
-//    private String skill1;
-//
-//    @Size(max=20)
-//    private String skill2;
-//
-//    public String getSkill1() {
-//        return skill1;
-//    }
-//
-//    public void setSkill1(String skill1) {
-//        this.skill1 = skill1;
-//    }
-//
-//    public String getSkill2() {
-//        return skill2;
-//    }
-//
-//    public void setSkill2(String skill2) {
-//        this.skill2 = skill2;
-//    }
+    @Size(max=20)
+    private String skill1;
+
+    @Size(max=20)
+    private String skill2;
+
+    public String getSkill1() {
+        return skill1;
+    }
+
+    public void setSkill1(String skill1) {
+        this.skill1 = skill1;
+    }
+
+    public String getSkill2() {
+        return skill2;
+    }
+
+    public void setSkill2(String skill2) {
+        this.skill2 = skill2;
+    }
 
 
     public String getJobPosition() {

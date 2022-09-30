@@ -12,7 +12,7 @@
     <title><spring:message code="registerPageTitle"/></title>
   </head>
   <body>
-    <jsp:include page="../components/navbarEmpty.jsp"/>
+    <jsp:include page="../components/navbar.jsp"/>
       <div class="d-flex justify-content-between mt-2">
         <div class="container-fluid">
           <div class="row justify-content-center mt-0">
@@ -45,12 +45,12 @@
                           <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                           <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                           <form:errors cssClass="formError" element="p"/>
-<%--                          <div class="d-flex">--%>
-<%--                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="register_photomsg"/></label>--%>
-<%--                            <div style="margin-left: 15px;">--%>
-<%--                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>--%>
-<%--                            </div>--%>
-<%--                          </div>--%>
+                          <div class="d-flex">
+                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>
+                            <div style="margin-left: 15px;">
+                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
+                            </div>
+                          </div>
                           <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                           <form:errors path="city" cssClass="formError" element="p"/>
                           <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
@@ -59,11 +59,11 @@
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="educationFormLevel"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="level" cssClass="list-dt ml-auto">
-                                <form:option value="Primario"><spring:message code="selectEducationLevelPrimary"/></form:option>
-                                <form:option value="Secundario"><spring:message code="selectEducationLevelSecondary"/></form:option>
-                                <form:option value="Terciario"><spring:message code="selectEducationLevelTertiary"/></form:option>
-                                <form:option value="Graduado"><spring:message code="selectEducationLevelGraduate"/></form:option>
-                                <form:option value="Postgrado"><spring:message code="selectEducationLevelPostgraduate"/></form:option>
+                                <form:option value="Primario"><spring:message code="Primario"/></form:option>
+                                <form:option value="Secundario"><spring:message code="Secundario"/></form:option>
+                                <form:option value="Terciario"><spring:message code="Terciario"/></form:option>
+                                <form:option value="Graduado"><spring:message code="Graduado"/></form:option>
+                                <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                               </form:select>
                             </div>
                             <form:errors path="level" cssClass="formError" element="p"/>

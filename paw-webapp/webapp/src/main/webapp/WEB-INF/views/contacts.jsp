@@ -15,15 +15,7 @@
     </jsp:include>
     <div class="row h-100 w-100">
         <div class="col-sm-2 sidebar">
-<%--            <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>--%>
-<%--            <c:url value="/contactsEnterprise/${loggedUserID}" var="getPath"/>--%>
-<%--            <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>
-<%--                <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">--%>
-<%--                    <spring:message code="navbar_search" var="searchBarPlaceholder"/>--%>
-<%--                    <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>--%>
-<%--                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>--%>
-<%--                </div>--%>
-<%--            </form:form>--%>
+            <!-- TODO: AGREGAR FILTROS -->
         </div>
         <div class="col mr-2">
         <div class="d-flex justify-content-between mt-2 ml-4">

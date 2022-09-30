@@ -12,7 +12,7 @@
     <title><spring:message code="registerPageTitle"/></title>
 </head>
     <body>
-        <jsp:include page="../components/navbarEmpty.jsp"/>
+        <jsp:include page="../components/navbar.jsp"/>
         <div class="d-flex justify-content-between mt-2">
             <div class="container-fluid">
                 <div class="row justify-content-center mt-0">
@@ -44,12 +44,12 @@
                                                     <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                                                     <form:errors path="repeatPassword" cssClass="formError" element="p"/>
                                                     <form:errors cssClass="formError" element="p"/>
-<%--                                                    <div class="d-flex">--%>
-<%--                                                            <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="register_photomsg"/></label>--%>
-<%--                                                        <div style="margin-left: 15px">--%>
-<%--                                                            <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
+                                                    <div class="d-flex">
+                                                            <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>
+                                                        <div style="margin-left: 15px">
+                                                            <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
+                                                        </div>
+                                                    </div>
                                                     <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                                                     <form:errors path="city" cssClass="formError" element="p"/>
                                                     <form:input type="text" path="aboutUs" placeholder="${descriptionPlaceholder}"/>

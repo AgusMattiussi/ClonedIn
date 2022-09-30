@@ -46,11 +46,11 @@
                         <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="educationLevel" cssClass="form-select">
                                 <form:option value=""><spring:message code="indexEducationLevelFilter"/></form:option>
-                                <form:option value="Primario"><spring:message code="selectEducationLevelPrimary"/></form:option>
-                                <form:option value="Secundario"><spring:message code="selectEducationLevelSecondary"/></form:option>
-                                <form:option value="Terciario"><spring:message code="selectEducationLevelTertiary"/></form:option>
-                                <form:option value="Graduado"><spring:message code="selectEducationLevelGraduate"/></form:option>
-                                <form:option value="Posgrado"><spring:message code="selectEducationLevelPostgraduate"/></form:option>
+                                <form:option value="Primario"><spring:message code="Primario"/></form:option>
+                                <form:option value="Secundario"><spring:message code="Secundario"/></form:option>
+                                <form:option value="Terciario"><spring:message code="Terciario"/></form:option>
+                                <form:option value="Graduado"><spring:message code="Graduado"/></form:option>
+                                <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                             </form:select>
                         </div>
                         <div class="dropdown ml-2 mt-2">
@@ -92,7 +92,7 @@
                                                                     </span>
                                                                 </p>
                                                                 <p class="card-text"><spring:message code="profilePosition"/>: <c:out value="${us.currentPosition}"/></p>
-                                                                <p class="card-text"><spring:message code="profileEducationLevel"/>: <c:out value="${us.education}"/></p>
+                                                                <p class="card-text"><spring:message code="profileEducationLevel"/>: <spring:message code="${us.education}"/></p>
                                                                 <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${us.location}"/></p>
                                                         </div>
                                                     </a>

@@ -26,7 +26,6 @@ public class ExperienceForm {
     @NotEmpty
     private String monthFrom;
 
-    @NotEmpty
     @Pattern(regexp = "(19|20)([0-9]{2})")
     private String yearTo;
 

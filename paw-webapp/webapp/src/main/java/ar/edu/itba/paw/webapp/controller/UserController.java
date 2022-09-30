@@ -63,6 +63,19 @@ public class UserController {
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
 
+        monthToNumber.put("Enero", 1);
+        monthToNumber.put("Febrero", 2);
+        monthToNumber.put("Marzo", 3);
+        monthToNumber.put("Abril", 4);
+        monthToNumber.put("Mayo", 5);
+        monthToNumber.put("Junio", 6);
+        monthToNumber.put("Julio", 7);
+        monthToNumber.put("Agosto", 8);
+        monthToNumber.put("Septiembre", 9);
+        monthToNumber.put("Octubre", 10);
+        monthToNumber.put("Noviembre", 11);
+        monthToNumber.put("Diciembre", 12);
+
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
@@ -150,6 +163,7 @@ public class UserController {
                 errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
             return formExperience(loggedUser, experienceForm, userId);
         }
+
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
@@ -203,12 +217,7 @@ public class UserController {
             return formSkill(loggedUser, skillForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        if(!skillForm.getLang().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
-        if(!skillForm.getMore().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getMore(), user.getId());
-        if(!skillForm.getSkill().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+        userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 

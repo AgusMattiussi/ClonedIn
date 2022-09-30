@@ -13,7 +13,7 @@
   <title><spring:message code="contactFormPageTitle"/></title>
 </head>
 <body>
-  <jsp:include page="../components/navbarEmpty.jsp">
+  <jsp:include page="../components/navbar.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
   </jsp:include>
   <div class="d-flex justify-content-between mt-2">
