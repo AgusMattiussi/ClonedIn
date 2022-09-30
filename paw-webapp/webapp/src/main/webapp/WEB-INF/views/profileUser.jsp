@@ -83,8 +83,8 @@
                                                     <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/>
                                                 </b></h6>
                                                 <p style="font-size: 9pt">
-                                                    <c:set var="monthFromNameEx" value="select_m${experience.monthFrom}"/>
-                                                    <c:set var="monthToNameEx" value="select_m${experience.monthTo}"/>
+                                                    <c:set var="monthFromNameEx" value="selectMonth${experience.monthFrom}"/>
+                                                    <c:set var="monthToNameEx" value="selectMonth${experience.monthTo}"/>
                                                     <spring:message code="${monthFromNameEx}"/> <c:out value="${experience.yearFrom}"/> -
                                                     <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
                                                 </p>
@@ -119,8 +119,8 @@
                                            <c:forEach items="${educations}" var="education">
                                                <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
                                                <p style="font-size: 9pt">
-                                                       <c:set var="monthFromNameEd" value="select_m${education.monthFrom}"/>
-                                                       <c:set var="monthToNameEd" value="select_m${education.monthTo}"/>
+                                                       <c:set var="monthFromNameEd" value="selectMonth${education.monthFrom}"/>
+                                                       <c:set var="monthToNameEd" value="selectMonth${education.monthTo}"/>
                                                        <spring:message code="${monthFromNameEd}"/> <c:out value="${education.yearFrom}"/> -
                                                        <spring:message code="${monthToNameEd}"/> <c:out value="${education.yearTo}"/>
                                                <p><c:out value="${education.description}"/></p>
