@@ -1,4 +1,5 @@
 /*INSERT INTO users (email, password) VALUES ('foo@bar.com', 'secret');*/
+INSERT INTO imagen(bytes) VALUES (null);
 INSERT INTO rubro (nombre) VALUES ('testCategory');
 INSERT INTO aptitud (descripcion) VALUES ('testskill');
 INSERT INTO usuario (nombre, email, contrasenia, descripcion, idRubro, ubicacion, posicionActual, educacion) VALUES ('John Lennon', 'johnlennon@gmail.com', 'imagineAPassword', null, 1, null, null, null);

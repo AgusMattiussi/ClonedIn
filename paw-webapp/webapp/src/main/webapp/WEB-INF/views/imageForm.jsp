@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
   <!-- Script -->
   <script src="<c:url value="/assets/js/steps.js"/>"></script>
-  <title><spring:message code="skillsFormPageTitle"/></title>
+  <title><spring:message code="imageFormPageTitle"/></title>
 </head>
 <body>
 <jsp:include page="../components/navbarEmpty.jsp">
@@ -20,27 +20,22 @@
     <div class="row justify-content-center mt-0">
       <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-          <h2><strong><spring:message code="skillsFormTitle"/></strong></h2>
-          <p><spring:message code="skillsFormWarning"/></p>
-          <spring:message code="skillsFormLanguages" var="languagesPlaceholder"/>
-          <spring:message code="skillsFormSkills" var="skillsPlaceholder"/>
-          <spring:message code="skillsFormComments" var="commentsPlaceholder"/>
+          <h2><strong><spring:message code="imageFormTitle"/></strong></h2>
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
-                <c:url value="/createSkill/${user.id}" var="postPath"/>
-                <form:form modelAttribute="skillForm" action="${postPath}" method="post">
+                <c:url value="/uploadProfileImage/${user.id}" var="postPath"/>
+                <form:form modelAttribute="imageForm" action="${postPath}" method="post" enctype="multipart/form-data">
                   <fieldset>
-                  <div class="form-card">
-                  <h2 class="fs-title"><spring:message code="skillsFormSubtitle"/></h2>
-                    <form:input type="text" path="lang"  placeholder="${languagesPlaceholder}"/>
-                    <form:errors path="lang" cssClass="formError" element="p"/>
-                    <form:input type="text" path="skill" placeholder="${skillsPlaceholder}"/>
-                    <form:errors path="skill" cssClass="formError" element="p"/>
-                    <form:input type="text" path="more"  placeholder="${commentsPlaceholder}"/>
-                    <form:errors path="more" cssClass="formError" element="p"/>
-                  </div>
-                    <p><spring:message code="skillsFormRequiredMsg"/></p>
+                    <div class="form-card">
+                        <div class="d-flex">
+                          <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerChoosePhoto"/></label>
+                          <div style="margin-left: 15px;">
+                            <form:input type="file" path="image" class="form-control-file" id="ControlFile" />
+                            <form:errors path="image" class="formError" element="p"/>
+                          </div>
+                        </div>
+                    </div>
                     <a href="<c:url value="/profileUser/${user.id}"/>">
                       <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                     </a>

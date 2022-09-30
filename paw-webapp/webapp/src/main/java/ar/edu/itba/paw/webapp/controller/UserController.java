@@ -5,10 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.EducationForm;
-import ar.edu.itba.paw.webapp.form.ExperienceForm;
-import ar.edu.itba.paw.webapp.form.SkillForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +34,7 @@ public class UserController {
     private final JobOfferSkillService jobOfferSkillService;
     private final ContactService contactService;
     private final EnterpriseService enterpriseService;
+    private final ImageService imageService;
 
     @Autowired
     private MessageSource messageSource;
@@ -50,9 +49,9 @@ public class UserController {
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
-                          final EducationService educationService, final UserSkillService userSkillService,
-                          final EmailService emailService, final JobOfferService jobOfferService,
-                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService){
+                          final EducationService educationService, final UserSkillService userSkillService, final EmailService emailService,
+                          final JobOfferService jobOfferService, final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
+                          final ImageService imageService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -62,6 +61,7 @@ public class UserController {
         this.jobOfferService = jobOfferService;
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
+        this.imageService = imageService;
 
         monthToNumber.put("Enero", 1);
         monthToNumber.put("Febrero", 2);
@@ -226,6 +226,25 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("imageForm");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors, @PathVariable("userId") final long userId) throws IOException {
+        if (errors.hasErrors()) {
+            return formImage(loggedUser, imageForm, userId);
+        }
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        imageService.uploadImage(imageForm.getImage().getBytes());
+        return new ModelAndView("redirect:/profileUser/" + user.getId());
+    }
+
     private void sendAnswerEmail(String enterpriseEmail, String username, String jobOffer, String answerMsg){
         final Map<String, Object> mailMap = new HashMap<>();
 
@@ -251,4 +270,6 @@ public class UserController {
             return enterprise.getId();
         }
     }
+
+
 }
