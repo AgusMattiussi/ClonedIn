@@ -47,7 +47,7 @@
                                                         </div>
                                                         <form:input type="text" path="jobDescription" placeholder="${descriptionPlaceholder}"/>
                                                         <form:errors path="jobDescription" cssClass="formError" element="p"/>
-                                                        <form:input type="text" path="salary" placeholder="${salaryPlaceholder}"/>
+                                                        <form:input type="number" path="salary" placeholder="${salaryPlaceholder}"/>
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
                                                         <div class="d-flex">
                                                             <div class="row">
