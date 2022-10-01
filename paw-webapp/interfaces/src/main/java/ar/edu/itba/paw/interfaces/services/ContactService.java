@@ -16,7 +16,7 @@ public interface ContactService {
 
     List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID);
 
-    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID);
+    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 

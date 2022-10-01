@@ -146,6 +146,7 @@
                                         </div>
                                         <!-- Pagination -->
                                         <jsp:include page="../components/pagination.jsp">
+                                            <jsp:param name="path" value=""/>
                                             <jsp:param name="currentPage" value="${currentPage}" />
                                             <jsp:param name="pages" value="${pages}" />
                                         </jsp:include>

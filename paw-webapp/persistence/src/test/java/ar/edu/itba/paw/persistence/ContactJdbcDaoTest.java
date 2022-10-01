@@ -28,7 +28,6 @@ public class ContactJdbcDaoTest {
     private static final String CONTACT_TABLE = "contactado";
     private static final String ENTERPRISE_ID = "idEmpresa";
     private static final String USER_ID = "idUsuario";
-
     private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
     private static final String TEST_ENTERPRISE_EMAIL = "empresaurio@gmail.com";
     private static final String NEW_ENTERPRISE_NAME = "Empresa1";
@@ -72,6 +71,7 @@ public class ContactJdbcDaoTest {
     private JobOffer testJobOffer;
     private JobOfferWithStatus testJobOfferWithStatus;
     private JobOfferStatusUserData testJobOfferWithStatusUserData;
+    private JobOfferStatusEnterpriseData testJobOfferWithStatusEnterpriseData;
 
     @Before
     public void setUp() {
@@ -83,6 +83,8 @@ public class ContactJdbcDaoTest {
                 testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING);
         testJobOfferWithStatusUserData = new JobOfferStatusUserData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
                 testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testUser.getName());
+        testJobOfferWithStatusEnterpriseData = new JobOfferStatusEnterpriseData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testEnterprise.getName());
         newEnterprise = enterpriseDao.create(NEW_ENTERPRISE_EMAIL, NEW_ENTERPRISE_PASSWORD, NEW_ENTERPRISE_NAME, NEW_ENTERPRISE_LOCATION, NEW_USER_CATEGORY_NAME, NEW_ENTERPRISE_DESCRIPTION);
         newUser = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, NEW_USER_LOCATION, NEW_USER_CATEGORY_NAME, NEW_USER_CURRENT_POSITION, NEW_USER_DESCRIPTION, NEW_USER_EDUCATION) ;
     }
@@ -139,12 +141,12 @@ public class ContactJdbcDaoTest {
 
     @Test
     public void testGetJobOffersWithStatusEnterpriseData() {
-        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testUser.getId());
+        final List<JobOfferStatusEnterpriseData> jobOfferList = contactJdbcDao.getJobOffersWithStatusEnterpriseData(testUser.getId(), 0, 8);
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());
         Assert.assertEquals(1, jobOfferList.size());
-        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
+        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusEnterpriseData));
     }
 
 
