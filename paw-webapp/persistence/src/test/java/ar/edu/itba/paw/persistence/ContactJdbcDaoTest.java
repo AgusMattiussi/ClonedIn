@@ -28,7 +28,6 @@ public class ContactJdbcDaoTest {
     private static final String CONTACT_TABLE = "contactado";
     private static final String ENTERPRISE_ID = "idEmpresa";
     private static final String USER_ID = "idUsuario";
-
     private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
     private static final String TEST_ENTERPRISE_EMAIL = "empresaurio@gmail.com";
     private static final String NEW_ENTERPRISE_NAME = "Empresa1";
@@ -142,7 +141,7 @@ public class ContactJdbcDaoTest {
 
     @Test
     public void testGetJobOffersWithStatusEnterpriseData() {
-        final List<JobOfferStatusEnterpriseData> jobOfferList = contactJdbcDao.getJobOffersWithStatusEnterpriseData(testUser.getId());
+        final List<JobOfferStatusEnterpriseData> jobOfferList = contactJdbcDao.getJobOffersWithStatusEnterpriseData(testUser.getId(), 0, 8);
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());

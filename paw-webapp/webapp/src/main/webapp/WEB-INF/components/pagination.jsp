@@ -6,7 +6,7 @@
 <nav class="d-flex justify-content-center align-items-center">
   <ul class="pagination">
     <li class="page-item">
-      <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">
+      <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/${param.path}?page=1"/>">
         <spring:message code="indexPaginationFirst"/>
       </a>
     </li>
@@ -14,12 +14,12 @@
       <li class="page-item">
         <c:choose>
           <c:when test="${param.currentPage == i}">
-            <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/?page=${i}"/>">
+            <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/${param.path}?page=${i}"/>">
               <c:out value="${i}"/>
             </a>
           </c:when>
           <c:otherwise>
-            <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">
+            <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/${param.path}?page=${i}"/>">
               <c:out value="${i}"/>
             </a>
           </c:otherwise>
@@ -27,7 +27,7 @@
       </li>
     </c:forEach>
     <li class="page-item">
-      <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${param.pages}"/>">
+      <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/${param.path}?page=${param.pages}"/>">
         <spring:message code="indexPaginationEnd"/>
       </a>
     </li>

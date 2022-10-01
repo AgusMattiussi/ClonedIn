@@ -176,12 +176,12 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     @Override
-    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID) {
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
         return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
                 DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", e." + ENTERPRISE_TABLE_NAME +
                 " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
                 " JOIN " + ENTERPRISE_TABLE + " e ON e." + ENTERPRISE_TABLE_ID + " = c." + ENTERPRISE_ID +
-                " WHERE c." + USER_ID + " = ?", new Object[]{ userID }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
+                " WHERE c." + USER_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ userID, page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
 
