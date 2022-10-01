@@ -20,7 +20,7 @@ public class SkillJdbcDao implements SkillDao {
 
     private static final String DESCRIPTION = "descripcion";
 
-    private static final RowMapper<Skill> SKILL_MAPPER = ((resultSet, rowNum) ->
+    protected static final RowMapper<Skill> SKILL_MAPPER = ((resultSet, rowNum) ->
             new Skill(resultSet.getLong(ID),
                     resultSet.getString(DESCRIPTION)));
 
