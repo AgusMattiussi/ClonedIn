@@ -48,13 +48,13 @@ public class SkillJdbcDao implements SkillDao {
 
     @Override
     public Optional<Skill> findById(long id) {
-        return template.query("SELECT * FROM " + SKILL_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM aptitud WHERE id = ?",
                 new Object[]{ id }, SKILL_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<Skill> findByDescription(String description) {
-        return template.query("SELECT * FROM " + SKILL_TABLE + " WHERE " + DESCRIPTION + " = ?",
+        return template.query("SELECT * FROM aptitud WHERE descripcion = ?",
                 new Object[]{ description.toLowerCase() }, SKILL_MAPPER).stream().findFirst();
     }
 
@@ -70,11 +70,7 @@ public class SkillJdbcDao implements SkillDao {
 
     @Override
     public List<Skill> getAllSkills() {
-        List<Skill> allSkills = template.query("SELECT * FROM " + SKILL_TABLE + " ORDER BY " + DESCRIPTION + " DESC", SKILL_MAPPER);
-        // Fixme: Es necesario?
-        if(allSkills == null)
-            return new ArrayList<>();
-        return allSkills;
+        return template.query("SELECT * FROM aptitud ORDER BY descripcion DESC", SKILL_MAPPER);
     }
 
 }

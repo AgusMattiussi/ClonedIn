@@ -34,7 +34,6 @@ public class EnterpriseController {
     private final EmailService emailService;
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
-    private static final int itemsPerPage = 8;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -61,6 +60,8 @@ public class EnterpriseController {
         final List<User> usersList;
 
         final int usersCount = userService.getAllUsers().size();
+
+        final int itemsPerPage = 8;
 
         //TODO: refactor?
         if(request.getParameter("term") == null)
@@ -92,10 +93,16 @@ public class EnterpriseController {
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
-    public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
+        final int itemsPerPage = 8;
+        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
+        // TODO: fix pagination
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", contactService.getJobOffersWithStatusUserData(enterpriseId));
+        mav.addObject("jobOffers", jobOffersList);
+        mav.addObject("pages", jobOffersList.size() / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
