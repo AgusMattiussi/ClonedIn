@@ -92,18 +92,18 @@ public class EducationJdbcDao implements EducationDao {
 
     @Override
     public Optional<Education> findById(long educationId) {
-        return template.query("SELECT * FROM " +  EDUCATION_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM educacion WHERE id = ?",
                 new Object[]{ educationId }, EDUCATION_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<Education> findByUserId(long userID) {
-        return template.query("SELECT * FROM " +  EDUCATION_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT * FROM educacion WHERE idUsuario = ?",
                 new Object[]{ userID }, EDUCATION_MAPPER);
     }
 
     @Override
     public void deleteEducation(long educationId) {
-       template.update("DELETE FROM " +  EDUCATION_TABLE + " WHERE " + ID + " = ?", educationId);
+       template.update("DELETE FROM educacion WHERE id = ?", educationId);
     }
 }
