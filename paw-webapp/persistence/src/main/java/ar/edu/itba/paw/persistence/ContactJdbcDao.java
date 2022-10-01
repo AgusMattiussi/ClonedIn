@@ -32,6 +32,9 @@ public class ContactJdbcDao implements ContactDao {
     public static final String USER_TABLE = "usuario";
     public static final String USER_TABLE_ID = "id";
     public static final String USER_TABLE_NAME = "nombre";
+    private static final String ENTERPRISE_TABLE = "empresa";
+    private static final String ENTERPRISE_TABLE_NAME = "nombre";
+    private static final String ENTERPRISE_TABLE_ID = "id";
     private static final String STATUS_PENDING = "pendiente";
     private static final String STATUS_ACCEPTED = "aceptada";
     private static final String STATUS_REJECTED = "rechazada";
@@ -68,8 +71,6 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
-        //User user = userDao.findById(resultSet.getLong(USER_ID)).orElseThrow(UserNotFoundException::new);
-
         return new JobOfferStatusUserData(resultSet.getLong(JOB_OFFER_TABLE_ID),
                 resultSet.getLong(ENTERPRISE_ID),
                 category,
@@ -79,6 +80,25 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(MODALITY),
                 resultSet.getString(STATUS),
                 resultSet.getString(USER_TABLE_NAME)
+                );
+    });
+
+    private final RowMapper<JobOfferStatusEnterpriseData> JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER = ((resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new JobOfferStatusEnterpriseData(resultSet.getLong(JOB_OFFER_TABLE_ID),
+                resultSet.getLong(ENTERPRISE_ID),
+                category,
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getBigDecimal(SALARY),
+                resultSet.getString(MODALITY),
+                resultSet.getString(STATUS),
+                resultSet.getString(ENTERPRISE_TABLE_NAME)
                 );
     });
 
@@ -153,6 +173,15 @@ public class ContactJdbcDao implements ContactDao {
                 " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
                 " JOIN " + USER_TABLE + " u ON u." + USER_TABLE_ID + " = c." + USER_ID +
                 " WHERE c." + ENTERPRISE_ID + " = ?", new Object[]{ enterpriseID }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+    }
+
+    @Override
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID) {
+        return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
+                DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", e." + ENTERPRISE_TABLE_NAME +
+                " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
+                " JOIN " + ENTERPRISE_TABLE + " e ON e." + ENTERPRISE_TABLE_ID + " = c." + ENTERPRISE_ID +
+                " WHERE c." + USER_ID + " = ?", new Object[]{ userID }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
 
