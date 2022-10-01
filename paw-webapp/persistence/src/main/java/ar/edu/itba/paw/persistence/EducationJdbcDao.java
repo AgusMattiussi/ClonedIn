@@ -76,7 +76,6 @@ public class EducationJdbcDao implements EducationDao {
 
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
-        //FIXME: Cambiar esto para manejar fechas de verdad
         values.put(MONTH_FROM, monthFrom);
         values.put(YEAR_FROM, yearFrom);
         values.put(MONTH_TO, monthTo);
