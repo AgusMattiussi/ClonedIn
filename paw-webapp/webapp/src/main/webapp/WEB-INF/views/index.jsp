@@ -86,14 +86,55 @@
                                                         <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Profile picture" width="100" height="200">
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
+                                                            <c:set var="categoryName" value="${us.category.name}"/>
                                                                 <p><spring:message code="indexCategory"/>:
-                                                                    <span class="badge badge-pill badge-success">
-                                                                        <spring:message code="${us.category.name}"/>
-                                                                    </span>
+                                                                    <c:choose>
+                                                                        <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
+                                                                            <spring:message code="profileInfoNotSpecified"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="badge badge-pill badge-success">
+                                                                            <spring:message code="${categoryName}"/>
+                                                                            </span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </p>
-                                                                <p class="card-text"><spring:message code="profilePosition"/>: <c:out value="${us.currentPosition}"/></p>
-                                                                <p class="card-text"><spring:message code="profileEducationLevel"/>: <spring:message code="${us.education}"/></p>
-                                                                <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${us.location}"/></p>
+                                                            <c:set var="position" value="${us.currentPosition}"/>
+                                                            <p class="card-text"><spring:message code="profilePosition"/>:
+                                                                <c:choose>
+                                                                <c:when test="${position.compareTo('') == 0}">
+                                                                    <spring:message code="profileInfoNotSpecified"/>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <c:out value="${position}"/></p>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </p>
+
+                                                            <c:set var="educationLevel" value="${us.education}"/>
+                                                            <p class="card-text"><spring:message code="profileEducationLevel"/>:
+                                                                <c:choose>
+                                                                    <c:when test="${educationLevel.compareTo('No-especificado') == 0}">
+                                                                        <spring:message code="profileInfoNotSpecified"/>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <spring:message code="${educationLevel}"/>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </p>
+
+                                                                <c:set var="location" value="${us.location}"/>
+                                                            <p class="card-text"> <spring:message code="profileLocation"/>:
+                                                                <c:choose>
+                                                                    <c:when test="${location.compareTo('') == 0}">
+                                                                        <spring:message code="profileInfoNotSpecified"/>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <c:out value="${location}"/>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </p>
+
                                                         </div>
                                                     </a>
                                                     <div class="card-footer second bg-white text-right mt-auto">

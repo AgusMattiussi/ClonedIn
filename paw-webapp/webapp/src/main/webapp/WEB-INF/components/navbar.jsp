@@ -67,12 +67,14 @@
                 </div>
             </sec:authorize>
             </div>
+            <sec:authorize access="isAuthenticated()">
             <a href="<c:url value="/logout"/>">
                 <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
                     <i class="bi bi-box-arrow-right pr-2"></i>
                     <spring:message code="navbarSession"/>
                 </button>
             </a>
+            </sec:authorize>
         </div>
     </nav>
         <!-- JavaScript Bundle with Popper -->

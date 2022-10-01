@@ -30,21 +30,13 @@
                 <div class="row">
                   <div class="col-md-12 mx-0">
                     <div id="msform">
-                      <c:url value="/createUser" var="postPath"/>
-                      <form:form modelAttribute="userForm" action="${postPath}" method="post" accept-charset="utf-8">
+                      <c:url value="/editUser/${user.id}" var="postPath"/>
+                      <form:form modelAttribute="EditUserForm" action="${postPath}" method="post" accept-charset="utf-8">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title"><spring:message code="registerSubtitle"/></h2>
-                          <form:input type="email" path="email" placeholder="${emailPlaceholder}"/>
-                          <form:errors path="email" cssClass="formError" element="p"/>
                           <form:input type="text" path="name" placeholder="${namePlaceholder}"/>
                           <form:errors path="name" cssClass="formError" element="p"/>
-                          <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
-                          <form:errors path="password" cssClass="formError" element="p"/>
-                          <form:errors cssClass="formError" element="p"/>
-                          <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
-                          <form:errors path="repeatPassword" cssClass="formError" element="p"/>
-                          <form:errors cssClass="formError" element="p"/>
                           <div class="d-flex">
                               <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>
                             <div style="margin-left: 15px;">
@@ -84,7 +76,7 @@
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>
                         </div>
                         <p><spring:message code="registerRequiredMsg"/></p>
-                        <a href="<c:url value="/login"/>">
+                        <a href="<c:url value="/profileUser/${user.id}"/>">
                           <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                         </a>
                         <button type="submit" name="end" class="btn action-button"><spring:message code="registerButtonMsg"/></button>

@@ -83,7 +83,7 @@ public class UserJdbcDao implements UserDao {
         }
 
         if(!educationLevelsSet.contains(education))
-            education = "No especificado";
+            education = "No-especificado";
 
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);

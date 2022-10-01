@@ -47,21 +47,13 @@
                                         <p class="card-text"><c:out value="${job.salary}"/></p>
                                     </div>
                                 </div>
-<%--                                <div class="col">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
-<%--                                             <p class="card-text"><c:out value="${joboffer.skill1}"/> </p>--%>
-<%--                                             <p class="card-text"><c:out value="${joboffer.skill2}"/> </p>--%>
-<%--                                    </div>--%>
-<%--                                </div>--%>
-<%--                                <div class="col">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
+                                    <div class="row">
+                                        <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
 <%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
 <%--                                                <p class="card-text"><c:out value="${skill.value}"/></p>--%>
 <%--                                            </c:forEach>--%>
-<%--                                    </div>--%>
-<%--                                </div>--%>
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">

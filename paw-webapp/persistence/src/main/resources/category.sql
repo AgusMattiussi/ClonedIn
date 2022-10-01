@@ -1,3 +1,4 @@
+INSERT INTO rubro (nombre) VALUES ('No-Especificado') ON CONFLICT DO NOTHING;
 INSERT INTO rubro (nombre) VALUES ('Tecnologia') ON CONFLICT DO NOTHING;
 INSERT INTO rubro (nombre) VALUES ('Medicina') ON CONFLICT DO NOTHING;
 INSERT INTO rubro (nombre) VALUES ('Recursos-Humanos') ON CONFLICT DO NOTHING;

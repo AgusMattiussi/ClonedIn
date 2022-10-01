@@ -29,21 +29,13 @@
                             <div class="row">
                                 <div class="col-md-12 mx-0">
                                     <div id="msform">
-                                        <c:url value="/createEnterprise" var="postPath"/>
-                                        <form:form modelAttribute="enterpriseForm" action="${postPath}" method="post" accept-charset="utf-8">
+                                        <c:url value="/editEnterprise/${enterprise.id}" var="postPath"/>
+                                        <form:form modelAttribute="EditEnterpriseForm" action="${postPath}" method="post" accept-charset="utf-8">
                                             <fieldset>
                                                 <div class="form-card">
                                                     <h2 class="fs-title"><spring:message code="registerSubtitle"/></h2>
-                                                    <form:input type="email" path="email" placeholder="${emailPlaceholder}"/>
-                                                    <form:errors path="email" cssClass="formError" element="p"/>
                                                     <form:input type="text" path="name" placeholder="${namePlaceholder}"/>
                                                     <form:errors path="name" cssClass="formError" element="p"/>
-                                                    <form:input type="password" path="password" placeholder="${passPlaceholder}"/>
-                                                    <form:errors path="password" cssClass="formError" element="p"/>
-                                                    <form:errors cssClass="formError" element="p"/>
-                                                    <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
-                                                    <form:errors path="repeatPassword" cssClass="formError" element="p"/>
-                                                    <form:errors cssClass="formError" element="p"/>
                                                     <div class="d-flex">
                                                             <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>
                                                         <div style="margin-left: 15px">
