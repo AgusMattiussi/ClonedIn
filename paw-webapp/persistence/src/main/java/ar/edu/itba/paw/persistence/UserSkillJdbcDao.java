@@ -88,6 +88,20 @@ public class UserSkillJdbcDao implements UserSkillDao {
         return insert.execute(values) > 0;
     }
 
+    @Override
+    public boolean alreadyExists(long skillID, long userID) {
+        return template.queryForObject("SELECT COUNT(*) FROM aptitudUsuario WHERE idAptitud = ? AND idUsuario = ?",
+                new Object[]{skillID, userID}, Integer.class) > 0;
+    }
+
+    @Override
+    public boolean alreadyExists(String skillDescription, long userID) {
+       Optional<Skill> skill = skillDao.findByDescription(skillDescription);
+       if(!skill.isPresent())
+           return false;
+       return alreadyExists(skill.get().getId(), userID);
+    }
+
     private List<Long> getUserIDsWithSkill(long skillID){
         return template.query("SELECT idUsuario FROM aptitudUsuario WHERE idAptitud = ?",
                 new Object[]{ skillID }, (resultSet, rowNum) ->

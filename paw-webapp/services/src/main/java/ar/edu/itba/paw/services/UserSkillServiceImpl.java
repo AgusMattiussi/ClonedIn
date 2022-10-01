@@ -32,6 +32,16 @@ public class UserSkillServiceImpl implements UserSkillService {
     }
 
     @Override
+    public boolean alreadyExists(String skillDescription, long userID) {
+        return userSkillDao.alreadyExists(skillDescription, userID);
+    }
+
+    @Override
+    public boolean alreadyExists(long skillID, long userID) {
+        return userSkillDao.alreadyExists(skillID, userID);
+    }
+
+    @Override
     public List<User> getUsersWithSkill(String skillDescription) {
         return userSkillDao.getUsersWithSkill(skillDescription);
     }

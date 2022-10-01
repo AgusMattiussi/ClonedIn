@@ -40,6 +40,9 @@ public class UserSkillJdbcDaoTest {
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
     private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
     private static final String TEST_SKILL = "unaskill";
+    public static final String EXISTING_SKILL = "testskill";
+    public static final String NON_EXISTING_SKILL = "nonexistingskill";
+    public static final String EXISTING_USER_EMAIL = "johnlennon@gmail.com";
 
     @Autowired
     private UserSkillJdbcDao userSkillDao;
@@ -55,9 +58,14 @@ public class UserSkillJdbcDaoTest {
 
     private JdbcTemplate jdbctemplate;
 
+    private Skill testSkill;
+    private User testUser;
+
     @Before
     public void setUp() {
         jdbctemplate = new JdbcTemplate(ds);
+        testSkill = skillDao.findByDescription(EXISTING_SKILL).get();
+        testUser = userDao.findByEmail(EXISTING_USER_EMAIL).get();
     }
 
     @Test
@@ -86,7 +94,7 @@ public class UserSkillJdbcDaoTest {
     }
 
     @Test
-    public void addSkillToUserUsingIDTest() {
+    public void testAddSkillToUserUsingID() {
         final User user = userDao.findByEmail("johnlennon@gmail.com").get();
         final Skill skill = skillDao.create("aaaaa");
 
@@ -102,7 +110,7 @@ public class UserSkillJdbcDaoTest {
     }
 
     @Test
-    public void addSkillToUserUsingDescriptionTest() {
+    public void testAddSkillToUserUsingDescription() {
         //JdbcTestUtils.deleteFromTables(jdbctemplate, USER_SKILL_TABLE);
         final User user = userDao.findByEmail("johnlennon@gmail.com").get();
         final Skill skill = skillDao.create("bbbbb");
@@ -116,6 +124,34 @@ public class UserSkillJdbcDaoTest {
         Assert.assertTrue(skillList.contains(skill));
         Assert.assertEquals(1, userList.size());
         Assert.assertTrue(userList.contains(user));
+    }
+
+    @Test
+    public void testAlreadyExistsWithIDTrue(){
+        final boolean exists = userSkillDao.alreadyExists(testSkill.getId(), testUser.getId());
+
+        Assert.assertTrue(exists);
+    }
+
+    @Test
+    public void testAlreadyExistsWithIDFalse(){
+        final boolean exists = userSkillDao.alreadyExists(0, testUser.getId());
+
+        Assert.assertFalse(exists);
+    }
+
+    @Test
+    public void testAlreadyExistsWithDescriptionTrue(){
+        final boolean exists = userSkillDao.alreadyExists(testSkill.getDescription(), testUser.getId());
+
+        Assert.assertTrue(exists);
+    }
+
+    @Test
+    public void testAlreadyExistsWithDescriptionFalse(){
+        final boolean exists = userSkillDao.alreadyExists(NON_EXISTING_SKILL, testUser.getId());
+
+        Assert.assertFalse(exists);
     }
 
     @Test
