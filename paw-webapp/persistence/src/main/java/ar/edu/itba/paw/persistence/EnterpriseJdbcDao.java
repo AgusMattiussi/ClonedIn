@@ -77,7 +77,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
     @Override
     public Optional<Enterprise> findByEmail(final String email) {
-        return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + EMAIL + " = ?",
+        return template.query("SELECT * FROM empresa WHERE email = ?",
                 new Object[]{ email }, ENTERPRISE_MAPPER).stream().findFirst();
     }
 

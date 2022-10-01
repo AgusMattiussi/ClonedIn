@@ -128,7 +128,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<Integer> getUsersCount() {
-        return template.query("SELECT COUNT(*) as count FROM " +  USER_TABLE, COUNT_ROW_MAPPER).stream().findFirst();
+        return template.query("SELECT COUNT(*) as count FROM usuario", COUNT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class UserJdbcDao implements UserDao {
         Object[] sanitizedInputs = new Object[]{categoryId, location, educationLevel};
 
         StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM USER_TABLE");
+        filterQuery.append("SELECT * FROM usuario");
 
         if(!categoryId.isEmpty())
             filterQuery.append(" WHERE idRubro = '").append(sanitizedInputs[0]).append("'");
