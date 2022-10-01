@@ -14,7 +14,7 @@ public interface ContactService {
 
     List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId);
 
-    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID);
+    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
 
     List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
 

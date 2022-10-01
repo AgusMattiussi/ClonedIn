@@ -38,8 +38,6 @@ public class UserController {
 
     //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
-    private static final int itemsPerPage = 2;
-
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -110,12 +108,14 @@ public class UserController {
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
+        final int itemsPerPage = 2;
+
         List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
 
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
-        // TODO: add skills for joboffer + pagination
+        // TODO: add skills for joboffer
 //        mav.addObject("skills", contactService)
         mav.addObject("pages", jobOffersList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
