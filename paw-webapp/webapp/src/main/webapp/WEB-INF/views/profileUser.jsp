@@ -32,19 +32,57 @@
                                         </a>
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('USER')">
+                                        <a href="<c:url value="/editUser/${user.id}"/>">
                                             <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                                        </a>
                                     </sec:authorize>
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                    <p class="card-text"><spring:message code="profilePosition"/>: <c:out value="${user.currentPosition}"/></p>
+                                <c:set var="position" value="${user.currentPosition}"/>
+                                <p class="card-text"><spring:message code="profilePosition"/>:
+                                    <c:choose>
+                                        <c:when test="${position.compareTo('') == 0}">
+                                            <spring:message code="profileInfoNotSpecified"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${position}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                            </p>
                                     <c:set var="categoryName" value="${user.category.name}"/>
-                                    <p class="card-text"><spring:message code="profileCategory"/>: <span class="badge badge-pill badge-success">
-                                        <spring:message code="${categoryName}"/>
-                                    </span></p>
+                                    <p class="card-text"><spring:message code="profileCategory"/>:
+                                        <c:choose>
+                                            <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                        <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
                                     <c:set var="educationLevel" value="${user.education}"/>
-                                    <p class="card-text"><spring:message code="profileEducationLevel"/>: <spring:message code="${educationLevel}"/></p>
-                                    <p class="card-text"><spring:message code="profileLocation"/>: <c:out value="${user.location}"/></p>
+                                    <p class="card-text"><spring:message code="profileEducationLevel"/>:
+                                        <c:choose>
+                                            <c:when test="${educationLevel.compareTo('No-especificado') == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="${educationLevel}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                <c:set var="location" value="${user.location}"/>
+                                    <p class="card-text"><spring:message code="profileLocation"/>:
+                                        <c:choose>
+                                            <c:when test="${location.compareTo('') == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="${location}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
                             </div>
                         </div>
                     </div>
@@ -57,7 +95,15 @@
                                     </div>
                                 </div>
                                 <div class="card-footer bg-white text-left">
-                                    <p class="card-text"><c:out value="${user.description}"/></p>
+                                    <c:set var="desc" value="${user.description}"/>
+                                    <c:choose>
+                                        <c:when test="${desc.compareTo('') == 0}">
+                                            <p><b><spring:message code="profileInfoNotSpecified"/></b></p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p class="card-text"><c:out value="${desc}"/></p>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>

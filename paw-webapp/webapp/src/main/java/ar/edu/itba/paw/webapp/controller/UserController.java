@@ -5,10 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.EducationForm;
-import ar.edu.itba.paw.webapp.form.ExperienceForm;
-import ar.edu.itba.paw.webapp.form.SkillForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +32,7 @@ public class UserController {
     private final JobOfferSkillService jobOfferSkillService;
     private final ContactService contactService;
     private final EnterpriseService enterpriseService;
+    private final CategoryService categoryService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
@@ -47,7 +44,7 @@ public class UserController {
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
                           final EducationService educationService, final UserSkillService userSkillService,
                           final EmailService emailService, final JobOfferService jobOfferService,
-                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService){
+                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService, CategoryService categoryService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -57,6 +54,7 @@ public class UserController {
         this.jobOfferService = jobOfferService;
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
+        this.categoryService = categoryService;
 
         monthToNumber.put("Enero", 1);
         monthToNumber.put("Febrero", 2);
@@ -216,6 +214,15 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
+    @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEditUser(@ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+                                     @PathVariable("userId") final long userId) {
+        ModelAndView mav = new ModelAndView("userEditForm");
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", user);
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
     private boolean isUser(Authentication loggedUser){
         return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
     }

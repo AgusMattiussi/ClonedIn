@@ -47,7 +47,7 @@ public class UserJdbcDaoTest {
     private static final String TEST_CATEGORY_NAME = "testCategory";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
-    private static final String TEST_EDUCATION = "No especificado";
+    private static final String TEST_EDUCATION = "No-especificado";
 
     private static final long FIRST_ID = 1;
     private static final String EXISTING_NAME = "John Lennon";

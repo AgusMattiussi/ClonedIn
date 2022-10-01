@@ -31,7 +31,6 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col"><spring:message code="contactsEnterpriseJobOffer"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseName"/></th>
@@ -42,7 +41,6 @@
                             <c:forEach var="job" items="${jobOffers}">
                                 <tr>
                                     <c:if test="${usersMap[job.id] != null}">
-                                        <th><c:out value="${job.id}"/></th>
                                         <td><c:out value="${job.position}"/></td>
                                         <c:set var="categoryName" value="${job.category.name}"/>
                                         <td><spring:message code="${categoryName}"/></td>

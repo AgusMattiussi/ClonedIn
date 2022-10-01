@@ -141,6 +141,15 @@ public class EnterpriseController {
 
     }
 
+    @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEditUser(@ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm, @PathVariable("enterpriseId") final long enterpriseId) {
+        ModelAndView mav = new ModelAndView("enterpriseEditForm");
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("enterprise", enterprise);
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
+
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);

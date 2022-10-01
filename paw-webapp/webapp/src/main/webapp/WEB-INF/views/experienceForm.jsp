@@ -71,6 +71,7 @@
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                             <form:select path="monthTo" cssClass="list-dt ml-auto">
+                              <form:option value="No-especificado"><spring:message code="No-especificado"/></form:option>
                               <form:option value="Enero"><spring:message code="selectMonth1"/></form:option>
                               <form:option value="Febrero"><spring:message code="selectMonth2"/></form:option>
                               <form:option value="Marzo"><spring:message code="selectMonth3"/></form:option>
