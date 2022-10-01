@@ -15,10 +15,12 @@
 <div class="row h-100 w-100">
     <div class="col-sm-2 sidebar">
         <!-- TODO: AGREGAR FILTROS -->
-        <h5 class="ml-2 mt-2"><spring:message code="indexSearchFilter"/></h5>
-        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Accepted</button>
-        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Pending</button>
-        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Declined</button>
+        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+            <h5 class="ml-2 mt-2"><spring:message code="indexSearchFilter"/></h5>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Accepted</button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Pending</button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Declined</button>
+        </div>
     </div>
     <div class="col mr-2">
         <div class="d-flex justify-content-between mt-2 ml-4">
@@ -51,6 +53,7 @@
                                         <p class="card-text"><c:out value="${job.salary}"/></p>
                                     </div>
                                 </div>
+                                <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
 <%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
