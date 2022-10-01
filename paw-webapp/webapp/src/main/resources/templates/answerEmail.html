@@ -82,30 +82,12 @@ https://beefree.io/
                                             </td>
                                         </tr>
                                     </table>
-                                    <table border="0" cellpadding="0" cellspacing="0" class="text_block block-2"
-                                           role="presentation"
-                                           style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word;"
-                                           width="100%">
-                                        <tr>
-                                            <td class="pad"
-                                                style="padding-bottom:5px;padding-left:20px;padding-right:10px;">
-                                                <div style="font-family: sans-serif">
-                                                    <div class=""
-                                                         style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #3fb9bc; line-height: 1.2; font-family: Oswald, Arial, Helvetica Neue, Helvetica, sans-serif;">
-                                                        <p style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">
-                                                            <span style="font-size:50px;"><strong><span th:text="${username}"/> <span th:text="${answerMsg}"/> <span th:text="${jobOffer}"/></strong></span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
                                     <table class="text_block block-3" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
                                         <tr>
                                             <td class="pad" style="padding-bottom:30px;padding-left:15px;padding-right:15px;padding-top:15px;">
                                                 <div style="font-family: Arial, sans-serif">
                                                     <div class style="font-size: 12px; font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif; mso-line-height-alt: 18px; color: #555555; line-height: 1.5;">
-                                                        <p style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 24px;"><span style="font-size:16px;"></span></p>
+                                                        <span style="font-size:50px;"><strong><span th:text="${username}"/> <span th:text="${answerMsg}"/> <span th:text="${jobOffer}"/></strong></span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -119,6 +101,47 @@ https://beefree.io/
                 </tr>
                 </tbody>
             </table>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-12" role="presentation"
+                   style="mso-table-lspace: 0; mso-table-rspace: 0;" width="100%">
+                <tbody>
+                <tr>
+                    <td>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack"
+                               role="presentation"
+                               style="mso-table-lspace: 0; mso-table-rspace: 0; color: #000000; width: 680px;"
+                               width="680">
+                            <tbody>
+                            <tr>
+                                <td class="column column-1"
+                                    style="mso-table-lspace: 0; mso-table-rspace: 0; font-weight: 400; text-align: left; vertical-align: top; padding-top: 35px; padding-bottom: 15px; border-top: 0; border-right: 0; border-bottom: 0; border-left: 0;"
+                                    width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" class="button_block block-1"
+                                           role="presentation" style="mso-table-lspace: 0; mso-table-rspace: 0;"
+                                           width="100%">
+                                        <tr>
+                                            <td class="pad"
+                                                style="padding: 10px 10px 20px;text-align:center;">
+                                                <div align="center" class="alignment">
+                                                    <!--[if mso]>
+                                                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+                                                                 xmlns:w="urn:schemas-microsoft-com:office:word"
+                                                                 href="http://www.example.com/"
+                                                                 style="height:64px;width:188px;v-text-anchor:middle;"
+                                                                 arcsize="55%" stroke="false" fillcolor="#3fb9bc">
+                                                        <w:anchorlock/>
+                                                        <v:textbox inset="0px,0px,0px,0px">
+                                                            <center style="color:#ffffff; font-family:Arial, sans-serif; font-size:22px">
+                                                    <![endif]--><a th:href="${contactsUrl}"
+                                                                   style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3fb9bc;border-radius:35px;width:auto;border-top:0 solid #2F7D81;font-weight:400;border-right:0 solid #2F7D81;border-bottom:0 solid #2F7D81;border-left:0 solid #2F7D81;padding-top:10px;padding-bottom:10px;font-family:Oswald, Arial, Helvetica Neue, Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"
+                                                                   target="_blank"><span
+                                                        style="padding-left:45px;padding-right:45px;font-size:22px;display:inline-block;letter-spacing:normal;"><span
+                                                        dir="ltr" style="word-break: break-word;"><span
+                                                        data-mce-style="" dir="ltr" style="line-height: 44px;"><span th:text="${buttonMsg}"/></span></span></span></a>
+                                                    <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             </tbody>

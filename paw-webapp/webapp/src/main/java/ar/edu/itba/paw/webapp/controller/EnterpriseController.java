@@ -96,7 +96,7 @@ public class EnterpriseController {
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
-        final int itemsPerPage = 2;
+        final int itemsPerPage = 8;
         List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
         // TODO: fix pagination
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
