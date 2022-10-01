@@ -16,4 +16,6 @@ public interface UserSkillDao {
     List<User> getUsersWithSkill(long skillID);
 
     List<Skill> getSkillsForUser(long userID);
+
+    void deleteSkillFromUser(long userID, long skillID);
 }

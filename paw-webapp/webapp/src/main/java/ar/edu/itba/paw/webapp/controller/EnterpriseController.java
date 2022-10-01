@@ -94,23 +94,8 @@ public class EnterpriseController {
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("contacts");
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-
-        HashMap<Long, String> usersMap = new HashMap<>();
-        HashMap<Long, String> statusMap = new HashMap<>();
-
-        //TODO: refactor
-        for (User user : contactService.getUsersForEnterprise(enterpriseId)) {
-            for (JobOfferStatusUserData jobOffer : contactService.getJobOffersWithStatusUserData(user.getId()) ) {
-                statusMap.put(jobOffer.getId(), jobOffer.getStatus());
-                usersMap.put(jobOffer.getId(), jobOffer.getUserName());
-            }
-        }
-
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(enterpriseId));
-        mav.addObject("usersMap", usersMap);
-        mav.addObject("statusMap", statusMap);
+        mav.addObject("jobOffers", contactService.getJobOffersWithStatusUserData(enterpriseId));
         return mav;
     }
 

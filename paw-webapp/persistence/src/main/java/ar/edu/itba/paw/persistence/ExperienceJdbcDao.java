@@ -97,4 +97,9 @@ public class ExperienceJdbcDao implements ExperienceDao {
         return template.query("SELECT * FROM " +  EXPERIENCE_TABLE + " WHERE " + USER_ID + " = ?",
                 new Object[]{ userID }, EXPERIENCE_MAPPER);
     }
+
+    @Override
+    public void deleteExperience(long experienceId) {
+        template.update("DELETE FROM " +  EXPERIENCE_TABLE + " WHERE " + ID + " = ?", experienceId);
+    }
 }

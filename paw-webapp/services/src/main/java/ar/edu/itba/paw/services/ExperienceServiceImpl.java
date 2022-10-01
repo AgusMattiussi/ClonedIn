@@ -35,4 +35,9 @@ public class ExperienceServiceImpl implements ExperienceService {
     public List<Experience> findByUserId(long userID) {
         return experienceDao.findByUserId(userID);
     }
+
+    @Override
+    public void deleteExperience(long experienceId) {
+        experienceDao.deleteExperience(experienceId);
+    }
 }

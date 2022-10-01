@@ -16,10 +16,10 @@
     <div class="col-sm-2 sidebar">
         <!-- TODO: AGREGAR FILTROS -->
         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-            <h5 class="ml-2 mt-2"><spring:message code="indexSearchFilter"/></h5>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Accepted</button>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Pending</button>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Declined</button>
+            <h5 class="ml-2 mt-2"><spring:message code="notificationsFilter"/></h5>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
         </div>
     </div>
     <div class="col mr-2">
@@ -36,7 +36,7 @@
                 <c:forEach var="job" items="${jobOffers}">
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><c:out value="${enterpriseMap[job.enterpriseID]} | ${job.position}"/></h5>
+                            <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
                             <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
                         </div>
                         <div class="card-body">

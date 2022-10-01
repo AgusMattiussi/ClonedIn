@@ -40,15 +40,12 @@
                         <tbody>
                             <c:forEach var="job" items="${jobOffers}">
                                 <tr>
-                                    <c:if test="${usersMap[job.id] != null}">
-                                        <td><c:out value="${job.position}"/></td>
-                                        <c:set var="categoryName" value="${job.category.name}"/>
-                                        <td><spring:message code="${categoryName}"/></td>
-                                        <!-- como referenciar empleado y estado -->
-                                        <td><c:out value="${usersMap[job.id]}"/></td>
-                                        <c:set var="statusName" value="${statusMap[job.id]}"/>
-                                        <td><spring:message code="${statusName}"/></td>
-                                    </c:if>
+                                    <td><c:out value="${job.position}"/></td>
+                                    <c:set var="categoryName" value="${job.category.name}"/>
+                                    <td><spring:message code="${categoryName}"/></td>
+                                    <td><c:out value="${job.userName}"/></td>
+                                    <c:set var="statusName" value="${job.status}"/>
+                                    <td><spring:message code="${statusName}"/></td>
                                 </tr>
                             </c:forEach>
                         </tbody>

@@ -110,25 +110,11 @@ public class UserController {
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
 
-        HashMap<Long, String> enterpriseMap = new HashMap<>();
-
-        HashMap<Long, List<Skill>> skillsMap = new HashMap<>();
-
-        for (JobOfferWithStatus jobOfferWithStatus : contactService.getJobOffersWithStatusForUser(userId)) {
-            long enterpriseID = jobOfferWithStatus.getEnterpriseID();
-            Enterprise enterprise = enterpriseService.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
-            enterpriseMap.put(enterpriseID, enterprise.getName());
-
-            long jobOfferId = jobOfferWithStatus.getId();
-            skillsMap.put(jobOfferId, jobOfferSkillService.getSkillsForJobOffer(jobOfferId));
-        }
-
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", contactService.getJobOffersWithStatusForUser(userId));
-        mav.addObject("enterpriseMap", enterpriseMap);
-        mav.addObject("skillsMap", skillsMap);
-
+        mav.addObject("jobOffers", contactService.getJobOffersWithStatusEnterpriseData(userId));
+        // TODO: add skills for joboffer + pagination
+//        mav.addObject("skills", contactService)
 //        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
 //        mav.addObject("currentPage", page);
 
@@ -166,6 +152,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
+        experienceService.deleteExperience(experienceId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationForm");
@@ -196,6 +189,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
+        educationService.deleteEducation(educationId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
@@ -212,6 +212,13 @@ public class UserController {
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteSkill/{userId:[0-9]+}/{skillId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteSkill(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("skillId") final long skillId) {
+        userSkillService.deleteSkillFromUser(userId, skillId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })

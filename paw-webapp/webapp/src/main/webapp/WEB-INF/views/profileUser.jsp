@@ -130,7 +130,9 @@
                                                     <c:out value="${experience.enterpriseName}"/> - <c:out value="${experience.position}"/>
                                                 </b></h6>
                                                     <sec:authorize access="hasRole('USER')">
+                                                    <a href="<c:url value="/deleteExperience/${user.id}/${experience.id}"/>">
                                                         <button type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                                    </a>
                                                     </sec:authorize>
                                                 </div>
                                                 <p style="font-size: 9pt">
@@ -170,12 +172,16 @@
                                    <c:choose>
                                        <c:when test="${educations.size() > 0}">
                                            <c:forEach items="${educations}" var="education">
-                                       <div class="d-flex justify-content-between">
-                                               <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
-                                           <sec:authorize access="hasRole('USER')">
-                                               <button type="button" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                           </sec:authorize>
-                                       </div>
+                                               <div class="d-flex justify-content-between">
+                                                       <h6><b><c:out value="${education.institutionName}"/> - <c:out value="${education.title}"/></b></h6>
+                                                   <sec:authorize access="hasRole('USER')">
+                                                       <a href="<c:url value="/deleteEducation/${user.id}/${education.id}"/>">
+                                                           <button type="button" class="btn btn-outline-danger">
+                                                               <i class="bi bi-trash"></i>
+                                                           </button>
+                                                       </a>
+                                                   </sec:authorize>
+                                               </div>
                                                <p style="font-size: 9pt">
                                                        <c:set var="monthFromNameEd" value="selectMonth${education.monthFrom}"/>
                                                        <c:set var="monthToNameEd" value="selectMonth${education.monthTo}"/>
@@ -212,7 +218,11 @@
                                         <c:forEach items="${skills}" var="skill">
                                             <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
                                                 <sec:authorize access="hasRole('USER')">
-                                                <button type="button" class="btn waves-effect btn-sm" style="color: white"><i class="bi bi-x"></i></button>
+                                                    <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">
+                                                    <button type="button" class="btn waves-effect btn-sm" style="color: white">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                    </a>
                                                 </sec:authorize>
                                             </span>
                                         </c:forEach>

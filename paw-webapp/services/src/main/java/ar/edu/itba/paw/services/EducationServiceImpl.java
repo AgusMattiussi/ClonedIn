@@ -36,4 +36,9 @@ public class EducationServiceImpl implements EducationService {
     public List<Education> findByUserId(long userID) {
         return educationDao.findByUserId(userID);
     }
+
+    @Override
+    public void deleteEducation(long educationId) {
+        educationDao.deleteEducation(educationId);
+    }
 }

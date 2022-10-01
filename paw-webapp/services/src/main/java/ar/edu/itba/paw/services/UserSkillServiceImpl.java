@@ -45,4 +45,9 @@ public class UserSkillServiceImpl implements UserSkillService {
     public List<Skill> getSkillsForUser(long userID) {
         return userSkillDao.getSkillsForUser(userID);
     }
+
+    @Override
+    public void deleteSkillFromUser(long userID, long skillID) {
+        userSkillDao.deleteSkillFromUser(userID, skillID);
+    }
 }
