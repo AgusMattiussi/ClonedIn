@@ -14,11 +14,13 @@ public interface ContactService {
 
     List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId);
 
-    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long userId);
+
+    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
     String getStatus(long userID, long jobOfferID);
+
     void acceptJobOffer(long userID, long jobOfferID);
 
     void rejectJobOffer(long userID, long jobOfferID);

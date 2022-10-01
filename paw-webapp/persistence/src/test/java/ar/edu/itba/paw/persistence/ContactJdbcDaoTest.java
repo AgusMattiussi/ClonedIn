@@ -126,15 +126,17 @@ public class ContactJdbcDaoTest {
         Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatus));
     }
 
+
     @Test
     public void testGetJobOffersWithStatusUserData() {
-        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testUser.getId());
+        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testEnterprise.getId());
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());
         Assert.assertEquals(1, jobOfferList.size());
         Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
     }
+
 
     @Test
     public void testGetStatus(){
