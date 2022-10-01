@@ -39,7 +39,7 @@ public class UserJdbcDao implements UserDao {
     public static final String[] EDUCATION_LEVELS = new String[] {"Primario", "Secundario", "Terciario", "Graduado", "Posgrado"};
     public static final Set<String> educationLevelsSet = new HashSet<>(Arrays.asList(EDUCATION_LEVELS));
 
-    protected final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
+    private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID_FK);
         Category category = null;
 

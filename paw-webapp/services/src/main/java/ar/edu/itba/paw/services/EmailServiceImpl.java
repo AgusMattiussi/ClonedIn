@@ -112,6 +112,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("username", username);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
         mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
 
         String subject = messageSource.getMessage("answerMail.subject", null, LocaleContextHolder.getLocale());
 

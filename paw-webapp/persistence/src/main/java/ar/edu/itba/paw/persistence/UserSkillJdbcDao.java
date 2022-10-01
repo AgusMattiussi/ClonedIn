@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,24 +18,56 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.SkillJdbcDao.SKILL_MAPPER;
+
 @Repository
 public class UserSkillJdbcDao implements UserSkillDao {
 
     private static final String USER_SKILL_TABLE = "aptitudUsuario";
     private static final String SKILL_ID = "idAptitud";
     private static final String USER_ID = "idUsuario";
+    private static final String USER_TABLE_ID = "id";
+    private static final String USER_TABLE_NAME = "nombre";
+    private static final String USER_TABLE_EMAIL = "email";
+    private static final String USER_TABLE_PASSWORD = "contrasenia";
+    private static final String USER_TABLE_LOCATION = "ubicacion";
+    private static final String USER_TABLE_CATEGORY_ID_FK = "idRubro";
+    private static final String USER_TABLE_CURRENT_POSITION = "posicionActual";
+    private static final String USER_TABLE_DESCRIPTION = "descripcion";
+    private static final String USER_TABLE_EDUCATION = "educacion";
+
     private final SkillDao skillDao;
     private final UserDao userDao;
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
+    private CategoryDao categoryDao;
+    private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(USER_TABLE_CATEGORY_ID_FK);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new User(resultSet.getLong(USER_TABLE_ID),
+                resultSet.getString(USER_TABLE_EMAIL),
+                resultSet.getString(USER_TABLE_PASSWORD),
+                resultSet.getString(USER_TABLE_NAME),
+                resultSet.getString(USER_TABLE_LOCATION),
+                category,
+                resultSet.getString(USER_TABLE_CURRENT_POSITION),
+                resultSet.getString(USER_TABLE_DESCRIPTION),
+                resultSet.getString(USER_TABLE_EDUCATION));
+    };
+
     @Autowired
-    public UserSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final UserDao userDao){
+    public UserSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final UserDao userDao, final CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(USER_SKILL_TABLE);
         this.skillDao = skillDao;
         this.userDao = userDao;
+        this.categoryDao = categoryDao;
     }
 
     @Override
@@ -54,22 +89,15 @@ public class UserSkillJdbcDao implements UserSkillDao {
     }
 
     private List<Long> getUserIDsWithSkill(long skillID){
-        return template.query("SELECT " + USER_ID + " FROM " + USER_SKILL_TABLE + " WHERE " + SKILL_ID + " = ?",
+        return template.query("SELECT idUsuario FROM aptitudUsuario WHERE idAptitud = ?",
                 new Object[]{ skillID }, (resultSet, rowNum) ->
             resultSet.getLong(USER_ID));
     }
 
     @Override
     public List<User> getUsersWithSkill(long skillID) {
-        List<Long> userIDs = getUserIDsWithSkill(skillID);
-        List<User> userList = new ArrayList<>();
-
-        for (Long uid : userIDs) {
-            Optional<User> currentUser = userDao.findById(uid);
-            currentUser.ifPresent(userList::add);
-        }
-
-        return userList;
+        return template.query("SELECT * FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario WHERE au.idAptitud = ?",
+                new Object[]{skillID}, USER_MAPPER);
     }
 
     @Override
@@ -79,27 +107,22 @@ public class UserSkillJdbcDao implements UserSkillDao {
     }
 
     private List<Long> getSkillIDsForUser(long userID){
-        return template.query("SELECT " + SKILL_ID + " FROM " + USER_SKILL_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT idAptitud FROM aptitudUsuario WHERE idUsuario = ?",
                 new Object[]{ userID }, (resultSet, rowNum) ->
             resultSet.getLong(SKILL_ID));
     }
 
     @Override
     public List<Skill> getSkillsForUser(long userID) {
-        List<Long> skillIDs = getSkillIDsForUser(userID);
-        List<Skill> skillList = new ArrayList<>();
 
-        for (Long uid : skillIDs) {
-            Optional<Skill> currentSkill = skillDao.findById(uid);
-            currentSkill.ifPresent(skillList::add);
-        }
-
-        return skillList;
+        return template.query("SELECT a.id, a.descripcion FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario " +
+                        "JOIN aptitud a ON a.id = au.idAptitud WHERE au.idUsuario = ?",
+                new Object[]{userID}, SKILL_MAPPER);
     }
 
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {
-        template.update("DELETE FROM " +  USER_SKILL_TABLE + " WHERE " + USER_ID + " = ?" + " AND " + SKILL_ID + " = ?",
+        template.update("DELETE FROM aptitudUsuario WHERE idUsuario = ? AND idAptitud = ?",
                 userID, skillID);
     }
 }
