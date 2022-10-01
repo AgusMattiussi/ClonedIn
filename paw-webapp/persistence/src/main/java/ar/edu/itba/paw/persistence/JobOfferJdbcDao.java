@@ -90,13 +90,13 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
     @Override
     public Optional<JobOffer> findById(long id) {
-        return template.query("SELECT * FROM " +  JOB_OFFER_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM ofertaLaboral WHERE id = ?",
                 new Object[]{ id }, JOB_OFFER_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<JobOffer> findByEnterpriseId(long enterpriseID) {
-        return template.query("SELECT * FROM " +  JOB_OFFER_TABLE + " WHERE " + ENTERPRISE_ID + " = ?",
+        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ?",
                 new Object[]{ enterpriseID }, JOB_OFFER_MAPPER);
     }
 }
