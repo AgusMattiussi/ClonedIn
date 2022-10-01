@@ -123,4 +123,15 @@ public class ExperienceJdbcDaoTest {
         Assert.assertEquals(EXISTING_POSITION, experienceList.get(0).getPosition());
         Assert.assertEquals(EXISTING_DESCRIPTION, experienceList.get(0).getDescription());
     }
+
+    @Test
+    public void testDeleteExperience(){
+        final Experience newExperience = dao.create(testUser.getId(), NEW_MONTH_FROM, NEW_YEAR_FROM, NEW_MONTH_TO, NEW_YEAR_TO,
+                NEW_ENTERPRISE_NAME, NEW_POSITION, NEW_DESCRIPTION);
+        Optional<Experience> foundExperience = dao.findById(newExperience.getId());
+        Assert.assertTrue(foundExperience.isPresent());
+        dao.deleteExperience(newExperience.getId());
+        foundExperience = dao.findById(newExperience.getId());
+        Assert.assertFalse(foundExperience.isPresent());
+    }
 }

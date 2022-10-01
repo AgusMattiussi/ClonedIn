@@ -101,4 +101,9 @@ public class EducationJdbcDao implements EducationDao {
         return template.query("SELECT * FROM " +  EDUCATION_TABLE + " WHERE " + USER_ID + " = ?",
                 new Object[]{ userID }, EDUCATION_MAPPER);
     }
+
+    @Override
+    public void deleteEducation(long educationId) {
+       template.update("DELETE FROM " +  EDUCATION_TABLE + " WHERE " + ID + " = ?", educationId);
+    }
 }

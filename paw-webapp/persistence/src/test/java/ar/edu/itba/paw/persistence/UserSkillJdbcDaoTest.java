@@ -118,4 +118,14 @@ public class UserSkillJdbcDaoTest {
         Assert.assertTrue(userList.contains(user));
     }
 
+    @Test
+    public void testDeleteSkillFromUser() {
+        final User user = userDao.findByEmail("johnlennon@gmail.com").get();
+        final Skill skill = skillDao.create("ccccc");
+        final boolean added = userSkillDao.addSkillToUser(skill.getId(), user.getId());
+        Assert.assertTrue(added);
+        userSkillDao.deleteSkillFromUser(user.getId(), skill.getId());
+        final List<Skill> skillList = userSkillDao.getSkillsForUser(user.getId());
+        Assert.assertFalse(skillList.contains(skill));
+    }
 }

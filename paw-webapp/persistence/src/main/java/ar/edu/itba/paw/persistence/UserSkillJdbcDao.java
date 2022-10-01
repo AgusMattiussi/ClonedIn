@@ -96,4 +96,10 @@ public class UserSkillJdbcDao implements UserSkillDao {
 
         return skillList;
     }
+
+    @Override
+    public void deleteSkillFromUser(long userID, long skillID) {
+        template.update("DELETE FROM " +  USER_SKILL_TABLE + " WHERE " + USER_ID + " = ?" + " AND " + SKILL_ID + " = ?",
+                userID, skillID);
+    }
 }
