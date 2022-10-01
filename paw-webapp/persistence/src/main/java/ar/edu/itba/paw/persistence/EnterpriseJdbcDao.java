@@ -83,17 +83,17 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
     @Override
     public Optional<Enterprise> findById(final long enterpriseId) {
-        return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM empresa WHERE id = ?",
                 new Object[]{ enterpriseId }, ENTERPRISE_MAPPER).stream().findFirst();
     }
 
     @Override
     public void changePassword(String email, String password) {
-        template.update("UPDATE " + ENTERPRISE_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+        template.update("UPDATE empresa SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }
 
     @Override
     public boolean enterpriseExists(String email) {
-        return findByEmail(email).isPresent();
+        return template.queryForObject("SELECT COUNT(*) FROM empresa WHERE email = ?", new Object[]{ email }, Integer.class) > 0;
     }
 }
