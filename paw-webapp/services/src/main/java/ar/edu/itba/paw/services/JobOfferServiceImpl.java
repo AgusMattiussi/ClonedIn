@@ -33,7 +33,12 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
-        return jobOfferDao.findByEnterpriseId(enterpriseID);
+    public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return jobOfferDao.findByEnterpriseId(enterpriseID, page, pageSize);
+    }
+
+    @Override
+    public Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID) {
+        return jobOfferDao.getJobOffersCountForEnterprise(enterpriseID);
     }
 }

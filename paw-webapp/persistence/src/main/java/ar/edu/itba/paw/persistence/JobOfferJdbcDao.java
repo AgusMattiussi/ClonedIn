@@ -53,6 +53,9 @@ public class JobOfferJdbcDao implements JobOfferDao {
                 resultSet.getString(MODALITY));
     });
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
+
+
     @Autowired
     public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
@@ -95,8 +98,14 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
-        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ?",
-                new Object[]{ enterpriseID }, JOB_OFFER_MAPPER);
+    public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ? OFFSET ? LIMIT ?",
+                new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_MAPPER);
+    }
+
+    @Override
+    public Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID) {
+        return template.query("SELECT COUNT(*) FROM ofertaLaboral WHERE idEmpresa = ?",
+                new Object[]{ enterpriseID}, COUNT_ROW_MAPPER).stream().findFirst();
     }
 }

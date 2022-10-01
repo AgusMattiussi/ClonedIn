@@ -129,6 +129,12 @@
                                     </div>
                                 </div>
                             </c:forEach>
+                            <!-- Pagination -->
+                            <jsp:include page="../components/pagination.jsp">
+                                <jsp:param name="path" value="profileEnterprise/${enterpriseId}/"/>
+                                <jsp:param name="currentPage" value="${currentPage}" />
+                                <jsp:param name="pages" value="${pages}" />
+                            </jsp:include>
                         </c:when>
                         <c:otherwise>
                             <div class="d-flex justify-content-center">

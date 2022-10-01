@@ -108,7 +108,8 @@ public class UserController {
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
-        final int itemsPerPage = 2;
+        final int itemsPerPage = 3;
+        int contactsCount = contactService.getContactsCountForUser(userId).orElseThrow(RuntimeException::new);
 
         List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
 
@@ -117,9 +118,9 @@ public class UserController {
         mav.addObject("jobOffers", jobOffersList);
         // TODO: add skills for joboffer
 //        mav.addObject("skills", contactService)
-        mav.addObject("pages", jobOffersList.size() / itemsPerPage + 1);
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-
+        // TODO: revisar esta paginacion
         return mav;
     }
 

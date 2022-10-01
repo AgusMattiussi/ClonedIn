@@ -100,7 +100,7 @@ public class JobOfferJdbcDaoTest {
 
     @Test
     public void testFindByEnterpriseID(){
-        final List<JobOffer> jobOfferList = jobOfferJdbcDao.findByEnterpriseId(enterprise.getId());
+        final List<JobOffer> jobOfferList = jobOfferJdbcDao.findByEnterpriseId(enterprise.getId(), 0, 8);
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());
