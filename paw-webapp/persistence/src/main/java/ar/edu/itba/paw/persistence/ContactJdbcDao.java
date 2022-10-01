@@ -172,7 +172,7 @@ public class ContactJdbcDao implements ContactDao {
                 DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", u." + USER_TABLE_NAME +
                 " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
                 " JOIN " + USER_TABLE + " u ON u." + USER_TABLE_ID + " = c." + USER_ID +
-                " WHERE c." + ENTERPRISE_ID + " = ?", new Object[]{ enterpriseID }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+                " WHERE c." + ENTERPRISE_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ enterpriseID, page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
     @Override
