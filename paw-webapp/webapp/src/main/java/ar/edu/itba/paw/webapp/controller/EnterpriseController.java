@@ -59,7 +59,7 @@ public class EnterpriseController {
 
         final List<User> usersList;
 
-        final int usersCount = userService.getAllUsers().size();
+//        final int usersCount = userService.getAllUsers().size();
 
         final int itemsPerPage = 8;
 
@@ -69,6 +69,8 @@ public class EnterpriseController {
                             filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
+
+        final int usersCount = usersList.size();
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -81,12 +83,19 @@ public class EnterpriseController {
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
-    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
+        final int itemsPerPage = 3;
+        int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        List<JobOffer> jobOfferList = jobOfferService.findByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
-        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("joboffers", jobOfferList);
+        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
@@ -97,11 +106,12 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
         final int itemsPerPage = 8;
+        int contactsCount = contactService.getContactsCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
         List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
-        // TODO: fix pagination
+
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
-        mav.addObject("pages", jobOffersList.size() / itemsPerPage + 1);
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -147,7 +157,7 @@ public class EnterpriseController {
         long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID));
+        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID, 0, 100));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }

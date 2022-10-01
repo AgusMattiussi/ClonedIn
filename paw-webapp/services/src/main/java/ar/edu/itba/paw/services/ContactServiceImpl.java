@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Primary
 @Service
@@ -68,5 +69,16 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void rejectJobOffer(long userID, long jobOfferID) {
         contactDao.rejectJobOffer(userID, jobOfferID);
+    }
+
+    @Override
+    public Optional<Integer> getContactsCountForEnterprise(long enterpriseID) {
+        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    }
+
+    @Override
+    public Optional<Integer> getContactsCountForUser(long userID) {
+        return contactDao.getContactsCountForUser(userID);
+
     }
 }

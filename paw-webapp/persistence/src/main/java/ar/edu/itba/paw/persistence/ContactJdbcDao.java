@@ -102,6 +102,8 @@ public class ContactJdbcDao implements ContactDao {
                 );
     });
 
+    private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
+
     @Autowired
     public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao, CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
@@ -172,7 +174,7 @@ public class ContactJdbcDao implements ContactDao {
                 DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", u." + USER_TABLE_NAME +
                 " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
                 " JOIN " + USER_TABLE + " u ON u." + USER_TABLE_ID + " = c." + USER_ID +
-                " WHERE c." + ENTERPRISE_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ enterpriseID, page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+                " WHERE c." + ENTERPRISE_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
     @Override
@@ -181,7 +183,7 @@ public class ContactJdbcDao implements ContactDao {
                 DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", e." + ENTERPRISE_TABLE_NAME +
                 " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
                 " JOIN " + ENTERPRISE_TABLE + " e ON e." + ENTERPRISE_TABLE_ID + " = c." + ENTERPRISE_ID +
-                " WHERE c." + USER_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ userID, page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
+                " WHERE c." + USER_ID + " = ?" + " OFFSET ? LIMIT ? ", new Object[]{ userID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
 
@@ -228,8 +230,17 @@ public class ContactJdbcDao implements ContactDao {
         insert.execute(values);
     }
 
+    @Override
+    public Optional<Integer> getContactsCountForEnterprise(long enterpriseID) {
+        return template.query("SELECT COUNT(*) FROM contactado WHERE idEmpresa = ?",
+                new Object[]{ enterpriseID }, COUNT_ROW_MAPPER).stream().findFirst();
+    }
 
-
+    @Override
+    public Optional<Integer> getContactsCountForUser(long userID) {
+        return template.query("SELECT COUNT(*) FROM contactado WHERE idUsuario = ?",
+                new Object[]{ userID }, COUNT_ROW_MAPPER).stream().findFirst();
+    }
 
     /*@Override
     public Category create(String name) {
