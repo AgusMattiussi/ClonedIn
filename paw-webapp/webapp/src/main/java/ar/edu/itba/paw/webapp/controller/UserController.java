@@ -36,11 +36,6 @@ public class UserController {
     private final JobOfferSkillService jobOfferSkillService;
     private final ContactService contactService;
     private final EnterpriseService enterpriseService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    private static final String ANSWER_TEMPLATE = "answerEmail.html";
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
@@ -102,11 +97,11 @@ public class UserController {
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
+            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
+            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + user.getId());
@@ -219,18 +214,6 @@ public class UserController {
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
-    }
-
-    private void sendAnswerEmail(String enterpriseEmail, String username, String jobOffer, String answerMsg){
-        final Map<String, Object> mailMap = new HashMap<>();
-
-        mailMap.put("username", username);
-        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, Locale.getDefault()));
-        mailMap.put("jobOffer", jobOffer);
-
-        String subject = messageSource.getMessage("answerMail.subject", null, Locale.getDefault());
-
-        emailService.sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
     }
 
     private boolean isUser(Authentication loggedUser){

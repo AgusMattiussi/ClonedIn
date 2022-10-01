@@ -35,10 +35,6 @@ public class EnterpriseController {
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
     private static final int itemsPerPage = 8;
-    private static final String CONTACT_TEMPLATE = "contactEmail.html";
-    private final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
-    @Autowired
-    private MessageSource messageSource;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -156,41 +152,19 @@ public class EnterpriseController {
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors,
-                                @PathVariable("userId") final long userId) {
+    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
+                                final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
             errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
             return contactForm(loggedUser, form, userId);
         }
         long jobOfferId = form.getCategory();
+
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
-
         Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        final Map<String, Object> mailMap = new HashMap<>();
-        final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-
-        mailMap.put(EmailService.USERNAME_FIELD, user.getName());
-        mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
-        mailMap.put("jobDesc", jobOffer.getDescription());
-        mailMap.put("jobPos", jobOffer.getPosition());
-        mailMap.put("salary", String.valueOf(jobOffer.getSalary()));
-        mailMap.put("modality", jobOffer.getModality());
-        mailMap.put("enterpriseName", enterprise.getName());
-        mailMap.put("enterpriseEmail", enterprise.getEmail());
-        mailMap.put("message", form.getMessage());
-
-        mailMap.put("congratulationsMsg", messageSource.getMessage("contactMail.congrats", null, Locale.getDefault()));
-        mailMap.put("enterpriseMsg", messageSource.getMessage("contactMail.enterprise", null, Locale.getDefault()));
-        mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, Locale.getDefault()));
-        mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, Locale.getDefault()));
-        mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, Locale.getDefault()));
-        mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, Locale.getDefault()));
-        mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, Locale.getDefault()));
-        mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
-
-        String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
-        emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
+        emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage());
         // TODO: validar clave duplicada
         contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
 

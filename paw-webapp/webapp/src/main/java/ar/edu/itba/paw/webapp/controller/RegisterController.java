@@ -35,9 +35,6 @@ public class RegisterController {
     private final EnterpriseService enterpriseService;
     private final CategoryService categoryService;
     private final EmailService emailService;
-    private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
-    @Autowired
-    private MessageSource messageSource;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -96,16 +93,7 @@ public class RegisterController {
     }
 
     private void sendRegisterEmail(String email, String username){
-        final Map<String, Object> mailMap = new HashMap<>();
-
-        mailMap.put("username", username);
-        mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, Locale.getDefault()));
-        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, Locale.getDefault()));
-        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, Locale.getDefault()));
-
-        String subject = messageSource.getMessage("registerMail.subject", null, Locale.getDefault());
-
-        emailService.sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
+        emailService.sendRegisterConfirmationEmail(email, username);
     }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
