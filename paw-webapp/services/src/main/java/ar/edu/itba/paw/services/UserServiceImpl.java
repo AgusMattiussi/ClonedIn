@@ -104,4 +104,26 @@ public class UserServiceImpl implements UserService {
     public void updateCurrentPosition(long userID, String newPosition) {
         userDao.updateCurrentPosition(userID, newPosition);
     }
+
+    @Override
+    public void updateCategory(long userID, String newCategoryName) {
+        userDao.updateCategory(userID, newCategoryName);
+    }
+
+    @Override
+    public void updateEducationLevel(long userID, String newEducationLevel) {
+        userDao.updateEducationLevel(userID, newEducationLevel);
+    }
+
+    @Override
+    public void updateUserInformation(User user, String newName, String newDescription, String newLocation, String newPosition,
+                                      String newCategoryName, String newEducationLevel) {
+        long userID = user.getId();
+        updateName(userID, newName.isEmpty()? user.getName() : newName);
+        updateDescription(userID, newDescription.isEmpty()? user.getDescription() : newDescription);
+        updateLocation(userID, newLocation.isEmpty()? user.getLocation() : newLocation);
+        updateCurrentPosition(userID, newPosition.isEmpty()? user.getCurrentPosition() : newPosition);
+        updateCategory(userID, newCategoryName.isEmpty()? user.getCategory().getName() : newCategoryName);
+        updateEducationLevel(userID, newEducationLevel.isEmpty()? user.getEducation() : newEducationLevel);
+    }
 }

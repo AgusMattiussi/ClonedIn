@@ -5,14 +5,13 @@ import javax.validation.constraints.Size;
 import java.io.File;
 
 public class EditUserForm {
-    @NotEmpty
     @Size(max=100)
     private String name;
 
     private File image;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @Size(max=50)
     private String position;
@@ -34,12 +33,12 @@ public class EditUserForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getPosition() {

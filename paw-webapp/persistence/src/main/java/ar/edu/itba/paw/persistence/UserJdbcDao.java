@@ -209,6 +209,19 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public void updateCategory(long userID, String newCategoryName) {
+        //TODO: chequear que no explote
+        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
+        template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), userID});
+    }
+
+    @Override
+    public void updateEducationLevel(long userID, String newEducationLevel) {
+        if(educationLevelsSet.contains(newEducationLevel)) {
+            template.update("UPDATE usuario SET educacion = ? WHERE id = ?", new Object[]{newEducationLevel, userID});
+    }
+
+    @Override
     public void changePassword(String email, String password) {
         template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }

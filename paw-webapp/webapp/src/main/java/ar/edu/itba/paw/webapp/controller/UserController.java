@@ -208,7 +208,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
+                                    final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formSkill(loggedUser, skillForm, userId);
         }
@@ -224,14 +225,28 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEditUser(@ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
                                      @PathVariable("userId") final long userId) {
         ModelAndView mav = new ModelAndView("userEditForm");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+                                 final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEditUser(loggedUser, editUserForm, userId);
+        }
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        userService.updateUserInformation(user, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel());
+        return new ModelAndView("redirect:/profileUser/" + userId);
     }
     private boolean isUser(Authentication loggedUser){
         return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());

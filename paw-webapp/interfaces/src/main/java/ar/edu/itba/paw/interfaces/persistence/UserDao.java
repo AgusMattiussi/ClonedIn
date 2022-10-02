@@ -38,7 +38,9 @@ public interface UserDao {
 
     void updateCurrentPosition(long userID, String newPosition);
 
+    void updateCategory(long userID, String newCategoryName);
 
+    void updateEducationLevel(long userID, String newEducationLevel);
 
     /* TODO:
         - findByLocation

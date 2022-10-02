@@ -18,9 +18,9 @@
             <!-- TODO: AGREGAR FILTROS -->
             <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
                 <h5 class="ml-2 mt-2"><spring:message code="indexFilter"/></h5>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Accepted</button>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Pending</button>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit">Declined</button>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
             </div>
         </div>
         <div class="col mr-2">

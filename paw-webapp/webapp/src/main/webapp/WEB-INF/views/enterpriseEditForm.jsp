@@ -54,7 +54,7 @@
                                                             </form:select>
                                                         </div>
                                                     </div>
-                                                    <form:textarea path="aboutUs" rows = "3" placeholder="${descriptionPlaceholder}"/>
+                                                    <form:textarea path="aboutUs" rows = "3" cssStyle="resize: none" placeholder="${descriptionPlaceholder}"/>
                                                     <form:errors path="aboutUs" cssClass="formError" element="p"/>
                                                 </div>
                                                 <p><spring:message code="registerRequiredMsg"/></p>

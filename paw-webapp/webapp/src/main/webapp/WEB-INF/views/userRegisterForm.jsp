@@ -80,7 +80,7 @@
                             </div>
                             <form:errors path="category" cssClass="formError" element="p"/>
                           </div>
-                          <form:textarea path="aboutMe" rows = "3" placeholder="${descriptionPlaceholder}"/>
+                          <form:textarea path="aboutMe" rows="3" cssStyle="resize: none"placeholder="${descriptionPlaceholder}"/>
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>
                         </div>
                         <p><spring:message code="registerRequiredMsg"/></p>

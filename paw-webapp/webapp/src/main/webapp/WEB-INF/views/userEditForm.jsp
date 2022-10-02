@@ -8,8 +8,8 @@
     <%@include file="../components/imports.jsp"%>
     <!-- Script -->
     <script src="<c:url value="/assets/js/steps.js"/>"></script>
-    <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
-    <title><spring:message code="registerPageTitle"/></title>
+    <link rel="stylesheet" href="<c:url value="/assets/css/editForm.css"/>"/>
+    <title><spring:message code="editPageTitle"/></title>
   </head>
   <body>
     <jsp:include page="../components/navbar.jsp"/>
@@ -21,7 +21,7 @@
                 <h2><strong><spring:message code="registerTitle"/></strong></h2>
                 <p><spring:message code="registerWarning"/></p>
                 <spring:message code="registerMail" var="emailPlaceholder"/>
-                <spring:message code="registerName" var="namePlaceholder"/>
+                <spring:message code="contactsEnterpriseName" var="namePlaceholder"/>
                 <spring:message code="registerPassword" var="passPlaceholder"/>
                 <spring:message code="registerRepeatPassword" var="repeatpassPlaceholder"/>
                 <spring:message code="registerLocation" var="locationPlaceholder"/>
@@ -34,23 +34,27 @@
                       <form:form modelAttribute="EditUserForm" action="${postPath}" method="post" accept-charset="utf-8">
                       <fieldset>
                         <div class="form-card">
-                          <h2 class="fs-title"><spring:message code="registerSubtitle"/></h2>
-                          <form:input type="text" path="name" placeholder="${namePlaceholder}"/>
+                          <h2 class="fs-title mb-2"><spring:message code="registerSubtitle"/></h2>
+                          <form:label path="name">${namePlaceholder}</form:label>
+                          <form:input type="text" path="name" placeholder="${user.name}"/>
                           <form:errors path="name" cssClass="formError" element="p"/>
-                          <div class="d-flex">
-                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>
-                            <div style="margin-left: 15px;">
-                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>
-                            </div>
-                          </div>
-                          <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
-                          <form:errors path="city" cssClass="formError" element="p"/>
-                          <form:input type="text" path="position" placeholder="${positionPlaceholder}"/>
+<%--                          <div class="d-flex">--%>
+<%--                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>--%>
+<%--                            <div style="margin-left: 15px;">--%>
+<%--                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>--%>
+<%--                            </div>--%>
+<%--                          </div>--%>
+                          <form:label path="location">${locationPlaceholder}</form:label>
+                          <form:input type="text" path="location" placeholder="${user.location}"/>
+                          <form:errors path="location" cssClass="formError" element="p"/>
+                          <form:label path="position">${positionPlaceholder}</form:label>
+                          <form:input type="text" path="position" placeholder="${user.currentPosition}"/>
                           <form:errors path="position" cssClass="formError" element="p"/>
                           <div class="d-flex">
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="registerEducationLevel"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="level" cssClass="list-dt ml-auto">
+                                <form:option value="${user.education}"><spring:message code="${user.education}"/></form:option>
                                 <form:option value="No-especificado"><spring:message code="No-especificado"/></form:option>
                                 <form:option value="Primario"><spring:message code="Primario"/></form:option>
                                 <form:option value="Secundario"><spring:message code="Secundario"/></form:option>
@@ -65,6 +69,7 @@
                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="registerCategoryRequired"/></label>
                             <div style="margin-left: 15px; margin-top: 1.2rem;">
                               <form:select path="category" cssClass="list-dt ml-auto">
+                                <form:option value="${user.category.name}"><spring:message code="${user.category.name}"/></form:option>
                                 <c:forEach items="${categories}" var="category">
                                   <form:option value="${category.name}"><spring:message code="${category.name}"/></form:option>
                                 </c:forEach>
@@ -72,14 +77,15 @@
                             </div>
                             <form:errors path="category" cssClass="formError" element="p"/>
                           </div>
-                          <form:textarea path="aboutMe" rows = "3" placeholder="${descriptionPlaceholder}"/>
+                          <form:label cssStyle="margin-left:10px; margin-top:10px;" path="aboutMe">${descriptionPlaceholder}</form:label>
+                          <form:textarea path="aboutMe" rows="3" cssStyle="resize: none" placeholder="${user.description}"/>
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>
                         </div>
-                        <p><spring:message code="registerRequiredMsg"/></p>
+<%--                        <p><spring:message code="registerRequiredMsg"/></p>--%>
                         <a href="<c:url value="/profileUser/${user.id}"/>">
                           <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                         </a>
-                        <button type="submit" name="end" class="btn action-button"><spring:message code="registerButtonMsg"/></button>
+                        <button type="submit" name="end" class="btn action-button"><spring:message code="educationFormButtonMsg"/></button>
                       </fieldset>
                       </form:form>
                       </div>
