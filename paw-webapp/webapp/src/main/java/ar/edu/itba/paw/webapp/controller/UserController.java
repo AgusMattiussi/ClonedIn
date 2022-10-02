@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -36,6 +38,8 @@ public class UserController {
 
     //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -73,7 +77,10 @@ public class UserController {
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
 
         final ModelAndView mav = new ModelAndView("profileUser");
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
         mav.addObject("user", user);
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
@@ -86,9 +93,18 @@ public class UserController {
     public ModelAndView acceptJobOffer(Authentication loggedUser, @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("answer") final long answer) {
 
-        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(UserNotFoundException::new);
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
-        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
@@ -111,7 +127,10 @@ public class UserController {
 
         List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
 
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
         // TODO: add skills for joboffer
@@ -126,7 +145,10 @@ public class UserController {
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("experienceForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
@@ -141,13 +163,21 @@ public class UserController {
                 errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
             else if (yearFlag == 0 && monthFlag < 0)
                 errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
+            LOGGER.warn("Experience form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formExperience(loggedUser, experienceForm, userId);
         }
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        Experience experience = experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
+
+        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
+        LOGGER.info("A new experience was registered");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -163,7 +193,10 @@ public class UserController {
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
@@ -178,13 +211,20 @@ public class UserController {
                 errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
             else if (yearFlag == 0 && monthFlag < 0)
                 errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
-
+            LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formEducation(loggedUser, educationForm, userId);
         }
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        Education education = educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
                 monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+
+        LOGGER.debug("A new experience was registered under id: {}", education.getId());
+        LOGGER.info("A new experience was registered");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -200,7 +240,10 @@ public class UserController {
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
@@ -209,10 +252,18 @@ public class UserController {
     public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
                                     final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
+            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formSkill(loggedUser, skillForm, userId);
         }
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+
+        LOGGER.debug("A new skill has been added to user {}", user.getId());
+        LOGGER.info("A new skill has been added to user");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
@@ -228,7 +279,10 @@ public class UserController {
     public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                      @PathVariable("userId") final long userId) {
         ModelAndView mav = new ModelAndView("userEditForm");
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
         mav.addObject("user", user);
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
@@ -253,10 +307,16 @@ public class UserController {
 
     private long getLoggerUserId(Authentication loggedUser){
         if(isUser(loggedUser)) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("User not found");
+                return new UserNotFoundException();
+            });
             return user.getId();
         } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("Enterprise not found");
+                return new UserNotFoundException();
+            });
             return enterprise.getId();
         }
     }
