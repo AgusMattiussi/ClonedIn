@@ -114,5 +114,16 @@ public static final int TEST_MONTH_FROM = 11;
         Assert.assertEquals(TEST_DESCRIPTION, educationList.get(0).getDescription());
     }
 
+    @Test
+    public void testDeleteEducation(){
+        final Education newEducation = educationDao.add(testUser.getId(), NEW_MONTH_FROM, NEW_YEAR_FROM,
+                NEW_MONTH_TO, NEW_YEAR_TO, NEW_TITLE, NEW_INSTITUTION, NEW_DESCRIPTION) ;
+        Optional<Education> foundEducation = educationDao.findById(newEducation.getId());
+        Assert.assertTrue(foundEducation.isPresent());
+        educationDao.deleteEducation(newEducation.getId());
+        foundEducation = educationDao.findById(newEducation.getId());
+        Assert.assertFalse(foundEducation.isPresent());
+    }
+
 
 }

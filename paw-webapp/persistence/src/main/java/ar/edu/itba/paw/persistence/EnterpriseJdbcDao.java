@@ -77,23 +77,38 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
     @Override
     public Optional<Enterprise> findByEmail(final String email) {
-        return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + EMAIL + " = ?",
+        return template.query("SELECT * FROM empresa WHERE email = ?",
                 new Object[]{ email }, ENTERPRISE_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<Enterprise> findById(final long enterpriseId) {
-        return template.query("SELECT * FROM " +  ENTERPRISE_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM empresa WHERE id = ?",
                 new Object[]{ enterpriseId }, ENTERPRISE_MAPPER).stream().findFirst();
     }
 
     @Override
     public void changePassword(String email, String password) {
-        template.update("UPDATE " + ENTERPRISE_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+        template.update("UPDATE empresa SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }
 
     @Override
     public boolean enterpriseExists(String email) {
-        return findByEmail(email).isPresent();
+        return template.queryForObject("SELECT COUNT(*) FROM empresa WHERE email = ?", new Object[]{ email }, Integer.class) > 0;
+    }
+
+    @Override
+    public void updateName(long userID, String newName) {
+        template.update("UPDATE empresa SET nombre = ? WHERE id = ?", new Object[] {newName, userID});
+    }
+
+    @Override
+    public void updateDescription(long userID, String newDescription) {
+        template.update("UPDATE empresa SET descripcion = ? WHERE id = ?", new Object[] {newDescription, userID});
+    }
+
+    @Override
+    public void updateLocation(long userID, String newLocation) {
+        template.update("UPDATE empresa SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
     }
 }

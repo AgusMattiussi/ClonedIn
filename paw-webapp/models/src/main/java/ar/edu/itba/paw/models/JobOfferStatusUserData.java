@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class JobOfferStatusUserData extends JobOfferWithStatus {
 
-    private String userName;
+    private final String userName;
 
     public JobOfferStatusUserData(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String status, String userName) {
         super(id, enterpriseID, category, position, description, salary, modality, status);

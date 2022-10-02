@@ -50,7 +50,7 @@ public class CategoryJdbcDao implements CategoryDao {
 
     @Override
     public Optional<Category> findByName(String name) {
-        return template.query("SELECT * FROM " + CATEGORY_TABLE + " WHERE " + NAME + " = ?",
+        return template.query("SELECT * FROM rubro WHERE nombre = ?",
                 new Object[]{ name }, CATEGORY_MAPPER).stream().findFirst();
     }
 
@@ -65,13 +65,13 @@ public class CategoryJdbcDao implements CategoryDao {
         if(id == 0)
             return Optional.empty();
 
-        return template.query("SELECT * FROM " + CATEGORY_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM rubro WHERE id = ?",
                 new Object[]{ id }, CATEGORY_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<Category> getAllCategories() {
-        List<Category> allCategories = template.query("SELECT * FROM " + CATEGORY_TABLE, CATEGORY_MAPPER);
+        List<Category> allCategories = template.query("SELECT * FROM rubro", CATEGORY_MAPPER);
         // Fixme: Es necesario?
         if(allCategories == null)
             return new ArrayList<>();

@@ -76,7 +76,6 @@ public class EducationJdbcDao implements EducationDao {
 
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
-        //FIXME: Cambiar esto para manejar fechas de verdad
         values.put(MONTH_FROM, monthFrom);
         values.put(YEAR_FROM, yearFrom);
         values.put(MONTH_TO, monthTo);
@@ -92,13 +91,18 @@ public class EducationJdbcDao implements EducationDao {
 
     @Override
     public Optional<Education> findById(long educationId) {
-        return template.query("SELECT * FROM " +  EDUCATION_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM educacion WHERE id = ?",
                 new Object[]{ educationId }, EDUCATION_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<Education> findByUserId(long userID) {
-        return template.query("SELECT * FROM " +  EDUCATION_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT * FROM educacion WHERE idUsuario = ?",
                 new Object[]{ userID }, EDUCATION_MAPPER);
+    }
+
+    @Override
+    public void deleteEducation(long educationId) {
+       template.update("DELETE FROM educacion WHERE id = ?", educationId);
     }
 }

@@ -15,15 +15,13 @@
     </jsp:include>
     <div class="row h-100 w-100">
         <div class="col-sm-2 sidebar">
-<%--            <h5 class="ml-2 mt-2"><spring:message code="search_filter"/></h5>--%>
-<%--            <c:url value="/contactsEnterprise/${loggedUserID}" var="getPath"/>--%>
-<%--            <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>
-<%--                <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">--%>
-<%--                    <spring:message code="navbar_search" var="searchBarPlaceholder"/>--%>
-<%--                    <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>--%>
-<%--                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>--%>
-<%--                </div>--%>
-<%--            </form:form>--%>
+            <!-- TODO: AGREGAR FILTROS -->
+            <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+                <h5 class="ml-2 mt-2"><spring:message code="indexFilter"/></h5>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
+                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
+            </div>
         </div>
         <div class="col mr-2">
         <div class="d-flex justify-content-between mt-2 ml-4">
@@ -39,7 +37,6 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col"><spring:message code="contactsEnterpriseJobOffer"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseName"/></th>
@@ -49,20 +46,22 @@
                         <tbody>
                             <c:forEach var="job" items="${jobOffers}">
                                 <tr>
-                                    <c:if test="${usersMap[job.id] != null}">
-                                        <th><c:out value="${job.id}"/></th>
-                                        <td><c:out value="${job.position}"/></td>
-                                        <c:set var="categoryName" value="${job.category.name}"/>
-                                        <td><spring:message code="${categoryName}"/></td>
-                                        <!-- como referenciar empleado y estado -->
-                                        <td><c:out value="${usersMap[job.id]}"/></td>
-                                        <c:set var="statusName" value="${statusMap[job.id]}"/>
-                                        <td><spring:message code="${statusName}"/></td>
-                                    </c:if>
+                                    <td><c:out value="${job.position}"/></td>
+                                    <c:set var="categoryName" value="${job.category.name}"/>
+                                    <td><spring:message code="${categoryName}"/></td>
+                                    <td><c:out value="${job.userName}"/></td>
+                                    <c:set var="statusName" value="${job.status}"/>
+                                    <td><spring:message code="${statusName}"/></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
+                        <!-- Pagination -->
+                        <jsp:include page="../components/pagination.jsp">
+                            <jsp:param name="path" value="contactsEnterprise/${enterpriseId}/"/>
+                            <jsp:param name="currentPage" value="${currentPage}" />
+                            <jsp:param name="pages" value="${pages}" />
+                        </jsp:include>
                     </c:otherwise>
                 </c:choose>
             </div>

@@ -12,7 +12,7 @@
   <title><spring:message code="skillsFormPageTitle"/></title>
 </head>
 <body>
-<jsp:include page="../components/navbarEmpty.jsp">
+<jsp:include page="../components/navbar.jsp">
   <jsp:param name="id" value="${user.id}"/>
 </jsp:include>
 <div class="d-flex justify-content-between mt-2">
@@ -22,9 +22,7 @@
         <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
           <h2><strong><spring:message code="skillsFormTitle"/></strong></h2>
           <p><spring:message code="skillsFormWarning"/></p>
-          <spring:message code="skillsFormLanguages" var="languagesPlaceholder"/>
           <spring:message code="skillsFormSkills" var="skillsPlaceholder"/>
-          <spring:message code="skillsFormComments" var="commentsPlaceholder"/>
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
@@ -33,12 +31,8 @@
                   <fieldset>
                   <div class="form-card">
                   <h2 class="fs-title"><spring:message code="skillsFormSubtitle"/></h2>
-                    <form:input type="text" path="lang"  placeholder="${languagesPlaceholder}"/>
-                    <form:errors path="lang" cssClass="formError" element="p"/>
                     <form:input type="text" path="skill" placeholder="${skillsPlaceholder}"/>
                     <form:errors path="skill" cssClass="formError" element="p"/>
-                    <form:input type="text" path="more"  placeholder="${commentsPlaceholder}"/>
-                    <form:errors path="more" cssClass="formError" element="p"/>
                   </div>
                     <p><spring:message code="skillsFormRequiredMsg"/></p>
                     <a href="<c:url value="/profileUser/${user.id}"/>">

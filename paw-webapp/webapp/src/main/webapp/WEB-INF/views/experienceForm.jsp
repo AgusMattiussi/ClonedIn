@@ -12,7 +12,7 @@
   <title><spring:message code="experienceFormPageTitle"/></title>
 </head>
 <body>
-<jsp:include page="../components/navbarEmpty.jsp">
+<jsp:include page="../components/navbar.jsp">
   <jsp:param name="id" value="${user.id}"/>
 </jsp:include>
 <div class="d-flex justify-content-between mt-2">
@@ -58,19 +58,20 @@
                               <form:option value="Noviembre"><spring:message code="selectMonth11"/></form:option>
                               <form:option value="Diciembre"><spring:message code="selectMonth12"/></form:option>
                             </form:select>
-                            <form:errors path="monthFrom" cssClass="formError" element="p"/>
                           </div>
                           <div class="col-sm-6">
                             <form:input type="text" path="yearFrom" placeholder="${datePlaceholder}"/>
-                            <form:errors path="yearFrom" cssClass="formError" element="p"/>
                           </div>
                         </div>
                       </div>
+                      <form:errors path="monthFrom" cssClass="formError" element="p"/>
+                      <form:errors path="yearFrom" cssClass="formError" element="p"/>
                       <div class="d-flex">
                         <label class="endDate" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="experienceFormEndDate"/></label>
                         <div class="row" style="margin-left: 10px">
                           <div class="col-sm-6" style="margin-top: 1.2rem;">
                             <form:select path="monthTo" cssClass="list-dt ml-auto">
+                              <form:option value="No-especificado"><spring:message code="No-especificado"/></form:option>
                               <form:option value="Enero"><spring:message code="selectMonth1"/></form:option>
                               <form:option value="Febrero"><spring:message code="selectMonth2"/></form:option>
                               <form:option value="Marzo"><spring:message code="selectMonth3"/></form:option>
@@ -84,14 +85,14 @@
                               <form:option value="Noviembre"><spring:message code="selectMonth11"/></form:option>
                               <form:option value="Diciembre"><spring:message code="selectMonth12"/></form:option>
                             </form:select>
-                            <form:errors path="monthTo" cssClass="formError" element="p"/>
                           </div>
                           <div class="col-sm-6">
                             <form:input type="text" path="yearTo" placeholder="${datePlaceholder}"/>
-                            <form:errors path="yearTo" cssClass="formError" element="p"/>
                           </div>
                         </div>
                       </div>
+                      <form:errors path="monthTo" cssClass="formError" element="p"/>
+                      <form:errors path="yearTo" cssClass="formError" element="p"/>
                     </div>
                       <p><spring:message code="experienceFormRequiredMsg"/></p>
                       <a href="<c:url value="/profileUser/${user.id}"/>">

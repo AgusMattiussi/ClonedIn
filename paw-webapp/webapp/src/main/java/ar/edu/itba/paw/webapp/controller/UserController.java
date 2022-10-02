@@ -15,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,18 +39,19 @@ public class UserController {
     private MessageSource messageSource;
 
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
+    private final CategoryService categoryService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
     //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
-
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
-                          final EducationService educationService, final UserSkillService userSkillService, final EmailService emailService,
-                          final JobOfferService jobOfferService, final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
-                          final ImageService imageService){
+                          final EducationService educationService, final UserSkillService userSkillService,
+                          final EmailService emailService, final JobOfferService jobOfferService,
+                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
+                          final ImageService imageService, final CategoryService categoryService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -61,6 +61,7 @@ public class UserController {
         this.jobOfferService = jobOfferService;
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
+        this.categoryService = categoryService;
         this.imageService = imageService;
 
         monthToNumber.put("Enero", 1);
@@ -75,7 +76,6 @@ public class UserController {
         monthToNumber.put("Octubre", 10);
         monthToNumber.put("Noviembre", 11);
         monthToNumber.put("Diciembre", 12);
-
 
     }
 
@@ -103,11 +103,11 @@ public class UserController {
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
+            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            sendAnswerEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
+            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + user.getId());
@@ -117,29 +117,19 @@ public class UserController {
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
+        final int itemsPerPage = 3;
+        long contactsCount = contactService.getContactsCountForUser(userId);
 
-        HashMap<Long, String> enterpriseMap = new HashMap<>();
-
-        HashMap<Long, List<Skill>> skillsMap = new HashMap<>();
-
-        for (JobOfferWithStatus jobOfferWithStatus : contactService.getJobOffersWithStatusForUser(userId)) {
-            long enterpriseID = jobOfferWithStatus.getEnterpriseID();
-            Enterprise enterprise = enterpriseService.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
-            enterpriseMap.put(enterpriseID, enterprise.getName());
-
-            long jobOfferId = jobOfferWithStatus.getId();
-            skillsMap.put(jobOfferId, jobOfferSkillService.getSkillsForJobOffer(jobOfferId));
-        }
+        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
 
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", contactService.getJobOffersWithStatusForUser(userId));
-        mav.addObject("enterpriseMap", enterpriseMap);
-        mav.addObject("skillsMap", skillsMap);
-
-//        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
-//        mav.addObject("currentPage", page);
-
+        mav.addObject("jobOffers", jobOffersList);
+        // TODO: add skills for joboffer
+//        mav.addObject("skills", contactService)
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
+        // TODO: revisar esta paginacion
         return mav;
     }
 
@@ -164,12 +154,20 @@ public class UserController {
                 errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
             return formExperience(loggedUser, experienceForm, userId);
         }
+
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
+        experienceService.deleteExperience(experienceId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
@@ -203,6 +201,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
+        educationService.deleteEducation(educationId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
@@ -212,20 +217,22 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm, final BindingResult errors, @PathVariable("userId") final long userId) {
+    public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
+                                    final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formSkill(loggedUser, skillForm, userId);
         }
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        if(!skillForm.getLang().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getLang(), user.getId());
-        if(!skillForm.getMore().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getMore(), user.getId());
-        if(!skillForm.getSkill().isEmpty())
-            userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+        userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/deleteSkill/{userId:[0-9]+}/{skillId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
+    public ModelAndView deleteSkill(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("skillId") final long skillId) {
+        userSkillService.deleteSkillFromUser(userId, skillId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
@@ -245,16 +252,28 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
-    private void sendAnswerEmail(String enterpriseEmail, String username, String jobOffer, String answerMsg){
-        final Map<String, Object> mailMap = new HashMap<>();
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+                                     @PathVariable("userId") final long userId) {
+        ModelAndView mav = new ModelAndView("userEditForm");
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", user);
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
 
-        mailMap.put("username", username);
-        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, Locale.getDefault()));
-        mailMap.put("jobOffer", jobOffer);
-
-        String subject = messageSource.getMessage("answerMail.subject", null, Locale.getDefault());
-
-        emailService.sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+                                 final BindingResult errors, @PathVariable("userId") final long userId) {
+        if (errors.hasErrors()) {
+            return formEditUser(loggedUser, editUserForm, userId);
+        }
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        userService.updateUserInformation(user, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel());
+        return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
     private boolean isUser(Authentication loggedUser){

@@ -34,11 +34,6 @@ public class EnterpriseController {
     private final EmailService emailService;
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
-    private static final int itemsPerPage = 8;
-    private static final String CONTACT_TEMPLATE = "contactEmail.html";
-    private final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
-    @Autowired
-    private MessageSource messageSource;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -64,7 +59,9 @@ public class EnterpriseController {
 
         final List<User> usersList;
 
-        final int usersCount = userService.getAllUsers().size();
+//        final int usersCount = userService.getAllUsers().size();
+
+        final int itemsPerPage = 8;
 
         //TODO: refactor?
         if(request.getParameter("term") == null)
@@ -72,6 +69,8 @@ public class EnterpriseController {
                             filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
+
+        final int usersCount = usersList.size();
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -84,37 +83,36 @@ public class EnterpriseController {
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
-    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
+        final int itemsPerPage = 3;
+        int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        List<JobOffer> jobOfferList = jobOfferService.findByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
-        mav.addObject("joboffers", jobOfferService.findByEnterpriseId(enterpriseId));
+        mav.addObject("joboffers", jobOfferList);
+        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
-    public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-
-        HashMap<Long, String> usersMap = new HashMap<>();
-        HashMap<Long, String> statusMap = new HashMap<>();
-
-        //TODO: refactor
-        for (User user : contactService.getUsersForEnterprise(enterpriseId)) {
-            for (JobOfferStatusUserData jobOffer : contactService.getJobOffersWithStatusUserData(user.getId()) ) {
-                statusMap.put(jobOffer.getId(), jobOffer.getStatus());
-                usersMap.put(jobOffer.getId(), jobOffer.getUserName());
-            }
-        }
+        final int itemsPerPage = 8;
+        long contactsCount = contactService.getContactsCountForEnterprise(enterpriseId);
+        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(enterpriseId));
-        mav.addObject("usersMap", usersMap);
-        mav.addObject("statusMap", statusMap);
+        mav.addObject("jobOffers", jobOffersList);
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         return mav;
     }
 
@@ -145,52 +143,39 @@ public class EnterpriseController {
 
     }
 
+    @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formEditUser(@ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm, @PathVariable("enterpriseId") final long enterpriseId) {
+        ModelAndView mav = new ModelAndView("enterpriseEditForm");
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        mav.addObject("enterprise", enterprise);
+        mav.addObject("categories", categoryService.getAllCategories());
+        return mav;
+    }
+
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("simpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
-        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID));
+        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID, 0, 100));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
 
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form, final BindingResult errors,
-                                @PathVariable("userId") final long userId) {
+    public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
+                                final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
             errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
             return contactForm(loggedUser, form, userId);
         }
         long jobOfferId = form.getCategory();
+
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
-
         Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        final Map<String, Object> mailMap = new HashMap<>();
-        final User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-
-        mailMap.put(EmailService.USERNAME_FIELD, user.getName());
-        mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
-        mailMap.put("jobDesc", jobOffer.getDescription());
-        mailMap.put("jobPos", jobOffer.getPosition());
-        mailMap.put("salary", String.valueOf(jobOffer.getSalary()));
-        mailMap.put("modality", jobOffer.getModality());
-        mailMap.put("enterpriseName", enterprise.getName());
-        mailMap.put("enterpriseEmail", enterprise.getEmail());
-        mailMap.put("message", form.getMessage());
-
-        mailMap.put("congratulationsMsg", messageSource.getMessage("contactMail.congrats", null, Locale.getDefault()));
-        mailMap.put("enterpriseMsg", messageSource.getMessage("contactMail.enterprise", null, Locale.getDefault()));
-        mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, Locale.getDefault()));
-        mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, Locale.getDefault()));
-        mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, Locale.getDefault()));
-        mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, Locale.getDefault()));
-        mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, Locale.getDefault()));
-        mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, Locale.getDefault()));
-
-        String subject = messageSource.getMessage("contactMail.subject", null, Locale.getDefault()) + enterprise.getName();
-        emailService.sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
+        emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage());
         // TODO: validar clave duplicada
         contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
 

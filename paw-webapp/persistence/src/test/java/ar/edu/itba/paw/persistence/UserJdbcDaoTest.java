@@ -47,12 +47,14 @@ public class UserJdbcDaoTest {
     private static final String TEST_CATEGORY_NAME = "testCategory";
     private static final String TEST_CURRENT_POSITION = "CEO de PAW";
     private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
-    private static final String TEST_EDUCATION = "No especificado";
+    private static final String TEST_EDUCATION = "No-especificado";
 
     private static final long FIRST_ID = 1;
     private static final String EXISTING_NAME = "John Lennon";
     private static final String EXISTING_EMAIL = "johnlennon@gmail.com";
     private static final String EXISTING_PASSWORD = "imagineAPassword";
+    public static final String NEW_EMAIL = "goku@gmail.com";
+    public static final String UPDATED_STRING = "updatedstring";
 
     @Autowired
     private UserJdbcDao dao;
@@ -113,9 +115,9 @@ public class UserJdbcDaoTest {
 
     @Test
     public void testGetAllUsers() {
-        final User u1 = dao.create("naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u2 = dao.create("sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        final User u3 = dao.create("sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u1 = dao.create("a@gmail.com", TEST_PASSWORD, "A", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u2 = dao.create("b@gmail.com", TEST_PASSWORD, "B", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        final User u3 = dao.create("c@gmail.com", TEST_PASSWORD, "C", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
 
         final List<User> allUsers = dao.getAllUsers();
         //Tenemos en cuenta el insert inicial
@@ -123,6 +125,42 @@ public class UserJdbcDaoTest {
         Assert.assertTrue(allUsers.contains(u1));
         Assert.assertTrue(allUsers.contains(u2));
         Assert.assertTrue(allUsers.contains(u3));
+    }
+
+    @Test
+    public void testUpdateName(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateName(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getName());
+    }
+
+    @Test
+    public void testUpdateDescription(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateDescription(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getDescription());
+    }
+
+    @Test
+    public void testUpdateLocation(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateLocation(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getLocation());
+    }
+
+    @Test
+    public void testUpdateCurrentPosition(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateCurrentPosition(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getCurrentPosition());
     }
 
 }

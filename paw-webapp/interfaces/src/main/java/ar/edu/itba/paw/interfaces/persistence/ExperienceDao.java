@@ -12,4 +12,6 @@ public interface ExperienceDao {
     Optional<Experience> findById(long experienceId);
 
     List<Experience> findByUserId(long userID);
+
+    void deleteExperience(long experienceId);
 }

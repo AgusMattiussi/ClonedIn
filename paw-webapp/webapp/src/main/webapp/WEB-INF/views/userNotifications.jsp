@@ -8,15 +8,25 @@
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
     <title><spring:message code="navbarNotifications"/> | ClonedIn</title>
 </head>
-<body style="background: #F2F2F2">
+<body>
 <jsp:include page="../components/navbar.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
 </jsp:include>
-
-<div class="d-flex justify-content-between mt-2 ml-4">
-    <h3><spring:message code="navbarNotifications"/></h3>
-</div>
-<%--<div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">--%>
+<div class="row h-100 w-100">
+    <div class="col-sm-2 sidebar">
+        <!-- TODO: AGREGAR FILTROS -->
+        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+            <h5 class="ml-2 mt-2"><spring:message code="notificationsFilter"/></h5>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
+            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
+        </div>
+    </div>
+    <div class="col mr-2">
+        <div class="d-flex justify-content-between mt-2 ml-4">
+            <h3><spring:message code="navbarNotifications"/></h3>
+        </div>
+        <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
     <div class="container">
         <c:choose>
             <c:when test = "${jobOffers.size() == 0}">
@@ -26,7 +36,7 @@
                 <c:forEach var="job" items="${jobOffers}">
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><c:out value="${enterpriseMap[job.enterpriseID]} | ${job.position}"/></h5>
+                            <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
                             <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
                         </div>
                         <div class="card-body">
@@ -43,21 +53,14 @@
                                         <p class="card-text"><c:out value="${job.salary}"/></p>
                                     </div>
                                 </div>
-<%--                                <div class="col">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
-<%--                                             <p class="card-text"><c:out value="${joboffer.skill1}"/> </p>--%>
-<%--                                             <p class="card-text"><c:out value="${joboffer.skill2}"/> </p>--%>
-<%--                                    </div>--%>
-<%--                                </div>--%>
-<%--                                <div class="col">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <h5 class="card-title"><spring:message code="notifications_skills"/></h5>--%>
+                                <div class="col">
+                                    <div class="row">
+                                        <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
 <%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
 <%--                                                <p class="card-text"><c:out value="${skill.value}"/></p>--%>
 <%--                                            </c:forEach>--%>
-<%--                                    </div>--%>
-<%--                                </div>--%>
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">
@@ -85,41 +88,18 @@
                         </div>
                     </div>
                 </c:forEach>
+                <!-- Pagination -->
+                <jsp:include page="../components/pagination.jsp">
+                    <jsp:param name="path" value="notificationsUser/${user.id}/"/>
+                    <jsp:param name="currentPage" value="${currentPage}" />
+                    <jsp:param name="pages" value="${pages}" />
+                </jsp:include>
             </c:otherwise>
         </c:choose>
-        <!-- Pagination -->
-        <%--        <nav class="d-flex justify-content-center align-items-center">--%>
-        <%--            <ul class="pagination">--%>
-        <%--                <li class="page-item">--%>
-        <%--                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=1"/>">--%>
-        <%--                        <spring:message code="index.pagination.first"/>--%>
-        <%--                    </a>--%>
-        <%--                </li>--%>
-        <%--                <c:forEach var="i" begin="1" end="${pages}">--%>
-        <%--                    <li class="page-item">--%>
-        <%--                        <c:choose>--%>
-        <%--                            <c:when test="${currentPage == i}">--%>
-        <%--                                <a class="page-link text-decoration-none" style="color: black; font-weight: bold;" href="<c:url value="/?page=${i}"/>">--%>
-        <%--                                    <c:out value="${i}"/>--%>
-        <%--                                </a>--%>
-        <%--                            </c:when>--%>
-        <%--                            <c:otherwise>--%>
-        <%--                                <a class="page-link text-decoration-none" style="color: black" href="<c:url value="/?page=${i}"/>">--%>
-        <%--                                    <c:out value="${i}"/>--%>
-        <%--                                </a>--%>
-        <%--                            </c:otherwise>--%>
-        <%--                        </c:choose>--%>
-        <%--                    </li>--%>
-        <%--                </c:forEach>--%>
-        <%--                <li class="page-item">--%>
-        <%--                    <a class="page-link text-decoration-none" style="color: black" href="<c:url value = "/?page=${pages}"/>">--%>
-        <%--                        <spring:message code="index.pagination.end"/>--%>
-        <%--                    </a>--%>
-        <%--                </li>--%>
-        <%--            </ul>--%>
-        <%--        </nav>--%>
     </div>
-<%--</div>--%>
+        </div>
+    </div>
+</div>
 <!-- Modal -->
 <jsp:include page="../components/answerModal.jsp"/>
 </body>

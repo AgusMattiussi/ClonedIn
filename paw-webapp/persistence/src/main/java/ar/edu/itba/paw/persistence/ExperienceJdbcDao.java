@@ -88,13 +88,18 @@ public class ExperienceJdbcDao implements ExperienceDao {
 
     @Override
     public Optional<Experience> findById(long experienceId) {
-        return template.query("SELECT * FROM " +  EXPERIENCE_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM experiencia WHERE id = ?",
                 new Object[]{ experienceId }, EXPERIENCE_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<Experience> findByUserId(long userID) {
-        return template.query("SELECT * FROM " +  EXPERIENCE_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT * FROM experiencia WHERE idUsuario = ?",
                 new Object[]{ userID }, EXPERIENCE_MAPPER);
+    }
+
+    @Override
+    public void deleteExperience(long experienceId) {
+        template.update("DELETE FROM experiencia WHERE id = ?", experienceId);
     }
 }

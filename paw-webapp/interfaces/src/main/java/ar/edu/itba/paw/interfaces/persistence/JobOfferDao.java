@@ -12,5 +12,7 @@ public interface JobOfferDao {
 
     Optional<JobOffer> findById(long id);
 
-    List<JobOffer> findByEnterpriseId(long enterpriseID);
+    List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize);
+
+    Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID);
 }

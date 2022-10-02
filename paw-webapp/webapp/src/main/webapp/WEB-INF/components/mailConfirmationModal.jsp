@@ -1,11 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<html>
-<head>
-  <%@include file="../components/imports.jsp"%>
-</head>
-<body>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -24,5 +19,3 @@
     </div>
   </div>
 </div>
-</body>
-</html>

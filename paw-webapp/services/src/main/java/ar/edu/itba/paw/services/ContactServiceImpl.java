@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Primary
 @Service
@@ -41,8 +42,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long userId) {
-        return contactDao.getJobOffersWithStatusUserData(userId);
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
+        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize);
+    }
+
+    @Override
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
+        return contactDao.getJobOffersWithStatusEnterpriseData(userID, page, pageSize);
     }
 
     @Override
@@ -63,5 +69,16 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void rejectJobOffer(long userID, long jobOfferID) {
         contactDao.rejectJobOffer(userID, jobOfferID);
+    }
+
+    @Override
+    public long getContactsCountForEnterprise(long enterpriseID) {
+        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    }
+
+    @Override
+    public long getContactsCountForUser(long userID) {
+        return contactDao.getContactsCountForUser(userID);
+
     }
 }

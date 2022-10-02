@@ -84,4 +84,46 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
         return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel);
     }
+
+    @Override
+    public void updateName(long userID, String newName) {
+        userDao.updateName(userID, newName);
+    }
+
+    @Override
+    public void updateDescription(long userID, String newDescription) {
+        userDao.updateDescription(userID, newDescription);
+    }
+
+    @Override
+    public void updateLocation(long userID, String newLocation) {
+        userDao.updateLocation(userID, newLocation);
+    }
+
+    @Override
+    public void updateCurrentPosition(long userID, String newPosition) {
+        userDao.updateCurrentPosition(userID, newPosition);
+    }
+
+    @Override
+    public void updateCategory(long userID, String newCategoryName) {
+        userDao.updateCategory(userID, newCategoryName);
+    }
+
+    @Override
+    public void updateEducationLevel(long userID, String newEducationLevel) {
+        userDao.updateEducationLevel(userID, newEducationLevel);
+    }
+
+    @Override
+    public void updateUserInformation(User user, String newName, String newDescription, String newLocation, String newPosition,
+                                      String newCategoryName, String newEducationLevel) {
+        long userID = user.getId();
+        updateName(userID, newName.isEmpty()? user.getName() : newName);
+        updateDescription(userID, newDescription.isEmpty()? user.getDescription() : newDescription);
+        updateLocation(userID, newLocation.isEmpty()? user.getLocation() : newLocation);
+        updateCurrentPosition(userID, newPosition.isEmpty()? user.getCurrentPosition() : newPosition);
+        updateCategory(userID, newCategoryName.isEmpty()? user.getCategory().getName() : newCategoryName);
+        updateEducationLevel(userID, newEducationLevel.isEmpty()? user.getEducation() : newEducationLevel);
+    }
 }

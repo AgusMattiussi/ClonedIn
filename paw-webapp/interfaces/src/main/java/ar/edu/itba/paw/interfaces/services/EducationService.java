@@ -13,4 +13,6 @@ public interface EducationService {
     Optional<Education> findById(long educationID);
 
     List<Education> findByUserId(long userID);
+
+    void deleteEducation(long educationId);
 }

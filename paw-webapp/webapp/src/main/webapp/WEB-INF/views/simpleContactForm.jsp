@@ -13,7 +13,7 @@
   <title><spring:message code="contactFormPageTitle"/></title>
 </head>
 <body>
-  <jsp:include page="../components/navbarEmpty.jsp">
+  <jsp:include page="../components/navbar.jsp">
     <jsp:param name="id" value="${loggedUserID}" />
   </jsp:include>
   <div class="d-flex justify-content-between mt-2">
@@ -29,34 +29,44 @@
             <div class="row">
               <div class="col-md-12 mx-0">
                 <div id="msform">
-                  <c:url value="/contact/${user.id}" var="postPath"/>
-                  <form:form modelAttribute="simpleContactForm" action="${postPath}" method="post" accept-charset="utf-8">
-                    <fieldset>
-                      <div class="form-card">
-                        <h2 class="fs-title"><spring:message code="contactFormSubtitle"/></h2>
-                        <form:input type="text" path="message" placeholder="${messagePlaceholder}"/>
-                        <form:errors path="message" cssClass="formError" element="p"/>
-                        <div class="d-flex">
-                          <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="contactFormJobOfferSelect"/></label>
-                          <div style="margin-left: 15px; margin-top: 1.2rem;">
-                            <form:select path="category" cssClass="list-dt ml-auto">
-                              <c:forEach items="${jobOffers}" var="jobOffer">
-                                <form:option value="${jobOffer.id}">${jobOffer.position}</form:option>
-                              </c:forEach>
-                            </form:select>
-                            <form:errors path="category" cssClass="formError" element="p"/>
+                  <c:choose>
+                    <c:when test = "${jobOffers.size() == 0}">
+                      <h5 class="mt-5 mb-5"><spring:message code="jobOfferFormNoJobOffersMsg"/></h5>
+                      <a href="<c:url value="/profileEnterprise/${loggedUserID}"/>">
+                        <button type="button" name="end" class="btn next action-button" style="width: fit-content"><spring:message code="navbarMyJobOffers"/></button>
+                      </a>
+                    </c:when>
+                    <c:otherwise>
+                      <c:url value="/contact/${user.id}" var="postPath"/>
+                      <form:form modelAttribute="simpleContactForm" action="${postPath}" method="post" accept-charset="utf-8">
+                        <fieldset>
+                          <div class="form-card">
+                            <h2 class="fs-title"><spring:message code="contactFormSubtitle"/></h2>
+                            <form:input type="text" path="message" placeholder="${messagePlaceholder}"/>
+                            <form:errors path="message" cssClass="formError" element="p"/>
+                            <div class="d-flex">
+                              <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="contactFormJobOfferSelect"/></label>
+                              <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                <form:select path="category" cssClass="list-dt ml-auto">
+                                  <c:forEach items="${jobOffers}" var="jobOffer">
+                                    <form:option value="${jobOffer.id}">${jobOffer.position}</form:option>
+                                  </c:forEach>
+                                </form:select>
+                                <form:errors path="category" cssClass="formError" element="p"/>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                        <p><spring:message code="contactFormRequiredMsg"/></p>
+                          <p><spring:message code="contactFormRequiredMsg"/></p>
                           <a onclick="history.back()">
                             <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                           </a>
                           <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
-                    </fieldset>
-                  </form:form>
+                        </fieldset>
+                      </form:form>
+                    </c:otherwise>
+                  </c:choose>
                 </div>
               </div>
             </div>

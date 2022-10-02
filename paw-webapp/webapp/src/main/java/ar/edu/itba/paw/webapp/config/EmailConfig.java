@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -15,14 +16,13 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import java.util.Properties;
 
 @EnableWebMvc
+@EnableAsync
 @ComponentScan({ "ar.edu.itba.paw.services" })
 @Configuration
 public class EmailConfig {
 
     @Autowired
     private MessageSource messageSource;
-
-
 
     @Bean
     public JavaMailSender getJavaMailSender() {

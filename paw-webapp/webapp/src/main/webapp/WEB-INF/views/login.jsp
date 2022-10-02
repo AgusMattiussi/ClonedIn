@@ -11,7 +11,7 @@
     <title><spring:message code="loginPageTitle"/></title>
 </head>
 <body>
-<jsp:include page="../components/navbarEmpty.jsp"/>
+<jsp:include page="../components/navbar.jsp"/>
 <div class="d-flex justify-content-between mt-2">
     <div class="container-fluid">
         <div class="row justify-content-center mt-0">

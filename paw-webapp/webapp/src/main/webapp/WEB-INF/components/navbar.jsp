@@ -15,18 +15,15 @@
     <nav class="navbar navbar-dark mb-auto nav-fill w-100" style="background-color: #04704C; font-size: large;">
         <div class="container-fluid">
             <div class="d-flex">
+                <sec:authorize access="isAnonymous()">
+                    <a class="navbar-brand" href="<c:url value="/login"/>">
+                        <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
+                    </a>
+                </sec:authorize>
             <sec:authorize access="hasRole('ENTERPRISE')">
                 <a class="navbar-brand" href="<c:url value="/"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
                 </a>
-            </sec:authorize>
-            <sec:authorize access="hasRole('USER')">
-                <a class="navbar-brand" href="<c:url value="/profileUser/${param.id}"/>">
-                    <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
-                </a>
-            </sec:authorize>
-
-            <sec:authorize access="hasRole('ENTERPRISE')">
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/"/>">
@@ -49,6 +46,9 @@
                 </div>
             </sec:authorize>
             <sec:authorize access="hasRole('USER')">
+                <a class="navbar-brand" href="<c:url value="/profileUser/${param.id}"/>">
+                    <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
+                </a>
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
@@ -67,23 +67,14 @@
                 </div>
             </sec:authorize>
             </div>
-<%--            <img src="<c:url value="/assets/images/defaultProfilePicture.png"/>" height="40" class="d-inline-block align-top" alt="">--%>
-<%--            <sec:authorize access="hasRole('ENTERPRISE')">--%>
-<%--                <c:url value="/" var="getPath"/>--%>
-<%--                <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>
-<%--                    <div class="d-flex flex-wrap justify-content-center ml-2">--%>
-<%--                        <spring:message code="navbar_search" var="searchBarPlaceholder"/>--%>
-<%--                        <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="searchBarPlaceholder"/>--%>
-<%--                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>--%>
-<%--                    </div>--%>
-<%--                </form:form>--%>
-<%--            </sec:authorize>--%>
+            <sec:authorize access="isAuthenticated()">
             <a href="<c:url value="/logout"/>">
                 <button type="button" class="btn btn-outline-success waves-effect" style="color: white">
                     <i class="bi bi-box-arrow-right pr-2"></i>
                     <spring:message code="navbarSession"/>
                 </button>
             </a>
+            </sec:authorize>
         </div>
     </nav>
         <!-- JavaScript Bundle with Popper -->

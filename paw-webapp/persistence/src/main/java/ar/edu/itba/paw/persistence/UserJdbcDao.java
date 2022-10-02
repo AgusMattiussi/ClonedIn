@@ -39,7 +39,7 @@ public class UserJdbcDao implements UserDao {
     public static final String[] EDUCATION_LEVELS = new String[] {"Primario", "Secundario", "Terciario", "Graduado", "Posgrado"};
     public static final Set<String> educationLevelsSet = new HashSet<>(Arrays.asList(EDUCATION_LEVELS));
 
-    protected final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
+    private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID_FK);
         Category category = null;
 
@@ -83,7 +83,7 @@ public class UserJdbcDao implements UserDao {
         }
 
         if(!educationLevelsSet.contains(education))
-            education = "No especificado";
+            education = "No-especificado";
 
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
@@ -102,24 +102,24 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findByEmail(final String email) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + EMAIL + " = ?",
+        return template.query("SELECT * FROM usuario WHERE email = ?",
                 new Object[]{ email }, USER_MAPPER).stream().findFirst();
     }
 
     @Override
     public Optional<User> findById(final long userId) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM usuario WHERE id = ?",
                 new Object[]{ userId }, USER_MAPPER).stream().findFirst();
     }
 
     @Override
     public boolean userExists(String email) {
-        return findByEmail(email).isPresent();
+        return template.queryForObject("SELECT COUNT(*) FROM usuario WHERE email = ?", new Object[]{email} ,Integer.class) > 0;
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> allUsers = template.query("SELECT * FROM " + USER_TABLE, USER_MAPPER);
+        List<User> allUsers = template.query("SELECT * FROM usuario", USER_MAPPER);
         // Fixme: Es necesario?
         if(allUsers == null)
             return new ArrayList<>();
@@ -128,42 +128,42 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<Integer> getUsersCount() {
-        return template.query("SELECT COUNT(*) as count FROM " +  USER_TABLE, COUNT_ROW_MAPPER).stream().findFirst();
+        return template.query("SELECT COUNT(*) as count FROM usuario", COUNT_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
     public List<User> getUsersList(int page, int pageSize) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM usuario OFFSET ? LIMIT ? ",
                 new Object[]{ pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override
     public List<User> getUsersListByCategory(int page, int pageSize, int categoryId) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + CATEGORY_ID_FK + " = ?" + " OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM usuario WHERE idRubro = ? OFFSET ? LIMIT ? ",
                 new Object[]{ categoryId, pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override
     public List<User> getUsersListByName(int page, int pageSize, String term) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + NAME + " ILIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM usuario WHERE nombre ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
                 new Object[]{ term, pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override
     public List<User> getUsersListByLocation(int page, int pageSize, String location) {
-        return template.query("SELECT * FROM " +  USER_TABLE + " WHERE " + LOCATION + " ILIKE CONCAT('%', ?, '%')" + " OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM usuario WHERE ubicacion ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
                 new Object[]{ location, pageSize * page, pageSize }, USER_MAPPER);
     }
 
     @Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
+        Object[] sanitizedInputs = new Object[]{categoryId, location, educationLevel};
+
         StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM ").append(USER_TABLE);
-
-
+        filterQuery.append("SELECT * FROM usuario");
 
         if(!categoryId.isEmpty())
-            filterQuery.append(" WHERE ").append(CATEGORY_ID_FK).append(" = ").append(categoryId);
+            filterQuery.append(" WHERE idRubro = '").append(sanitizedInputs[0]).append("'");
 
 
         if(!location.isEmpty()) {
@@ -171,7 +171,7 @@ public class UserJdbcDao implements UserDao {
                 filterQuery.append(" AND ");
             else
                 filterQuery.append(" WHERE ");
-            filterQuery.append(LOCATION).append(" ILIKE CONCAT('%', '").append(location).append("', '%')");
+            filterQuery.append("ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
         }
 
         if(!educationLevel.isEmpty()) {
@@ -179,7 +179,7 @@ public class UserJdbcDao implements UserDao {
                 filterQuery.append(" WHERE ");
             else
                 filterQuery.append(" AND ");
-            filterQuery.append(EDUCATION).append(" ILIKE CONCAT('%', '").append(educationLevel).append("', '%')");
+            filterQuery.append("educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
         }
 
         filterQuery.append(" OFFSET ? LIMIT ? ");
@@ -189,7 +189,40 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public void updateName(long userID, String newName) {
+        template.update("UPDATE usuario SET nombre = ? WHERE id = ?", new Object[] {newName, userID});
+    }
+
+    @Override
+    public void updateDescription(long userID, String newDescription) {
+        template.update("UPDATE usuario SET descripcion = ? WHERE id = ?", new Object[] {newDescription, userID});
+    }
+
+    @Override
+    public void updateLocation(long userID, String newLocation) {
+        template.update("UPDATE usuario SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
+    }
+
+    @Override
+    public void updateCurrentPosition(long userID, String newPosition) {
+        template.update("UPDATE usuario SET posicionActual = ? WHERE id = ?", new Object[] {newPosition, userID});
+    }
+
+    @Override
+    public void updateCategory(long userID, String newCategoryName) {
+        //TODO: chequear que no explote
+        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
+        template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), userID});
+    }
+
+    @Override
+    public void updateEducationLevel(long userID, String newEducationLevel) {
+        if(educationLevelsSet.contains(newEducationLevel))
+            template.update("UPDATE usuario SET educacion = ? WHERE id = ?", new Object[]{newEducationLevel, userID});
+    }
+
+    @Override
     public void changePassword(String email, String password) {
-        template.update("UPDATE " + USER_TABLE + " SET " + PASSWORD + " = ? WHERE " + EMAIL + " = ?", new Object[] {password, email});
+        template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }
 }

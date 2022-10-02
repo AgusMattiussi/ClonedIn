@@ -30,8 +30,23 @@ public class ContactJdbcDao implements ContactDao {
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
     public static final String USER_TABLE = "usuario";
-    public static final String USER_TABLE_ID = "id";
-    public static final String USER_TABLE_NAME = "nombre";
+    private static final String USER_TABLE_ID = "id";
+    private static final String USER_TABLE_NAME = "nombre";
+    private static final String USER_TABLE_EMAIL = "email";
+    private static final String USER_TABLE_PASSWORD = "contrasenia";
+    private static final String USER_TABLE_LOCATION = "ubicacion";
+    private static final String USER_TABLE_CATEGORY_ID_FK = "idRubro";
+    private static final String USER_TABLE_CURRENT_POSITION = "posicionActual";
+    private static final String USER_TABLE_DESCRIPTION = "descripcion";
+    private static final String USER_TABLE_EDUCATION = "educacion";
+    private static final String ENTERPRISE_TABLE = "empresa";
+    private static final String ENTERPRISE_TABLE_ID = "id";
+    private static final String ENTERPRISE_TABLE_NAME = "nombre";
+    private static final String ENTERPRISE_TABLE_EMAIL = "email";
+    private static final String ENTERPRISE_TABLE_PASSWORD = "contrasenia";
+    private static final String ENTERPRISE_TABLE_LOCATION = "ubicacion";
+    private static final String ENTERPRISE_TABLE_CATEGORY_ID_FK = "idRubro";
+    private static final String ENTERPRISE_TABLE_DESCRIPTION = "descripcion";
     private static final String STATUS_PENDING = "pendiente";
     private static final String STATUS_ACCEPTED = "aceptada";
     private static final String STATUS_REJECTED = "rechazada";
@@ -68,8 +83,6 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
-        //User user = userDao.findById(resultSet.getLong(USER_ID)).orElseThrow(UserNotFoundException::new);
-
         return new JobOfferStatusUserData(resultSet.getLong(JOB_OFFER_TABLE_ID),
                 resultSet.getLong(ENTERPRISE_ID),
                 category,
@@ -81,6 +94,59 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(USER_TABLE_NAME)
                 );
     });
+
+    private final RowMapper<JobOfferStatusEnterpriseData> JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER = ((resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(CATEGORY_ID);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new JobOfferStatusEnterpriseData(resultSet.getLong(JOB_OFFER_TABLE_ID),
+                resultSet.getLong(ENTERPRISE_ID),
+                category,
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION),
+                resultSet.getBigDecimal(SALARY),
+                resultSet.getString(MODALITY),
+                resultSet.getString(STATUS),
+                resultSet.getString(ENTERPRISE_TABLE_NAME)
+                );
+    });
+
+    protected final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(ENTERPRISE_TABLE_CATEGORY_ID_FK);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new Enterprise(resultSet.getLong(ENTERPRISE_TABLE_ID),
+                resultSet.getString(ENTERPRISE_TABLE_NAME),
+                resultSet.getString(ENTERPRISE_TABLE_EMAIL),
+                resultSet.getString(ENTERPRISE_TABLE_PASSWORD),
+                resultSet.getString(ENTERPRISE_TABLE_LOCATION),
+                category,
+                resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION));
+    };
+
+    private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
+        long categoryID = resultSet.getLong(USER_TABLE_CATEGORY_ID_FK);
+        Category category = null;
+
+        if(categoryID != 0)
+            category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        return new User(resultSet.getLong(USER_TABLE_ID),
+                resultSet.getString(USER_TABLE_EMAIL),
+                resultSet.getString(USER_TABLE_PASSWORD),
+                resultSet.getString(USER_TABLE_NAME),
+                resultSet.getString(USER_TABLE_LOCATION),
+                category,
+                resultSet.getString(USER_TABLE_CURRENT_POSITION),
+                resultSet.getString(USER_TABLE_DESCRIPTION),
+                resultSet.getString(USER_TABLE_EDUCATION));
+    };
 
     @Autowired
     public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao, CategoryDao categoryDao){
@@ -94,84 +160,76 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     private List<Long> getEnterpriseIDsForUser(long userID){
-        return template.query("SELECT " + ENTERPRISE_ID + " FROM " + CONTACT_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT idEmpresa FROM contactado WHERE idUsuario = ?",
                 new Object[]{ userID }, (resultSet, rowNum) ->
             resultSet.getLong(ENTERPRISE_ID));
     }
 
     @Override
     public List<Enterprise> getEnterprisesForUser(long userID) {
-        List<Long> enterpriseIDs = getEnterpriseIDsForUser(userID);
-        List<Enterprise> enterpriseList = new ArrayList<>();
-
-        for (Long id : enterpriseIDs) {
-            Optional<Enterprise> currentEnterprise = enterpriseDao.findById(id);
-            currentEnterprise.ifPresent(enterpriseList::add);
-        }
-
-        return enterpriseList;
+        return template.query("SELECT e.id, e.nombre, e.email, e.contrasenia, e.ubicacion, e.idRubro, e.descripcion " +
+                        "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idUsuario = ?",
+                new Object[]{ userID }, ENTERPRISE_MAPPER);
     }
 
     private List<Long> getUserIDsForEnterprise(long enterpriseID){
-        return template.query("SELECT " + USER_ID + " FROM " + CONTACT_TABLE + " WHERE " + ENTERPRISE_ID + " = ?",
+        return template.query("SELECT idUsuario FROM contactado WHERE idEmpresa = ?",
                 new Object[]{ enterpriseID }, (resultSet, rowNum) ->
             resultSet.getLong(USER_ID));
     }
 
     @Override
     public List<User> getUsersForEnterprise(long enterpriseID) {
-        List<Long> userIDs = getUserIDsForEnterprise(enterpriseID);
-        List<User> userList = new ArrayList<>();
-
-        for (Long id : userIDs) {
-            Optional<User> currentUser = userDao.findById(id);
-            currentUser.ifPresent(userList::add);
-        }
-
-        return userList;
+        return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion " +
+                        "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idEmpresa = ?",
+                new Object[]{ enterpriseID }, USER_MAPPER);
     }
 
     private List<Long> getJobOfferIDsForUser(long userId){
-        return template.query("SELECT " + JOB_OFFER_ID + " FROM " + CONTACT_TABLE + " WHERE " + USER_ID + " = ?",
+        return template.query("SELECT idOferta FROM contactado WHERE idUsuario = ?",
                 new Object[]{ userId }, (resultSet, rowNum) ->
             resultSet.getLong(JOB_OFFER_ID));
     }
 
     @Override
     public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
-        return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
-                DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS +
-                " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
-                " WHERE c." + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado " +
+                "FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta WHERE c.idUsuario = ?",
+                new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
+    }
+
+
+    @Override
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre" +
+                " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
+                " WHERE c.idEmpresa = ? OFFSET ? LIMIT ? ",
+                new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long userId) {
-        return template.query("SELECT ol." + JOB_OFFER_TABLE_ID + ", ol." + ENTERPRISE_ID + ", ol." + POSITION + ", ol." +
-                DESCRIPTION + ", ol." + SALARY + ", ol." + CATEGORY_ID + ", ol." + MODALITY + ", c." + STATUS + ", u." + USER_TABLE_NAME +
-                " FROM " + JOB_OFFER_TABLE + " ol JOIN "+ CONTACT_TABLE +  " c ON ol."+JOB_OFFER_TABLE_ID + " = c." + JOB_OFFER_ID +
-                " JOIN " + USER_TABLE + " u ON u." + USER_TABLE_ID + " = c." + USER_ID +
-                " WHERE c." + USER_ID + " = ?", new Object[]{ userId }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, e.nombre" +
+                " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
+                " WHERE c.idUsuario = ? OFFSET ? LIMIT ? ",
+                new Object[]{ userID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
 
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
-        return template.queryForObject("SELECT COUNT(*) FROM " + CONTACT_TABLE + " WHERE " +
-                USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?", new Object[]{ userID, jobOfferID},
-                Integer.class) > 0;
+        return template.queryForObject("SELECT COUNT(*) FROM contactado WHERE idUsuario = ? AND idOferta = ?",
+                new Object[]{ userID, jobOfferID}, Integer.class) > 0;
     }
 
     @Override
     public String getStatus(long userID, long jobOfferID) {
-        return template.queryForObject("SELECT " + STATUS + " FROM " + CONTACT_TABLE + " WHERE " +
-                USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?", new Object[]{ userID, jobOfferID},
-                String.class);
+        return template.queryForObject("SELECT estado FROM contactado WHERE idUsuario = ? AND idOferta = ?",
+                new Object[]{ userID, jobOfferID}, String.class);
     }
 
     private void updateStatus(long userID, long jobOfferID, String newStatus){
-        template.update("UPDATE " + CONTACT_TABLE + " SET " + STATUS + " = ?" +
-                " WHERE " + USER_ID + " = ?" + " AND " + JOB_OFFER_ID + " = ?",
+        template.update("UPDATE contactado SET estado = ? WHERE idUsuario = ? AND idOferta = ?",
                 new Object[]{newStatus, userID, jobOfferID});
     }
 
@@ -185,8 +243,6 @@ public class ContactJdbcDao implements ContactDao {
         updateStatus(userID, jobOfferID, STATUS_REJECTED);
     }
 
-
-    //TODO: Manejar el caso en que ya exista el par
     @Override
     public void addContact(long enterpriseID, long userID, long jobOfferID) {
         final Map<String, Object> values = new HashMap<>();
@@ -198,20 +254,15 @@ public class ContactJdbcDao implements ContactDao {
         insert.execute(values);
     }
 
+    @Override
+    public long getContactsCountForEnterprise(long enterpriseID) {
+        return template.queryForObject("SELECT COUNT(*) FROM contactado WHERE idEmpresa = ?",
+                new Object[]{ enterpriseID }, Long.class);
+    }
 
-
-
-    /*@Override
-    public Category create(String name) {
-        Optional<Category> existing = findByName(name);
-        if(existing.isPresent())
-            return existing.get();
-
-        final Map<String, Object> values = new HashMap<>();
-        values.put(NAME, name);
-
-        Number categoryId = insert.executeAndReturnKey(values);
-
-        return new Category(categoryId.longValue(), name);
-    }*/
+    @Override
+    public long getContactsCountForUser(long userID) {
+        return template.queryForObject("SELECT COUNT(*) FROM contactado WHERE idUsuario = ?",
+                new Object[]{ userID }, Long.class);
+    }
 }

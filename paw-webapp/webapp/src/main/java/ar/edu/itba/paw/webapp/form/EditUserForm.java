@@ -1,35 +1,17 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validators.ExistingEmail;
-import ar.edu.itba.paw.webapp.validators.StringMatches;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.constraints.Size;
 import java.io.File;
 
-@StringMatches(string1 = "password", string2 = "repeatPassword")
-public class UserForm {
-    @ExistingEmail
-    @Email
-    @NotEmpty
-    @Size(max=100)
-    private String email;
-
-    @Size(min = 6, max = 20)
-    private String password;
-
-    @Size(min = 6, max = 20)
-    private String repeatPassword;
-
-    @NotEmpty
+public class EditUserForm {
     @Size(max=100)
     private String name;
 
     private File image;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @Size(max=50)
     private String position;
@@ -43,30 +25,6 @@ public class UserForm {
     @NotEmpty
     private String level;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getName() {
         return name;
     }
@@ -75,12 +33,12 @@ public class UserForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getPosition() {
