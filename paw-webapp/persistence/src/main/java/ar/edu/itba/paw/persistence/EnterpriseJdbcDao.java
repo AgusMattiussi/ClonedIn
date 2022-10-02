@@ -111,4 +111,10 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     public void updateLocation(long userID, String newLocation) {
         template.update("UPDATE empresa SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
     }
+
+    @Override
+    public void updateCategory(long enterpriseID, String newCategoryName) {
+        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
+        template.update("UPDATE empresa SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), enterpriseID});
+    }
 }

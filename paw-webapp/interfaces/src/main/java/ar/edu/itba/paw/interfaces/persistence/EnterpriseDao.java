@@ -22,6 +22,8 @@ public interface EnterpriseDao {
 
     void updateLocation(long enterpriseID, String newLocation);
 
+    void updateCategory(long enterpriseID, String newCategoryName);
+
     /* TODO:
         - findByLocation
         - findByCategory

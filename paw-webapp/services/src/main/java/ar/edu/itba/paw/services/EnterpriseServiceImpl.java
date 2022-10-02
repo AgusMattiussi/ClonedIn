@@ -64,4 +64,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public void updateLocation(long enterpriseID, String newLocation) {
         enterpriseDao.updateLocation(enterpriseID, newLocation);
     }
+
+    @Override
+    public void updateCategory(long enterpriseID, String newCategoryName) {
+        enterpriseDao.updateCategory(enterpriseID, newCategoryName);
+    }
+
+    @Override
+    public void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName) {
+        long enterpriseID = enterprise.getId();
+        updateName(enterpriseID, newName.isEmpty()? enterprise.getName() : newName);
+        updateDescription(enterpriseID, newDescription.isEmpty()? enterprise.getDescription() : newDescription);
+        updateLocation(enterpriseID, newLocation.isEmpty()? enterprise.getLocation() : newLocation);
+        updateCategory(enterpriseID, newCategoryName.isEmpty()? enterprise.getCategory().getName() : newCategoryName);
+    }
 }

@@ -143,8 +143,10 @@ public class EnterpriseController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEditUser(@ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView formEditEnterprise(Authentication loggedUser, @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
+                                     @PathVariable("enterpriseId") final long enterpriseId) {
         ModelAndView mav = new ModelAndView("enterpriseEditForm");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         mav.addObject("enterprise", enterprise);
@@ -152,6 +154,20 @@ public class EnterpriseController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView editEnterprise(Authentication loggedUser, @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
+                                 final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
+        if (errors.hasErrors()) {
+            return formEditEnterprise(loggedUser, editEnterpriseForm, enterpriseId);
+        }
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        enterpriseService.updateEnterpriseInformation(enterprise, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
+                editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory());
+        return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);
@@ -162,6 +178,7 @@ public class EnterpriseController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
                                 final BindingResult errors, @PathVariable("userId") final long userId) {

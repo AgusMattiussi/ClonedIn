@@ -7,7 +7,6 @@ import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -227,7 +225,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                      @PathVariable("userId") final long userId) {
         ModelAndView mav = new ModelAndView("userEditForm");
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -238,7 +236,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                  final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);
@@ -248,6 +246,7 @@ public class UserController {
                 editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
+
     private boolean isUser(Authentication loggedUser){
         return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
     }
