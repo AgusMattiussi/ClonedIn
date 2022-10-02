@@ -14,4 +14,10 @@ public interface EnterpriseService {
     boolean enterpriseExists(String email);
 
     void changePassword(String email, String password);
+
+    void updateName(long enterpriseID, String newName);
+
+    void updateDescription(long enterpriseID, String newDescription);
+
+    void updateLocation(long enterpriseID, String newLocation);
 }

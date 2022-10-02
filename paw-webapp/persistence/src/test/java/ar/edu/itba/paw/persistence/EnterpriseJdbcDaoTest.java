@@ -43,8 +43,9 @@ public class EnterpriseJdbcDaoTest {
     private static final long FIRST_ID = 1;
     private static final String EXISTING_NAME = "Empresaurio";
     private static final String EXISTING_EMAIL = "empresaurio@gmail.com";
-
     private static final String EXISTING_PASSWORD = "12345678";
+
+    public static final String UPDATED_STRING = "updatedstring";
 
     @Autowired
     private EnterpriseJdbcDao dao;
@@ -101,5 +102,33 @@ public class EnterpriseJdbcDaoTest {
         Assert.assertEquals(EXISTING_EMAIL, newEnterprise.get().getEmail());
         Assert.assertEquals(EXISTING_NAME, newEnterprise.get().getName());
     }
+
+    @Test
+    public void testUpdateName(){
+        Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
+        dao.updateName(newEnterprise.getId(), UPDATED_STRING);
+        newEnterprise = dao.findById(newEnterprise.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, newEnterprise.getName());
+    }
+
+    @Test
+    public void testUpdateDescription(){
+        Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
+        dao.updateDescription(newEnterprise.getId(), UPDATED_STRING);
+        newEnterprise = dao.findById(newEnterprise.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, newEnterprise.getDescription());
+    }
+
+    @Test
+    public void testUpdateLocation(){
+        Enterprise newEnterprise = dao.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
+        dao.updateLocation(newEnterprise.getId(), UPDATED_STRING);
+        newEnterprise = dao.findById(newEnterprise.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, newEnterprise.getLocation());
+    }
+
 
 }

@@ -49,4 +49,19 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public void changePassword(String email, String password) {
         enterpriseDao.changePassword(email, passwordEncoder.encode(password));
     }
+
+    @Override
+    public void updateName(long enterpriseID, String newName) {
+        enterpriseDao.updateName(enterpriseID, newName);
+    }
+
+    @Override
+    public void updateDescription(long enterpriseID, String newDescription) {
+        enterpriseDao.updateDescription(enterpriseID, newDescription);
+    }
+
+    @Override
+    public void updateLocation(long enterpriseID, String newLocation) {
+        enterpriseDao.updateLocation(enterpriseID, newLocation);
+    }
 }

@@ -96,4 +96,19 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     public boolean enterpriseExists(String email) {
         return template.queryForObject("SELECT COUNT(*) FROM empresa WHERE email = ?", new Object[]{ email }, Integer.class) > 0;
     }
+
+    @Override
+    public void updateName(long userID, String newName) {
+        template.update("UPDATE empresa SET nombre = ? WHERE id = ?", new Object[] {newName, userID});
+    }
+
+    @Override
+    public void updateDescription(long userID, String newDescription) {
+        template.update("UPDATE empresa SET descripcion = ? WHERE id = ?", new Object[] {newDescription, userID});
+    }
+
+    @Override
+    public void updateLocation(long userID, String newLocation) {
+        template.update("UPDATE empresa SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
+    }
 }

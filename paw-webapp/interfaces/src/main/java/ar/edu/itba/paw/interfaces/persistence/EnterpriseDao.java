@@ -16,6 +16,12 @@ public interface EnterpriseDao {
 
     boolean enterpriseExists(String email);
 
+    void updateName(long enterpriseID, String newName);
+
+    void updateDescription(long enterpriseID, String newDescription);
+
+    void updateLocation(long enterpriseID, String newLocation);
+
     /* TODO:
         - findByLocation
         - findByCategory
