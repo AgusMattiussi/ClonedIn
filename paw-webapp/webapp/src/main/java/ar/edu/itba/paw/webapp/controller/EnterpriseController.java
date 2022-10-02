@@ -117,19 +117,17 @@ public class EnterpriseController {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
         });
-//        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-//            LOGGER.error("Job Offer not found");
-//            return new JobOfferNotFoundException();
-//        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
 
-        System.out.println("\n\n\n\n\n" + userId + "\n\n\n\n\n");
-
         contactService.closeJobOffer(userId, jobOfferId);
-//        emailService.sendClosedJobOffer(user.getEmail(), enterprise.getName(), jobOffer.getPosition());
+        emailService.sendCloseJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
 
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }

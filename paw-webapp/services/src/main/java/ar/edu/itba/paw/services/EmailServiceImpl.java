@@ -106,16 +106,33 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(String enterpriseEmail, String username, String jobOfferPosition, String answerMsg) {
+    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String jobOfferPosition, String answerMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
         mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("contactsUrl", baseUrl + "/contactsEnterprise/" + enterprise.getId());
         mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
 
         String subject = messageSource.getMessage("answerMail.subject", null, LocaleContextHolder.getLocale());
 
-        sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
+        sendEmail(enterprise.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
+    }
+
+    @Async
+    @Override
+    public void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition) {
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", enterpriseName);
+        mailMap.put("answerMsg", messageSource.getMessage("closeMsg", null, LocaleContextHolder.getLocale()));
+        mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("contactsUrl", baseUrl + "/notificationsUser/" + user.getId());
+        mailMap.put("buttonMsg", messageSource.getMessage("closeMail.button", null, LocaleContextHolder.getLocale()));
+
+        String subject = messageSource.getMessage("closeMail.subject", null, LocaleContextHolder.getLocale());
+
+        sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }
 }
