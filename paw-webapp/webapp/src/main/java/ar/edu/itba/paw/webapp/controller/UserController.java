@@ -17,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -130,7 +128,15 @@ public class UserController {
         final int itemsPerPage = 10;
         long contactsCount = contactService.getContactsCountForUser(userId);
 
-        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
+        List<JobOfferStatusEnterpriseData> jobOffersAuxList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
+        List<JobOfferStatusEnterpriseData> jobOffersList = new ArrayList<>();
+
+        //aca deberia leer el status basado en que boton selecciono
+        for(JobOfferStatusEnterpriseData jobOffer: jobOffersAuxList) {
+            if(jobOffer.getStatus().equals("Accepted")) {
+                jobOffersList.add(jobOffer);
+            }
+        }
 
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
