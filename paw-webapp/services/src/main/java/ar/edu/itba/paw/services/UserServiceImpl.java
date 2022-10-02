@@ -99,4 +99,9 @@ public class UserServiceImpl implements UserService {
     public void updateLocation(long userID, String newLocation) {
         userDao.updateLocation(userID, newLocation);
     }
+
+    @Override
+    public void updateCurrentPosition(long userID, String newPosition) {
+        userDao.updateCurrentPosition(userID, newPosition);
+    }
 }

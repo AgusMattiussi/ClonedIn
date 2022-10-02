@@ -36,5 +36,6 @@ public interface UserService {
 
     void updateLocation(long userID, String newLocation);
 
+    void updateCurrentPosition(long userID, String newPosition);
 
 }

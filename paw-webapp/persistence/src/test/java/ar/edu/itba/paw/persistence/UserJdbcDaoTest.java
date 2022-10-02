@@ -154,4 +154,13 @@ public class UserJdbcDaoTest {
         Assert.assertEquals(UPDATED_STRING, u1.getLocation());
     }
 
+    @Test
+    public void testUpdateCurrentPosition(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateCurrentPosition(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getCurrentPosition());
+    }
+
 }

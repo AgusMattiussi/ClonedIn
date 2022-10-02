@@ -36,7 +36,7 @@ public interface UserDao {
 
     void updateLocation(long userID, String newLocation);
 
-    /*void updateCurrentPosition(long userID, String newPosition);*/
+    void updateCurrentPosition(long userID, String newPosition);
 
 
 
