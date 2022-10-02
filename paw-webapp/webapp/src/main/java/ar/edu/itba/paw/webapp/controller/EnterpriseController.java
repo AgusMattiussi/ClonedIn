@@ -106,7 +106,7 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
         final int itemsPerPage = 8;
-        int contactsCount = contactService.getContactsCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
+        long contactsCount = contactService.getContactsCountForEnterprise(enterpriseId);
         List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));

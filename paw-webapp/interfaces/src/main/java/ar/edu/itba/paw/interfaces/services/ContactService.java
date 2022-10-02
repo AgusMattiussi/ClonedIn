@@ -27,9 +27,9 @@ public interface ContactService {
 
     void rejectJobOffer(long userID, long jobOfferID);
 
-    Optional<Integer> getContactsCountForEnterprise(long enterpriseID);
+    long getContactsCountForEnterprise(long enterpriseID);
 
-    Optional<Integer> getContactsCountForUser(long userID);
+    long getContactsCountForUser(long userID);
 
     //TODO: void removeContact(long enterpriseID, long userID);
 }

@@ -72,12 +72,12 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Optional<Integer> getContactsCountForEnterprise(long enterpriseID) {
+    public long getContactsCountForEnterprise(long enterpriseID) {
         return contactDao.getContactsCountForEnterprise(enterpriseID);
     }
 
     @Override
-    public Optional<Integer> getContactsCountForUser(long userID) {
+    public long getContactsCountForUser(long userID) {
         return contactDao.getContactsCountForUser(userID);
 
     }
