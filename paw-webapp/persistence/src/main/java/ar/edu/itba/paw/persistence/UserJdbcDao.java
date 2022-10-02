@@ -217,7 +217,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public void updateEducationLevel(long userID, String newEducationLevel) {
-        if(educationLevelsSet.contains(newEducationLevel)) {
+        if(educationLevelsSet.contains(newEducationLevel))
             template.update("UPDATE usuario SET educacion = ? WHERE id = ?", new Object[]{newEducationLevel, userID});
     }
 
