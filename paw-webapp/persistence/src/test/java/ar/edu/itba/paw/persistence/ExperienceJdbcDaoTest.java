@@ -38,8 +38,8 @@ public class ExperienceJdbcDaoTest {
     private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
     public static final int NEW_MONTH_FROM = 11;
     public static final int NEW_YEAR_FROM = 2000;
-    public static final int NEW_MONTH_TO = 12;
-    public static final int NEW_YEAR_TO = 2004;
+    public static final Integer NEW_MONTH_TO = 12;
+    public static final Integer NEW_YEAR_TO = 2004;
     private static final String NEW_ENTERPRISE_NAME = "Empresa 1";
     private static final String NEW_POSITION = "Hokage";
     private static final String NEW_DESCRIPTION = "El admin de la aldea";
@@ -50,8 +50,8 @@ public class ExperienceJdbcDaoTest {
     private static final String EXISTING_ENTERPRISE_NAME = "Paw Inc.";
     public static final int EXISTING_MONTH_FROM = 11;
     public static final int EXISTING_YEAR_FROM = 2011;
-    public static final int EXISTING_MONTH_TO = 12;
-    public static final int EXISTING_YEAR_TO = 2012;
+    public static final Integer EXISTING_MONTH_TO = 12;
+    public static final Integer EXISTING_YEAR_TO = 2012;
     private static final String EXISTING_POSITION = "Ceo de Paw Inc.";
     private static final String EXISTING_DESCRIPTION = "Era el CEO :)";
 

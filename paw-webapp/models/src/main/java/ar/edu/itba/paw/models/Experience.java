@@ -9,13 +9,13 @@ public class Experience {
     private final long userId;
     private final int monthFrom;
     private final int yearFrom;
-    private final int monthTo;
-    private final int yearTo;
+    private final Integer monthTo;
+    private final Integer yearTo;
     private final String enterpriseName;
     private final String position;
     private final String description;
 
-    public Experience(long id, long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String enterpriseName, String position, String description) {
+    public Experience(long id, long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         this.id = id;
         this.userId = userId;
         this.monthFrom = monthFrom;
@@ -55,11 +55,11 @@ public class Experience {
         return yearFrom;
     }
 
-    public int getMonthTo() {
+    public Integer getMonthTo() {
         return monthTo;
     }
 
-    public int getYearTo() {
+    public Integer getYearTo() {
         return yearTo;
     }
 

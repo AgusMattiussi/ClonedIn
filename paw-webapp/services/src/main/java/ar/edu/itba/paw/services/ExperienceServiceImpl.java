@@ -22,7 +22,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public Experience create(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String enterpriseName, String position, String description) {
+    public Experience create(long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         return experienceDao.create(userId, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
     }
 

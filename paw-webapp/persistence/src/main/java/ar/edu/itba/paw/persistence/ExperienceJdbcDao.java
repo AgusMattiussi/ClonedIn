@@ -66,10 +66,15 @@ public class ExperienceJdbcDao implements ExperienceDao {
     }
 
     @Override
-    public Experience create(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String enterpriseName, String position, String description) {
-        if(!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
-            throw new InvalidParameterException("La fecha" + monthFrom+ "/" + yearFrom +
-                    " - " + monthTo + "/" + yearTo +  " es incorrecta");
+    public Experience create(long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+        if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)
+            throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
+
+        if(monthTo != null && yearTo != null) {
+            if (!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
+                throw new InvalidParameterException("La fecha" + monthFrom + "/" + yearFrom +
+                        " - " + monthTo + "/" + yearTo + " es incorrecta");
+        }
 
         final Map<String, Object> values = new HashMap<>();
         values.put(USER_ID, userId);
