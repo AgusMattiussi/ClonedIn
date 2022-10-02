@@ -54,6 +54,7 @@ public class UserJdbcDaoTest {
     private static final String EXISTING_EMAIL = "johnlennon@gmail.com";
     private static final String EXISTING_PASSWORD = "imagineAPassword";
     public static final String NEW_EMAIL = "goku@gmail.com";
+    public static final String UPDATED_STRING = "updatedstring";
 
     @Autowired
     private UserJdbcDao dao;
@@ -133,6 +134,15 @@ public class UserJdbcDaoTest {
         u1 = dao.findById(u1.getId()).get();
 
         Assert.assertEquals("BBB", u1.getName());
+    }
+
+    @Test
+    public void testUpdateDescription(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateDescription(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getDescription());
     }
 
 }

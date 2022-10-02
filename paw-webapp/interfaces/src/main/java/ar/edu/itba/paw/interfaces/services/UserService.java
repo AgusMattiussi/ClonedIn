@@ -32,5 +32,7 @@ public interface UserService {
 
     void updateName(long userID, String newName);
 
+    void updateDescription(long userID, String newDescription);
+
 
 }

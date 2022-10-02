@@ -194,6 +194,11 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public void updateDescription(long userID, String newDescription) {
+        template.update("UPDATE usuario SET descripcion = ? WHERE id = ?", new Object[] {newDescription, userID});
+    }
+
+    @Override
     public void changePassword(String email, String password) {
         template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }

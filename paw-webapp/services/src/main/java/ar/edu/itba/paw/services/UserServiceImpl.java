@@ -89,4 +89,9 @@ public class UserServiceImpl implements UserService {
     public void updateName(long userID, String newName) {
         userDao.updateName(userID, newName);
     }
+
+    @Override
+    public void updateDescription(long userID, String newDescription) {
+        userDao.updateDescription(userID, newDescription);
+    }
 }

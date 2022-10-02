@@ -32,9 +32,9 @@ public interface UserDao {
 
     void updateName(long userID, String newName);
 
-    /*void updateDescription(long userID, String newDescription);
+    void updateDescription(long userID, String newDescription);
 
-    void updateLocation(long userID, String newLocation);
+    /*void updateLocation(long userID, String newLocation);
 
     void updateCurrentPosition(long userID, String newPosition);*/
 
