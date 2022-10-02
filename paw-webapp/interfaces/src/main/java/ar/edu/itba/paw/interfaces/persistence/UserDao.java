@@ -30,6 +30,16 @@ public interface UserDao {
 
     List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel);
 
+    void updateName(long userID, String newName);
+
+    /*void updateDescription(long userID, String newDescription);
+
+    void updateLocation(long userID, String newLocation);
+
+    void updateCurrentPosition(long userID, String newPosition);*/
+
+
+
     /* TODO:
         - findByLocation
         - findByCategory

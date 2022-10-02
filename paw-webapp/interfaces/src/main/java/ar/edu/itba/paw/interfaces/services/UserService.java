@@ -30,5 +30,7 @@ public interface UserService {
 
     List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel);
 
+    void updateName(long userID, String newName);
+
 
 }

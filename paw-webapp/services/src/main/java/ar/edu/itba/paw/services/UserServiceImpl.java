@@ -84,4 +84,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
         return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel);
     }
+
+    @Override
+    public void updateName(long userID, String newName) {
+        userDao.updateName(userID, newName);
+    }
 }
