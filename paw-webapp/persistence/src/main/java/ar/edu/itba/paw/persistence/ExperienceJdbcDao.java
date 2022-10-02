@@ -99,7 +99,7 @@ public class ExperienceJdbcDao implements ExperienceDao {
 
     @Override
     public List<Experience> findByUserId(long userID) {
-        return template.query("SELECT * FROM experiencia WHERE idUsuario = ?",
+        return template.query("SELECT * FROM experiencia WHERE idUsuario = ? ORDER BY anioDesde DESC, mesDesde DESC",
                 new Object[]{ userID }, EXPERIENCE_MAPPER);
     }
 
