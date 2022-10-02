@@ -130,10 +130,10 @@ public class UserJdbcDaoTest {
     @Test
     public void testUpdateName(){
         User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
-        dao.updateName(u1.getId(), "BBB");
+        dao.updateName(u1.getId(), UPDATED_STRING);
         u1 = dao.findById(u1.getId()).get();
 
-        Assert.assertEquals("BBB", u1.getName());
+        Assert.assertEquals(UPDATED_STRING, u1.getName());
     }
 
     @Test
@@ -143,6 +143,15 @@ public class UserJdbcDaoTest {
         u1 = dao.findById(u1.getId()).get();
 
         Assert.assertEquals(UPDATED_STRING, u1.getDescription());
+    }
+
+    @Test
+    public void testUpdateLocation(){
+        User u1 = dao.create(NEW_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
+        dao.updateLocation(u1.getId(), UPDATED_STRING);
+        u1 = dao.findById(u1.getId()).get();
+
+        Assert.assertEquals(UPDATED_STRING, u1.getLocation());
     }
 
 }

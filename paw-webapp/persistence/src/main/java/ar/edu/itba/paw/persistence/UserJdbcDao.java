@@ -199,6 +199,11 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public void updateLocation(long userID, String newLocation) {
+        template.update("UPDATE usuario SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
+    }
+
+    @Override
     public void changePassword(String email, String password) {
         template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
     }

@@ -34,5 +34,7 @@ public interface UserService {
 
     void updateDescription(long userID, String newDescription);
 
+    void updateLocation(long userID, String newLocation);
+
 
 }

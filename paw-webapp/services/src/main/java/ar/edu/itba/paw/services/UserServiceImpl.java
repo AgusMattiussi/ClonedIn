@@ -94,4 +94,9 @@ public class UserServiceImpl implements UserService {
     public void updateDescription(long userID, String newDescription) {
         userDao.updateDescription(userID, newDescription);
     }
+
+    @Override
+    public void updateLocation(long userID, String newLocation) {
+        userDao.updateLocation(userID, newLocation);
+    }
 }
