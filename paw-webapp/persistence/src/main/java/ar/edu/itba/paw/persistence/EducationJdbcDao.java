@@ -97,7 +97,7 @@ public class EducationJdbcDao implements EducationDao {
 
     @Override
     public List<Education> findByUserId(long userID) {
-        return template.query("SELECT * FROM educacion WHERE idUsuario = ?",
+        return template.query("SELECT * FROM educacion WHERE idUsuario = ? ORDER BY anioDesde DESC, mesDesde DESC",
                 new Object[]{ userID }, EDUCATION_MAPPER);
     }
 
