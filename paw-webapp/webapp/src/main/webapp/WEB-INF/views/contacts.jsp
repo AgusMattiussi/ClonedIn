@@ -44,14 +44,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="job" items="${jobOffers}">
+                            <c:forEach var="contact" items="${jobOffers}">
                                 <tr>
-                                    <td><c:out value="${job.position}"/></td>
-                                    <c:set var="categoryName" value="${job.category.name}"/>
+                                    <td><c:out value="${contact.position}"/></td>
+                                    <c:set var="categoryName" value="${contact.category.name}"/>
                                     <td><spring:message code="${categoryName}"/></td>
-                                    <td><c:out value="${job.userName}"/></td>
-                                    <c:set var="statusName" value="${job.status}"/>
+                                    <td><c:out value="${contact.userName}"/></td>
+                                    <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
+                                    <c:if test="${statusName == 'aceptada'}">
+                                        <td>
+                                            <a href="<c:url value="/closeJobOffer/${contact.userId}/${contact.id}"/>" >
+                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;">
+                                                    <spring:message code="contactsCloseBtn"/>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </c:if>
                                 </tr>
                             </c:forEach>
                         </tbody>

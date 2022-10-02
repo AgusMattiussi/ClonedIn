@@ -107,6 +107,33 @@ public class EnterpriseController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/closeJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView closeJobOffer(Authentication loggedUser,
+                                      @PathVariable("userId") final long userId,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+
+        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+//        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+//            LOGGER.error("Job Offer not found");
+//            return new JobOfferNotFoundException();
+//        });
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        System.out.println("\n\n\n\n\n" + userId + "\n\n\n\n\n");
+
+        contactService.closeJobOffer(userId, jobOfferId);
+//        emailService.sendClosedJobOffer(user.getEmail(), enterprise.getName(), jobOffer.getPosition());
+
+        return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
+    }
+
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,

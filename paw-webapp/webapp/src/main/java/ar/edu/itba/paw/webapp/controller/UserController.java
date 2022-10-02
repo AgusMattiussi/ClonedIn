@@ -89,8 +89,12 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping("/acceptJobOffer/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView acceptJobOffer(Authentication loggedUser, @PathVariable("jobOfferId") final long jobOfferId,
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping("/answerJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView answerJobOffer(Authentication loggedUser,
+                                       @PathVariable("userId") final long userId,
+                                       @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("answer") final long answer) {
 
         User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
@@ -115,14 +119,15 @@ public class UserController {
             emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
-        return new ModelAndView("redirect:/notificationsUser/" + user.getId());
+        return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
+
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
-        final int itemsPerPage = 3;
+        final int itemsPerPage = 10;
         long contactsCount = contactService.getContactsCountForUser(userId);
 
         List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);

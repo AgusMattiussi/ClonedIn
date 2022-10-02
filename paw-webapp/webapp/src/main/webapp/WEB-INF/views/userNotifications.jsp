@@ -67,12 +67,12 @@
                                             <spring:message code="notificationsStatus"/><spring:message code="${job.status}"/>
                                         </h5>
                                         <c:if test="${job.status == 'pendiente'}">
-                                            <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
+                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
                                             </a>
-                                            <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
+                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/0"/>" >
                                                 <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>

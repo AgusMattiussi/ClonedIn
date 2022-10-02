@@ -27,6 +27,10 @@ public interface ContactService {
 
     void rejectJobOffer(long userID, long jobOfferID);
 
+    void cancelJobOffer(long userID, long jobOfferID);
+
+    void closeJobOffer(long userID, long jobOfferID);
+
     long getContactsCountForEnterprise(long enterpriseID);
 
     long getContactsCountForUser(long userID);

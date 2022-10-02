@@ -6,14 +6,20 @@ import java.util.Objects;
 public class JobOfferStatusUserData extends JobOfferWithStatus {
 
     private final String userName;
+    private final long userId;
 
-    public JobOfferStatusUserData(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String status, String userName) {
+    public JobOfferStatusUserData(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String status, String userName, long userId) {
         super(id, enterpriseID, category, position, description, salary, modality, status);
         this.userName = userName;
+        this.userId = userId;
     }
 
     public String getUserName() {
         return userName;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     @Override

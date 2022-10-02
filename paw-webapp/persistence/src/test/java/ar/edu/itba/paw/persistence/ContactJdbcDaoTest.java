@@ -82,7 +82,7 @@ public class ContactJdbcDaoTest {
         testJobOfferWithStatus = new JobOfferWithStatus(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
                 testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING);
         testJobOfferWithStatusUserData = new JobOfferStatusUserData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
-                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testUser.getName());
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testUser.getName(), 1);
         testJobOfferWithStatusEnterpriseData = new JobOfferStatusEnterpriseData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
                 testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testEnterprise.getName());
         newEnterprise = enterpriseDao.create(NEW_ENTERPRISE_EMAIL, NEW_ENTERPRISE_PASSWORD, NEW_ENTERPRISE_NAME, NEW_ENTERPRISE_LOCATION, NEW_USER_CATEGORY_NAME, NEW_ENTERPRISE_DESCRIPTION);

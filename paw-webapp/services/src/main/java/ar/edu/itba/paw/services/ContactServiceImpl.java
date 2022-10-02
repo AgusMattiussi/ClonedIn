@@ -72,10 +72,19 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public void cancelJobOffer(long userID, long jobOfferID) {
+        contactDao.cancelJobOffer(userID, jobOfferID);
+    }
+
+    @Override
+    public void closeJobOffer(long userID, long jobOfferID) {
+        contactDao.closeJobOffer(userID, jobOfferID);
+    }
+
+    @Override
     public long getContactsCountForEnterprise(long enterpriseID) {
         return contactDao.getContactsCountForEnterprise(enterpriseID);
     }
-
     @Override
     public long getContactsCountForUser(long userID) {
         return contactDao.getContactsCountForUser(userID);
