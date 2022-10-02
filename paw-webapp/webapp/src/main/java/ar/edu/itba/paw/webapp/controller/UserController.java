@@ -110,11 +110,11 @@ public class UserController {
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), REJECT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
