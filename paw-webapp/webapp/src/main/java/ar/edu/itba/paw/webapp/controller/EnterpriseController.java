@@ -66,18 +66,18 @@ public class EnterpriseController {
 
         final List<User> usersList;
 
-//        final int usersCount = userService.getAllUsers().size();
+        final int usersCount = userService.getAllUsers().size();
 
-        final int itemsPerPage = 8;
+        final int itemsPerPage = 3;
 
         //TODO: refactor?
         if(request.getParameter("term") == null)
                 usersList = userService.getUsersListByFilters(page-1, itemsPerPage,
                             filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
-            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
+            usersList = userService.getUsersListByName(page-1, itemsPerPage, searchForm.getTerm());
 
-        final int usersCount = usersList.size();
+//        final int usersCount = usersList.size();
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -140,11 +140,14 @@ public class EnterpriseController {
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                           @RequestParam(value = "status",defaultValue = "") final String status,
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
-        final int itemsPerPage = 8;
-        long contactsCount = contactService.getContactsCountForEnterprise(enterpriseId);
-        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
+        final int itemsPerPage = 12;
+        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId,
+                page - 1, itemsPerPage, status);
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : jobOffersList.size();
+
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);

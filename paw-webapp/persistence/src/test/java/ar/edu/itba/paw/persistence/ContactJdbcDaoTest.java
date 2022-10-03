@@ -131,7 +131,7 @@ public class ContactJdbcDaoTest {
 
     @Test
     public void testGetJobOffersWithStatusUserData() {
-        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testEnterprise.getId(), 0, 8);
+        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testEnterprise.getId(), 0, 8,"");
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());

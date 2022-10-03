@@ -37,6 +37,11 @@
                         <spring:message code="cerrada"/>
                     </button>
                 </a>
+                <a href="<c:url value="?"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="indexClearFilter"/>
+                    </button>
+                </a>
             </div>
         </div>
     </div>
@@ -55,7 +60,7 @@
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
-                            <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
+                            <span class="badge badge-pill badge-success p-2"><spring:message code="${job.category.name}"/></span>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -99,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-2">
                                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                 <p class="card-text">${job.description}</p>
                             </div>

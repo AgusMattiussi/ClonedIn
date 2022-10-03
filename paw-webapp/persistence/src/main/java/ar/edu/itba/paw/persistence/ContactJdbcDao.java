@@ -203,11 +203,11 @@ public class ContactJdbcDao implements ContactDao {
 
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre, u.id as idUsuario" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
-                " WHERE c.idEmpresa = ? OFFSET ? LIMIT ? ",
-                new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+                " WHERE c.idEmpresa = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+                new Object[]{ enterpriseID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
     @Override

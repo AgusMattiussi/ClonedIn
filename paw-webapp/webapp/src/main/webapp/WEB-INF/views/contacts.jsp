@@ -15,12 +15,35 @@
     </jsp:include>
     <div class="row h-100 w-100">
         <div class="col-sm-2 sidebar">
-            <!-- TODO: AGREGAR FILTROS -->
             <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                <h5 class="ml-2 mt-2"><spring:message code="indexFilter"/></h5>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
-                <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
+                <h5 class="ml-2 mt-2"><spring:message code="notificationsFilter"/></h5>
+                <div class="d-flex flex-column ">
+                    <a href="<c:url value="?status=aceptada"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="aceptada"/>
+                        </button>
+                    </a>
+                    <a href="<c:url value="?status=rechazada"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="rechazada"/>
+                        </button>
+                    </a>
+                    <a href="<c:url value="?status=pendiente"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="pendiente"/>
+                        </button>
+                    </a>
+                    <a href="<c:url value="?status=cerrada"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="cerrada"/>
+                        </button>
+                    </a>
+                    <a href="<c:url value="?"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="indexClearFilter"/>
+                        </button>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col mr-2">
@@ -31,7 +54,7 @@
             <div class="container">
                 <c:choose>
                     <c:when test = "${jobOffers.size() == 0}">
-                        <h4 class="mt-5 mb-5"><spring:message code="noNotificationsMsg"/></h4>
+                        <h4 class="mt-5 mb-5"><spring:message code="noContactsMsg"/></h4>
                     </c:when>
                     <c:otherwise>
                     <table class="table">

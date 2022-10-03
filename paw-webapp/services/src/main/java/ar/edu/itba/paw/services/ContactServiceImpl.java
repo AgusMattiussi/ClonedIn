@@ -42,8 +42,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
-        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize);
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
+        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize, status);
     }
 
     @Override
