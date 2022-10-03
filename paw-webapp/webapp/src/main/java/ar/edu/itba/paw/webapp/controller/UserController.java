@@ -32,11 +32,6 @@ public class UserController {
     private final ContactService contactService;
     private final EnterpriseService enterpriseService;
     private final ImageService imageService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    private static final String ANSWER_TEMPLATE = "answerEmail.html";
     private final CategoryService categoryService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
