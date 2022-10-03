@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -40,17 +42,17 @@ public class ImageJdbcDao implements ImageDao {
 
     @Override
     public Optional<Image> getImage(int id) {
-        return template.query("SELECT * FROM " + IMAGE_TABLE + " WHERE " + ID + " = ?",
+        return template.query("SELECT * FROM imagen WHERE id = ?",
                 new Object[]{ id }, IMAGE_ROW_MAPPER).stream().findFirst();
     }
 
     @Override
-    public Optional<Image> uploadImage(byte[] bytes) {
+    public Image uploadImage(byte[] bytes) {
         final Map<String, Object> values = new HashMap<>();
         values.put(BYTES, bytes);
 
         Number imageId = imageInsert.executeAndReturnKey(values);
 
-        return Optional.of(new Image(imageId.longValue(), bytes));
+        return new Image(imageId.longValue(), bytes);
     }
 }

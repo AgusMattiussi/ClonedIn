@@ -25,7 +25,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> uploadImage(byte[] bytes) {
+    public Image uploadImage(byte[] bytes) {
         return imageDao.uploadImage(bytes);
     }
 }

@@ -14,10 +14,6 @@ public class User {
     private final String description;
     private final String education;
 
-
-    //TODO: Aniadir imagen
-
-
     public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
         this.id = id;
         this.email = email;

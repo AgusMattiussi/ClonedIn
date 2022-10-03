@@ -33,12 +33,12 @@ CREATE TABLE IF NOT EXISTS usuario (
     contrasenia VARCHAR(100) NOT NULL,
     descripcion TEXT,
     idRubro INTEGER,
---     idImagen  INTEGER,
     ubicacion TEXT,
     posicionActual TEXT,
     educacion TEXT,
-    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
---     FOREIGN KEY (idImagen) REFERENCES imagen (id) ON DELETE SET NULL
+    idImagen INTEGER,
+    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
+    FOREIGN KEY (idImagen) REFERENCES imagen ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS experiencia (

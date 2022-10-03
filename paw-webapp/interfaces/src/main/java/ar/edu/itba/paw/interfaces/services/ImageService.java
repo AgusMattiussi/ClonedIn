@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ImageService {
     Optional<Image> getImage(int id);
-    Optional<Image> uploadImage(byte[] bytes);
+    Image uploadImage(byte[] bytes);
 }
