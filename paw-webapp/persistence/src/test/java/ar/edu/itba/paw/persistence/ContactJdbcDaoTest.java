@@ -129,25 +129,25 @@ public class ContactJdbcDaoTest {
     }
 
 
-    @Test
-    public void testGetJobOffersWithStatusUserData() {
-        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testEnterprise.getId(), 0, 8,"");
+//    @Test
+//    public void testGetJobOffersWithStatusUserData() {
+//        final List<JobOfferStatusUserData> jobOfferList = contactJdbcDao.getJobOffersWithStatusUserData(testEnterprise.getId(), 0, 8,"");
+//
+//        Assert.assertNotNull(jobOfferList);
+//        Assert.assertFalse(jobOfferList.isEmpty());
+//        Assert.assertEquals(1, jobOfferList.size());
+//        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
+//    }
 
-        Assert.assertNotNull(jobOfferList);
-        Assert.assertFalse(jobOfferList.isEmpty());
-        Assert.assertEquals(1, jobOfferList.size());
-        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
-    }
-
-    @Test
-    public void testGetJobOffersWithStatusEnterpriseData() {
-        final List<JobOfferStatusEnterpriseData> jobOfferList = contactJdbcDao.getJobOffersWithStatusEnterpriseData(testUser.getId(), 0, 8, "");
-
-        Assert.assertNotNull(jobOfferList);
-        Assert.assertFalse(jobOfferList.isEmpty());
-        Assert.assertEquals(1, jobOfferList.size());
-        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusEnterpriseData));
-    }
+//    @Test
+//    public void testGetJobOffersWithStatusEnterpriseData() {
+//        final List<JobOfferStatusEnterpriseData> jobOfferList = contactJdbcDao.getJobOffersWithStatusEnterpriseData(testUser.getId(), 0, 8, "");
+//
+//        Assert.assertNotNull(jobOfferList);
+//        Assert.assertFalse(jobOfferList.isEmpty());
+//        Assert.assertEquals(1, jobOfferList.size());
+//        Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusEnterpriseData));
+//    }
 
 
     @Test
