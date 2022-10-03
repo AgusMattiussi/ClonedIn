@@ -55,6 +55,7 @@ public class UserController {
         this.contactService = contactService;
         this.categoryService = categoryService;
 
+        monthToNumber.put("No-especificado", 0);
         monthToNumber.put("Enero", 1);
         monthToNumber.put("Febrero", 2);
         monthToNumber.put("Marzo", 3);
@@ -160,14 +161,31 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
-        int yearFlag = experienceForm.getYearTo().compareTo(experienceForm.getYearFrom());
-        int monthFlag = monthToNumber.get(experienceForm.getMonthTo()).compareTo(monthToNumber.get(experienceForm.getMonthFrom()));
 
-        if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
-            if(yearFlag < 0)
-                errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
-            else if (yearFlag == 0 && monthFlag < 0)
-                errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
+        String formYearTo = experienceForm.getYearTo();
+        String formMonthTo = experienceForm.getMonthTo();
+        String formYearFrom = experienceForm.getYearFrom();
+
+        boolean yearToIsEmpty = formYearTo.isEmpty();
+        boolean monthToIsEmpty = formMonthTo.equals("No-especificado");
+        boolean monthOrYearEmpty = yearToIsEmpty && !monthToIsEmpty || !yearToIsEmpty && monthToIsEmpty;
+        boolean yearFromIsEmpty = formYearFrom.isEmpty();
+
+        Integer yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
+        Integer monthTo = monthToIsEmpty ? null : monthToNumber.get(formMonthTo);
+        Integer yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
+        Integer monthFrom = monthToNumber.get(experienceForm.getMonthFrom());
+
+        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty &&
+                (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
+
+
+        if (errors.hasErrors() || yearFromIsEmpty || monthOrYearEmpty || invalidDate) {
+            if(monthOrYearEmpty)
+                errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick an year and month, or let both fields empty");
+            else if (invalidDate)
+                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
+
             LOGGER.warn("Experience form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formExperience(loggedUser, experienceForm, userId);
         }
@@ -176,8 +194,9 @@ public class UserController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
         Experience experience = experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
-                monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
+                monthTo, yearTo,experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
 
         LOGGER.debug("A new experience was registered under id: {}", experience.getId());
@@ -256,14 +275,17 @@ public class UserController {
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
                                     final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors()) {
-            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return formSkill(loggedUser, skillForm, userId);
-        }
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
+        if (errors.hasErrors() || userSkillService.alreadyExists(skillForm.getSkill(), user.getId())) {
+            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
+            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return formSkill(loggedUser, skillForm, userId);
+        }
+
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
 
         LOGGER.debug("A new skill has been added to user {}", user.getId());
