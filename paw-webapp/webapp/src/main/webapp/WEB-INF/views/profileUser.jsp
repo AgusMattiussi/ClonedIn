@@ -144,9 +144,9 @@
                                                 </div>
                                                 <p style="font-size: 9pt">
                                                     <c:set var="monthFromNameEx" value="selectMonth${experience.monthFrom}"/>
-                                                    <c:set var="monthToNameEx" value="selectMonth${experience.monthTo}"/>
                                                     <spring:message code="${monthFromNameEx}"/> <c:out value="${experience.yearFrom}"/> -
-                                                    <c:if test="${experience.yearTo != null}">
+                                                    <c:if test="${experience.yearTo != null && experience.monthTo != 0}">
+                                                        <c:set var="monthToNameEx" value="selectMonth${experience.monthTo}"/>
                                                         <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
                                                     </c:if>
                                                 </p>

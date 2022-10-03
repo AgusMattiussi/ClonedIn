@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.EnterpriseForm;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,8 @@ import java.util.Map;
 
 @Controller
 public class RegisterController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
     private final UserService userService;
     private final EnterpriseService enterpriseService;
     private final CategoryService categoryService;
@@ -57,13 +61,14 @@ public class RegisterController {
     @RequestMapping(value = "/createUser", method = { RequestMethod.POST })
     public ModelAndView createUser(@Valid @ModelAttribute("userForm") final UserForm userForm, final BindingResult errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
+            LOGGER.warn("User register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formRegisterUser(userForm);
         }
         final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
         sendRegisterEmail(userForm.getEmail(), userForm.getName());
-
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
-
+        LOGGER.debug("A new user was registered under id: {}", u.getId());
+        LOGGER.info("A new user was registered");
         return new ModelAndView("redirect:/profileUser/" + u.getId());
     }
 
@@ -77,13 +82,14 @@ public class RegisterController {
     @RequestMapping(value = "/createEnterprise", method = { RequestMethod.POST })
     public ModelAndView createEnterprise(@Valid @ModelAttribute("enterpriseForm") final EnterpriseForm enterpriseForm, final BindingResult errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
+            LOGGER.warn("Enterprise register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formRegisterEnterprise(enterpriseForm);
         }
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
         sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
-
         authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
-
+        LOGGER.debug("A new enterprise was registered under id: {}", e.getId());
+        LOGGER.info("A new enterprise was registered");
         return new ModelAndView("redirect:/");
     }
 
@@ -99,9 +105,7 @@ public class RegisterController {
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
         authToken.setDetails(new WebAuthenticationDetails(request));
-
         Authentication authentication = authenticationManager.authenticate(authToken);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

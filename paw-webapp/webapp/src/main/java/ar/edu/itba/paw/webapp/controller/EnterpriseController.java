@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,13 +36,15 @@ public class EnterpriseController {
     private final EmailService emailService;
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
+    private final JobOfferSkillService jobOfferSkillService;
     @Autowired
     protected AuthenticationManager authenticationManager;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
                                 final SkillService skillService, final EmailService emailService, final JobOfferService jobOfferService,
-                                final ContactService contactService){
+                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
@@ -48,6 +52,7 @@ public class EnterpriseController {
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
         this.contactService = contactService;
+        this.jobOfferSkillService = jobOfferSkillService;
     }
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
@@ -59,7 +64,7 @@ public class EnterpriseController {
 
         final List<User> usersList;
 
-//        final int usersCount = userService.getAllUsers().size();
+        final int usersCount = userService.getAllUsers().size();
 
         final int itemsPerPage = 8;
 
@@ -68,9 +73,9 @@ public class EnterpriseController {
                 usersList = userService.getUsersListByFilters(page-1, itemsPerPage,
                             filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
-            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
+            usersList = userService.getUsersListByName(page-1, itemsPerPage, searchForm.getTerm());
 
-        final int usersCount = usersList.size();
+//        final int usersCount = usersList.size();
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -88,26 +93,84 @@ public class EnterpriseController {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         final int itemsPerPage = 3;
         int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+            LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
         List<JobOffer> jobOfferList = jobOfferService.findByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterpriseId, page - 1, itemsPerPage);
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
-        mav.addObject("joboffers", jobOfferList);
+        mav.addObject("jobOffers", jobOfferList);
+        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/closeJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView closeJobOffer(Authentication loggedUser,
+                                      @PathVariable("userId") final long userId,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+
+        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        contactService.closeJobOffer(userId, jobOfferId);
+        emailService.sendCloseJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
+
+        return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/cancelJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView cancelJobOffer(Authentication loggedUser,
+                                      @PathVariable("userId") final long userId,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+
+        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        contactService.cancelJobOffer(userId, jobOfferId);
+        emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
+
+        return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
+    }
+
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                           @RequestParam(value = "status",defaultValue = "") final String status,
                                            @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("contacts");
-        final int itemsPerPage = 8;
-        long contactsCount = contactService.getContactsCountForEnterprise(enterpriseId);
-        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId, page - 1, itemsPerPage);
+        final int itemsPerPage = 12;
+        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId,
+                page - 1, itemsPerPage, status);
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : jobOffersList.size();
+
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
@@ -120,7 +183,10 @@ public class EnterpriseController {
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formJobOffer(Authentication loggedUser, @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("jobOfferForm");
-        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        }));
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
     }
@@ -129,51 +195,95 @@ public class EnterpriseController {
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createJobOffer(Authentication loggedUser, @Valid @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {
+            LOGGER.warn("Job Offer form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formJobOffer(loggedUser, jobOfferForm, enterpriseId);
         }
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        long categoryID = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(UserNotFoundException::new).getId();
-        jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-//        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-//        if(!jobOfferForm.getSkill1().isEmpty())
-//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
-//        if(!jobOfferForm.getSkill2().isEmpty())
-//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        long categoryID = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(() -> {
+            LOGGER.error("Category not found");
+            return new UserNotFoundException();
+        }).getId();
+        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+
+        if(!jobOfferForm.getSkill1().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+        if(!jobOfferForm.getSkill2().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill2(), jobOffer.getId());
+
+        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
+        LOGGER.info("A new job offer was registered");
+
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEditUser(@ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm, @PathVariable("enterpriseId") final long enterpriseId) {
+    public ModelAndView formEditEnterprise(Authentication loggedUser, @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
+                                     @PathVariable("enterpriseId") final long enterpriseId) {
         ModelAndView mav = new ModelAndView("enterpriseEditForm");
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
         mav.addObject("enterprise", enterprise);
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView editEnterprise(Authentication loggedUser, @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
+                                 final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
+        if (errors.hasErrors()) {
+            return formEditEnterprise(loggedUser, editEnterpriseForm, enterpriseId);
+        }
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        enterpriseService.updateEnterpriseInformation(enterprise, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
+                editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory());
+        return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("simpleContactForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID, 0, 100));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
                                 final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
             errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
+            LOGGER.warn("Contact form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return contactForm(loggedUser, form, userId);
         }
         long jobOfferId = form.getCategory();
 
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
-        Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
 
         emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage());
         // TODO: validar clave duplicada
@@ -188,10 +298,16 @@ public class EnterpriseController {
 
     private long getLoggerUserId(Authentication loggedUser){
         if(isUser(loggedUser)) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("User not found");
+                return new UserNotFoundException();
+            });
             return user.getId();
         } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("Enterprise not found");
+                return new UserNotFoundException();
+            });
             return enterprise.getId();
         }
     }

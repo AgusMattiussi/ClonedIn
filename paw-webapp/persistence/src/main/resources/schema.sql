@@ -53,10 +53,9 @@ CREATE TABLE IF NOT EXISTS experiencia (
     descripcion TEXT,
     FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
     CHECK(mesDesde BETWEEN 1 AND 12),
-    CHECK(mesHasta BETWEEN 1 AND 12),
     CHECK(anioDesde BETWEEN 1900 AND 2100),
-    CHECK(anioHasta BETWEEN 1900 AND 2100),
-    CHECK((anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))
+    CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR ((mesHasta BETWEEN 1 AND 12) AND (anioHasta BETWEEN 1900 AND 2100))),
+    CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR (anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))
 );
 
 CREATE TABLE IF NOT EXISTS educacion (
@@ -71,10 +70,9 @@ CREATE TABLE IF NOT EXISTS educacion (
     descripcion TEXT,
     FOREIGN KEY (idUsuario) REFERENCES usuario ON DELETE CASCADE,
     CHECK(mesDesde BETWEEN 1 AND 12),
-    CHECK(mesHasta BETWEEN 1 AND 12),
     CHECK(anioDesde BETWEEN 1900 AND 2100),
-    CHECK(anioHasta BETWEEN 1900 AND 2100),
-    CHECK((anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))
+    CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR ((mesHasta BETWEEN 1 AND 12) AND (anioHasta BETWEEN 1900 AND 2100))),
+    CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR (anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))
 );
 
 CREATE TABLE IF NOT EXISTS ofertaLaboral (

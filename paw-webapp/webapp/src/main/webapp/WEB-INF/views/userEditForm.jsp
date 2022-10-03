@@ -31,7 +31,7 @@
                   <div class="col-md-12 mx-0">
                     <div id="msform">
                       <c:url value="/editUser/${user.id}" var="postPath"/>
-                      <form:form modelAttribute="EditUserForm" action="${postPath}" method="post" accept-charset="utf-8">
+                      <form:form modelAttribute="editUserForm" action="${postPath}" method="post" accept-charset="utf-8">
                       <fieldset>
                         <div class="form-card">
                           <h2 class="fs-title mb-2"><spring:message code="registerSubtitle"/></h2>

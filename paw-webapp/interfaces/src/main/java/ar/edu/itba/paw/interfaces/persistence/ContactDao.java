@@ -15,9 +15,9 @@ public interface ContactDao {
 
     List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId);
 
-    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
+    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status);
 
-    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
+    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
@@ -26,6 +26,10 @@ public interface ContactDao {
     void acceptJobOffer(long userID, long jobOfferID);
 
     void rejectJobOffer(long userID, long jobOfferID);
+
+    void cancelJobOffer(long userID, long jobOfferID);
+
+    void closeJobOffer(long userID, long jobOfferID);
 
     long getContactsCountForEnterprise(long enterpriseID);
 

@@ -50,6 +50,8 @@ public class ContactJdbcDao implements ContactDao {
     private static final String STATUS_PENDING = "pendiente";
     private static final String STATUS_ACCEPTED = "aceptada";
     private static final String STATUS_REJECTED = "rechazada";
+    private static final String STATUS_CANCELLED = "cancelada";
+    private static final String STATUS_CLOSED = "cerrada";
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -91,7 +93,8 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getBigDecimal(SALARY),
                 resultSet.getString(MODALITY),
                 resultSet.getString(STATUS),
-                resultSet.getString(USER_TABLE_NAME)
+                resultSet.getString(USER_TABLE_NAME),
+                resultSet.getLong("idUsuario")
                 );
     });
 
@@ -200,19 +203,19 @@ public class ContactJdbcDao implements ContactDao {
 
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
-        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre" +
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre, u.id as idUsuario" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
-                " WHERE c.idEmpresa = ? OFFSET ? LIMIT ? ",
-                new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+                " WHERE c.idEmpresa = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+                new Object[]{ enterpriseID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
     @Override
-    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, e.nombre" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
-                " WHERE c.idUsuario = ? OFFSET ? LIMIT ? ",
-                new Object[]{ userID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
+                " WHERE c.idUsuario = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+                new Object[]{ userID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
 
@@ -241,6 +244,16 @@ public class ContactJdbcDao implements ContactDao {
     @Override
     public void rejectJobOffer(long userID, long jobOfferID) {
         updateStatus(userID, jobOfferID, STATUS_REJECTED);
+    }
+
+    @Override
+    public void cancelJobOffer(long userID, long jobOfferID) {
+        updateStatus(userID, jobOfferID, STATUS_CANCELLED);
+    }
+
+    @Override
+    public void closeJobOffer(long userID, long jobOfferID) {
+        updateStatus(userID, jobOfferID, STATUS_CLOSED);
     }
 
     @Override

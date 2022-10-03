@@ -7,20 +7,18 @@ import ar.edu.itba.paw.webapp.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
+import java.util.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 @Controller
 public class UserController {
@@ -46,6 +44,8 @@ public class UserController {
     //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
                           final EducationService educationService, final UserSkillService userSkillService,
@@ -64,6 +64,7 @@ public class UserController {
         this.categoryService = categoryService;
         this.imageService = imageService;
 
+        monthToNumber.put("No-especificado", 0);
         monthToNumber.put("Enero", 1);
         monthToNumber.put("Febrero", 2);
         monthToNumber.put("Marzo", 3);
@@ -84,7 +85,10 @@ public class UserController {
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
 
         final ModelAndView mav = new ModelAndView("profileUser");
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
         mav.addObject("user", user);
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
@@ -93,43 +97,61 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping("/acceptJobOffer/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView acceptJobOffer(Authentication loggedUser, @PathVariable("jobOfferId") final long jobOfferId,
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping("/answerJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView answerJobOffer(Authentication loggedUser,
+                                       @PathVariable("userId") final long userId,
+                                       @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("answer") final long answer) {
 
-        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(UserNotFoundException::new);
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(JobOfferNotFoundException::new);
-        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), REJECT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), REJECT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise.getEmail(), user.getName(), jobOffer.getPosition(), ACCEPT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), ACCEPT);
         }
 
-        return new ModelAndView("redirect:/notificationsUser/" + user.getId());
+        return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
+
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "status",defaultValue = "") final String status,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
-        final int itemsPerPage = 3;
-        long contactsCount = contactService.getContactsCountForUser(userId);
+        final int itemsPerPage = 4;
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,
+                page - 1, itemsPerPage, status);
+        Map<Long, List<Skill>> jobOfferSkillMap = contactService.getJobOfferSkillsMapForUser(jobOffersList);
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : jobOffersList.size();
 
-        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
-
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
-        // TODO: add skills for joboffer
-//        mav.addObject("skills", contactService)
+        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        // TODO: revisar esta paginacion
         return mav;
     }
 
@@ -137,28 +159,57 @@ public class UserController {
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("experienceForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
-        int yearFlag = experienceForm.getYearTo().compareTo(experienceForm.getYearFrom());
-        int monthFlag = monthToNumber.get(experienceForm.getMonthTo()).compareTo(monthToNumber.get(experienceForm.getMonthFrom()));
 
-        if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
-            if(yearFlag < 0)
-                errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
-            else if (yearFlag == 0 && monthFlag < 0)
-                errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
+        String formYearTo = experienceForm.getYearTo();
+        String formMonthTo = experienceForm.getMonthTo();
+        String formYearFrom = experienceForm.getYearFrom();
+
+        boolean yearToIsEmpty = formYearTo.isEmpty();
+        boolean monthToIsEmpty = formMonthTo.equals("No-especificado");
+        boolean monthOrYearEmpty = yearToIsEmpty && !monthToIsEmpty || !yearToIsEmpty && monthToIsEmpty;
+        boolean yearFromIsEmpty = formYearFrom.isEmpty();
+
+        Integer yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
+        Integer monthTo = monthToIsEmpty ? null : monthToNumber.get(formMonthTo);
+        Integer yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
+        Integer monthFrom = monthToNumber.get(experienceForm.getMonthFrom());
+
+        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty &&
+                (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
+
+
+        if (errors.hasErrors() || yearFromIsEmpty || monthOrYearEmpty || invalidDate) {
+            if(monthOrYearEmpty)
+                errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick an year and month, or let both fields empty");
+            else if (invalidDate)
+                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
+
+            LOGGER.warn("Experience form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formExperience(loggedUser, experienceForm, userId);
         }
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
-                monthToNumber.get(experienceForm.getMonthTo()), Integer.parseInt(experienceForm.getYearTo()),experienceForm.getCompany(),
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        Experience experience = experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+                monthTo, yearTo,experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
+
+        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
+        LOGGER.info("A new experience was registered");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -174,7 +225,10 @@ public class UserController {
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("educationForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
@@ -189,13 +243,20 @@ public class UserController {
                 errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
             else if (yearFlag == 0 && monthFlag < 0)
                 errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
-
+            LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formEducation(loggedUser, educationForm, userId);
         }
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        Education education = educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
                 monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+
+        LOGGER.debug("A new experience was registered under id: {}", education.getId());
+        LOGGER.info("A new experience was registered");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
@@ -211,7 +272,10 @@ public class UserController {
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("skillsForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        }));
         return mav;
     }
 
@@ -219,11 +283,22 @@ public class UserController {
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
                                     final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors()) {
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        if (errors.hasErrors() || userSkillService.alreadyExists(skillForm.getSkill(), user.getId())) {
+            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
+            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formSkill(loggedUser, skillForm, userId);
         }
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+
+        LOGGER.debug("A new skill has been added to user {}", user.getId());
+        LOGGER.info("A new skill has been added to user");
+
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
@@ -254,10 +329,13 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
-    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+    public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                      @PathVariable("userId") final long userId) {
         ModelAndView mav = new ModelAndView("userEditForm");
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
         mav.addObject("user", user);
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
@@ -265,7 +343,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("EditUserForm") final EditUserForm editUserForm,
+    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                  final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);
@@ -282,10 +360,16 @@ public class UserController {
 
     private long getLoggerUserId(Authentication loggedUser){
         if(isUser(loggedUser)) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("User not found");
+                return new UserNotFoundException();
+            });
             return user.getId();
         } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+                LOGGER.error("Enterprise not found");
+                return new UserNotFoundException();
+            });
             return enterprise.getId();
         }
     }

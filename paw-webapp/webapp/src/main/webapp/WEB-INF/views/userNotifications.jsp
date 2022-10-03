@@ -14,12 +14,40 @@
 </jsp:include>
 <div class="row h-100 w-100">
     <div class="col-sm-2 sidebar">
-        <!-- TODO: AGREGAR FILTROS -->
         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
             <h5 class="ml-2 mt-2"><spring:message code="notificationsFilter"/></h5>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="aceptada"/></button>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="rechazada"/></button>
-            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><spring:message code="pendiente"/></button>
+            <div class="d-flex flex-column ">
+                <a href="<c:url value="?status=aceptada"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="aceptada"/>
+                    </button>
+                </a>
+                <a href="<c:url value="?status=rechazada"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="rechazada"/>
+                    </button>
+                </a>
+                <a href="<c:url value="?status=pendiente"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="pendiente"/>
+                    </button>
+                </a>
+                <a href="<c:url value="?status=cerrada"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="cerrada"/>
+                    </button>
+                </a>
+                <a href="<c:url value="?status=cancelada"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="cancelada"/>
+                    </button>
+                </a>
+                <a href="<c:url value="?"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="indexClearFilter"/>
+                    </button>
+                </a>
+            </div>
         </div>
     </div>
     <div class="col mr-2">
@@ -37,7 +65,7 @@
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
-                            <span class="badge badge-pill badge-success p-2"><c:out value="${job.category.name}"/></span>
+                            <span class="badge badge-pill badge-success p-2"><spring:message code="${job.category.name}"/></span>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -56,9 +84,12 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-<%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
-<%--                                                <p class="card-text"><c:out value="${skill.value}"/></p>--%>
-<%--                                            </c:forEach>--%>
+                                            <c:if test="${jobOffersSkillMap[job.id].size() == 0}">
+                                                <p><spring:message code="profileInfoNotSpecified"/></p>
+                                            </c:if>
+                                            <c:forEach items="${jobOffersSkillMap[job.id]}" var="skill">
+                                                <p><c:out value="${skill.description}"/></p>
+                                            </c:forEach>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -67,12 +98,12 @@
                                             <spring:message code="notificationsStatus"/><spring:message code="${job.status}"/>
                                         </h5>
                                         <c:if test="${job.status == 'pendiente'}">
-                                            <a href="<c:url value="/acceptJobOffer/${job.id}/1"/>" >
+                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
                                             </a>
-                                            <a href="<c:url value="/acceptJobOffer/${job.id}/0"/>" >
+                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/0"/>" >
                                                 <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
@@ -81,7 +112,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-2">
                                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                 <p class="card-text">${job.description}</p>
                             </div>

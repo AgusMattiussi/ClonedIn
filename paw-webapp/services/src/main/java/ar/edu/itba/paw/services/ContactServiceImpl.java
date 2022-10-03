@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
+import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Primary
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class ContactServiceImpl implements ContactService {
 
     private final ContactDao contactDao;
+    private final JobOfferSkillDao jobOfferSkillDao;
 
     @Autowired
-    public ContactServiceImpl(ContactDao contactDao) {
+    public ContactServiceImpl(ContactDao contactDao, JobOfferSkillDao jobOfferSkillDao) {
         this.contactDao = contactDao;
+        this.jobOfferSkillDao= jobOfferSkillDao;
     }
 
     @Override
@@ -42,13 +47,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
-        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize);
+    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
+        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize, status);
     }
 
     @Override
-    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
-        return contactDao.getJobOffersWithStatusEnterpriseData(userID, page, pageSize);
+    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
+        return contactDao.getJobOffersWithStatusEnterpriseData(userID, page, pageSize, status);
     }
 
     @Override
@@ -72,13 +77,30 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCountForEnterprise(long enterpriseID) {
-        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    public void cancelJobOffer(long userID, long jobOfferID) {
+        contactDao.cancelJobOffer(userID, jobOfferID);
     }
 
     @Override
+    public void closeJobOffer(long userID, long jobOfferID) {
+        contactDao.closeJobOffer(userID, jobOfferID);
+    }
+
+    @Override
+    public long getContactsCountForEnterprise(long enterpriseID) {
+        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    }
+    @Override
     public long getContactsCountForUser(long userID) {
         return contactDao.getContactsCountForUser(userID);
+    }
 
+    @Override
+    public Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList) {
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
+        for (JobOffer jobOffer : jobOfferList) {
+            jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));
+        }
+        return jobOfferSkillMap;
     }
 }

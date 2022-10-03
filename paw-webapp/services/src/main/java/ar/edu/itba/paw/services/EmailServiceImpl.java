@@ -30,15 +30,14 @@ public class EmailServiceImpl implements EmailService {
     private SpringTemplateEngine templateEngine;
     @Autowired
     private MessageSource messageSource;
-
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
-
     private final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
-
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
+    private static final String CLOSE = "close";
+    private static final String CANCEL = "cancel";
 
 
 
@@ -106,16 +105,45 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(String enterpriseEmail, String username, String jobOfferPosition, String answerMsg) {
+    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String jobOfferPosition, String answerMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
         mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("contactsUrl", baseUrl + "/contactsEnterprise/" + enterprise.getId());
         mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
 
         String subject = messageSource.getMessage("answerMail.subject", null, LocaleContextHolder.getLocale());
 
-        sendEmail(enterpriseEmail, subject, ANSWER_TEMPLATE, mailMap);
+        sendEmail(enterprise.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }
+
+    @Async
+    @Override
+    public void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition) {
+        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CLOSE);
+    }
+
+    @Async
+    @Override
+    public void sendCancelJobOfferEmail(User user, String enterpriseName, String jobOfferPosition) {
+        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CANCEL);
+    }
+
+    @Async
+    void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action) {
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", enterpriseName);
+        mailMap.put("answerMsg", messageSource.getMessage(action + "Msg", null, LocaleContextHolder.getLocale()));
+        mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("contactsUrl", baseUrl + "/notificationsUser/" + user.getId());
+        mailMap.put("buttonMsg", messageSource.getMessage("closeMail.button", null, LocaleContextHolder.getLocale()));
+
+        String subject = messageSource.getMessage(action + "Mail.subject", null, LocaleContextHolder.getLocale());
+
+        sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
+    }
+
 }

@@ -1,22 +1,18 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validators.ExistingEmail;
-import ar.edu.itba.paw.webapp.validators.StringMatches;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 import java.io.File;
 
 public class EditEnterpriseForm {
-    @NotEmpty
     @Size(max=50)
     private String name;
 
     private File image;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @Size(max=200)
     private String aboutUs;
@@ -32,12 +28,12 @@ public class EditEnterpriseForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getAboutUs() {
