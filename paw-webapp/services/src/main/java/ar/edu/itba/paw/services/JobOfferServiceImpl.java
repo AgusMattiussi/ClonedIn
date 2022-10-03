@@ -1,14 +1,18 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
+import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Primary
@@ -16,10 +20,12 @@ import java.util.Optional;
 public class JobOfferServiceImpl implements JobOfferService {
 
     private final JobOfferDao jobOfferDao;
+    private final JobOfferSkillDao jobOfferSkillDao;
 
     @Autowired
-    public JobOfferServiceImpl(JobOfferDao jobOfferDao){
+    public JobOfferServiceImpl(JobOfferDao jobOfferDao, JobOfferSkillDao jobOfferSkillDao){
         this.jobOfferDao = jobOfferDao;
+        this.jobOfferSkillDao= jobOfferSkillDao;
     }
 
     @Override
@@ -40,5 +46,15 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID) {
         return jobOfferDao.getJobOffersCountForEnterprise(enterpriseID);
+    }
+
+    @Override
+    public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize) {
+        List<JobOffer> jobOfferList = findByEnterpriseId(enterpriseID, page, pageSize);
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
+        for (JobOffer jobOffer : jobOfferList) {
+            jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));
+        }
+        return jobOfferSkillMap;
     }
 }

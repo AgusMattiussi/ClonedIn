@@ -36,6 +36,8 @@ public class EnterpriseController {
     private final EmailService emailService;
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
+    private final JobOfferSkillService jobOfferSkillService;
+
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -44,7 +46,7 @@ public class EnterpriseController {
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
                                 final SkillService skillService, final EmailService emailService, final JobOfferService jobOfferService,
-                                final ContactService contactService){
+                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
@@ -52,6 +54,7 @@ public class EnterpriseController {
         this.emailService = emailService;
         this.jobOfferService = jobOfferService;
         this.contactService = contactService;
+        this.jobOfferSkillService = jobOfferSkillService;
     }
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
@@ -97,10 +100,12 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
         List<JobOffer> jobOfferList = jobOfferService.findByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterpriseId, page - 1, itemsPerPage);
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
-        mav.addObject("joboffers", jobOfferList);
+        mav.addObject("jobOffers", jobOfferList);
+        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
@@ -176,11 +181,11 @@ public class EnterpriseController {
             return new UserNotFoundException();
         }).getId();
         JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-//        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-//        if(!jobOfferForm.getSkill1().isEmpty())
-//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
-//        if(!jobOfferForm.getSkill2().isEmpty())
-//            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+
+        if(!jobOfferForm.getSkill1().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
+        if(!jobOfferForm.getSkill2().isEmpty())
+            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill2(), jobOffer.getId());
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");

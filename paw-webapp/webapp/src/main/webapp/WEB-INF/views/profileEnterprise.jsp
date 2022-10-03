@@ -78,8 +78,8 @@
                         </div>
                     </sec:authorize>
                     <c:choose>
-                        <c:when test="${joboffers.size() > 0}">
-                            <c:forEach items="${joboffers}" var="joboffer">
+                        <c:when test="${jobOffers.size() > 0}">
+                            <c:forEach items="${jobOffers}" var="joboffer">
                                 <div class="card mt-2">
                                     <div class="card-body pb-0">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -90,9 +90,6 @@
                                                 <spring:message code="${categoryName2}"/>
                                             </span>
                                             </c:if>
-                                            <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">
-                                                <spring:message code="profileEnterpriseNOJOB"/>
-                                            </button>
                                         </div>
                                     </div>
                                     <div class="card-footer bg-white text-left">
@@ -120,12 +117,21 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <h6> <spring:message code="jobOfferFormSkills"/></h6>
-<%--                                                        <p><c:out value="${joboffer.skill1}"/> </p>--%>
-<%--                                                        <p><c:out value="${joboffer.skill2}"/> </p>--%>
+                                                    <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
+                                                        <p><spring:message code="profileInfoNotSpecified"/></p>
+                                                    </c:if>
+                                                    <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
+                                                        <p><c:out value="${skill.description}"/></p>
+                                                    </c:forEach>
                                                 </div>
                                             </div>
                                         </div>
-                                        <p><c:out value="${joboffer.description}"/></p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p><c:out value="${joboffer.description}"/></p>
+                                            <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">
+                                                <spring:message code="profileEnterpriseNOJOB"/>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </c:forEach>
