@@ -38,6 +38,11 @@
                             <spring:message code="cerrada"/>
                         </button>
                     </a>
+                    <a href="<c:url value="?status=cancelada"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                            <spring:message code="cancelada"/>
+                        </button>
+                    </a>
                     <a href="<c:url value="?"/>">
                         <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
                             <spring:message code="indexClearFilter"/>
@@ -80,6 +85,15 @@
                                             <a href="<c:url value="/closeJobOffer/${contact.userId}/${contact.id}"/>" >
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;">
                                                     <spring:message code="contactsCloseBtn"/>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${statusName == 'pendiente'}">
+                                        <td>
+                                            <a href="<c:url value="/cancelJobOffer/${contact.userId}/${contact.id}"/>" >
+                                                <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;">
+                                                    <spring:message code="contactsCancelBtn"/>
                                                 </button>
                                             </a>
                                         </td>

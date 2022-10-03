@@ -84,10 +84,10 @@
                                     <div class="card-body pb-0">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
-                                            <c:set var="categoryName2" value="${joboffer.category.name}"/>
-                                            <c:if test="${categoryName2.compareTo('No-Especificado') != 0}">
+                                            <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
+                                            <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                                             <span class="badge badge-pill badge-success p-2 mb-2">
-                                                <spring:message code="${categoryName2}"/>
+                                                <spring:message code="${jobOfferCategoryName}"/>
                                             </span>
                                             </c:if>
                                         </div>
@@ -128,9 +128,13 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p><c:out value="${joboffer.description}"/></p>
-                                            <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">
-                                                <spring:message code="profileEnterpriseNOJOB"/>
-                                            </button>
+<%--                                            <c:if test="${joboffer.status != 'cancelada'}">--%>
+<%--                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>">--%>
+<%--                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">--%>
+<%--                                                        <spring:message code="profileEnterpriseNOJOB"/>--%>
+<%--                                                    </button>--%>
+<%--                                                </a>--%>
+<%--                                            </c:if>--%>
                                         </div>
                                     </div>
                                 </div>

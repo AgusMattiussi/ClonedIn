@@ -37,10 +37,8 @@ public class EnterpriseController {
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
     private final JobOfferSkillService jobOfferSkillService;
-
     @Autowired
     protected AuthenticationManager authenticationManager;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     @Autowired
@@ -133,6 +131,31 @@ public class EnterpriseController {
 
         contactService.closeJobOffer(userId, jobOfferId);
         emailService.sendCloseJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
+
+        return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/cancelJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView cancelJobOffer(Authentication loggedUser,
+                                      @PathVariable("userId") final long userId,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+
+        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        contactService.cancelJobOffer(userId, jobOfferId);
+        emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
 
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }

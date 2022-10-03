@@ -37,6 +37,11 @@
                         <spring:message code="cerrada"/>
                     </button>
                 </a>
+                <a href="<c:url value="?status=cancelada"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                        <spring:message code="cancelada"/>
+                    </button>
+                </a>
                 <a href="<c:url value="?"/>">
                     <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
                         <spring:message code="indexClearFilter"/>
