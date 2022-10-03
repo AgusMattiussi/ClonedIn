@@ -24,7 +24,7 @@
                         <h5 class="card-title"><c:out value="${enterprise.name}"/></h5>
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/editEnterprise/${enterprise.id}"/>">
-                             <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                             <button type="button" class="btn btn-outline-dark"><i class="bi bi-pencil-square"></i></button>
                             </a>
                         </sec:authorize>
                         </div>

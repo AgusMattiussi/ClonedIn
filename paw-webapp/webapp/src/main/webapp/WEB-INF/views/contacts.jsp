@@ -76,7 +76,17 @@
                                 <tr>
                                     <td><c:out value="${contact.position}"/></td>
                                     <c:set var="categoryName" value="${contact.category.name}"/>
-                                    <td><spring:message code="${categoryName}"/></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="${categoryName}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                    </td>
                                     <td><c:out value="${contact.userName}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>

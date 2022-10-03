@@ -33,7 +33,9 @@
                             <form:select path="category" cssClass="form-select">
                                 <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>
                                 <c:forEach items="${categories}" var="category">
-                                    <form:option value="${category.id}"><spring:message code="${category.name}"/></form:option>
+                                    <c:if test="${category.name.compareTo('No-Especificado') != 0}">
+                                        <form:option value="${category.id}"><spring:message code="${category.name}"/></form:option>
+                                    </c:if>
                                 </c:forEach>
                             </form:select>
                         </div>

@@ -181,7 +181,7 @@ public class UserController {
 
         if (errors.hasErrors() || yearFromIsEmpty || monthOrYearEmpty || invalidDate) {
             if(monthOrYearEmpty)
-                errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick an year and month, or let both fields empty");
+                errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick a year and month, or let both fields empty");
             else if (invalidDate)
                 errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
 
@@ -231,9 +231,9 @@ public class UserController {
 
         if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
             if(yearFlag < 0)
-                errors.rejectValue("yearTo", "LowerYearTo", "Year to must be greater than year from");
+                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
             else if (yearFlag == 0 && monthFlag < 0)
-                errors.rejectValue("monthTo", "LowerMonthTo", "Month to must be greater than month from if years are the same");
+                errors.rejectValue("monthTo", "InvalidDate", "End date cannot be before initial date");
             LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formEducation(loggedUser, educationForm, userId);
         }

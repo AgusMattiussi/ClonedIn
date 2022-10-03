@@ -65,7 +65,10 @@
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
-                            <span class="badge badge-pill badge-success p-2"><spring:message code="${job.category.name}"/></span>
+                            <c:set var="jobCategoryName" value="${job.category.name}"/>
+                            <c:if test="${jobCategoryName.compareTo('No-Especificado') != 0}">
+                            <span class="badge badge-pill badge-success p-2"><spring:message code="${jobCategoryName}"/></span>
+                            </c:if>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -78,7 +81,15 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSalary"/></h5>
-                                        <p class="card-text"><c:out value="${job.salary}"/></p>
+                                        <c:set var="salary" value="${job.salary}"/>
+                                        <c:choose>
+                                            <c:when test="${salary == null}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <p class="card-text">$<c:out value="${salary}"/></p>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -113,8 +124,11 @@
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
-                                <p class="card-text">${job.description}</p>
+                                <c:set var="desc" value="${job.description}"/>
+                                <c:if test="${desc.compareTo('') != 0}">
+                                    <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
+                                    <p class="card-text">${desc}</p>
+                                </c:if>
                             </div>
                         </div>
                     </div>

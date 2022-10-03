@@ -17,6 +17,11 @@
            <div class="container">
                 <div class="row">
                     <div class="col-3">
+                        <div class="d-flex justify-content-center mt-3">
+                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                            <spring:message code="hideProfile"/>
+                        </button>
+                        </div>
                         <div class="card ml-2 mt-2 mb-2 h-70">
                             <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>
                             <div class="card-body pb-0">
@@ -33,7 +38,7 @@
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('USER')">
                                         <a href="<c:url value="/editUser/${user.id}"/>">
-                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                                            <button type="button" class="btn btn-outline-dark"><i class="bi bi-pencil-square"></i></button>
                                         </a>
                                     </sec:authorize>
                                 </div>

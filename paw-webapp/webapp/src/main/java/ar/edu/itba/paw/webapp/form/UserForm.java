@@ -4,6 +4,7 @@ import ar.edu.itba.paw.webapp.validators.ExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 import java.io.File;
@@ -26,7 +27,7 @@ public class UserForm {
     @Size(max=100)
     private String name;
 
-    private File image;
+    private MultipartFile image;
 
     @Size(max=50)
     private String city;
@@ -107,11 +108,11 @@ public class UserForm {
         this.category = category;
     }
 
-    public File getImage() {
+    public MultipartFile getImage() {
         return image;
     }
 
-    public void setImage(File image) {
+    public void setImage(MultipartFile image) {
         this.image = image;
     }
 
