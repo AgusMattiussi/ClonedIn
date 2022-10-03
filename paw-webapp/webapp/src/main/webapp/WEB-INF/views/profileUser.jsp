@@ -40,7 +40,7 @@
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('USER')">
                                         <a href="<c:url value="/editUser/${user.id}"/>">
-                                            <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
+                                            <button type="button" class="btn btn-outline-dark mr-2" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
                                         </a>
                                     </sec:authorize>
                                 </div>

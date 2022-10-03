@@ -12,7 +12,7 @@
   <title><spring:message code="imageFormPageTitle"/></title>
 </head>
 <body>
-<jsp:include page="../components/navbarEmpty.jsp">
+<jsp:include page="../components/navbar.jsp">
   <jsp:param name="id" value="${user.id}"/>
 </jsp:include>
 <div class="d-flex justify-content-between mt-2">
