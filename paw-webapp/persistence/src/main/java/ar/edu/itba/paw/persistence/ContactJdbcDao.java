@@ -214,7 +214,7 @@ public class ContactJdbcDao implements ContactDao {
     public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, e.nombre" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
-                " WHERE c.idUsuario = ? AND c.estado = ? OFFSET ? LIMIT ? ",
+                " WHERE c.idUsuario = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
                 new Object[]{ userID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
