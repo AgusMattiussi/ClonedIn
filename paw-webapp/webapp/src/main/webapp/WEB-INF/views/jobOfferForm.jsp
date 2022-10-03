@@ -55,13 +55,14 @@
                                                                 <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferFormSkills"/></label>
                                                                 </div>
                                                                  <div class="col-sm-4">
-                                                                <form:input type="text" path="skill1"/>
-                                                                <form:errors path="skill1" cssClass="formError" element="p"/>
+                                                                    <form:input type="text" path="skill1"/>
+                                                                    <form:errors path="skill1" cssClass="formError" element="p"/>
                                                                  </div>
-                                                                     <div class="col-sm-4">
-                                                                <form:input type="text" path="skill2"/>
-                                                                <form:errors path="skill2" cssClass="formError" element="p"/>
-                                                                     </div>
+                                                                <div class="col-sm-4">
+                                                                    <form:input type="text" path="skill2"/>
+                                                                    <form:errors path="skill2" cssClass="formError" element="p"/>
+                                                                 </div>
+                                                                <form:errors cssClass="formError" element="p"/>
                                                             </div>
                                                         </div>
                                                         <div class="d-flex">
