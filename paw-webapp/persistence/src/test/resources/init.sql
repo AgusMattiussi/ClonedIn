@@ -2,8 +2,8 @@
 INSERT INTO imagen(bytes) VALUES (null);
 INSERT INTO rubro (nombre) VALUES ('testCategory');
 INSERT INTO aptitud (descripcion) VALUES ('testskill');
-INSERT INTO usuario (nombre, email, contrasenia, descripcion, idRubro, ubicacion, posicionActual, educacion) VALUES ('John Lennon', 'johnlennon@gmail.com', 'imagineAPassword', null, 1, null, null, null);
-INSERT INTO empresa (nombre, email, contrasenia, descripcion, idRubro, ubicacion) VALUES ('Empresaurio', 'empresaurio@gmail.com', '12345678', null, null, null);
+INSERT INTO usuario (nombre, email, contrasenia, descripcion, idRubro, ubicacion, posicionActual, educacion, idImagen) VALUES ('John Lennon', 'johnlennon@gmail.com', 'imagineAPassword', null, 1, null, null, null, 1);
+INSERT INTO empresa (nombre, email, contrasenia, descripcion, idRubro, ubicacion, idImagen) VALUES ('Empresaurio', 'empresaurio@gmail.com', '12345678', null, null, null, 1);
 INSERT INTO aptitudUsuario (idAptitud, idUsuario)
     SELECT a.id, u.id
     FROM aptitud a, usuario u
