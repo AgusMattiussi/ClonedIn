@@ -27,8 +27,6 @@ public class UserForm {
     @Size(max=100)
     private String name;
 
-    private MultipartFile image;
-
     @Size(max=50)
     private String city;
 
@@ -106,14 +104,6 @@ public class UserForm {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public MultipartFile getImage() {
-        return image;
-    }
-
-    public void setImage(MultipartFile image) {
-        this.image = image;
     }
 
     public String getLevel() {

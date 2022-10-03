@@ -17,11 +17,13 @@
            <div class="container">
                 <div class="row">
                     <div class="col-3">
+                        <sec:authorize access="hasRole('USER')">
                         <div class="d-flex justify-content-center mt-3">
                         <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
                             <spring:message code="hideProfile"/>
                         </button>
                         </div>
+                        </sec:authorize>
                         <div class="card ml-2 mt-2 mb-2 h-70">
                             <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>
                             <div class="card-body pb-0">
@@ -45,7 +47,7 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <c:set var="position" value="${user.currentPosition}"/>
-                                <p class="card-text"><spring:message code="profilePosition"/>:
+                                <p class="card-text"><spring:message code="profilePosition"/>
                                     <c:choose>
                                         <c:when test="${position.compareTo('') == 0}">
                                             <spring:message code="profileInfoNotSpecified"/>
@@ -56,7 +58,7 @@
                                     </c:choose>
                                             </p>
                                     <c:set var="categoryName" value="${user.category.name}"/>
-                                    <p class="card-text"><spring:message code="profileCategory"/>:
+                                    <p class="card-text"><spring:message code="profileCategory"/>
                                         <c:choose>
                                             <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
                                                 <spring:message code="profileInfoNotSpecified"/>
@@ -67,7 +69,7 @@
                                         </c:choose>
                                     </p>
                                     <c:set var="educationLevel" value="${user.education}"/>
-                                    <p class="card-text"><spring:message code="profileEducationLevel"/>:
+                                    <p class="card-text"><spring:message code="profileEducationLevel"/>
                                         <c:choose>
                                             <c:when test="${educationLevel.compareTo('No-especificado') == 0}">
                                                 <spring:message code="profileInfoNotSpecified"/>
@@ -78,7 +80,7 @@
                                         </c:choose>
                                     </p>
                                 <c:set var="location" value="${user.location}"/>
-                                    <p class="card-text"><spring:message code="profileLocation"/>:
+                                    <p class="card-text"><spring:message code="profileLocation"/>
                                         <c:choose>
                                             <c:when test="${location.compareTo('') == 0}">
                                                 <spring:message code="profileInfoNotSpecified"/>
@@ -143,10 +145,15 @@
                                                 <p style="font-size: 9pt">
                                                     <c:set var="monthFromNameEx" value="selectMonth${experience.monthFrom}"/>
                                                     <spring:message code="${monthFromNameEx}"/> <c:out value="${experience.yearFrom}"/> -
-                                                    <c:if test="${experience.yearTo != null && experience.monthTo != 0}">
+                                                <c:choose>
+                                                    <c:when test="${experience.yearTo != null && experience.monthTo != 0}">
                                                         <c:set var="monthToNameEx" value="selectMonth${experience.monthTo}"/>
                                                         <spring:message code="${monthToNameEx}"/> <c:out value="${experience.yearTo}"/>
-                                                    </c:if>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <spring:message code="profileNow"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 </p>
                                                 <p><c:out value="${experience.description}"/></p>
                                                 <hr style="border: 1px solid grey">

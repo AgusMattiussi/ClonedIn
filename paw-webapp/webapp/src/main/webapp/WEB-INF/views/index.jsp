@@ -89,7 +89,7 @@
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                                             <c:set var="categoryName" value="${us.category.name}"/>
-                                                                <p><spring:message code="indexCategory"/>:
+                                                                <p><spring:message code="indexCategory"/>
                                                                     <c:choose>
                                                                         <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
                                                                             <spring:message code="profileInfoNotSpecified"/>
@@ -102,7 +102,7 @@
                                                                     </c:choose>
                                                                 </p>
                                                             <c:set var="position" value="${us.currentPosition}"/>
-                                                            <p class="card-text"><spring:message code="profilePosition"/>:
+                                                            <p class="card-text"><spring:message code="profilePosition"/>
                                                                 <c:choose>
                                                                 <c:when test="${position.compareTo('') == 0}">
                                                                     <spring:message code="profileInfoNotSpecified"/>
@@ -114,7 +114,7 @@
                                                             </p>
 
                                                             <c:set var="educationLevel" value="${us.education}"/>
-                                                            <p class="card-text"><spring:message code="profileEducationLevel"/>:
+                                                            <p class="card-text"><spring:message code="profileEducationLevel"/>
                                                                 <c:choose>
                                                                     <c:when test="${educationLevel.compareTo('No-especificado') == 0}">
                                                                         <spring:message code="profileInfoNotSpecified"/>
@@ -126,7 +126,7 @@
                                                             </p>
 
                                                                 <c:set var="location" value="${us.location}"/>
-                                                            <p class="card-text"> <spring:message code="profileLocation"/>:
+                                                            <p class="card-text"> <spring:message code="profileLocation"/>
                                                                 <c:choose>
                                                                     <c:when test="${location.compareTo('') == 0}">
                                                                         <spring:message code="profileInfoNotSpecified"/>

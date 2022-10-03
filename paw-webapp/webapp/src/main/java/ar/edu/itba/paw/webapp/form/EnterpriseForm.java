@@ -28,8 +28,6 @@ public class EnterpriseForm {
     @Size(max=50)
     private String name;
 
-    private MultipartFile image;
-
     @Size(max=50)
     private String city;
 
@@ -93,14 +91,6 @@ public class EnterpriseForm {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public MultipartFile getImage() {
-        return image;
-    }
-
-    public void setImage(MultipartFile image) {
-        this.image = image;
     }
 
 }

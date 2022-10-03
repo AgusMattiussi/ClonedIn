@@ -43,13 +43,6 @@
                                                     <form:errors cssClass="formError" element="p"/>
                                                     <form:input type="password" path="repeatPassword" placeholder="${repeatpassPlaceholder}"/>
                                                     <form:errors path="repeatPassword" cssClass="formError" element="p"/>
-<%--                                                    <div class="d-flex">--%>
-<%--                                                            <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>--%>
-<%--                                                        <div style="margin-left: 15px">--%>
-<%--                                                            <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
-                                                    <form:errors path="image" cssClass="formError" element="p"/>
                                                     <form:input type="text" path="city" placeholder="${locationPlaceholder}"/>
                                                     <form:errors path="city" cssClass="formError" element="p"/>
                                                     <div class="d-flex">

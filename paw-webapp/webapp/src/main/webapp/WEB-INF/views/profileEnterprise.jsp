@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-footer bg-white">
                         <c:set var="categoryName" value="${enterprise.category.name}"/>
-                        <p class="card-text"><spring:message code="profileCategory"/>:
+                        <p class="card-text"><spring:message code="profileCategory"/>
                             <c:choose>
                                 <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
@@ -43,7 +43,7 @@
                         </p>
 
                         <c:set var="location" value="${enterprise.location}"/>
-                        <p class="card-text"><spring:message code="profileLocation"/>:
+                        <p class="card-text"><spring:message code="profileLocation"/>
                             <c:choose>
                                 <c:when test="${location.compareTo('') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>

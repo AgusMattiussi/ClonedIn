@@ -18,7 +18,7 @@
           <div class="row justify-content-center mt-0">
             <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
               <div class="card px-0 pt-4 pb-0 mt-3 mb-3"  style="background: #F2F2F2">
-                <h2><strong><spring:message code="registerTitle"/></strong></h2>
+                <h2><strong><spring:message code="editPageTitle"/></strong></h2>
                 <p><spring:message code="registerWarning"/></p>
                 <spring:message code="registerMail" var="emailPlaceholder"/>
                 <spring:message code="contactsEnterpriseName" var="namePlaceholder"/>
@@ -38,12 +38,6 @@
                           <form:label path="name">${namePlaceholder}</form:label>
                           <form:input type="text" path="name" placeholder="${user.name}"/>
                           <form:errors path="name" cssClass="formError" element="p"/>
-<%--                          <div class="d-flex">--%>
-<%--                              <label style="margin-top: 1.2rem; margin-left: 10px" for="ControlFile"><spring:message code="registerPhotoMsg"/></label>--%>
-<%--                            <div style="margin-left: 15px;">--%>
-<%--                              <form:input type="file" path="image" class="form-control-file" id="ControlFile"/>--%>
-<%--                            </div>--%>
-<%--                          </div>--%>
                           <form:label path="location">${locationPlaceholder}</form:label>
                           <form:input type="text" path="location" placeholder="${user.location}"/>
                           <form:errors path="location" cssClass="formError" element="p"/>

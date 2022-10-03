@@ -9,8 +9,6 @@ public class EditEnterpriseForm {
     @Size(max=50)
     private String name;
 
-    private File image;
-
     @Size(max=50)
     private String location;
 
@@ -52,11 +50,4 @@ public class EditEnterpriseForm {
         this.category = category;
     }
 
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
-    }
 }
