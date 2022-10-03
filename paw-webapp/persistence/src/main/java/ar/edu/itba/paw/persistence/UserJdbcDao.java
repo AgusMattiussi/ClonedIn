@@ -230,7 +230,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public void updateUserProfileImage(long userId, long imageId) {
-        template.update("UPDATE usuario SET idImagen = ? WHERE id = ?", userId, imageId);
+        template.update("UPDATE usuario SET idImagen = ? WHERE id = ?", imageId, userId);
     }
 
     @Override

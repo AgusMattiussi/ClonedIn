@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -246,6 +247,39 @@ public class EnterpriseController {
                 editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory());
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping(value = "/uploadEnterpriseProfileImage/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm,
+                                  @PathVariable("enterpriseId") final long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("imageForm");
+//        mav.addObject("user", userService.findById(enterpriseId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping(value = "/uploadEnterpriseProfileImage/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors,
+                                    @PathVariable("enterpriseId") final long enterpriseId) throws IOException {
+        if (errors.hasErrors()) {
+            return formImage(loggedUser, imageForm, enterpriseId);
+        }
+//        userService.updateProfileImage(enterpriseId, imageForm.getImage().getBytes());
+        return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
+    }
+
+//    @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
+//    public @ResponseBody byte[] getProfileImage(@PathVariable("enterpriseId") final long enterpriseId, @PathVariable("imageId") final int imageId) {
+//        LOGGER.debug("Trying to access profile image");
+//        byte[] profileImage = new byte[0];
+//        try {
+//            profileImage = userService.getProfileImage(imageId).orElseThrow(UserNotFoundException::new).getBytes();
+//        } catch (UserNotFoundException e) {
+//            LOGGER.error("Error loading image {}", imageId);
+//        }
+//        LOGGER.info("Profile image accessed.");
+//        return profileImage;
+//    }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })

@@ -19,8 +19,16 @@
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
                     <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>
-                    <div class="card-body pb-0">
-                        <div class="d-flex justify-content-between">
+<%--                    <img class="card-img-top small" alt="profile_image" src="<c:url value="/${enterprise.id}/image/${enterprise.imageId}"/>">--%>
+                    <div class="card-body p-0">
+                        <sec:authorize access="hasRole('ENTERPRISE')">
+                            <a href="<c:url value="/uploadEnterpriseProfileImage/${enterprise.id}"/>">
+                                <button class="btn btn-block waves-effect mb-2" style="background-color: #459F78; color: white;">
+                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn"/>
+                                </button>
+                            </a>
+                        </sec:authorize>
+                        <div class="d-flex justify-content-between pb-0 pl-4 mt-2 pr-2">
                         <h5 class="card-title"><c:out value="${enterprise.name}"/></h5>
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/editEnterprise/${enterprise.id}"/>">

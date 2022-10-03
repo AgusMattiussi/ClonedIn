@@ -36,7 +36,7 @@
                           </div>
                         </div>
                     </div>
-                    <a href="<c:url value="/profileUser/${user.id}"/>">
+                    <a onclick="history.back()">
                       <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                     </a>
                     <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
