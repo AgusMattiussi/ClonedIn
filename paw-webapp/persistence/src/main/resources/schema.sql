@@ -23,7 +23,9 @@ CREATE TABLE IF NOT EXISTS empresa (
     descripcion TEXT,
     idRubro INTEGER,
     ubicacion TEXT,
-    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
+    idImagen INTEGER,
+    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
+    FOREIGN KEY (idImagen) REFERENCES imagen ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS usuario (

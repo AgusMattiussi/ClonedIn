@@ -46,7 +46,7 @@ public interface UserService {
     void updateUserInformation(User user, String newName, String newDescription, String newLocation, String newPosition,
                                String newCategoryName, String newEducationLevel);
 
-    void updateProfileImage(long userId, byte[] imageId);
+    void updateProfileImage(long userId, byte[] imageBytes);
 
     Optional<Image> getProfileImage(int imageId);
 

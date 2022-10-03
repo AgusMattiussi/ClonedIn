@@ -132,7 +132,8 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(ENTERPRISE_TABLE_PASSWORD),
                 resultSet.getString(ENTERPRISE_TABLE_LOCATION),
                 category,
-                resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION));
+                resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION),
+                resultSet.getLong(IMAGE_ID));
     };
 
     private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {

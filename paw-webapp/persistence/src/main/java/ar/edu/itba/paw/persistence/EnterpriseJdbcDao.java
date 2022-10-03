@@ -26,6 +26,8 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private static final String LOCATION = "ubicacion";
     private static final String CATEGORY_ID_FK = "idRubro";
     private static final String DESCRIPTION = "descripcion";
+    private static final String IMAGE_ID = "idImagen";
+    private static final long DEFAULT_IMAGE_ID = 1;
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
@@ -44,7 +46,8 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
                 resultSet.getString(PASSWORD),
                 resultSet.getString(LOCATION),
                 category,
-                resultSet.getString(DESCRIPTION));
+                resultSet.getString(DESCRIPTION),
+                resultSet.getLong(IMAGE_ID));
     };
 
 
@@ -62,6 +65,8 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
         Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
 
+        long imageId = DEFAULT_IMAGE_ID;
+
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
         values.put(EMAIL, email);
@@ -69,10 +74,11 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
         values.put(LOCATION, location);
         values.put(DESCRIPTION, description);
         values.put(CATEGORY_ID_FK, category.getId());
+        values.put(IMAGE_ID, imageId);
 
         Number enterpriseId = insert.executeAndReturnKey(values);
 
-        return new Enterprise(enterpriseId.longValue(), name, email, password, location, category, description);
+        return new Enterprise(enterpriseId.longValue(), name, email, password, location, category, description, imageId);
     }
 
     @Override
@@ -116,5 +122,10 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     public void updateCategory(long enterpriseID, String newCategoryName) {
         Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
         template.update("UPDATE empresa SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), enterpriseID});
+    }
+
+    @Override
+    public void updateEnterpriseProfileImage(long enterpriseID, long imageId) {
+        template.update("UPDATE empresa SET idImagen = ? WHERE id = ?", imageId, enterpriseID);
     }
 }

@@ -43,7 +43,7 @@ public class EnterpriseServiceImplTest {
     @Test
     public void testCreate() {
         Mockito.when(enterpriseDao.create(eq(TEST_EMAIL), eq(TEST_NAME), eq(TEST_PASSWORD), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_DESCRIPTION)))
-                .thenReturn(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION));
+                .thenReturn(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION, 1));
 
         final Enterprise newEnterprise = enterpriseService.create(TEST_EMAIL, TEST_NAME, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY_NAME, TEST_DESCRIPTION);
 
@@ -59,7 +59,7 @@ public class EnterpriseServiceImplTest {
     @Test
     public void testFindByEmail() {
         Mockito.when(enterpriseDao.findByEmail(eq(TEST_EMAIL)))
-                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION)));
+                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION, 1)));
 
         final Optional<Enterprise> optEnterprise = enterpriseService.findByEmail(TEST_EMAIL);
 
@@ -76,7 +76,7 @@ public class EnterpriseServiceImplTest {
     @Test
     public void testFindById() {
         Mockito.when(enterpriseDao.findById(eq(TEST_ID)))
-                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION)));
+                .thenReturn(Optional.of(new Enterprise(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD, TEST_LOCATION, TEST_CATEGORY, TEST_DESCRIPTION, 1)));
 
 
         final Optional<Enterprise> optEnterprise = enterpriseService.findById(TEST_ID);

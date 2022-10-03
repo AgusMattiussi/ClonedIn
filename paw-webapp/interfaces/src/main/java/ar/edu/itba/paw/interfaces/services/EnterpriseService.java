@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Optional;
@@ -25,4 +26,8 @@ public interface EnterpriseService {
     void updateCategory(long enterpriseID, String newCategoryName);
 
     void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName);
+
+    void updateProfileImage(long enterpriseID, byte[] imageId);
+
+    Optional<Image> getProfileImage(int imageId);
 }

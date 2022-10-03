@@ -10,10 +10,10 @@ public class Enterprise {
     private final String location;
     private final Category category;
     private final String description;
+    private final long imageId;
 
-    //TODO: Aniadir imagen
 
-    public Enterprise(long id, String name, String email, String password, String location, Category category, String description) {
+    public Enterprise(long id, String name, String email, String password, String location, Category category, String description, long imageId) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -21,6 +21,7 @@ public class Enterprise {
         this.location = location;
         this.category = category;
         this.description = description;
+        this.imageId = imageId;
     }
 
     public long getId() {
@@ -49,6 +50,10 @@ public class Enterprise {
 
     public String getDescription() {
         return description;
+    }
+
+    public long getImageId() {
+        return imageId;
     }
 
     @Override

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 <head>
@@ -24,7 +25,12 @@
           <div class="row">
             <div class="col-md-12 mx-0">
               <div id="msform">
-                <c:url value="/uploadProfileImage/${user.id}" var="postPath"/>
+                <sec:authorize access="hasRole('ENTERPRISE')">
+                  <c:url value="/uploadEnterpriseProfileImage/${enterprise.id}" var="postPath"/>
+                </sec:authorize>
+                <sec:authorize access="hasRole('USER')">
+                  <c:url value="/uploadProfileImage/${user.id}" var="postPath"/>
+                </sec:authorize>
                 <form:form modelAttribute="imageForm" action="${postPath}" method="post" enctype="multipart/form-data">
                   <fieldset>
                     <div class="form-card">
@@ -36,10 +42,18 @@
                           </div>
                         </div>
                     </div>
-                    <a onclick="history.back()">
-                      <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                    </a>
-                    <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                    <sec:authorize access="hasRole('ENTERPRISE')">
+                      <a href="<c:url value="/profileEnterprise/${enterprise.id}"/>">
+                        <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
+                      </a>
+                      <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('USER')">
+                      <a href="<c:url value="/profileUser/${user.id}"/>">
+                        <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
+                      </a>
+                      <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                    </sec:authorize>
                   </fieldset>
                 </form:form>
               </div>

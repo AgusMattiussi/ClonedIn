@@ -44,11 +44,4 @@ public interface UserDao {
 
     void updateUserProfileImage(long userId, long imageId);
 
-    /* TODO:
-        - findByLocation
-        - findByCategory
-        - findByCurrentPosition
-        - findByDescription
-        - findByEducation
-     */
 }
