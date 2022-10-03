@@ -123,20 +123,14 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "status",defaultValue = "") final String status,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         final int itemsPerPage = 10;
         long contactsCount = contactService.getContactsCountForUser(userId);
 
-        List<JobOfferStatusEnterpriseData> jobOffersAuxList = contactService.getJobOffersWithStatusEnterpriseData(userId, page - 1, itemsPerPage);
-        List<JobOfferStatusEnterpriseData> jobOffersList = new ArrayList<>();
-
-        //aca deberia leer el status basado en que boton selecciono
-        for(JobOfferStatusEnterpriseData jobOffer: jobOffersAuxList) {
-            if(jobOffer.getStatus().equals("Accepted")) {
-                jobOffersList.add(jobOffer);
-            }
-        }
+        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,
+                page - 1, itemsPerPage, status);
 
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");

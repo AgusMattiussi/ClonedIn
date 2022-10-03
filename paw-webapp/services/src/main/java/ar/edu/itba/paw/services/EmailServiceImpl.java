@@ -99,7 +99,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("username", username);
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, LocaleContextHolder.getLocale()));
         mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, LocaleContextHolder.getLocale()));
-        mailMap.put("registerButtonMsg", messageSource.getMessage("registerMail.button", null, LocaleContextHolder.getLocale()));
+        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, LocaleContextHolder.getLocale()));
         String subject = messageSource.getMessage("registerMail.subject", null, LocaleContextHolder.getLocale());
         sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
     }

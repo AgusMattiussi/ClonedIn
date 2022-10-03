@@ -17,7 +17,7 @@ public interface ContactDao {
 
     List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
 
-    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
+    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
