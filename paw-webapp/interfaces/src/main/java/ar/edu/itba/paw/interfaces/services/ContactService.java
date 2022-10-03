@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ContactService {
@@ -34,6 +35,9 @@ public interface ContactService {
     long getContactsCountForEnterprise(long enterpriseID);
 
     long getContactsCountForUser(long userID);
+
+    Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList);
+
 
     //TODO: void removeContact(long enterpriseID, long userID);
 }

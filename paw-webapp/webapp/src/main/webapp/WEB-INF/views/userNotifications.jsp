@@ -79,9 +79,12 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-<%--                                            <c:forEach items="${skillsMap[job.id]}" var="skill">--%>
-<%--                                                <p class="card-text"><c:out value="${skill.value}"/></p>--%>
-<%--                                            </c:forEach>--%>
+                                            <c:if test="${jobOffersSkillMap[job.id].size() == 0}">
+                                                <p><spring:message code="profileInfoNotSpecified"/></p>
+                                            </c:if>
+                                            <c:forEach items="${jobOffersSkillMap[job.id]}" var="skill">
+                                                <p><c:out value="${skill.description}"/></p>
+                                            </c:forEach>
                                     </div>
                                 </div>
                                 <div class="col">

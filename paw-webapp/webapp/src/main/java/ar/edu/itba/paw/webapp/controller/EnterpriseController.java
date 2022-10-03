@@ -68,7 +68,7 @@ public class EnterpriseController {
 
         final int usersCount = userService.getAllUsers().size();
 
-        final int itemsPerPage = 3;
+        final int itemsPerPage = 8;
 
         //TODO: refactor?
         if(request.getParameter("term") == null)

@@ -127,23 +127,22 @@ public class UserController {
                                           @RequestParam(value = "status",defaultValue = "") final String status,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("userNotifications");
-        final int itemsPerPage = 10;
-        long contactsCount = contactService.getContactsCountForUser(userId);
-
-        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,
-                page - 1, itemsPerPage, status);
-
-        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+        final int itemsPerPage = 4;
+        User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
-        }));
+        });
+        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,
+                page - 1, itemsPerPage, status);
+        Map<Long, List<Skill>> jobOfferSkillMap = contactService.getJobOfferSkillsMapForUser(jobOffersList);
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : jobOffersList.size();
+
+        mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
-        // TODO: add skills for joboffer
-//        mav.addObject("skills", contactService)
+        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        // TODO: revisar esta paginacion
         return mav;
     }
 
