@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -18,11 +20,13 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final ImageService imageService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
     }
 
     @Override
@@ -125,5 +129,19 @@ public class UserServiceImpl implements UserService {
         updateCurrentPosition(userID, newPosition.isEmpty()? user.getCurrentPosition() : newPosition);
         updateCategory(userID, newCategoryName.isEmpty()? user.getCategory().getName() : newCategoryName);
         updateEducationLevel(userID, newEducationLevel.isEmpty()? user.getEducation() : newEducationLevel);
+    }
+
+    @Override
+    public void updateProfileImage(long userId, byte[] imageBytes) {
+        Image newImage = imageService.uploadImage(imageBytes);
+        userDao.updateUserProfileImage(userId, newImage.getId());
+    }
+
+    @Override
+    public Optional<Image> getProfileImage(int imageId) {
+        if(imageId == 1) {
+            return imageService.getImage(1);
+        }
+        return imageService.getImage(imageId);
     }
 }

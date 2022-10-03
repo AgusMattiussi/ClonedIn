@@ -39,6 +39,8 @@ public class ContactJdbcDao implements ContactDao {
     private static final String USER_TABLE_CURRENT_POSITION = "posicionActual";
     private static final String USER_TABLE_DESCRIPTION = "descripcion";
     private static final String USER_TABLE_EDUCATION = "educacion";
+    private static final String IMAGE_ID = "idImagen";
+
     private static final String ENTERPRISE_TABLE = "empresa";
     private static final String ENTERPRISE_TABLE_ID = "id";
     private static final String ENTERPRISE_TABLE_NAME = "nombre";
@@ -148,7 +150,8 @@ public class ContactJdbcDao implements ContactDao {
                 category,
                 resultSet.getString(USER_TABLE_CURRENT_POSITION),
                 resultSet.getString(USER_TABLE_DESCRIPTION),
-                resultSet.getString(USER_TABLE_EDUCATION));
+                resultSet.getString(USER_TABLE_EDUCATION),
+                resultSet.getLong(IMAGE_ID));
     };
 
     @Autowired

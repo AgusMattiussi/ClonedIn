@@ -13,8 +13,9 @@ public class User {
     private final String currentPosition;
     private final String description;
     private final String education;
+    private final long imageId;
 
-    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
+    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, long imageId) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -24,6 +25,7 @@ public class User {
         this.currentPosition = currentPosition;
         this.description = description;
         this.education = education;
+        this.imageId = imageId;
     }
 
     public long getId() {
@@ -60,6 +62,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public long getImageId() {
+        return imageId;
     }
 
     @Override

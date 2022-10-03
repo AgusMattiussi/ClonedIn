@@ -313,13 +313,26 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors, @PathVariable("userId") final long userId) throws IOException {
+    public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors,
+                                    @PathVariable("userId") final long userId) throws IOException {
         if (errors.hasErrors()) {
             return formImage(loggedUser, imageForm, userId);
         }
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        imageService.uploadImage(imageForm.getImage().getBytes());
-        return new ModelAndView("redirect:/profileUser/" + user.getId());
+        userService.updateProfileImage(userId, imageForm.getImage().getBytes());
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
+    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
+        LOGGER.debug("Trying to access profile image");
+        byte[] profileImage = new byte[0];
+        try {
+            profileImage = userService.getProfileImage(imageId).orElseThrow(UserNotFoundException::new).getBytes();
+        } catch (UserNotFoundException e) {
+            LOGGER.error("Error loading image {}", imageId);
+        }
+        LOGGER.info("Profile image accessed.");
+        return profileImage;
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")

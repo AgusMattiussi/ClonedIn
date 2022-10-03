@@ -18,7 +18,8 @@
                 <div class="row">
                     <div class="col-3">
                         <div class="card ml-2 mt-2 mb-2 h-70">
-                            <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${user.id}/image/${user.imageId}"/>">
+<%--                            <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>--%>
                             <div class="card-body p-0">
                                 <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/uploadProfileImage/${user.id}"/>">

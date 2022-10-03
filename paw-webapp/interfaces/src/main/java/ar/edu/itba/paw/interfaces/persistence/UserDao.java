@@ -42,6 +42,8 @@ public interface UserDao {
 
     void updateEducationLevel(long userID, String newEducationLevel);
 
+    void updateUserProfileImage(long userId, long imageId);
+
     /* TODO:
         - findByLocation
         - findByCategory

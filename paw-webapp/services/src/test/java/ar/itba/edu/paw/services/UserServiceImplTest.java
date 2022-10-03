@@ -46,11 +46,11 @@ public class UserServiceImplTest {
     @Before
     public void setUp(){
         Mockito.when(userDao.create(eq("naruto@gmail.com"), eq(TEST_PASSWORD), eq("Naruto"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(2, "naruto@gmail.com", TEST_PASSWORD, "Naruto", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION, 1));
         Mockito.when(userDao.create(eq("sasuke@gmail.com"), eq(TEST_PASSWORD), eq("Sasuke"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(3, "sasuke@gmail.com", TEST_PASSWORD, "Sasuke", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION, 1));
         Mockito.when(userDao.create(eq("sakura@gmail.com"), eq(TEST_PASSWORD), eq("Sakura"), eq(TEST_LOCATION), eq(TEST_CATEGORY_NAME), eq(TEST_CURRENT_POSITION), eq(TEST_DESCRIPTION), eq(TEST_EDUCATION)))
-            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION));
+            .thenReturn(new User(4, "sakura@gmail.com", TEST_PASSWORD, "Sakura", TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION, 1));
     }
 
     //FIXME: Al agregar la encriptacion de la contrasenia, se rompio este test
@@ -75,7 +75,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindByEmail() {
         Mockito.when(userDao.findByEmail(eq(TEST_EMAIL)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION, 1)));
 
         final Optional<User> optUser = userService.findByEmail(TEST_EMAIL);
 
@@ -94,7 +94,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindById() {
         Mockito.when(userDao.findById(eq(TEST_ID)))
-                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION)));
+                .thenReturn(Optional.of(new User(TEST_ID, TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_LOCATION, new Category(99, TEST_CATEGORY_NAME), TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION, 1)));
 
 
         final Optional<User> optUser = userService.findById(TEST_ID);
