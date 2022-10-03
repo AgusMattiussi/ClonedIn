@@ -89,21 +89,21 @@ public class ContactJdbcDaoTest {
         newUser = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, NEW_USER_LOCATION, NEW_USER_CATEGORY_NAME, NEW_USER_CURRENT_POSITION, NEW_USER_DESCRIPTION, NEW_USER_EDUCATION) ;
     }
 
-    @Test
-    public void testGetEnterprisesForUser() {
-        final List<Enterprise> enterpriseList = contactJdbcDao.getEnterprisesForUser(testUser.getId());
-
-        Assert.assertEquals(1, enterpriseList.size());
-        Assert.assertEquals(testEnterprise.getId(), enterpriseList.get(0).getId());
-    }
-
-    @Test
-    public void testGetUsersForEnterprise() {
-        final List<User> userList = contactJdbcDao.getUsersForEnterprise(testEnterprise.getId());
-
-        Assert.assertEquals(1, userList.size());
-        Assert.assertEquals(testUser.getId(), userList.get(0).getId());
-    }
+//    @Test
+//    public void testGetEnterprisesForUser() {
+//        final List<Enterprise> enterpriseList = contactJdbcDao.getEnterprisesForUser(testUser.getId());
+//
+//        Assert.assertEquals(1, enterpriseList.size());
+//        Assert.assertEquals(testEnterprise.getId(), enterpriseList.get(0).getId());
+//    }
+//
+//    @Test
+//    public void testGetUsersForEnterprise() {
+//        final List<User> userList = contactJdbcDao.getUsersForEnterprise(testEnterprise.getId());
+//
+//        Assert.assertEquals(1, userList.size());
+//        Assert.assertEquals(testUser.getId(), userList.get(0).getId());
+//    }
 
 //    @Test
 //    public void addContactTest() {
