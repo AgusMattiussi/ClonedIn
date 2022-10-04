@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 public class AuthUser extends User {
-    //private static final long serialVersionUID = ;
     public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }

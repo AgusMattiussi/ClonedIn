@@ -7,8 +7,6 @@
   <%@include file="../components/imports.jsp"%>
   <!-- CSS -->
   <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
-  <!-- Script -->
-  <script src="<c:url value="/assets/js/steps.js"/>"></script>
   <title><spring:message code="skillsFormPageTitle"/></title>
 </head>
 <body>

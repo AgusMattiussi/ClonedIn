@@ -4,8 +4,6 @@
 <html>
 <head>
     <%@include file="../components/imports.jsp"%>
-    <!-- Script -->
-    <script src="<c:url value="/assets/js/steps.js"/>"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
     <title><spring:message code="loginPageTitle"/></title>

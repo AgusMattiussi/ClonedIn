@@ -6,8 +6,6 @@
 <html>
   <head>
     <%@include file="../components/imports.jsp"%>
-    <!-- Script -->
-    <script src="<c:url value="/assets/js/steps.js"/>"></script>
     <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
     <title><spring:message code="registerPageTitle"/></title>
   </head>
@@ -78,9 +76,9 @@
                         </div>
                         <p><spring:message code="registerRequiredMsg"/></p>
                         <a href="<c:url value="/login"/>">
-                          <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
+                          <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                         </a>
-                        <button type="submit" name="end" class="btn action-button"><spring:message code="registerButtonMsg"/></button>
+                        <button type="submit" class="btn action-button"><spring:message code="registerButtonMsg"/></button>
                       </fieldset>
                       </form:form>
                       </div>

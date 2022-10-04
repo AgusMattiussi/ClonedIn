@@ -13,8 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <!-- BootStrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- Script -->
-    <script src="<c:url value="/assets/js/script.js"/>"></script>
     <!-- TabIcon -->
     <link rel="icon" type="image/x-icon" href="<c:url value="/assets/images/favicon.ico"/>">
 </head>

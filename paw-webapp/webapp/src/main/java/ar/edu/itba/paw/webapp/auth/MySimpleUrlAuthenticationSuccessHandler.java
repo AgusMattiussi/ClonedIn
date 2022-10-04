@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MySimpleUrlAuthenticationSuccessHandler
         implements AuthenticationSuccessHandler {
@@ -71,7 +69,6 @@ public class MySimpleUrlAuthenticationSuccessHandler
 
             switch (authorityName) {
                 case "ROLE_USER":
-                    //TODO: Cambiar por getIdForEmail()
                     User user = userService.findByEmail(accountEmail).orElseThrow(UserNotFoundException::new);
                     return redirectURL + "profileUser/" + user.getId();
                 case "ROLE_ENTERPRISE":

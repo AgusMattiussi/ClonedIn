@@ -6,8 +6,6 @@
 <html>
 <head>
   <%@include file="../components/imports.jsp"%>
-  <!-- Script -->
-  <script src="<c:url value="/assets/js/steps.js"/>"></script>
   <!-- CSS -->
   <link rel="stylesheet" href="<c:url value="/assets/css/steps.css"/>"/>
   <title><spring:message code="contactFormPageTitle"/></title>
@@ -58,7 +56,7 @@
                           </div>
                           <p><spring:message code="contactFormRequiredMsg"/></p>
                           <a onclick="history.back()">
-                            <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
+                            <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                           </a>
                           <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <spring:message code="contactFormButtonMsg"/>

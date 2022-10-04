@@ -4,11 +4,8 @@ import ar.edu.itba.paw.webapp.validators.ExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.web.multipart.MultipartFile;
-
 
 import javax.validation.constraints.Size;
-import java.io.File;
 
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class EnterpriseForm {
