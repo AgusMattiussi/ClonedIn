@@ -64,18 +64,17 @@ public class ImageJdbcDaoTest {
         Assert.assertEquals(testImageByteArray, newImage.getBytes());
     }
 
-    /*@Test
+    @Test
     public void testFindById() {
-        imageDao.uploadImage(testImageByteArray);
-        System.out.println("\n\n\n\n SUBIENDO IMAGEN \n\n\n\n");
+        final Image originalImage = imageDao.uploadImage(testImageByteArray);
 
-        final Optional<Image> image = imageDao.getImage(1);
+        final Optional<Image> image = imageDao.getImage(originalImage.getId());
 
         Assert.assertTrue(image.isPresent());
-        Assert.assertEquals(1, image.get().getId());
+        Assert.assertEquals(originalImage.getId(), image.get().getId());
         Assert.assertNotNull(image.get().getBytes());
         Assert.assertArrayEquals(testImageByteArray, image.get().getBytes());
-    }*/
+    }
 
 
 
