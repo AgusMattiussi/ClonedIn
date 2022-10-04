@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models;
 
-import java.sql.Date;
-import java.time.YearMonth;
 import java.util.Objects;
 
 public class Experience {

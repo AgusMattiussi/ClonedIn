@@ -3,7 +3,6 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ContactDao {
 
@@ -34,7 +33,5 @@ public interface ContactDao {
     long getContactsCountForEnterprise(long enterpriseID);
 
     long getContactsCountForUser(long userID);
-
-    //TODO: void removeContact(long enterpriseID, long userID);
 
 }

@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.models;
 
-import java.sql.Date;
 import java.util.Objects;
 
 public class Education {
 
     private final long id;
     private final long userId;
-    //TODO: Chequear manejo de fechas
     private final int monthFrom;
     private final int yearFrom;
     private final int monthTo;
