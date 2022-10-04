@@ -57,4 +57,9 @@ public class JobOfferServiceImpl implements JobOfferService {
         }
         return jobOfferSkillMap;
     }
+
+    @Override
+    public void closeJobOffer(long jobOfferID) {
+        jobOfferDao.closeJobOffer(jobOfferID);
+    }
 }

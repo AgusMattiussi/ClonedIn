@@ -17,4 +17,8 @@ public interface JobOfferDao {
 
     Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID);
 
+    void closeJobOffer(long jobOfferID);
+
+    //void cancelJobOffer(long jobOfferID);
+
 }
