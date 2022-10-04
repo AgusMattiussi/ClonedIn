@@ -36,8 +36,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
     private static final String CLOSE = "close";
     private static final String CANCEL = "cancel";
-
-
+    private static final String ACCEPT = "acceptMsg";
 
     @Async
     @Override
@@ -103,14 +102,14 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, String contactMsg) {
+    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
-        mailMap.put("email", email);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
-        mailMap.put("contactMsg", messageSource.getMessage(contactMsg, null, LocaleContextHolder.getLocale()));
-        mailMap.put("noContactMsg", messageSource.getMessage(contactMsg, null, LocaleContextHolder.getLocale()));
+        mailMap.put("contactMsg", answerMsg.compareTo(ACCEPT)==0?
+                messageSource.getMessage("contactMsg", null, LocaleContextHolder.getLocale()) + email :
+                messageSource.getMessage("nonContactMsg", null, LocaleContextHolder.getLocale()));
         mailMap.put("jobOffer", jobOfferPosition);
         mailMap.put("contactsUrl", baseUrl + "/contactsEnterprise/" + enterprise.getId());
         mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
