@@ -18,6 +18,6 @@ public interface JobOfferDao {
 
     void closeJobOffer(long jobOfferID);
 
-    //void cancelJobOffer(long jobOfferID);
+    void cancelJobOffer(long jobOfferID);
 
 }

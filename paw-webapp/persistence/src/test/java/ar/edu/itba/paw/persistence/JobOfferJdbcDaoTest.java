@@ -127,4 +127,16 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(JobOfferAvailability.CLOSED.getStatus(), closedOffer.get().getAvailable());
     }
 
+    @Test
+    public void testCancelJobOffer(){
+        /* Se crea con disponible = "Activa" */
+        final JobOffer newJobOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+        jobOfferJdbcDao.cancelJobOffer(newJobOffer.getId());
+        final Optional<JobOffer> cancelledOffer = jobOfferJdbcDao.findById(newJobOffer.getId());
+
+        Assert.assertTrue(cancelledOffer.isPresent());
+        Assert.assertEquals(newJobOffer.getId(), cancelledOffer.get().getId());
+        Assert.assertEquals(JobOfferAvailability.CANCELLED.getStatus(), cancelledOffer.get().getAvailable());
+    }
+
 }

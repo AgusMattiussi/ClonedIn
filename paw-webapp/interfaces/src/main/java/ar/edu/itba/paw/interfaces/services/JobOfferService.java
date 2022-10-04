@@ -22,4 +22,6 @@ public interface JobOfferService {
 
     void closeJobOffer(long jobOfferID);
 
+    void cancelJobOffer(long jobOfferID);
+
 }
