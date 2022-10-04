@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
+import ar.edu.itba.paw.models.enums.JobOfferStatuses;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -193,5 +194,45 @@ public class ContactJdbcDaoTest {
         Assert.assertNotNull(status);
         Assert.assertFalse(status.isEmpty());
         Assert.assertEquals(STATUS_REJECTED, status);
+    }
+
+    @Test
+    public void testCancelJobOfferForEveryone(){
+        User user1 = userDao.findByEmail("test1@gmail.com").get();
+        User user2 = userDao.findByEmail("test2@gmail.com").get();
+        contactJdbcDao.addContact(testEnterprise.getId(), user1.getId(), testJobOffer.getId());
+        contactJdbcDao.addContact(testEnterprise.getId(), user2.getId(), testJobOffer.getId());
+
+        contactJdbcDao.cancelJobOfferForEveryone(testJobOffer.getId());
+
+        List<JobOfferWithStatus> user1JobOffers = contactJdbcDao.getJobOffersWithStatusForUser(user1.getId());
+        List<JobOfferWithStatus> user2JobOffers = contactJdbcDao.getJobOffersWithStatusForUser(user2.getId());
+
+        Assert.assertFalse(user1JobOffers.isEmpty());
+        Assert.assertFalse(user2JobOffers.isEmpty());
+        Assert.assertEquals(1, user1JobOffers.size());
+        Assert.assertEquals(1, user2JobOffers.size());
+        Assert.assertEquals(JobOfferStatuses.CANCELLED.getStatus(), user1JobOffers.get(0).getStatus());
+        Assert.assertEquals(JobOfferStatuses.CANCELLED.getStatus(), user1JobOffers.get(0).getStatus());
+    }
+
+    @Test
+    public void testCloseJobOfferForEveryone(){
+        User user1 = userDao.findByEmail("test1@gmail.com").get();
+        User user2 = userDao.findByEmail("test2@gmail.com").get();
+        contactJdbcDao.addContact(testEnterprise.getId(), user1.getId(), testJobOffer.getId());
+        contactJdbcDao.addContact(testEnterprise.getId(), user2.getId(), testJobOffer.getId());
+
+        contactJdbcDao.closeJobOfferForEveryone(testJobOffer.getId());
+
+        List<JobOfferWithStatus> user1JobOffers = contactJdbcDao.getJobOffersWithStatusForUser(user1.getId());
+        List<JobOfferWithStatus> user2JobOffers = contactJdbcDao.getJobOffersWithStatusForUser(user2.getId());
+
+        Assert.assertFalse(user1JobOffers.isEmpty());
+        Assert.assertFalse(user2JobOffers.isEmpty());
+        Assert.assertEquals(1, user1JobOffers.size());
+        Assert.assertEquals(1, user2JobOffers.size());
+        Assert.assertEquals(JobOfferStatuses.CLOSED.getStatus(), user1JobOffers.get(0).getStatus());
+        Assert.assertEquals(JobOfferStatuses.CLOSED.getStatus(), user1JobOffers.get(0).getStatus());
     }
 }

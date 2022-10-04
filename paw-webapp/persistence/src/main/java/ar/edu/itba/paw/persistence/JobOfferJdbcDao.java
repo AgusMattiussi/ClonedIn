@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
+import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.JobOffer;
@@ -37,6 +38,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private final SimpleJdbcInsert insert;
 
     private CategoryDao categoryDao;
+    private ContactDao contactDao;
 
     private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
@@ -59,12 +61,13 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
 
     @Autowired
-    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao){
+    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao, ContactDao contactDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(JOB_OFFER_TABLE)
                 .usingGeneratedKeyColumns(ID);
         this.categoryDao = categoryDao;
+        this.contactDao = contactDao;
     }
 
 
@@ -115,10 +118,12 @@ public class JobOfferJdbcDao implements JobOfferDao {
     @Override
     public void closeJobOffer(long jobOfferID) {
         template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOfferID);
+        contactDao.closeJobOfferForEveryone(jobOfferID);
     }
 
     @Override
     public void cancelJobOffer(long jobOfferID) {
         template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CANCELLED.getStatus(), jobOfferID);
+        contactDao.cancelJobOfferForEveryone(jobOfferID);
     }
 }

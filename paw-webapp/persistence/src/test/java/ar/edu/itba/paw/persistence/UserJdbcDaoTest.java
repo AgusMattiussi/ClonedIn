@@ -117,9 +117,11 @@ public class UserJdbcDaoTest {
         final User u2 = dao.create("b@gmail.com", TEST_PASSWORD, "B", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
         final User u3 = dao.create("c@gmail.com", TEST_PASSWORD, "C", TEST_LOCATION, TEST_CATEGORY_NAME, TEST_CURRENT_POSITION, TEST_DESCRIPTION, TEST_EDUCATION);
 
+        long userCount = JdbcTestUtils.countRowsInTable(jdbctemplate, USER_TABLE);
+
         final List<User> allUsers = dao.getAllUsers();
         //Tenemos en cuenta el insert inicial
-        Assert.assertEquals(3 + 1, allUsers.size());
+        Assert.assertEquals(userCount, allUsers.size());
         Assert.assertTrue(allUsers.contains(u1));
         Assert.assertTrue(allUsers.contains(u2));
         Assert.assertTrue(allUsers.contains(u3));
