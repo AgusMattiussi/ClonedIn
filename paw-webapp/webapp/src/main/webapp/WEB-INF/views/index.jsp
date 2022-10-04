@@ -85,7 +85,16 @@
                                             <div class="col-auto mb-3">
                                                 <div class="card mt-1 h-100 mx-0" style="width: 15rem;">
                                                     <a class="text-decoration-none" href="<c:url value="/profileUser/${us.id}"/>" style="color: inherit">
-                                                        <img class="card-img-top small" alt="profile_image" src="<c:url value="/${us.id}/image/${us.imageId}"/>" width="100" height="200">
+                                                        <c:set var="image" value="${us.imageId}"/>
+                                                        <c:choose>
+                                                            <c:when test="${image == 0}">
+                                                                <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <img class="card-img-top small" alt="profile_image" src="<c:url value="/${us.id}/image/${image}"/>" width="100" height="200">
+                                                            </c:otherwise>
+                                                        </c:choose>
+
                                                         <div class="card-body">
                                                             <h5 class="card-title"><c:out value="${us.name}"/></h5>
                                                             <c:set var="categoryName" value="${us.category.name}"/>

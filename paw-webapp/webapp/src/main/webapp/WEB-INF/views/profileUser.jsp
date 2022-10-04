@@ -38,7 +38,15 @@
                         </div>
                         </sec:authorize>
                         <div class="card ml-2 mt-2 mb-2 h-70">
-                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${user.id}/image/${user.imageId}"/>" width="100" height="200">
+                            <c:set var="image" value="${user.imageId}"/>
+                            <c:choose>
+                                <c:when test="${image == 0}">
+                                    <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="card-img-top small" alt="profile_image" src="<c:url value="/${user.id}/image/${image}"/>" width="100" height="200">
+                                </c:otherwise>
+                            </c:choose>
                             <div class="card-body p-0">
                                 <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/uploadProfileImage/${user.id}"/>">
