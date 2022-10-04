@@ -143,13 +143,13 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p><c:out value="${joboffer.description}"/></p>
-<%--                                            <c:if test="${joboffer.status != 'cancelada'}">--%>
-<%--                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>">--%>
-<%--                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">--%>
-<%--                                                        <spring:message code="profileEnterpriseNOJOB"/>--%>
-<%--                                                    </button>--%>
-<%--                                                </a>--%>
-<%--                                            </c:if>--%>
+                                            <c:if test="${joboffer.available == 'Activa'}">
+                                                <a href="<c:url value="/closeJobOffer/${joboffer.id}"/>" >
+                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">
+                                                        <spring:message code="profileEnterpriseNOJOB"/>
+                                                    </button>
+                                                </a>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

@@ -90,15 +90,6 @@
                                     <td><c:out value="${contact.userName}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
-                                    <c:if test="${statusName == 'aceptada'}">
-                                        <td>
-                                            <a href="<c:url value="/closeJobOffer/${contact.userId}/${contact.id}"/>" >
-                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;">
-                                                    <spring:message code="contactsCloseBtn"/>
-                                                </button>
-                                            </a>
-                                        </td>
-                                    </c:if>
                                     <c:if test="${statusName == 'pendiente'}">
                                         <td>
                                             <a href="<c:url value="/cancelJobOffer/${contact.userId}/${contact.id}"/>" >

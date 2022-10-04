@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,6 +23,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -111,6 +113,30 @@ public class JobOfferJdbcDaoTest {
         Assert.assertEquals(TEST_DESCRIPTION, jobOfferList.get(0).getDescription());
         Assert.assertEquals(TEST_SALARY, jobOfferList.get(0).getSalary());
         Assert.assertEquals(TEST_MODALITY, jobOfferList.get(0).getModality());
+    }
+
+    @Test
+    public void testCloseJobOffer(){
+        /* Se crea con disponible = "Activa" */
+        final JobOffer newJobOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+        jobOfferJdbcDao.closeJobOffer(newJobOffer.getId());
+        final Optional<JobOffer> closedOffer = jobOfferJdbcDao.findById(newJobOffer.getId());
+
+        Assert.assertTrue(closedOffer.isPresent());
+        Assert.assertEquals(newJobOffer.getId(), closedOffer.get().getId());
+        Assert.assertEquals(JobOfferAvailability.CLOSED.getStatus(), closedOffer.get().getAvailable());
+    }
+
+    @Test
+    public void testCancelJobOffer(){
+        /* Se crea con disponible = "Activa" */
+        final JobOffer newJobOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+        jobOfferJdbcDao.cancelJobOffer(newJobOffer.getId());
+        final Optional<JobOffer> cancelledOffer = jobOfferJdbcDao.findById(newJobOffer.getId());
+
+        Assert.assertTrue(cancelledOffer.isPresent());
+        Assert.assertEquals(newJobOffer.getId(), cancelledOffer.get().getId());
+        Assert.assertEquals(JobOfferAvailability.CANCELLED.getStatus(), cancelledOffer.get().getAvailable());
     }
 
 }

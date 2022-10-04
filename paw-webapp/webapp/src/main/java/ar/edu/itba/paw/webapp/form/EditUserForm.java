@@ -13,7 +13,7 @@ public class EditUserForm {
     @Size(max=50)
     private String position;
 
-    @Size(max=200)
+    @Size(max=600)
     private String aboutMe;
 
     @NotEmpty

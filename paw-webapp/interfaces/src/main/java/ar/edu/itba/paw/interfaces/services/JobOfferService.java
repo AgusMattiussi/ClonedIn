@@ -20,4 +20,8 @@ public interface JobOfferService {
 
     Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize);
 
+    void closeJobOffer(long jobOfferID);
+
+    void cancelJobOffer(long jobOfferID);
+
 }

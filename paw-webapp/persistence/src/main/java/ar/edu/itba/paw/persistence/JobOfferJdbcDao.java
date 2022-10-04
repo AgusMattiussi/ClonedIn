@@ -111,4 +111,14 @@ public class JobOfferJdbcDao implements JobOfferDao {
         return template.query("SELECT COUNT(*) FROM ofertaLaboral WHERE idEmpresa = ?",
                 new Object[]{ enterpriseID}, COUNT_ROW_MAPPER).stream().findFirst();
     }
+
+    @Override
+    public void closeJobOffer(long jobOfferID) {
+        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOfferID);
+    }
+
+    @Override
+    public void cancelJobOffer(long jobOfferID) {
+        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CANCELLED.getStatus(), jobOfferID);
+    }
 }
