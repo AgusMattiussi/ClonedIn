@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models.enums;
 
 public enum JobOfferStatuses {
     PENDING("pendiente"),
-    CLOSED("rechazada"),
+    CLOSED("cerrada"),
     CANCELLED("cancelada"),
     ACCEPTED("aceptada"),
     DECLINED("rechazada");
