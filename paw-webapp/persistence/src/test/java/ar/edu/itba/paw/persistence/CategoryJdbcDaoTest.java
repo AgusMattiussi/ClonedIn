@@ -65,16 +65,6 @@ public class CategoryJdbcDaoTest {
         Assert.assertEquals(FIRST_ID, category.get().getId());
     }
 
-    /*@Test
-    public void testFindByNameOrCreate(){
-        final Optional<Category> notFoundCategory = dao.findByName(NON_EXISTING_CATEGORY);
-        final Category category = dao.findByNameOrCreate(NON_EXISTING_CATEGORY);
-
-        Assert.assertFalse(notFoundCategory.isPresent());
-        Assert.assertNotNull(category);
-        Assert.assertEquals(NON_EXISTING_CATEGORY, category.getName());
-    }*/
-
     @Test
     public void testFindById() {
         final Optional<Category> category = dao.findById(1);

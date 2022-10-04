@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.security.InvalidParameterException;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

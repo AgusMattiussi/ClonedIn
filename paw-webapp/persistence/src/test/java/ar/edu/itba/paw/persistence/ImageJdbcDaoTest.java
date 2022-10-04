@@ -13,13 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,12 +72,5 @@ public class ImageJdbcDaoTest {
         Assert.assertNotNull(image.get().getBytes());
         Assert.assertArrayEquals(testImageByteArray, image.get().getBytes());
     }
-
-
-
-
-
-
-
 
 }
