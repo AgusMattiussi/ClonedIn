@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
 import java.util.*;
 
 import static ar.edu.itba.paw.persistence.SkillJdbcDao.SKILL_MAPPER;
@@ -77,7 +76,6 @@ public class UserSkillJdbcDao implements UserSkillDao {
 
     @Override
     public boolean addSkillToUser(String skillDescription, long userID) {
-        // Optional<Skill> skill = skillDao.findByDescription(skillDescription);
         Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
         if(skill != null)
             return addSkillToUser(skill.getId(), userID);

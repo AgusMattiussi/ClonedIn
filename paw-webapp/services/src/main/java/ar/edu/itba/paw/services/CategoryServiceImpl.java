@@ -31,11 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDao.findByName(name);
     }
 
-    /*@Override
-    public Category findByNameOrCreate(String name) {
-        return categoryDao.findByNameOrCreate(name);
-    }*/
-
     @Override
     public Optional<Category> findById(long id) {
         return categoryDao.findById(id);

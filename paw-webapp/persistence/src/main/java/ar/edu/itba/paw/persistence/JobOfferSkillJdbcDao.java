@@ -79,11 +79,8 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
 
     @Override
     public boolean addSkillToJobOffer(String skillDescription, long jobOfferID) {
-//        Optional<Skill> skill = skillDao.findByDescription(skillDescription);
         Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-//        if(skill.isPresent())
         return addSkillToJobOffer(skill.getId(), jobOfferID);
-//        return true;
     }
 
     private List<Long> getJobOfferIDsWithSkill(long skillID){

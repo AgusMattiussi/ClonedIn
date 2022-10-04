@@ -18,7 +18,15 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="card ml-2 mt-2 mb-2 h-70">
-                    <img class="card-img-top small" alt="profile_image" src="<c:url value="/${enterprise.id}/enterpriseImage/${enterprise.imageId}"/>" width="100" height="200">
+                    <c:set var="image" value="${enterprise.imageId}"/>
+                    <c:choose>
+                        <c:when test="${image == 0}">
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
+                        </c:when>
+                        <c:otherwise>
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${enterprise.id}/image/${image}"/>" width="100" height="200">
+                        </c:otherwise>
+                    </c:choose>
                     <div class="card-body p-0">
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/uploadEnterpriseProfileImage/${enterprise.id}"/>">

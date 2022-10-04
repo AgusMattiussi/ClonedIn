@@ -17,7 +17,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 

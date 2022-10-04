@@ -58,7 +58,6 @@ public class SkillJdbcDao implements SkillDao {
                 new Object[]{ description.toLowerCase() }, SKILL_MAPPER).stream().findFirst();
     }
 
-    // FIXME: Revisar que este metodo funcione
     @Override
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);

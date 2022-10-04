@@ -28,7 +28,7 @@ public class EnterpriseForm {
     @Size(max=50)
     private String city;
 
-    @Size(max=200)
+    @Size(max=600)
     private String aboutUs;
 
     @NotEmpty

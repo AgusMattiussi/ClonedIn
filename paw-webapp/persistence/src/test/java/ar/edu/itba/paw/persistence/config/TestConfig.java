@@ -63,25 +63,9 @@ public class TestConfig {
         dbp.addScript(hsqldbSql);
         dbp.addScript(schemaSql);
         dbp.addScript(initSql);
-        //dbp.addScript(categorySql);
         /* Puedo agregar script de inserts iniciales para la DB */
 
         return dbp;
     }
-
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence charSequence) {
-                return charSequence.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                return s.equals(charSequence.toString());
-            }
-        };
-    }*/
 
 }

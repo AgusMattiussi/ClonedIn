@@ -65,14 +65,11 @@ public class EnterpriseController {
 
         final int itemsPerPage = 8;
 
-        //TODO: refactor?
         if(request.getParameter("term") == null)
                 usersList = userService.getUsersListByFilters(page-1, itemsPerPage,
                             filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
             usersList = userService.getUsersListByName(page-1, itemsPerPage, searchForm.getTerm());
-
-//        final int usersCount = usersList.size();
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -316,7 +313,6 @@ public class EnterpriseController {
         });
 
         emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage());
-        // TODO: validar clave duplicada
         contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
 
         return new ModelAndView("redirect:/");
