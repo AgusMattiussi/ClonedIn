@@ -11,7 +11,7 @@ public class EditEnterpriseForm {
     @Size(max=50)
     private String location;
 
-    @Size(max=200)
+    @Size(max=600)
     private String aboutUs;
 
     @NotEmpty

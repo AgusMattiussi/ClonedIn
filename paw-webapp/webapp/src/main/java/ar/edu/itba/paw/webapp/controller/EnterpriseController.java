@@ -105,9 +105,8 @@ public class EnterpriseController {
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
-    @RequestMapping("/closeJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    @RequestMapping("/closeJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView closeJobOffer(Authentication loggedUser,
-                                      @PathVariable("userId") final long userId,
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
@@ -118,15 +117,10 @@ public class EnterpriseController {
             LOGGER.error("Job Offer not found");
             return new JobOfferNotFoundException();
         });
-        User user = userService.findById(userId).orElseThrow(() -> {
-            LOGGER.error("User not found");
-            return new UserNotFoundException();
-        });
 
-        contactService.closeJobOffer(userId, jobOfferId);
-        emailService.sendCloseJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
+//        contactService.closeJobOffer(userId, jobOfferId);
 
-        return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
+        return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
