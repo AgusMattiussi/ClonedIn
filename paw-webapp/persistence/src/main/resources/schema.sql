@@ -1,5 +1,10 @@
 -- SET client_encoding = 'UTF8'
 
+CREATE TABLE IF NOT EXISTS imagen (
+    id SERIAL PRIMARY KEY,
+    bytes BYTEA
+);
+
 CREATE TABLE IF NOT EXISTS aptitud (
     id SERIAL PRIMARY KEY,
     descripcion TEXT NOT NULL UNIQUE
@@ -18,7 +23,9 @@ CREATE TABLE IF NOT EXISTS empresa (
     descripcion TEXT,
     idRubro INTEGER,
     ubicacion TEXT,
-    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
+    idImagen INTEGER,
+    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
+    FOREIGN KEY (idImagen) REFERENCES imagen ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS usuario (
@@ -32,7 +39,9 @@ CREATE TABLE IF NOT EXISTS usuario (
     posicionActual TEXT,
     educacion TEXT,
     visibilidad INTEGER,
-    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
+    idImagen INTEGER,
+    FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL,
+    FOREIGN KEY (idImagen) REFERENCES imagen ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS experiencia (

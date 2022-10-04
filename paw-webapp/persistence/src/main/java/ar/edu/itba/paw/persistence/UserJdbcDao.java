@@ -35,6 +35,8 @@ public class UserJdbcDao implements UserDao {
     private static final String EDUCATION = "educacion";
     private static final String VISIBILITY = "visibilidad";
     private static final int DEFAULT_VISIBILITY=1;
+    private static final String IMAGE_ID = "idImagen";
+    private static final long DEFAULT_IMAGE_ID = 1;
 
 
     private CategoryDao categoryDao;
@@ -58,7 +60,8 @@ public class UserJdbcDao implements UserDao {
                 resultSet.getString(CURRENT_POSITION),
                 resultSet.getString(DESCRIPTION),
                 resultSet.getString(EDUCATION),
-                resultSet.getInt(VISIBILITY));
+                resultSet.getInt(VISIBILITY),
+                resultSet.getLong(IMAGE_ID));
     };
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
@@ -91,6 +94,8 @@ public class UserJdbcDao implements UserDao {
 
         int visibility = DEFAULT_VISIBILITY;
 
+        long imageId = DEFAULT_IMAGE_ID;
+
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
@@ -101,10 +106,11 @@ public class UserJdbcDao implements UserDao {
         values.put(EDUCATION, education);
         values.put(CATEGORY_ID_FK, categoryID);
         values.put(VISIBILITY, visibility);
+        values.put(IMAGE_ID, null);
 
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password, name, location, category, currentPosition, description, education, visibility);
+        return new User(userId.longValue(), email, password, name, location, category, currentPosition, description, education, visibility, null);
     }
 
     @Override
@@ -186,35 +192,35 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public void updateName(long userID, String newName) {
-        template.update("UPDATE usuario SET nombre = ? WHERE id = ?", new Object[] {newName, userID});
+        template.update("UPDATE usuario SET nombre = ? WHERE id = ?", newName, userID);
     }
 
     @Override
     public void updateDescription(long userID, String newDescription) {
-        template.update("UPDATE usuario SET descripcion = ? WHERE id = ?", new Object[] {newDescription, userID});
+        template.update("UPDATE usuario SET descripcion = ? WHERE id = ?", newDescription, userID);
     }
 
     @Override
     public void updateLocation(long userID, String newLocation) {
-        template.update("UPDATE usuario SET ubicacion = ? WHERE id = ?", new Object[] {newLocation, userID});
+        template.update("UPDATE usuario SET ubicacion = ? WHERE id = ?", newLocation, userID);
     }
 
     @Override
     public void updateCurrentPosition(long userID, String newPosition) {
-        template.update("UPDATE usuario SET posicionActual = ? WHERE id = ?", new Object[] {newPosition, userID});
+        template.update("UPDATE usuario SET posicionActual = ? WHERE id = ?", newPosition, userID);
     }
 
     @Override
     public void updateCategory(long userID, String newCategoryName) {
         //TODO: chequear que no explote
         Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-        template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), userID});
+        template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", category.getId(), userID);
     }
 
     @Override
     public void updateEducationLevel(long userID, String newEducationLevel) {
         if(educationLevelsSet.contains(newEducationLevel))
-            template.update("UPDATE usuario SET educacion = ? WHERE id = ?", new Object[]{newEducationLevel, userID});
+            template.update("UPDATE usuario SET educacion = ? WHERE id = ?", newEducationLevel, userID);
     }
 
     @Override
@@ -223,7 +229,12 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public void updateUserProfileImage(long userId, long imageId) {
+        template.update("UPDATE usuario SET idImagen = ? WHERE id = ?", imageId, userId);
+    }
+
+    @Override
     public void changePassword(String email, String password) {
-        template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", new Object[] {password, email});
+        template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", password, email);
     }
 }

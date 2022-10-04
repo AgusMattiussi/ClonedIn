@@ -32,7 +32,7 @@
                     <form:input type="text" path="skill" placeholder="${skillsPlaceholder}"/>
                     <form:errors path="skill" cssClass="formError" element="p"/>
                   </div>
-                    <p><spring:message code="experienceFormRequiredMsg"/></p>
+                    <p><spring:message code="skillsFormRequiredMsg"/></p>
                     <a href="<c:url value="/profileUser/${user.id}"/>">
                       <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                     </a>

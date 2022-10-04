@@ -24,10 +24,5 @@ public interface EnterpriseDao {
 
     void updateCategory(long enterpriseID, String newCategoryName);
 
-    /* TODO:
-        - findByLocation
-        - findByCategory
-        - findByCurrentPosition
-        - findByDescription
-     */
+    void updateEnterpriseProfileImage(long enterpriseID, long imageId);
 }

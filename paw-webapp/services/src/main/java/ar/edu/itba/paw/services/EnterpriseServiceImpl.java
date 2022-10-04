@@ -2,7 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,14 +17,16 @@ import java.util.Optional;
 public class EnterpriseServiceImpl implements EnterpriseService {
 
     private final EnterpriseDao enterpriseDao;
-
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
+
 
     @Autowired
-    public EnterpriseServiceImpl(EnterpriseDao enterpriseDao, PasswordEncoder passwordEncoder) {
+    public EnterpriseServiceImpl(EnterpriseDao enterpriseDao, PasswordEncoder passwordEncoder, ImageService imageService) {
         this.enterpriseDao = enterpriseDao;
         this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
     }
 
     @Override
@@ -77,5 +81,19 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         updateDescription(enterpriseID, newDescription.isEmpty()? enterprise.getDescription() : newDescription);
         updateLocation(enterpriseID, newLocation.isEmpty()? enterprise.getLocation() : newLocation);
         updateCategory(enterpriseID, newCategoryName.isEmpty()? enterprise.getCategory().getName() : newCategoryName);
+    }
+
+    @Override
+    public void updateProfileImage(long enterpriseID, byte[] imageBytes) {
+        Image newImage = imageService.uploadImage(imageBytes);
+        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, newImage.getId());
+    }
+
+    @Override
+    public Optional<Image> getProfileImage(int imageId) {
+        if(imageId == 1) {
+            return imageService.getImage(1);
+        }
+        return imageService.getImage(imageId);
     }
 }

@@ -43,12 +43,7 @@ public interface UserDao {
     void updateEducationLevel(long userID, String newEducationLevel);
 
     void updateVisibility(long userID, int visibility);
+    
+    void updateUserProfileImage(long userId, long imageId);
 
-    /* TODO:
-        - findByLocation
-        - findByCategory
-        - findByCurrentPosition
-        - findByDescription
-        - findByEducation
-     */
 }

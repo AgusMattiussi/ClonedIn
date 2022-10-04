@@ -38,9 +38,16 @@
                         </div>
                         </sec:authorize>
                         <div class="card ml-2 mt-2 mb-2 h-70">
-                            <img class="card-img-top small" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" alt="Card image cap"/>
-                            <div class="card-body pb-0">
-                                <div class="d-flex justify-content-between">
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${user.id}/image/${user.imageId}"/>" width="100" height="200">
+                            <div class="card-body p-0">
+                                <sec:authorize access="hasRole('USER')">
+                                    <a href="<c:url value="/uploadProfileImage/${user.id}"/>">
+                                        <button class="btn btn-block waves-effect mb-2" style="background-color: #459F78; color: white;">
+                                            <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn"/>
+                                        </button>
+                                    </a>
+                                </sec:authorize>
+                                <div class="d-flex justify-content-between pb-0 pl-4 mt-2 pr-2">
                                     <h5 class="card-title" style="padding-top: 5px">
                                         <c:out value="${user.name}"/>
                                     </h5>
@@ -53,7 +60,7 @@
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('USER')">
                                         <a href="<c:url value="/editUser/${user.id}"/>">
-                                            <button type="button" class="btn btn-outline-dark"><i class="bi bi-pencil-square"></i></button>
+                                            <button type="button" class="btn btn-outline-dark mr-2" style="margin-bottom: 1rem"><i class="bi bi-pencil-square"></i></button>
                                         </a>
                                     </sec:authorize>
                                 </div>

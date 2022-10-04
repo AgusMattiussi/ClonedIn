@@ -13,14 +13,10 @@ public class User {
     private final String currentPosition;
     private final String description;
     private final String education;
-
     private final int visibility;
+    private final Long imageId;
 
-
-    //TODO: Aniadir imagen
-
-
-    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility) {
+    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -31,6 +27,7 @@ public class User {
         this.description = description;
         this.education = education;
         this.visibility = visibility;
+        this.imageId = imageId;
     }
 
     public long getId() {
@@ -71,6 +68,10 @@ public class User {
 
     public int getVisibility() {
         return visibility;
+    }
+
+    public Long getImageId() {
+        return imageId;
     }
 
     @Override

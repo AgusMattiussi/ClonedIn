@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -48,6 +49,10 @@ public interface UserService {
     void hideUserProfile(long userID);
 
     void showUserProfile(long userID);
+    
+    void updateProfileImage(long userId, byte[] imageBytes);
+    
+    Optional<Image> getProfileImage(int imageId);
 
 
 

@@ -40,7 +40,7 @@ public class ContactJdbcDao implements ContactDao {
     private static final String USER_TABLE_DESCRIPTION = "descripcion";
     private static final String USER_TABLE_EDUCATION = "educacion";
     private static final String USER_TABLE_VISIBILITY = "visibilidad";
-
+    private static final String IMAGE_ID = "idImagen";
     private static final String ENTERPRISE_TABLE = "empresa";
     private static final String ENTERPRISE_TABLE_ID = "id";
     private static final String ENTERPRISE_TABLE_NAME = "nombre";
@@ -132,7 +132,8 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(ENTERPRISE_TABLE_PASSWORD),
                 resultSet.getString(ENTERPRISE_TABLE_LOCATION),
                 category,
-                resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION));
+                resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION),
+                resultSet.getLong(IMAGE_ID));
     };
 
     private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
@@ -151,7 +152,8 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(USER_TABLE_CURRENT_POSITION),
                 resultSet.getString(USER_TABLE_DESCRIPTION),
                 resultSet.getString(USER_TABLE_EDUCATION),
-                resultSet.getInt(USER_TABLE_VISIBILITY));
+                resultSet.getInt(USER_TABLE_VISIBILITY),
+                resultSet.getLong(IMAGE_ID));
     };
 
     @Autowired
@@ -173,7 +175,7 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<Enterprise> getEnterprisesForUser(long userID) {
-        return template.query("SELECT e.id, e.nombre, e.email, e.contrasenia, e.ubicacion, e.idRubro, e.descripcion " +
+        return template.query("SELECT e.id, e.nombre, e.email, e.contrasenia, e.ubicacion, e.idRubro, e.descripcion, e.idImagen " +
                         "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idUsuario = ?",
                 new Object[]{ userID }, ENTERPRISE_MAPPER);
     }
@@ -186,8 +188,8 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<User> getUsersForEnterprise(long enterpriseID) {
-        return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion, u.visibilidad " +
-                        "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idEmpresa = ?",
+        return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion, u.visibilidad, " +
+                        "u.idImagen FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idEmpresa = ?",
                 new Object[]{ enterpriseID }, USER_MAPPER);
     }
 
@@ -204,12 +206,11 @@ public class ContactJdbcDao implements ContactDao {
                 new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
     }
 
-
     @Override
     public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre, u.id as idUsuario" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
-                " WHERE c.idEmpresa = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+                " WHERE c.idEmpresa = ? AND c.estado = ? OFFSET ? LIMIT ? ",
                 new Object[]{ enterpriseID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
     }
 
@@ -217,7 +218,7 @@ public class ContactJdbcDao implements ContactDao {
     public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, e.nombre" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
-                " WHERE c.idUsuario = ? AND c.estado ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+                " WHERE c.idUsuario = ? AND c.estado = ? OFFSET ? LIMIT ? ",
                 new Object[]{ userID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 

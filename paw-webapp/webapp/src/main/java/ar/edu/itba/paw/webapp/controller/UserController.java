@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.io.IOException;
 
 @Controller
 public class UserController {
@@ -30,6 +31,7 @@ public class UserController {
     private final JobOfferSkillService jobOfferSkillService;
     private final ContactService contactService;
     private final EnterpriseService enterpriseService;
+    private final ImageService imageService;
     private final CategoryService categoryService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
@@ -43,7 +45,8 @@ public class UserController {
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
                           final EducationService educationService, final UserSkillService userSkillService,
                           final EmailService emailService, final JobOfferService jobOfferService,
-                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService, CategoryService categoryService){
+                          final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
+                          final ImageService imageService, final CategoryService categoryService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -54,6 +57,7 @@ public class UserController {
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
         this.categoryService = categoryService;
+        this.imageService = imageService;
 
         monthToNumber.put("No-especificado", 0);
         monthToNumber.put("Enero", 1);
@@ -299,6 +303,37 @@ public class UserController {
         userSkillService.deleteSkillFromUser(userId, skillId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
+    public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("imageForm");
+        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+        return mav;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.POST })
+    public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors,
+                                    @PathVariable("userId") final long userId) throws IOException {
+        if (errors.hasErrors()) {
+            return formImage(loggedUser, imageForm, userId);
+        }
+        userService.updateProfileImage(userId, imageForm.getImage().getBytes());
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
+    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
+        LOGGER.debug("Trying to access profile image");
+        byte[] profileImage = new byte[0];
+        try {
+            profileImage = userService.getProfileImage(imageId).orElseThrow(UserNotFoundException::new).getBytes();
+        } catch (UserNotFoundException e) {
+            LOGGER.error("Error loading image {}", imageId);
+        }
+        LOGGER.info("Profile image accessed.");
+        return profileImage;
+    }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
@@ -360,4 +395,6 @@ public class UserController {
             return enterprise.getId();
         }
     }
+
+
 }
