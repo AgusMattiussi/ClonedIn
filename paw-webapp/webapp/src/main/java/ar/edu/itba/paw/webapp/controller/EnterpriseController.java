@@ -113,13 +113,7 @@ public class EnterpriseController {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
         });
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-            LOGGER.error("Job Offer not found");
-            return new JobOfferNotFoundException();
-        });
-
-//        contactService.closeJobOffer(userId, jobOfferId);
-
+        jobOfferService.closeJobOffer(jobOfferId);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 

@@ -31,6 +31,8 @@ public class UserJdbcDao implements UserDao {
     private static final int DEFAULT_VISIBILITY=1;
     private static final String IMAGE_ID = "idImagen";
     private static final long DEFAULT_IMAGE_ID = 1;
+    private static final int UNEXISTING_CATEGORY_ID = 99;
+
 
 
     private CategoryDao categoryDao;
@@ -161,7 +163,14 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
-        Object[] sanitizedInputs = new Object[]{categoryId, location, educationLevel};
+        int catId;
+        try {
+            catId = Integer.parseInt(categoryId);
+        } catch (NumberFormatException exception){
+            catId = UNEXISTING_CATEGORY_ID;
+        }
+
+        Object[] sanitizedInputs = new Object[]{catId, location, educationLevel};
 
         StringBuilder filterQuery = new StringBuilder();
         filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
