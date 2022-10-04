@@ -158,11 +158,17 @@ public class EnterpriseController {
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                            @RequestParam(value = "status",defaultValue = "") final String status,
-                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
+                                           @RequestParam(value = "page", defaultValue = "1") final int page,
+                                           HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("contacts");
         final int itemsPerPage = 12;
-        List<JobOfferStatusUserData> jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId,
-                page - 1, itemsPerPage, status);
+        List<JobOfferStatusUserData> jobOffersList;
+
+        if(request.getParameter("status") == null)
+            jobOffersList = contactService.getAllJobOffersWithStatusUserData(enterpriseId,page - 1, itemsPerPage);
+        else
+            jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId,page - 1, itemsPerPage, status);
+
         long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : jobOffersList.size();
 
 
