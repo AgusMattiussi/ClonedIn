@@ -29,6 +29,7 @@ public class ContactJdbcDao implements ContactDao {
     private static final String DESCRIPTION = "descripcion";
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
+    public static final String AVAILABLE = "disponible";
     public static final String USER_TABLE = "usuario";
     private static final String USER_TABLE_ID = "id";
     private static final String USER_TABLE_NAME = "nombre";
@@ -76,6 +77,7 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(DESCRIPTION),
                 resultSet.getBigDecimal(SALARY),
                 resultSet.getString(MODALITY),
+                resultSet.getString(AVAILABLE),
                 resultSet.getString(STATUS)
                 );
     });
@@ -94,6 +96,7 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(DESCRIPTION),
                 resultSet.getBigDecimal(SALARY),
                 resultSet.getString(MODALITY),
+                resultSet.getString(AVAILABLE),
                 resultSet.getString(STATUS),
                 resultSet.getString(USER_TABLE_NAME),
                 resultSet.getLong("idUsuario")
@@ -114,6 +117,7 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(DESCRIPTION),
                 resultSet.getBigDecimal(SALARY),
                 resultSet.getString(MODALITY),
+                resultSet.getString(AVAILABLE),
                 resultSet.getString(STATUS),
                 resultSet.getString(ENTERPRISE_TABLE_NAME)
                 );
@@ -201,14 +205,14 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
-        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado " +
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado " +
                 "FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta WHERE c.idUsuario = ?",
                 new Object[]{ userId }, JOB_OFFER_WITH_STATUS_MAPPER);
     }
 
     @Override
     public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
-        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, u.nombre, u.id as idUsuario" +
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado, u.nombre, u.id as idUsuario" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
                 " WHERE c.idEmpresa = ? AND c.estado = ? OFFSET ? LIMIT ? ",
                 new Object[]{ enterpriseID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
@@ -216,7 +220,7 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
-        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, c.estado, e.nombre" +
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado, e.nombre" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
                 " WHERE c.idUsuario = ? AND c.estado = ? OFFSET ? LIMIT ? ",
                 new Object[]{ userID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);

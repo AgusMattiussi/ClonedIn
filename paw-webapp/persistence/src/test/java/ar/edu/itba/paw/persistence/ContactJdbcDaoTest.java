@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -80,11 +81,11 @@ public class ContactJdbcDaoTest {
         testEnterprise = enterpriseDao.findByEmail(TEST_ENTERPRISE_EMAIL).get();
         testJobOffer = jobOfferDao.findById(1).get();
         testJobOfferWithStatus = new JobOfferWithStatus(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
-                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING);
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), JobOfferAvailability.ACTIVE.getStatus(), STATUS_PENDING);
         testJobOfferWithStatusUserData = new JobOfferStatusUserData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
-                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testUser.getName(), 1);
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), JobOfferAvailability.ACTIVE.getStatus(), STATUS_PENDING, testUser.getName(), 1);
         testJobOfferWithStatusEnterpriseData = new JobOfferStatusEnterpriseData(testJobOffer.getId(), testJobOffer.getEnterpriseID(), testJobOffer.getCategory(), testJobOffer.getPosition(),
-                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), STATUS_PENDING, testEnterprise.getName());
+                testJobOffer.getDescription(), testJobOffer.getSalary(), testJobOffer.getModality(), JobOfferAvailability.ACTIVE.getStatus(), STATUS_PENDING, testEnterprise.getName());
         newEnterprise = enterpriseDao.create(NEW_ENTERPRISE_EMAIL, NEW_ENTERPRISE_PASSWORD, NEW_ENTERPRISE_NAME, NEW_ENTERPRISE_LOCATION, NEW_USER_CATEGORY_NAME, NEW_ENTERPRISE_DESCRIPTION);
         newUser = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, NEW_USER_LOCATION, NEW_USER_CATEGORY_NAME, NEW_USER_CURRENT_POSITION, NEW_USER_DESCRIPTION, NEW_USER_EDUCATION) ;
     }
@@ -136,6 +137,10 @@ public class ContactJdbcDaoTest {
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());
         Assert.assertEquals(1, jobOfferList.size());
+
+        System.out.println("\n\n\n\n\n DEBERIA SER " + testJobOfferWithStatusUserData.toString());
+        System.out.println("PERO ES " + jobOfferList.get(0).toString() + "\n\n\n\n");
+
         Assert.assertTrue(jobOfferList.contains(testJobOfferWithStatusUserData));
     }
 

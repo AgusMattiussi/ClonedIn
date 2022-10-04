@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +28,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private static final String DESCRIPTION = "descripcion";
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
+    private static final String AVAILABLE = "disponible";
     public static final String[] MODALITIES = new String[] {"Remoto", "Presencial", "Mixto"};
     public static final Set<String> modalitiesSet = new HashSet<>(Arrays.asList(MODALITIES));
 
@@ -49,7 +51,8 @@ public class JobOfferJdbcDao implements JobOfferDao {
                 resultSet.getString(POSITION),
                 resultSet.getString(DESCRIPTION),
                 resultSet.getBigDecimal(SALARY),
-                resultSet.getString(MODALITY));
+                resultSet.getString(MODALITY),
+                resultSet.getString(AVAILABLE));
     });
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
@@ -84,10 +87,11 @@ public class JobOfferJdbcDao implements JobOfferDao {
         values.put(DESCRIPTION, description);
         values.put(SALARY, salary);
         values.put(MODALITY, modality);
+        values.put(AVAILABLE, JobOfferAvailability.ACTIVE.getStatus());
 
         Number jobOfferID = insert.executeAndReturnKey(values);
 
-        return new JobOffer(jobOfferID.longValue(), enterpriseID, category, position, description, salary, modality);
+        return new JobOffer(jobOfferID.longValue(), enterpriseID, category, position, description, salary, modality, JobOfferAvailability.ACTIVE.getStatus());
     }
 
     @Override

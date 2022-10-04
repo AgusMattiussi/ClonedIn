@@ -12,8 +12,9 @@ public class JobOffer {
     private final String description;
     private final BigDecimal salary;
     private final String modality;
+    private final String available;
 
-    public JobOffer(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality) {
+    public JobOffer(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.id = id;
         this.enterpriseID = enterpriseID;
         this.category = category;
@@ -21,6 +22,7 @@ public class JobOffer {
         this.description = description;
         this.salary = salary;
         this.modality = modality;
+        this.available = available;
     }
 
     public long getId() {
@@ -51,16 +53,21 @@ public class JobOffer {
         return modality;
     }
 
+    public String getAvailable() {
+        return available;
+    }
+
     @Override
     public String toString() {
         return "JobOffer{" +
                 "id=" + id +
                 ", enterpriseID=" + enterpriseID +
-                ", category=" + category.toString() +
+                ", category=" + category +
                 ", position='" + position + '\'' +
                 ", description='" + description + '\'' +
                 ", salary=" + salary +
                 ", modality='" + modality + '\'' +
+                ", available='" + available + '\'' +
                 '}';
     }
 
