@@ -37,6 +37,11 @@ public class UserController {
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
+    private static final String CONTACT = "contactMsg";
+
+    private static final String NON_CONTACT = "nonContactMsg";
+
+
     //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
@@ -116,11 +121,11 @@ public class UserController {
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), REJECT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, NON_CONTACT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), jobOffer.getPosition(), ACCEPT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, CONTACT);
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
