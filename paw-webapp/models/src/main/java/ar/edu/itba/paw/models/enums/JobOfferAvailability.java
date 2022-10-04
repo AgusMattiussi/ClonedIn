@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.models.enums;
 
-public enum JobOfferStatus {
+public enum JobOfferAvailability {
     ACTIVE("Activa"),
     CLOSED("Cerrada"),
     CANCELLED("Cancelada");
 
     private final String status;
 
-    JobOfferStatus(String status) {
+    JobOfferAvailability(String status) {
         this.status = status;
     }
 

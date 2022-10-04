@@ -33,6 +33,7 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
     private static final String JOB_OFFER_TABLE_DESCRIPTION = "descripcion";
     private static final String JOB_OFFER_TABLE_SALARY = "salario";
     private static final String JOB_OFFER_TABLE_MODALITY = "modalidad";
+    private static final String JOB_OFFER_TABLE_AVAILABLE = "disponible";
 
     private final SkillDao skillDao;
     private final JobOfferDao jobOfferDao;
@@ -53,7 +54,8 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
                 resultSet.getString(JOB_OFFER_TABLE_POSITION),
                 resultSet.getString(JOB_OFFER_TABLE_DESCRIPTION),
                 resultSet.getBigDecimal(JOB_OFFER_TABLE_SALARY),
-                resultSet.getString(JOB_OFFER_TABLE_MODALITY));
+                resultSet.getString(JOB_OFFER_TABLE_MODALITY),
+                resultSet.getString(JOB_OFFER_TABLE_AVAILABLE));
     });
 
     @Autowired
