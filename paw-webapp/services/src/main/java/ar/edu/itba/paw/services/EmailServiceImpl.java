@@ -103,11 +103,14 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String jobOfferPosition, String answerMsg) {
+    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, String contactMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
+        mailMap.put("email", email);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
+        mailMap.put("contactMsg", messageSource.getMessage(contactMsg, null, LocaleContextHolder.getLocale()));
+        mailMap.put("noContactMsg", messageSource.getMessage(contactMsg, null, LocaleContextHolder.getLocale()));
         mailMap.put("jobOffer", jobOfferPosition);
         mailMap.put("contactsUrl", baseUrl + "/contactsEnterprise/" + enterprise.getId());
         mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
