@@ -33,6 +33,9 @@ public class UserJdbcDao implements UserDao {
     private static final String CURRENT_POSITION = "posicionActual";
     private static final String DESCRIPTION = "descripcion";
     private static final String EDUCATION = "educacion";
+    private static final String VISIBILITY = "visibilidad";
+    private static final int DEFAULT_VISIBILITY=1;
+
 
     private CategoryDao categoryDao;
 
@@ -54,7 +57,8 @@ public class UserJdbcDao implements UserDao {
                 category,
                 resultSet.getString(CURRENT_POSITION),
                 resultSet.getString(DESCRIPTION),
-                resultSet.getString(EDUCATION));
+                resultSet.getString(EDUCATION),
+                resultSet.getInt(VISIBILITY));
     };
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
@@ -85,6 +89,8 @@ public class UserJdbcDao implements UserDao {
         if(!educationLevelsSet.contains(education))
             education = "No-especificado";
 
+        int visibility = DEFAULT_VISIBILITY;
+
         final Map<String, Object> values = new HashMap<>();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
@@ -94,10 +100,11 @@ public class UserJdbcDao implements UserDao {
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
         values.put(CATEGORY_ID_FK, categoryID);
+        values.put(VISIBILITY, visibility);
 
         Number userId = insert.executeAndReturnKey(values);
 
-        return new User(userId.longValue(), email, password, name, location, category, currentPosition, description, education);
+        return new User(userId.longValue(), email, password, name, location, category, currentPosition, description, education, visibility);
     }
 
     @Override
@@ -145,7 +152,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public List<User> getUsersListByName(int page, int pageSize, String term) {
-        return template.query("SELECT * FROM usuario WHERE nombre ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
+        return template.query("SELECT * FROM usuario WHERE visibilidad=1 AND nombre ILIKE CONCAT('%', ?, '%') OFFSET ? LIMIT ? ",
                 new Object[]{ term, pageSize * page, pageSize }, USER_MAPPER);
     }
 
@@ -160,28 +167,17 @@ public class UserJdbcDao implements UserDao {
         Object[] sanitizedInputs = new Object[]{categoryId, location, educationLevel};
 
         StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM usuario");
+        filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
 
         if(!categoryId.isEmpty())
-            filterQuery.append(" WHERE idRubro = '").append(sanitizedInputs[0]).append("'");
+            filterQuery.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
 
+        if(!location.isEmpty())
+            filterQuery.append(" AND ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
 
-        if(!location.isEmpty()) {
-            if (!categoryId.isEmpty())
-                filterQuery.append(" AND ");
-            else
-                filterQuery.append(" WHERE ");
-            filterQuery.append("ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
-        }
-
-        if(!educationLevel.isEmpty()) {
-            if (categoryId.isEmpty() && location.isEmpty())
-                filterQuery.append(" WHERE ");
-            else
-                filterQuery.append(" AND ");
-            filterQuery.append("educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
-        }
-
+        if(!educationLevel.isEmpty())
+            filterQuery.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
+        
         filterQuery.append(" OFFSET ? LIMIT ? ");
 
         return template.query(filterQuery.toString(),
@@ -219,6 +215,11 @@ public class UserJdbcDao implements UserDao {
     public void updateEducationLevel(long userID, String newEducationLevel) {
         if(educationLevelsSet.contains(newEducationLevel))
             template.update("UPDATE usuario SET educacion = ? WHERE id = ?", new Object[]{newEducationLevel, userID});
+    }
+
+    @Override
+    public void updateVisibility(long userID, int visibility) {
+        template.update("UPDATE usuario SET visibilidad = ? WHERE id = ?", new Object[]{visibility, userID});
     }
 
     @Override

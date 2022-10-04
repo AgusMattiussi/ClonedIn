@@ -14,11 +14,13 @@ public class User {
     private final String description;
     private final String education;
 
+    private final int visibility;
+
 
     //TODO: Aniadir imagen
 
 
-    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
+    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -28,6 +30,7 @@ public class User {
         this.currentPosition = currentPosition;
         this.description = description;
         this.education = education;
+        this.visibility = visibility;
     }
 
     public long getId() {
@@ -64,6 +67,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public int getVisibility() {
+        return visibility;
     }
 
     @Override

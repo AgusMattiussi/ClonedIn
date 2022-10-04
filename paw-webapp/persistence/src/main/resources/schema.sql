@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     ubicacion TEXT,
     posicionActual TEXT,
     educacion TEXT,
+    visibilidad INTEGER,
     FOREIGN KEY (idRubro) REFERENCES rubro ON DELETE SET NULL
 );
 

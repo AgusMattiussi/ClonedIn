@@ -19,9 +19,22 @@
                     <div class="col-3">
                         <sec:authorize access="hasRole('USER')">
                         <div class="d-flex justify-content-center mt-3">
-                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
-                            <spring:message code="hideProfile"/>
-                        </button>
+                            <c:choose>
+                                <c:when test="${user.visibility == 1}">
+                                    <a href="<c:url value="/hideUserProfile/${user.id}"/>">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                            <spring:message code="hideProfile"/>
+                                        </button>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="<c:url value="/showUserProfile/${user.id}"/>">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                            <spring:message code="showProfile"/>
+                                        </button>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         </sec:authorize>
                         <div class="card ml-2 mt-2 mb-2 h-70">

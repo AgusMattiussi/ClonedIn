@@ -45,6 +45,10 @@ public interface UserService {
     void updateUserInformation(User user, String newName, String newDescription, String newLocation, String newPosition,
                                String newCategoryName, String newEducationLevel);
 
+    void hideUserProfile(long userID);
+
+    void showUserProfile(long userID);
+
 
 
 }
