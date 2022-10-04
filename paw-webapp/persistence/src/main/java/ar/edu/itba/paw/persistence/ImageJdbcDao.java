@@ -41,7 +41,7 @@ public class ImageJdbcDao implements ImageDao {
 
 
     @Override
-    public Optional<Image> getImage(int id) {
+    public Optional<Image> getImage(long id) {
         return template.query("SELECT * FROM imagen WHERE id = ?",
                 new Object[]{ id }, IMAGE_ROW_MAPPER).stream().findFirst();
     }

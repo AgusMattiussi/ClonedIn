@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getImage(int id) {
+    public Optional<Image> getImage(long id) {
         return imageDao.getImage(id);
     }
 
