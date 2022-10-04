@@ -27,6 +27,9 @@ public class StringDiffValidator implements ConstraintValidator<StringDiff, Obje
         if (string1Value == null || string2Value == null)
             return true;
 
+        if(string1Value.equals("") && string2Value.equals(""))
+            return true;
+
         return !string1Value.equals(string2Value);
     }
 }

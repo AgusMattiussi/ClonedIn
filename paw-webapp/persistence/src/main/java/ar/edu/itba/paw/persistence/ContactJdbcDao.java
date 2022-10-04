@@ -39,6 +39,8 @@ public class ContactJdbcDao implements ContactDao {
     private static final String USER_TABLE_CURRENT_POSITION = "posicionActual";
     private static final String USER_TABLE_DESCRIPTION = "descripcion";
     private static final String USER_TABLE_EDUCATION = "educacion";
+    private static final String USER_TABLE_VISIBILITY = "visibilidad";
+
     private static final String ENTERPRISE_TABLE = "empresa";
     private static final String ENTERPRISE_TABLE_ID = "id";
     private static final String ENTERPRISE_TABLE_NAME = "nombre";
@@ -148,7 +150,8 @@ public class ContactJdbcDao implements ContactDao {
                 category,
                 resultSet.getString(USER_TABLE_CURRENT_POSITION),
                 resultSet.getString(USER_TABLE_DESCRIPTION),
-                resultSet.getString(USER_TABLE_EDUCATION));
+                resultSet.getString(USER_TABLE_EDUCATION),
+                resultSet.getInt(USER_TABLE_VISIBILITY));
     };
 
     @Autowired
@@ -183,7 +186,7 @@ public class ContactJdbcDao implements ContactDao {
 
     @Override
     public List<User> getUsersForEnterprise(long enterpriseID) {
-        return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion " +
+        return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion, u.visibilidad " +
                         "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idEmpresa = ?",
                 new Object[]{ enterpriseID }, USER_MAPPER);
     }

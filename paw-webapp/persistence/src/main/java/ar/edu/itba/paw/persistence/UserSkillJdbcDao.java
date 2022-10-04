@@ -35,6 +35,8 @@ public class UserSkillJdbcDao implements UserSkillDao {
     private static final String USER_TABLE_CURRENT_POSITION = "posicionActual";
     private static final String USER_TABLE_DESCRIPTION = "descripcion";
     private static final String USER_TABLE_EDUCATION = "educacion";
+    private static final String USER_TABLE_VISIBILITY = "visibilidad";
+
 
     private final SkillDao skillDao;
     private final UserDao userDao;
@@ -57,7 +59,9 @@ public class UserSkillJdbcDao implements UserSkillDao {
                 category,
                 resultSet.getString(USER_TABLE_CURRENT_POSITION),
                 resultSet.getString(USER_TABLE_DESCRIPTION),
-                resultSet.getString(USER_TABLE_EDUCATION));
+                resultSet.getString(USER_TABLE_EDUCATION),
+                resultSet.getInt(USER_TABLE_VISIBILITY));
+
     };
 
     @Autowired

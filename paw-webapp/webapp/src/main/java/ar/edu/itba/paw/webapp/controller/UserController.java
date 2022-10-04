@@ -327,6 +327,20 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/hideUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
+    public ModelAndView hideUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
+        userService.hideUserProfile(userId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping(value = "/showUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
+    public ModelAndView showUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
+        userService.showUserProfile(userId);
+        return new ModelAndView("redirect:/profileUser/" + userId);
+    }
+
     private boolean isUser(Authentication loggedUser){
         return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
     }

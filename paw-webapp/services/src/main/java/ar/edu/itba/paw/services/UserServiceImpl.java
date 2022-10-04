@@ -18,6 +18,8 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    private static final int HIDE_VALUE=0;
+    private static final int SHOW_VALUE=1;
 
     @Autowired
     public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
@@ -125,5 +127,19 @@ public class UserServiceImpl implements UserService {
         updateCurrentPosition(userID, newPosition.isEmpty()? user.getCurrentPosition() : newPosition);
         updateCategory(userID, newCategoryName.isEmpty()? user.getCategory().getName() : newCategoryName);
         updateEducationLevel(userID, newEducationLevel.isEmpty()? user.getEducation() : newEducationLevel);
+    }
+
+    @Override
+    public void hideUserProfile(long userID) {
+        updateVisibility(userID, HIDE_VALUE);
+    }
+
+    @Override
+    public void showUserProfile(long userID) {
+        updateVisibility(userID, SHOW_VALUE);
+    }
+
+    private void updateVisibility(long userID, int visibility) {
+        userDao.updateVisibility(userID, visibility);
     }
 }
