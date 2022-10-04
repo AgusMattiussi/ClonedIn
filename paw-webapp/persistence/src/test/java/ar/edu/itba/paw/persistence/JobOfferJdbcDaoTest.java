@@ -101,7 +101,7 @@ public class JobOfferJdbcDaoTest {
 
     @Test
     public void testFindByEnterpriseID(){
-        final List<JobOffer> jobOfferList = jobOfferJdbcDao.findByEnterpriseId(enterprise.getId(), 0, 8);
+        final List<JobOffer> jobOfferList = jobOfferJdbcDao.findByEnterpriseId(enterprise.getId());
 
         Assert.assertNotNull(jobOfferList);
         Assert.assertFalse(jobOfferList.isEmpty());
@@ -137,6 +137,22 @@ public class JobOfferJdbcDaoTest {
         Assert.assertTrue(cancelledOffer.isPresent());
         Assert.assertEquals(newJobOffer.getId(), cancelledOffer.get().getId());
         Assert.assertEquals(JobOfferAvailability.CANCELLED.getStatus(), cancelledOffer.get().getAvailable());
+    }
+
+    @Test
+    public void testFindActiveByEnterpriseId(){
+        final JobOffer activeOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+        final JobOffer closedOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+        final JobOffer cancelledOffer = jobOfferJdbcDao.create(enterprise.getId(), category.getId(), NEW_POSITION, NEW_DESCRIPTION, NEW_SALARY, TEST_MODALITY);
+
+        jobOfferJdbcDao.cancelJobOffer(cancelledOffer.getId());
+        jobOfferJdbcDao.closeJobOffer(closedOffer.getId());
+        List<JobOffer> allActive = jobOfferJdbcDao.findActiveByEnterpriseId(enterprise.getId());
+
+        Assert.assertFalse(allActive.isEmpty());
+        Assert.assertEquals(1, allActive.size());
+        Assert.assertEquals(activeOffer, allActive.get(0));
+        Assert.assertEquals(JobOfferAvailability.ACTIVE.getStatus(), allActive.get(0).getAvailable());
     }
 
 }
