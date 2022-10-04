@@ -118,6 +118,19 @@ public class EnterpriseController {
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/cancelJobOffer/{jobOfferId:[0-9]+}")
+    public ModelAndView cancelJobOffer(Authentication loggedUser,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+
+        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+        jobOfferService.cancelJobOffer(jobOfferId);
+        return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping("/cancelJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
                                       @PathVariable("userId") final long userId,
