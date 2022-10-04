@@ -23,8 +23,4 @@ public interface UserSkillService {
 
     void deleteSkillFromUser(long userID, long skillID);
 
-
-    /* TODO:
-    *   - hasSkill()
-    * */
 }

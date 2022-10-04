@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validators.CheckPassword;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -15,7 +16,7 @@ public class LoginForm {
     private String email;
 
     @Size(min = 6, max = 20)
-//    @CheckPassword
+    @CheckPassword
     private String password;
 
     private Boolean rememberMe;

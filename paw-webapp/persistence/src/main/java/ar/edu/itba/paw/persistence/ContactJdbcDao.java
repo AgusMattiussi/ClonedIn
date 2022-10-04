@@ -217,6 +217,14 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     @Override
+    public List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado, u.nombre, u.id as idUsuario" +
+                        " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN usuario u ON u.id = c.idUsuario" +
+                        " WHERE c.idEmpresa = ? OFFSET ? LIMIT ? ",
+                new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_USER_DATA_MAPPER);
+    }
+
+    @Override
     public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
         return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado, e.nombre" +
                 " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
@@ -224,6 +232,13 @@ public class ContactJdbcDao implements ContactDao {
                 new Object[]{ userID, status, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
     }
 
+    @Override
+    public List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
+        return template.query("SELECT ol.id, ol.idEmpresa, ol.posicion, ol.descripcion, ol.salario, ol.idRubro, ol.modalidad, ol.disponible, c.estado, e.nombre" +
+                        " FROM ofertaLaboral ol JOIN contactado c ON ol.id = c.idOferta JOIN empresa e ON e.id = c.idEmpresa" +
+                        " WHERE c.idUsuario = ? OFFSET ? LIMIT ? ",
+                new Object[]{ userID, pageSize * page, pageSize }, JOB_OFFER_WITH_STATUS_ENTERPRISE_DATA_MAPPER);
+    }
 
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {

@@ -175,7 +175,7 @@ public class UserJdbcDao implements UserDao {
         if(!educationLevel.isEmpty())
             filterQuery.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
         
-        filterQuery.append(" OFFSET ? LIMIT ? ");
+        filterQuery.append(" ORDER BY id OFFSET ? LIMIT ?");
 
         return template.query(filterQuery.toString(),
                 new Object[]{ pageSize * page, pageSize }, USER_MAPPER);

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.User;
 
 import java.util.Optional;
 

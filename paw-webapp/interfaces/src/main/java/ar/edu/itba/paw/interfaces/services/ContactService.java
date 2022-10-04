@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public interface ContactService {
 
@@ -18,7 +17,11 @@ public interface ContactService {
 
     List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status);
 
+    List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
+
     List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
+
+    List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
@@ -38,6 +41,4 @@ public interface ContactService {
 
     Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList);
 
-
-    //TODO: void removeContact(long enterpriseID, long userID);
 }

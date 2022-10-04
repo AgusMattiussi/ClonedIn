@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 import java.io.IOException;
@@ -129,15 +130,21 @@ public class UserController {
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "status",defaultValue = "") final String status,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page) {
+                                          @RequestParam(value = "page", defaultValue = "1") final int page,
+                                          HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         final int itemsPerPage = 4;
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
-        List<JobOfferStatusEnterpriseData> jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,
-                page - 1, itemsPerPage, status);
+        List<JobOfferStatusEnterpriseData> jobOffersList;
+
+        if(request.getParameter("status") == null)
+            jobOffersList = contactService.getAllJobOffersWithStatusEnterpriseData(userId,page - 1, itemsPerPage);
+        else
+            jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,page - 1, itemsPerPage, status);
+
         Map<Long, List<Skill>> jobOfferSkillMap = contactService.getJobOfferSkillsMapForUser(jobOffersList);
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : jobOffersList.size();
 
