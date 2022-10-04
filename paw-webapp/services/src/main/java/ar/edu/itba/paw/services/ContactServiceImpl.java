@@ -91,8 +91,18 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public void cancelJobOfferForEveryone(long jobOfferID) {
+        contactDao.cancelJobOfferForEveryone(jobOfferID);
+    }
+
+    @Override
     public void closeJobOffer(long userID, long jobOfferID) {
         contactDao.closeJobOffer(userID, jobOfferID);
+    }
+
+    @Override
+    public void closeJobOfferForEveryone(long jobOfferID) {
+        contactDao.closeJobOfferForEveryone(jobOfferID);
     }
 
     @Override

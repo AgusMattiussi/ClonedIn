@@ -32,7 +32,11 @@ public interface ContactDao {
 
     void cancelJobOffer(long userID, long jobOfferID);
 
+    void cancelJobOfferForEveryone(long jobOfferID);
+
     void closeJobOffer(long userID, long jobOfferID);
+
+    void closeJobOfferForEveryone(long jobOfferID);
 
     long getContactsCountForEnterprise(long enterpriseID);
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.JobOfferStatuses;
 import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,17 +49,10 @@ public class ContactJdbcDao implements ContactDao {
     private static final String ENTERPRISE_TABLE_LOCATION = "ubicacion";
     private static final String ENTERPRISE_TABLE_CATEGORY_ID_FK = "idRubro";
     private static final String ENTERPRISE_TABLE_DESCRIPTION = "descripcion";
-    private static final String STATUS_PENDING = "pendiente";
-    private static final String STATUS_ACCEPTED = "aceptada";
-    private static final String STATUS_REJECTED = "rechazada";
-    private static final String STATUS_CANCELLED = "cancelada";
-    private static final String STATUS_CLOSED = "cerrada";
+
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
-    private UserDao userDao;
-    private final EnterpriseDao enterpriseDao;
-    private final JobOfferDao jobOfferDao;
     private CategoryDao categoryDao;
 
     private final RowMapper<JobOfferWithStatus> JOB_OFFER_WITH_STATUS_MAPPER = ((resultSet, rowNum) -> {
@@ -159,13 +153,10 @@ public class ContactJdbcDao implements ContactDao {
     };
 
     @Autowired
-    public ContactJdbcDao(final DataSource ds, UserDao userDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao, CategoryDao categoryDao){
+    public ContactJdbcDao(final DataSource ds, CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(CONTACT_TABLE);
-        this.userDao = userDao;
-        this.enterpriseDao = enterpriseDao;
-        this.jobOfferDao = jobOfferDao;
         this.categoryDao = categoryDao;
     }
 
@@ -257,24 +248,39 @@ public class ContactJdbcDao implements ContactDao {
                 new Object[]{newStatus, userID, jobOfferID});
     }
 
+    private void updateStatusForEveryone(long jobOfferID, String newStatus){
+        template.update("UPDATE contactado SET estado = ? WHERE idOferta = ?",
+                new Object[]{newStatus, jobOfferID});
+    }
+
     @Override
     public void acceptJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, STATUS_ACCEPTED);
+        updateStatus(userID, jobOfferID, JobOfferStatuses.ACCEPTED.getStatus());
     }
 
     @Override
     public void rejectJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, STATUS_REJECTED);
+        updateStatus(userID, jobOfferID, JobOfferStatuses.DECLINED.getStatus());
     }
 
     @Override
     public void cancelJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, STATUS_CANCELLED);
+        updateStatus(userID, jobOfferID, JobOfferStatuses.CANCELLED.getStatus());
+    }
+
+    @Override
+    public void cancelJobOfferForEveryone(long jobOfferID) {
+        updateStatusForEveryone(jobOfferID, JobOfferStatuses.CANCELLED.getStatus());
     }
 
     @Override
     public void closeJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, STATUS_CLOSED);
+        updateStatus(userID, jobOfferID, JobOfferStatuses.CLOSED.getStatus());
+    }
+
+    @Override
+    public void closeJobOfferForEveryone(long jobOfferID) {
+        updateStatusForEveryone(jobOfferID, JobOfferStatuses.CLOSED.getStatus());
     }
 
     @Override
@@ -283,7 +289,7 @@ public class ContactJdbcDao implements ContactDao {
         values.put(ENTERPRISE_ID, enterpriseID);
         values.put(USER_ID, userID);
         values.put(JOB_OFFER_ID, jobOfferID);
-        values.put(STATUS, STATUS_PENDING);
+        values.put(STATUS, JobOfferStatuses.PENDING.getStatus());
 
         insert.execute(values);
     }
