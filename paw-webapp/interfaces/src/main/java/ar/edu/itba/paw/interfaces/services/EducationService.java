@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Education;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 

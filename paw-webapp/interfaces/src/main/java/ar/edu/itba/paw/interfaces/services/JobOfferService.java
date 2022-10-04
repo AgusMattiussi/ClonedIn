@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.JobOfferWithStatus;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Skill;
 
 import java.math.BigDecimal;
