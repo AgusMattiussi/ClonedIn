@@ -87,7 +87,11 @@
                                         </c:choose>
 
                                     </td>
-                                    <td><c:out value="${contact.userName}"/></td>
+                                    <td>
+                                        <a href="<c:url value="/profileUser/${contact.userId}"/>" class="text-decoration-none">
+                                            <c:out value="${contact.userName}"/>
+                                        </a>
+                                    </td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
                                     <c:if test="${statusName == 'pendiente'}">

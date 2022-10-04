@@ -37,9 +37,6 @@ public class UserController {
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
-    private static final String CONTACT = "contactMsg";
-
-    private static final String NON_CONTACT = "nonContactMsg";
 
 
     //TODO: pasar esta lógica a la capa service
@@ -121,11 +118,11 @@ public class UserController {
 
         if(answer==0) {
             contactService.rejectJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, NON_CONTACT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT);
         }
         else {
             contactService.acceptJobOffer(user.getId(), jobOfferId);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, CONTACT);
+            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT);
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
