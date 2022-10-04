@@ -104,9 +104,27 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
+    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
+        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ?",
+                new Object[]{ enterpriseID }, JOB_OFFER_MAPPER);
+    }
+
+    @Override
     public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
         return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ? OFFSET ? LIMIT ?",
                 new Object[]{ enterpriseID, pageSize * page, pageSize }, JOB_OFFER_MAPPER);
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID) {
+        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ? AND disponible = ?",
+                new Object[]{ enterpriseID, JobOfferAvailability.ACTIVE.getStatus() }, JOB_OFFER_MAPPER);
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ? AND disponible = ? OFFSET ? LIMIT ?",
+                new Object[]{ enterpriseID, JobOfferAvailability.ACTIVE.getStatus(), pageSize * page, pageSize }, JOB_OFFER_MAPPER);
     }
 
     @Override

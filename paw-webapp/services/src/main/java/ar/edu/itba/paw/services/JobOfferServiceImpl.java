@@ -39,8 +39,23 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
+    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
+        return jobOfferDao.findByEnterpriseId(enterpriseID);
+    }
+
+    @Override
     public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
         return jobOfferDao.findByEnterpriseId(enterpriseID, page, pageSize);
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID) {
+        return jobOfferDao.findActiveByEnterpriseId(enterpriseID);
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return jobOfferDao.findActiveByEnterpriseId(enterpriseID, page, pageSize);
     }
 
     @Override
