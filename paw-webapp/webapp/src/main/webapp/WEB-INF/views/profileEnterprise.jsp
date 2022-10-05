@@ -30,7 +30,7 @@
                     <div class="card-body p-0">
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/uploadEnterpriseProfileImage/${enterprise.id}"/>">
-                                <button class="btn btn-block waves-effect mb-2" style="background-color: #459F78; color: white;">
+                                <button class="btn btn-block waves-effect mb-2" style="white-space:normal; background-color: #459F78; color: white;">
                                     <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn"/>
                                 </button>
                             </a>

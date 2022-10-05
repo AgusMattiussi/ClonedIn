@@ -71,7 +71,8 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
-        mailMap.put("salary", String.valueOf(jobOffer.getSalary()));
+        mailMap.put("salary", jobOffer.getSalary() != null? "$" + String.valueOf(jobOffer.getSalary()) :
+                messageSource.getMessage("contactMail.noSalaryMsg", null, locale));
         mailMap.put("modality", jobOffer.getModality());
         mailMap.put("enterpriseName", enterprise.getName());
         mailMap.put("enterpriseEmail", enterprise.getEmail());
