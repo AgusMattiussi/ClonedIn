@@ -212,9 +212,12 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public void updateCategory(long userID, String newCategoryName) {
-        //TODO: chequear que no explote
-        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-        template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", category.getId(), userID);
+        try {
+            Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
+            template.update("UPDATE usuario SET idRubro = ? WHERE id = ?", category.getId(), userID);
+        } catch (CategoryNotFoundException exception) {
+
+        }
     }
 
     @Override

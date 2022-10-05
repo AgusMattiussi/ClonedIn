@@ -37,9 +37,6 @@ public class UserController {
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
-
-
-    //TODO: pasar esta lógica a la capa service
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
