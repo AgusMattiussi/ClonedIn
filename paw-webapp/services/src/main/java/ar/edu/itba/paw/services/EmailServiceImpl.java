@@ -90,12 +90,24 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendRegisterConfirmationEmail(String email, String username, Locale locale) {
+    public void sendRegisterUserConfirmationEmail(User user, Locale locale) {
+        sendRegisterConfirmationEmail(user.getEmail(), user.getName(), locale, "profileUser/" + user.getId());
+    }
+
+    @Async
+    @Override
+    public void sendRegisterEnterpriseConfirmationEmail(String email, String enterpriseName, Locale locale) {
+        sendRegisterConfirmationEmail(email, enterpriseName, locale, "");
+    }
+
+    @Async
+    void sendRegisterConfirmationEmail(String email, String username, Locale locale, String callToActionMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", username);
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, locale));
         mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, locale));
         mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, locale));
+        mailMap.put("callToActionUrl", baseUrl + callToActionMsg);
         String subject = messageSource.getMessage("registerMail.subject", null, locale);
         sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
     }

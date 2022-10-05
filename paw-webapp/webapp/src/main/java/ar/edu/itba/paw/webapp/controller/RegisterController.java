@@ -62,7 +62,7 @@ public class RegisterController {
             return formRegisterUser(userForm);
         }
         final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
-        sendRegisterEmail(userForm.getEmail(), userForm.getName());
+        emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
         LOGGER.debug("A new user was registered under id: {}", u.getId());
         LOGGER.info("A new user was registered");
@@ -83,7 +83,7 @@ public class RegisterController {
             return formRegisterEnterprise(enterpriseForm);
         }
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getAboutUs());
-        sendRegisterEmail(enterpriseForm.getEmail(), enterpriseForm.getName());
+        emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
         authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
         LOGGER.debug("A new enterprise was registered under id: {}", e.getId());
         LOGGER.info("A new enterprise was registered");
@@ -93,10 +93,6 @@ public class RegisterController {
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
     public ModelAndView login(@ModelAttribute("loginForm") final LoginForm loginForm) {
         return new ModelAndView("login");
-    }
-
-    private void sendRegisterEmail(String email, String username){
-        emailService.sendRegisterConfirmationEmail(email, username, LocaleContextHolder.getLocale());
     }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
