@@ -18,6 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -64,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message) {
+    public void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", user.getName());
         mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
@@ -75,72 +76,72 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("enterpriseName", enterprise.getName());
         mailMap.put("enterpriseEmail", enterprise.getEmail());
         mailMap.put("message", message);
-        mailMap.put("congratulationsMsg", messageSource.getMessage("contactMail.congrats", null, LocaleContextHolder.getLocale()));
-        mailMap.put("enterpriseMsg", messageSource.getMessage("contactMail.enterprise", null, LocaleContextHolder.getLocale()));
-        mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, LocaleContextHolder.getLocale()));
-        mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, LocaleContextHolder.getLocale()));
-        mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, LocaleContextHolder.getLocale()));
-        mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, LocaleContextHolder.getLocale()));
-        mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, LocaleContextHolder.getLocale()));
-        mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, LocaleContextHolder.getLocale()));
-        String subject = messageSource.getMessage("contactMail.subject", null, LocaleContextHolder.getLocale()) + enterprise.getName();
+        mailMap.put("congratulationsMsg", messageSource.getMessage("contactMail.congrats", null, locale));
+        mailMap.put("enterpriseMsg", messageSource.getMessage("contactMail.enterprise", null, locale));
+        mailMap.put("positionMsg", messageSource.getMessage("contactMail.position", null, locale));
+        mailMap.put("descriptionMsg", messageSource.getMessage("contactMail.description", null, locale));
+        mailMap.put("salaryMsg", messageSource.getMessage("contactMail.salary", null, locale));
+        mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, locale));
+        mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, locale));
+        mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, locale));
+        String subject = messageSource.getMessage("contactMail.subject", null, locale) + enterprise.getName();
         sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
     }
 
     @Async
     @Override
-    public void sendRegisterConfirmationEmail(String email, String username) {
+    public void sendRegisterConfirmationEmail(String email, String username, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", username);
-        mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, LocaleContextHolder.getLocale()));
-        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, LocaleContextHolder.getLocale()));
-        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, LocaleContextHolder.getLocale()));
-        String subject = messageSource.getMessage("registerMail.subject", null, LocaleContextHolder.getLocale());
+        mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, locale));
+        mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, locale));
+        mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, locale));
+        String subject = messageSource.getMessage("registerMail.subject", null, locale);
         sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
     }
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg) {
+    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
-        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, LocaleContextHolder.getLocale()));
+        mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, locale));
         mailMap.put("contactMsg", answerMsg.compareTo(ACCEPT)==0?
-                messageSource.getMessage("contactMsg", null, LocaleContextHolder.getLocale()) + email :
-                messageSource.getMessage("nonContactMsg", null, LocaleContextHolder.getLocale()));
+                messageSource.getMessage("contactMsg", null, locale) + email :
+                messageSource.getMessage("nonContactMsg", null, locale));
         mailMap.put("jobOffer", jobOfferPosition);
         mailMap.put("contactsUrl", baseUrl + "/contactsEnterprise/" + enterprise.getId());
-        mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, LocaleContextHolder.getLocale()));
+        mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, locale));
 
-        String subject = messageSource.getMessage("answerMail.subject", null, LocaleContextHolder.getLocale());
+        String subject = messageSource.getMessage("answerMail.subject", null, locale);
 
         sendEmail(enterprise.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }
 
     @Async
     @Override
-    public void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition) {
-        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CLOSE);
+    public void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale) {
+        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CLOSE, locale);
     }
 
     @Async
     @Override
-    public void sendCancelJobOfferEmail(User user, String enterpriseName, String jobOfferPosition) {
-        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CANCEL);
+    public void sendCancelJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale) {
+        sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CANCEL, locale);
     }
 
     @Async
-    void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action) {
+    void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", enterpriseName);
-        mailMap.put("answerMsg", messageSource.getMessage(action + "Msg", null, LocaleContextHolder.getLocale()));
+        mailMap.put("answerMsg", messageSource.getMessage(action + "Msg", null, locale));
         mailMap.put("jobOffer", jobOfferPosition);
         mailMap.put("contactsUrl", baseUrl + "/notificationsUser/" + user.getId());
-        mailMap.put("buttonMsg", messageSource.getMessage("closeMail.button", null, LocaleContextHolder.getLocale()));
+        mailMap.put("buttonMsg", messageSource.getMessage("closeMail.button", null, locale));
 
-        String subject = messageSource.getMessage(action + "Mail.subject", null, LocaleContextHolder.getLocale());
+        String subject = messageSource.getMessage(action + "Mail.subject", null, locale);
 
         sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }

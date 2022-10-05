@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -150,7 +151,7 @@ public class EnterpriseController {
         });
 
         contactService.cancelJobOffer(userId, jobOfferId);
-        emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition());
+        emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }
@@ -319,7 +320,7 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
 
-        emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage());
+        emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage(), LocaleContextHolder.getLocale());
         contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
 
         return new ModelAndView("redirect:/");
