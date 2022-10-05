@@ -290,7 +290,7 @@ public class EnterpriseController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         }));
-        mav.addObject("jobOffers", jobOfferService.findByEnterpriseId(loggedUserID, 0, 100));
+        mav.addObject("jobOffers", jobOfferService.findActiveByEnterpriseId(loggedUserID, 0, 100));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
