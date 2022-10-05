@@ -35,7 +35,7 @@
                                 </button>
                             </a>
                         </sec:authorize>
-                        <div class="d-flex justify-content-between pb-0 pl-4 mt-2 pr-2">
+                        <div class="d-flex flex-wrap justify-content-between pb-0 pl-4 mt-2 pr-2">
                         <h5 class="card-title"><c:out value="${enterprise.name}"/></h5>
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/editEnterprise/${enterprise.id}"/>">
@@ -146,7 +146,7 @@
                                             <c:if test="${joboffer.available == 'Activa'}">
                                             <div class="d-flex flex-column">
                                                 <a href="<c:url value="/closeJobOffer/${joboffer.id}"/>" >
-                                                    <button class="btn btn-secondary" style="margin-bottom: 0.75rem; width: 200px">
+                                                    <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
                                                         <spring:message code="profileEnterpriseCloseJobOfferButton"/>
                                                     </button>
                                                 </a>

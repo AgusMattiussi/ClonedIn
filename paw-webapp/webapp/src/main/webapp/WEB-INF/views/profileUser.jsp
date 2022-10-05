@@ -50,12 +50,12 @@
                             <div class="card-body p-0">
                                 <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/uploadProfileImage/${user.id}"/>">
-                                        <button class="btn btn-block waves-effect mb-2" style="background-color: #459F78; color: white;">
+                                        <button class="btn btn-block waves-effect mb-2" style="white-space:normal; background-color: #459F78; color: white;">
                                             <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn"/>
                                         </button>
                                     </a>
                                 </sec:authorize>
-                                <div class="d-flex justify-content-between pb-0 pl-4 mt-2 pr-2">
+                                <div class="d-flex flex-wrap justify-content-between pb-0 pl-4 mt-2 pr-2">
                                     <h5 class="card-title" style="padding-top: 5px">
                                         <c:out value="${user.name}"/>
                                     </h5>
@@ -145,7 +145,7 @@
                         <div class="row mr-2">
                         <div class="card mt-2">
                             <div class="card-body pb-0">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-wrap justify-content-between">
                                     <h5 class="card-title"><spring:message code="profileExperience"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createExperience/${user.id}"/>">
@@ -197,7 +197,7 @@
                         <div class="row mr-2">
                         <div class="card mt-2">
                             <div class="card-body pb-0">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-wrap justify-content-between">
                                     <h5 class="card-title"><spring:message code="profileEducation"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createEducation/${user.id}"/>">
@@ -241,7 +241,7 @@
                         <div class="row mr-2">
                         <div class="card mt-2">
                             <div class="card-body pb-0">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-wrap justify-content-between">
                                     <h5 class="card-title"><spring:message code="profileSkills"/></h5>
                                     <sec:authorize access="hasRole('USER')">
                                     <a href="<c:url value="/createSkill/${user.id}"/>">
