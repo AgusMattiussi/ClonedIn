@@ -56,9 +56,6 @@ public class CategoryJdbcDao implements CategoryDao {
 
     @Override
     public Optional<Category> findById(long id) {
-        if(id == 0)
-            return Optional.empty();
-
         return template.query("SELECT * FROM rubro WHERE id = ?",
                 new Object[]{ id }, CATEGORY_MAPPER).stream().findFirst();
     }

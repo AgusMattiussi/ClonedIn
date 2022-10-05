@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
+import ar.edu.itba.paw.models.enums.JobOfferModalities;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +31,8 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private static final String SALARY = "salario";
     private static final String MODALITY = "modalidad";
     private static final String AVAILABLE = "disponible";
-    public static final String[] MODALITIES = new String[] {"Remoto", "Presencial", "Mixto"};
+    public static final String[] MODALITIES = new String[] {JobOfferModalities.IN_PERSON.getModality(), JobOfferModalities.REMOTE.getModality(),
+                                            JobOfferModalities.REMOTE.getModality(), JobOfferModalities.MIXED.getModality()};
     public static final Set<String> modalitiesSet = new HashSet<>(Arrays.asList(MODALITIES));
 
     private final JdbcTemplate template;
@@ -43,7 +45,6 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
         Category category = null;
-
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
@@ -81,7 +82,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
         Category category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
         if(!modalitiesSet.contains(modality))
-            modality = "No especificado";
+            modality = JobOfferModalities.NOT_SPECIFIED.getModality();
 
         final Map<String, Object> values = new HashMap<>();
         values.put(ENTERPRISE_ID, enterpriseID);
