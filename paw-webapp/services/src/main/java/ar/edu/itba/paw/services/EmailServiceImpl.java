@@ -53,7 +53,6 @@ public class EmailServiceImpl implements EmailService {
 
             mailSender.send(mimeMessage);
         } catch(MessagingException messagingException) {
-            //TODO: LOG error
         }
     }
 

@@ -27,8 +27,6 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private static final String CATEGORY_ID_FK = "idRubro";
     private static final String DESCRIPTION = "descripcion";
     private static final String IMAGE_ID = "idImagen";
-    private static final long DEFAULT_IMAGE_ID = 1;
-
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
     private CategoryDao categoryDao;
@@ -64,8 +62,6 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     @Override
     public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
         Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
-
-        long imageId = DEFAULT_IMAGE_ID;
 
         final Map<String, Object> values = new HashMap<>();
         values.put(NAME, name);
@@ -120,8 +116,12 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
 
     @Override
     public void updateCategory(long enterpriseID, String newCategoryName) {
-        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-        template.update("UPDATE empresa SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), enterpriseID});
+        try {
+            Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
+            template.update("UPDATE empresa SET idRubro = ? WHERE id = ?", new Object[] {category.getId(), enterpriseID});
+        } catch (CategoryNotFoundException exception) {
+
+        }
     }
 
     @Override
