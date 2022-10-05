@@ -78,7 +78,7 @@ public class UserController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') OR canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
 

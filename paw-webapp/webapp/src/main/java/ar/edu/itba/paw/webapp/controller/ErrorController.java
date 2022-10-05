@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
 import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class ErrorController {
         return new ModelAndView("404");
     }
 
-    @ExceptionHandler(UserIsNotProfileOwnerException.class)
+    @ExceptionHandler({UserIsNotProfileOwnerException.class, HiddenProfileException.class})
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     public ModelAndView userIsNotProfileOwner() {
         LOGGER.error("Error 403 - Forbidden");

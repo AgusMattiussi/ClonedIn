@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
 import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -34,6 +35,13 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     public boolean canAccessEnterpriseProfile(Authentication loggedEnterprise, long profileID) {
         Enterprise enterprise = enterpriseService.findByEmail(loggedEnterprise.getName()).orElseThrow(UserNotFoundException::new);
         return canAccessProfile(enterprise.getId(), profileID);
+    }
+
+    public boolean isUserVisible(long userID){
+        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        if(user.getVisibility() != 1)
+            throw new HiddenProfileException();
+        return true;
     }
 
     public void setUserService(UserService userService) {
