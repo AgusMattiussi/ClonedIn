@@ -182,17 +182,28 @@ public class UserController {
         boolean monthToIsEmpty = formMonthTo.equals("No-especificado");
         boolean monthOrYearEmpty = yearToIsEmpty && !monthToIsEmpty || !yearToIsEmpty && monthToIsEmpty;
         boolean yearFromIsEmpty = formYearFrom.isEmpty();
+        boolean yearWrongFormat = false;
 
-        Integer yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
+        Integer yearTo;
+        Integer yearFrom;
+
+        try {
+            yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
+            yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
+        } catch (NumberFormatException e) {
+            yearWrongFormat = true;
+            yearTo = null;
+            yearFrom = null;
+        };
+
         Integer monthTo = monthToIsEmpty ? null : monthToNumber.get(formMonthTo);
-        Integer yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
         Integer monthFrom = monthToNumber.get(experienceForm.getMonthFrom());
 
-        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty &&
+        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat &&
                 (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
 
 
-        if (errors.hasErrors() || yearFromIsEmpty || monthOrYearEmpty || invalidDate) {
+        if (errors.hasErrors() || yearFromIsEmpty || yearWrongFormat || monthOrYearEmpty || invalidDate) {
             if(monthOrYearEmpty)
                 errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick a year and month, or let both fields empty");
             else if (invalidDate)
@@ -360,7 +371,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView editUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
+    public ModelAndView editUser(Authentication loggedUser, @Valid @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                  final BindingResult errors, @PathVariable("userId") final long userId) {
         if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);

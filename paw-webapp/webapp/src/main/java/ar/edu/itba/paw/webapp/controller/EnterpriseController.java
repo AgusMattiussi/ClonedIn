@@ -237,7 +237,7 @@ public class EnterpriseController {
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/editEnterprise/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
-    public ModelAndView editEnterprise(Authentication loggedUser, @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
+    public ModelAndView editEnterprise(Authentication loggedUser, @Valid @ModelAttribute("editEnterpriseForm") final EditEnterpriseForm editEnterpriseForm,
                                  final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
         if (errors.hasErrors()) {
             return formEditEnterprise(loggedUser, editEnterpriseForm, enterpriseId);

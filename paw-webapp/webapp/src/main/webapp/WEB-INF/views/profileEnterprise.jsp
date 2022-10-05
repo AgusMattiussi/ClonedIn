@@ -157,6 +157,16 @@
                                                 </a>
                                             </div>
                                             </c:if>
+                                            <c:if test="${joboffer.available == 'Cancelada'}">
+                                            <span class="badge badge-danger p-2 mb-2">
+                                                    <spring:message code="profileEnterpriseCancelJobOffer"/>
+                                            </span>
+                                            </c:if>
+                                            <c:if test="${joboffer.available == 'Cerrada'}">
+                                            <span class="badge badge-danger p-2 mb-2">
+                                                <spring:message code="profileEnterpriseCloseJobOffer"/>
+                                            </span>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
