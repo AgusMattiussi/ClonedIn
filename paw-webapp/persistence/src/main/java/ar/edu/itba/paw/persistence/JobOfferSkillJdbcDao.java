@@ -7,7 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
-import ar.edu.itba.paw.persistence.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

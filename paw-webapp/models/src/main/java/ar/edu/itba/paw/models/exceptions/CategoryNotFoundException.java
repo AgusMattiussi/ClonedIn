@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence.exceptions;
+package ar.edu.itba.paw.models.exceptions;
 
 public class CategoryNotFoundException extends RuntimeException{
 }
