@@ -1,22 +1,32 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "usuario")
 public class User {
 
-    private final long id;
-    private final String email;
-    private final String password;
-    private final String name;
-    private final String location;
-    private final Category category;
-    private final String currentPosition;
-    private final String description;
-    private final String education;
-    private final int visibility;
-    private final Long imageId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
+    @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Long id;
 
-    public User(long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
+
+    private String email;
+    private String password;
+    private String name;
+    private String location;
+    private Category category;
+    private String currentPosition;
+    private String description;
+    private String education;
+    private int visibility;
+    private Long imageId;
+
+    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
+        super();
         this.id = id;
         this.email = email;
         this.password = password;
@@ -30,7 +40,16 @@ public class User {
         this.imageId = imageId;
     }
 
-    public long getId() {
+    public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
+        this(null, email, password, name, location, category, currentPosition, description, education, visibility, imageId);
+    }
+
+    /* package */ User() {
+    // Just for Hibernate, we love you!
+    }
+
+
+    public Long getId() {
         return id;
     }
 

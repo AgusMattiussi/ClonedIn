@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-import static ar.edu.itba.paw.persistence.SkillJdbcDao.SKILL_MAPPER;
+import static ar.edu.itba.paw.persistence.jdbc.SkillJdbcDao.SKILL_MAPPER;
 
 @Repository
 public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
