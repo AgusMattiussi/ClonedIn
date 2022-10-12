@@ -1,18 +1,30 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
+@Entity
+@Table(name = "imagen")
 public class Image {
-    private final long id;
-    private final byte[] bytes;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "imagen_id_seq")
+    @SequenceGenerator(sequenceName = "imagen_id_seq", name = "imagen_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "bytes")
+    private byte[] bytes;
 
-    public Image(long id, byte[] bytes) {
+    /* package */ Image() {
+        //Just for Hibernate, we love you!
+    }
+
+    public Image(Long id, byte[] bytes) {
         this.id = id;
         this.bytes = bytes;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
