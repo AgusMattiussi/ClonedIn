@@ -17,7 +17,7 @@ import java.util.Optional;
 public class UserHibernateDao implements UserDao {
 
     //FIXME: Cambiar esto
-    public static final Category DEFAULT_CATEGORY = new Category(0, "testcategory");
+    public static final Category DEFAULT_CATEGORY = new Category(0L, "testcategory");
     public static final int DEFAULT_VISIBILITY = 1;
 
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
 public class CategoryJdbcDao implements CategoryDao {
 
     private static final String CATEGORY_TABLE = "rubro";
