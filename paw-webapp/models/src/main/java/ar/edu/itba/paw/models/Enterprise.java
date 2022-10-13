@@ -1,19 +1,34 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "empresa")
 public class Enterprise {
-    private final long id;
-    private final String name;
-    private final String email;
-    private final String password;
-    private final String location;
-    private final Category category;
-    private final String description;
-    private final Long imageId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
+    @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
+    private Long id;
+    @Column(length = 100, nullable = false, unique = true)
+    private String email;
+    @Column(length = 100, nullable = false)
+    private String password;
+    @Column(length = 100, nullable = false)
+    private String name;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "location")
+    private String location;
+    private Category category; // FIXme --> ?
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "description")
+    private String description;
+    private Long imageId; // FIXme: --> ?
 
 
-    public Enterprise(long id, String name, String email, String password, String location, Category category, String description, Long imageId) {
+    public Enterprise(Long id, String name, String email, String password, String location, Category category, String description, Long imageId) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -23,8 +38,15 @@ public class Enterprise {
         this.description = description;
         this.imageId = imageId;
     }
+    public Enterprise(String name, String email, String password, String location, Category category, String description, Long imageId) {
+        this(null, name, email, password, location, category, description, imageId);
+    }
 
-    public long getId() {
+    /* package */ Enterprise() {
+        // Just for Hibernate, we love you!
+    }
+
+    public Long getId() {
         return id;
     }
 
