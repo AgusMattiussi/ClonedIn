@@ -1,10 +1,16 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 public class Skill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidad_id_seq")
+    @SequenceGenerator(sequenceName = "habilidad_id_seq", name = "habilidad_id_seq", allocationSize = 1)
+    @Column(name = "id")
     private long id;
 
+    @Column(name = "description")
     private String description;
 
     public Skill(long id, String description) {
