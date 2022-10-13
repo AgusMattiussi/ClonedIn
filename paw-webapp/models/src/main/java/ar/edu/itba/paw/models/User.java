@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,20 +12,29 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
-    @Column(name = "id")
     private Long id;
-
-
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
+    @Column(length = 100, nullable = false)
     private String password;
+    @Column(length = 100, nullable = false)
     private String name;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "location")
     private String location;
-    private Category category;
+    private Category category; // FIXme --> ?
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "currentPosition")
     private String currentPosition;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "description")
     private String description;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "education")
     private String education;
+    @Column(name = "visibility", columnDefinition = "integer default 1")
     private int visibility;
-    private Long imageId;
+    private Long imageId; // FIXme: --> ?
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
         super();

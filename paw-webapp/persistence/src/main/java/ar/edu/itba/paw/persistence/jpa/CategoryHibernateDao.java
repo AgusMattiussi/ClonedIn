@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
-
+@Primary
 @Repository
 public class CategoryHibernateDao implements CategoryDao {
 
