@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
 import ar.edu.itba.paw.models.Experience;
+import ar.edu.itba.paw.models.User;
 import org.postgresql.core.NativeQuery;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     private EntityManager em;
 
     @Override
-    public Experience create(long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+    public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)
             throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
 
@@ -33,7 +34,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
                         " - " + monthTo + "/" + yearTo + " es incorrecta");
         }
 
-        final Experience experience = new Experience(userId, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
+        final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);
         return experience;
     }
@@ -53,7 +54,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public void deleteExperience(long experienceId) {
-        final Query query = em.createQuery("DELETE FROM Experience as e WHERE e.id = :experienceId");
+        final Query query = em.createQuery("DELETE FROM Experience AS e WHERE e.id = :experienceId");
         query.setParameter("experienceId", experienceId);
         query.executeUpdate();
     }
