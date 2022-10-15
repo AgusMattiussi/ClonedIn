@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferStatuses;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,6 +55,7 @@ public class ContactJdbcDao implements ContactDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
     private CategoryDao categoryDao;
+    private ImageDao imageDao;
 
     private final RowMapper<JobOfferWithStatus> JOB_OFFER_WITH_STATUS_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
@@ -139,6 +141,9 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        long imageID = resultSet.getLong(IMAGE_ID);
+        Image image = imageDao.getImage(imageID).orElseThrow(ImageNotFoundException::new);
+
         return new User(resultSet.getLong(USER_TABLE_ID),
                 resultSet.getString(USER_TABLE_EMAIL),
                 resultSet.getString(USER_TABLE_PASSWORD),
@@ -149,15 +154,16 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(USER_TABLE_DESCRIPTION),
                 resultSet.getString(USER_TABLE_EDUCATION),
                 resultSet.getInt(USER_TABLE_VISIBILITY),
-                resultSet.getLong(IMAGE_ID));
+                image);
     };
 
     @Autowired
-    public ContactJdbcDao(final DataSource ds, CategoryDao categoryDao){
+    public ContactJdbcDao(final DataSource ds, CategoryDao categoryDao, ImageDao imageDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(CONTACT_TABLE);
         this.categoryDao = categoryDao;
+        this.imageDao = imageDao;
     }
 
     private List<Long> getEnterpriseIDsForUser(long userID){

@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
+import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,6 +39,7 @@ public class UserJdbcDao implements UserDao {
 
 
     private CategoryDao categoryDao;
+    private ImageDao imageDao;
 
     public static final String[] EDUCATION_LEVELS = new String[] {"Primario", "Secundario", "Terciario", "Graduado", "Posgrado"};
     public static final Set<String> educationLevelsSet = new HashSet<>(Arrays.asList(EDUCATION_LEVELS));
@@ -47,6 +51,9 @@ public class UserJdbcDao implements UserDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        long imageID = resultSet.getLong(IMAGE_ID);
+        Image image = imageDao.getImage(imageID).orElseThrow(ImageNotFoundException::new);
+
         return new User(resultSet.getLong(ID),
                 resultSet.getString(EMAIL),
                 resultSet.getString(PASSWORD),
@@ -57,7 +64,7 @@ public class UserJdbcDao implements UserDao {
                 resultSet.getString(DESCRIPTION),
                 resultSet.getString(EDUCATION),
                 resultSet.getInt(VISIBILITY),
-                resultSet.getLong(IMAGE_ID));
+                image);
     };
 
     private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, rowNum) -> rs.getInt("count");
@@ -67,12 +74,13 @@ public class UserJdbcDao implements UserDao {
 
 
     @Autowired
-    public UserJdbcDao(final DataSource ds, final CategoryDao categoryDao){
+    public UserJdbcDao(final DataSource ds, final CategoryDao categoryDao, ImageDao imageDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(USER_TABLE)
                 .usingGeneratedKeyColumns(ID);
         this.categoryDao = categoryDao;
+        this.imageDao = imageDao;
     }
 
 

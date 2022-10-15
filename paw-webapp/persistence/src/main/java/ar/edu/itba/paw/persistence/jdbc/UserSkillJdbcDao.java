@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
-import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
-import ar.edu.itba.paw.interfaces.persistence.SkillDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,17 +38,20 @@ public class UserSkillJdbcDao implements UserSkillDao {
 
 
     private final SkillDao skillDao;
-    private final UserDao userDao;
+    private ImageDao imageDao;
+    private CategoryDao categoryDao;
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
-    private CategoryDao categoryDao;
     private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(USER_TABLE_CATEGORY_ID_FK);
         Category category = null;
 
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
+
+        long imageID = resultSet.getLong(IMAGE_ID);
+        Image image = imageDao.getImage(imageID).orElseThrow(ImageNotFoundException::new);
 
         return new User(resultSet.getLong(USER_TABLE_ID),
                 resultSet.getString(USER_TABLE_EMAIL),
@@ -61,16 +63,16 @@ public class UserSkillJdbcDao implements UserSkillDao {
                 resultSet.getString(USER_TABLE_DESCRIPTION),
                 resultSet.getString(USER_TABLE_EDUCATION),
                 resultSet.getInt(USER_TABLE_VISIBILITY),
-                resultSet.getLong(IMAGE_ID));
+                image);
     };
 
     @Autowired
-    public UserSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final UserDao userDao, final CategoryDao categoryDao){
+    public UserSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final ImageDao imageDao, final CategoryDao categoryDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(USER_SKILL_TABLE);
         this.skillDao = skillDao;
-        this.userDao = userDao;
+        this.imageDao = imageDao;
         this.categoryDao = categoryDao;
     }
 

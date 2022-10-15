@@ -13,30 +13,44 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
     private Long id;
-    @Column(length = 100, nullable = false, unique = true)
-    private String email;
-    @Column(length = 100, nullable = false)
-    private String password;
-    @Column(length = 100, nullable = false)
-    private String name;
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "location")
-    private String location;
-    private Category category; // FIXme --> ?
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "currentPosition")
-    private String currentPosition;
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "description")
-    private String description;
-    @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "education")
-    private String education;
-    @Column(name = "visibility", columnDefinition = "integer default 1")
-    private int visibility;
-    private Long imageId; // FIXme: --> ?
 
-    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
+    @Column(name = "email", length = 100, nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "contrasenia", length = 100, nullable = false)
+    private String password;
+
+    @Column(name = "nombre", length = 100, nullable = false)
+    private String name;
+
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "ubicacion")
+    private String location;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idRubro")
+    private Category category;
+
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "posicionActual")
+    private String currentPosition;
+
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "descripcion")
+    private String description;
+
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "educacion")
+    private String education;
+
+    @Column(name = "visibilidad"/*, columnDefinition = "integer default 1"*/)
+    private int visibility;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idImagen")
+    private Image image;
+
+    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
         super();
         this.id = id;
         this.email = email;
@@ -48,11 +62,11 @@ public class User {
         this.description = description;
         this.education = education;
         this.visibility = visibility;
-        this.imageId = imageId;
+        this.image = image;
     }
 
-    public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Long imageId) {
-        this(null, email, password, name, location, category, currentPosition, description, education, visibility, imageId);
+    public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
+        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
     }
 
     /* package */ User() {
@@ -100,8 +114,8 @@ public class User {
         return visibility;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public Image getImage() {
+        return image;
     }
 
     @Override
@@ -112,10 +126,11 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
-                ", category=" + category.toString() +
+                ", category=" + category +
                 ", currentPosition='" + currentPosition + '\'' +
                 ", description='" + description + '\'' +
                 ", education='" + education + '\'' +
+                ", visibility=" + visibility +
                 '}';
     }
 
