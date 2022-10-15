@@ -1,17 +1,36 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class JobOffer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ofertalaboral_id_seq")
+    @SequenceGenerator(sequenceName = "ofertalaboral_id_seq", name = "ofertalaboral_id_seq", allocationSize = 1)
+    @Column(name = "id")
     private final long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empresa_id_seq")
+    @SequenceGenerator(sequenceName = "empresa_id_seq", name = "empresa_id_seq", allocationSize = 1)
+    @Column(name = "enterpriseID")
     private final long enterpriseID;
+    @Column(name = "category")
     private final Category category;
+    @Column(name = "position")
     private final String position;
+
+    @Column(name = "description")
     private final String description;
+
+    @Column(name = "salary")
     private final BigDecimal salary;
+    @Column(name = "modality")
     private final String modality;
+
+    @Column(name = "available")
     private final String available;
 
     public JobOffer(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String available) {
