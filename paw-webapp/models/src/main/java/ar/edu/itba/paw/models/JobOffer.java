@@ -10,19 +10,20 @@ public class JobOffer {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ofertalaboral_id_seq")
     @SequenceGenerator(sequenceName = "ofertalaboral_id_seq", name = "ofertalaboral_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private final long id;
+    private final Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empresa_id_seq")
-    @SequenceGenerator(sequenceName = "empresa_id_seq", name = "empresa_id_seq", allocationSize = 1)
-    @Column(name = "enterpriseID")
-    private final long enterpriseID;
-    @Column(name = "category")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idEmpresa")
+    private final Long enterpriseID;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idRubro")
     private final Category category;
-    @Column(name = "position")
+
+    @Column(name = "posicion", nullable = false)
     private final String position;
 
-    @Column(name = "description")
+    @Column(name = "descripcion")
     private final String description;
 
     @Column(name = "salary")
