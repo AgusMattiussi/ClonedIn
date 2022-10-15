@@ -85,13 +85,15 @@ public class UserJdbcDao implements UserDao {
 
 
     @Override
-    public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
+    public User create(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
+        /*
+        FIXME: Hacer esto en el controller
         long categoryID = 0;
         Category category = null;
         if(categoryName != null) {
             category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
             categoryID = category.getId();
-        }
+        }*/
 
         if(!educationLevelsSet.contains(education))
             education = "No-especificado";
@@ -108,7 +110,7 @@ public class UserJdbcDao implements UserDao {
         values.put(CURRENT_POSITION, currentPosition);
         values.put(DESCRIPTION, description);
         values.put(EDUCATION, education);
-        values.put(CATEGORY_ID_FK, categoryID);
+        values.put(CATEGORY_ID_FK, category.getId());
         values.put(VISIBILITY, visibility);
         values.put(IMAGE_ID, null);
 
@@ -141,8 +143,8 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public Optional<Integer> getUsersCount() {
-        return template.query("SELECT COUNT(*) as count FROM usuario", COUNT_ROW_MAPPER).stream().findFirst();
+    public Integer getUsersCount() {
+        return template.queryForObject("SELECT COUNT(*) as count FROM usuario", Integer.class);
     }
 
     @Override
@@ -244,6 +246,7 @@ public class UserJdbcDao implements UserDao {
         template.update("UPDATE usuario SET idImagen = ? WHERE id = ?", imageId, userId);
     }
 
+    //FIXME: Ojo, esta hasheada?
     @Override
     public void changePassword(String email, String password) {
         template.update("UPDATE usuario SET contrasenia = ? WHERE email = ?", password, email);

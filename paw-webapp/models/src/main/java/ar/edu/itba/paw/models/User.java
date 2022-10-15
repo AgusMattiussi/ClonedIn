@@ -27,7 +27,8 @@ public class User {
     @Column(name = "ubicacion")
     private String location;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    // FIXME: O OneToMany?
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRubro")
     private Category category;
 

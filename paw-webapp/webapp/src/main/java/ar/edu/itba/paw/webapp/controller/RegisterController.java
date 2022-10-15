@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.form.EnterpriseForm;
 import ar.edu.itba.paw.webapp.form.LoginForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
@@ -61,7 +63,11 @@ public class RegisterController {
             LOGGER.warn("User register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formRegisterUser(userForm);
         }
-        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+
+        Category category = categoryService.findByName(userForm.getCategory()).orElseThrow(CategoryNotFoundException::new);
+
+        final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
+                category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
         emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
         LOGGER.debug("A new user was registered under id: {}", u.getId());

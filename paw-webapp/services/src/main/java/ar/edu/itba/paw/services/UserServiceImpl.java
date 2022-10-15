@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
-        return userDao.create(email, passwordEncoder.encode(password), name, location, categoryName, currentPosition, description, education);
+    public User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
+        return userDao.create(email, passwordEncoder.encode(password), name, location, category, currentPosition, description, education);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Integer> getUsersCount() {
+    public Integer getUsersCount() {
         return userDao.getUsersCount();
     }
 
