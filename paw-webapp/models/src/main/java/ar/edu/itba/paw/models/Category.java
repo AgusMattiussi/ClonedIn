@@ -12,7 +12,7 @@ public class Category {
     @SequenceGenerator(sequenceName = "rubro_id_seq", name = "rubro_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
-    @Column(name = "nombre")
+    @Column(name = "nombre",length = 100, nullable = false)
     private String name;
 
     /* package */ Category() {

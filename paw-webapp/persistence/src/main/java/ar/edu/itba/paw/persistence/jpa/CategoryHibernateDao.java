@@ -27,7 +27,7 @@ public class CategoryHibernateDao implements CategoryDao {
 
     @Override
     public Optional<Category> findByName(String name) {
-        final TypedQuery<Category> query = em.createQuery("from Category as c where c.name = :name", Category.class);
+        final TypedQuery<Category> query = em.createQuery("FROM Category AS c WHERE c.name = :name", Category.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
     }

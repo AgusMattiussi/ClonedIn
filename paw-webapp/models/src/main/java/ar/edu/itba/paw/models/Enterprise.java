@@ -12,23 +12,27 @@ public class Enterprise {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
     private Long id;
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
-    @Column(length = 100, nullable = false)
+    @Column(name = "contrasenia", length = 100, nullable = false)
     private String password;
-    @Column(length = 100, nullable = false)
+    @Column(name = "nombre", length = 100, nullable = false)
     private String name;
     @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "location")
+    @Column(name = "ubicacion")
     private String location;
-    private Category category; // FIXme --> ?
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idRubro")
+    private Category category;
     @Type(type = "org.hibernate.type.TextType")
-    @Column(name = "description")
+    @Column(name = "descripcion")
     private String description;
-    private Long imageId; // FIXme: --> ?
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idImagen")
+    private Image image;
 
 
-    public Enterprise(Long id, String name, String email, String password, String location, Category category, String description, Long imageId) {
+    public Enterprise(Long id, String name, String email, String password, String location, Category category, String description, Image image) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -36,10 +40,10 @@ public class Enterprise {
         this.location = location;
         this.category = category;
         this.description = description;
-        this.imageId = imageId;
+        this.image = image;
     }
-    public Enterprise(String name, String email, String password, String location, Category category, String description, Long imageId) {
-        this(null, name, email, password, location, category, description, imageId);
+    public Enterprise(String name, String email, String password, String location, Category category, String description, Image image) {
+        this(null, name, email, password, location, category, description, image);
     }
 
     /* package */ Enterprise() {
@@ -74,8 +78,8 @@ public class Enterprise {
         return description;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public Image getImageId() {
+        return image;
     }
 
     @Override
