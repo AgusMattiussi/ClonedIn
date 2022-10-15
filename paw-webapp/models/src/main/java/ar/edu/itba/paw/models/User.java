@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.models;
 
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "usuario")
@@ -124,7 +124,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && email.equals(user.email);
+        return Objects.equals(id, user.id) && email.equals(user.email);
     }
 
     @Override
