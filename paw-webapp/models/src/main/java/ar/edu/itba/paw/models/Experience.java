@@ -1,21 +1,45 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "experiencia")
 public class Experience {
-    private final long id;
-    private final long userId;
-    private final int monthFrom;
-    private final int yearFrom;
-    private final Integer monthTo;
-    private final Integer yearTo;
-    private final String enterpriseName;
-    private final String position;
-    private final String description;
 
-    public Experience(long id, long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educacion_id_seq")
+    @SequenceGenerator(sequenceName = "educacion_id_seq", name = "educacion_id_seq", allocationSize = 1)
+    private Long id;
+
+    //FIXme: o @OneToMany
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario")
+    private User user;
+    //FIXme: check
+    @Column(name = "mesDesde", columnDefinition = "CHECK(mesDesde BETWEEN 1 AND 12)")
+    private int monthFrom;
+    @Column(name = "anioDesde", columnDefinition = "CHECK(anioDesde BETWEEN 1900 AND 2100)")
+    private int yearFrom;
+    @Column(name = "mesHasta", columnDefinition = "CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR ((mesHasta BETWEEN 1 AND 12) AND (anioHasta BETWEEN 1900 AND 2100)))")
+    private Integer monthTo;
+    @Column(name = "anioHasta", columnDefinition = "CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR (anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))")
+    private Integer yearTo;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "posicion", nullable = false)
+    private String position;
+    @Column(name = "empresa", length = 100, nullable = false)
+    private String enterpriseName;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "descripcion")
+    private String description;
+
+
+    public Experience(Long id, User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.monthFrom = monthFrom;
         this.yearFrom = yearFrom;
         this.monthTo = monthTo;
@@ -25,12 +49,20 @@ public class Experience {
         this.description = description;
     }
 
-    public long getId() {
+    public Experience(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+        this(null, user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
+    }
+
+    /* package */ Experience() {
+        // Just for Hibernate, we love you!
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUserId() {
+        return user;
     }
 
     public String getEnterpriseName() {
@@ -66,14 +98,14 @@ public class Experience {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return id == that.id && userId == that.userId;
+        return id == that.id && user.getId() == that.user.getId();
     }
 
     @Override
     public String toString() {
         return "Experience{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", user=" + user +
                 ", monthFrom=" + monthFrom +
                 ", yearFrom=" + yearFrom +
                 ", monthTo=" + monthTo +
@@ -86,6 +118,6 @@ public class Experience {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId);
+        return Objects.hash(id, user.getId());
     }
 }

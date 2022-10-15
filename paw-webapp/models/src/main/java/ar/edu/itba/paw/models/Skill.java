@@ -1,24 +1,37 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "aptitud")
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidad_id_seq")
     @SequenceGenerator(sequenceName = "habilidad_id_seq", name = "habilidad_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
-    @Column(name = "description")
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "descripcion")
     private String description;
 
-    public Skill(long id, String description) {
+    public Skill(Long id, String description) {
         this.id = id;
         this.description = description;
     }
 
-    public long getId() {
+    public Skill(String description) {
+        this(null, description);
+    }
+
+    /* package */ Skill() {
+        // Just for Hibernate, we love you!
+    }
+
+    public Long getId() {
         return id;
     }
 
