@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name = "ofertaLaboral")
 public class JobOffer {
 
     @Id
@@ -16,7 +18,7 @@ public class JobOffer {
     @JoinColumn(name = "idEmpresa")
     private final Long enterpriseID;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRubro")
     private final Category category;
 
@@ -28,6 +30,7 @@ public class JobOffer {
 
     @Column(name = "salary")
     private final BigDecimal salary;
+
     @Column(name = "modality")
     private final String modality;
 
