@@ -124,6 +124,8 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Image image = imageDao.getImage(resultSet.getLong(IMAGE_ID)).orElseThrow(ImageNotFoundException::new);
+
         return new Enterprise(resultSet.getLong(ENTERPRISE_TABLE_ID),
                 resultSet.getString(ENTERPRISE_TABLE_NAME),
                 resultSet.getString(ENTERPRISE_TABLE_EMAIL),
@@ -131,7 +133,7 @@ public class ContactJdbcDao implements ContactDao {
                 resultSet.getString(ENTERPRISE_TABLE_LOCATION),
                 category,
                 resultSet.getString(ENTERPRISE_TABLE_DESCRIPTION),
-                resultSet.getLong(IMAGE_ID));
+                image);
     };
 
     private final RowMapper<User> USER_MAPPER = (resultSet, rowNum) -> {

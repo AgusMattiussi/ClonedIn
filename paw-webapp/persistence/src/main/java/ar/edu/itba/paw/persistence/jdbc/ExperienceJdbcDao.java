@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Experience;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,26 +31,33 @@ public class ExperienceJdbcDao implements ExperienceDao {
     private static final String POSITION = "posicion";
     private static final String DESCRIPTION = "descripcion";
 
-    private static final RowMapper<Experience> EXPERIENCE_MAPPER = (resultSet, rowNum) ->
-            new Experience(resultSet.getLong(ID),
-                    resultSet.getLong(USER_ID),
-                    resultSet.getInt(MONTH_FROM),
-                    resultSet.getInt(YEAR_FROM),
-                    resultSet.getInt(MONTH_TO),
-                    resultSet.getInt(YEAR_TO),
-                    resultSet.getString(ENTERPRISE_NAME),
-                    resultSet.getString(POSITION),
-                    resultSet.getString(DESCRIPTION));
+    private UserDao userDao;
+
+    private final RowMapper<Experience> EXPERIENCE_MAPPER = ((resultSet, rowNum) -> {
+        User user = userDao.findById(resultSet.getLong(USER_ID)).orElseThrow(UserNotFoundException::new);
+
+        return new Experience(resultSet.getLong(ID),
+                user,
+                resultSet.getInt(MONTH_FROM),
+                resultSet.getInt(YEAR_FROM),
+                resultSet.getInt(MONTH_TO),
+                resultSet.getInt(YEAR_TO),
+                resultSet.getString(ENTERPRISE_NAME),
+                resultSet.getString(POSITION),
+                resultSet.getString(DESCRIPTION));
+    });
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
     @Autowired
-    public ExperienceJdbcDao(final DataSource ds){
+    public ExperienceJdbcDao(final DataSource ds, UserDao userDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(EXPERIENCE_TABLE)
                 .usingGeneratedKeyColumns(ID);
+
+        this.userDao = userDao;
     }
 
     private boolean isMonthValid(int month){
@@ -65,7 +75,7 @@ public class ExperienceJdbcDao implements ExperienceDao {
     }
 
     @Override
-    public Experience create(long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+    public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)
             throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
 
@@ -76,7 +86,7 @@ public class ExperienceJdbcDao implements ExperienceDao {
         }
 
         final Map<String, Object> values = new HashMap<>();
-        values.put(USER_ID, userId);
+        values.put(USER_ID, user.getId());
         values.put(MONTH_FROM, monthFrom);
         values.put(YEAR_FROM, yearFrom);
         values.put(MONTH_TO, monthTo);
@@ -87,7 +97,7 @@ public class ExperienceJdbcDao implements ExperienceDao {
 
         Number experienceId = insert.executeAndReturnKey(values);
 
-        return new Experience(experienceId.longValue(), userId, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
+        return new Experience(experienceId.longValue(), user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
     }
 
     @Override

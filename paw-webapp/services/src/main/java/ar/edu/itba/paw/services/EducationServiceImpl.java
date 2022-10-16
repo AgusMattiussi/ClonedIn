@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.interfaces.services.EducationService;
 import ar.edu.itba.paw.models.Education;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public Education add(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
-        return educationDao.add(userId, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
+    public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+        return educationDao.add(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
     }
 
     @Override

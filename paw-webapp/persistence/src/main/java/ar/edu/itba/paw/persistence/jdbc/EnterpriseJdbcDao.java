@@ -2,9 +2,12 @@ package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,6 +33,7 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
     private CategoryDao categoryDao;
+    private ImageDao imageDao;
 
     protected final RowMapper<Enterprise> ENTERPRISE_MAPPER = (resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID_FK);
@@ -38,6 +42,8 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Image image = imageDao.getImage(resultSet.getLong(IMAGE_ID)).orElseThrow(ImageNotFoundException::new);
+
         return new Enterprise(resultSet.getLong(ID),
                 resultSet.getString(NAME),
                 resultSet.getString(EMAIL),
@@ -45,18 +51,19 @@ public class EnterpriseJdbcDao implements EnterpriseDao {
                 resultSet.getString(LOCATION),
                 category,
                 resultSet.getString(DESCRIPTION),
-                resultSet.getLong(IMAGE_ID));
+                image);
     };
 
 
 
     @Autowired
-    public EnterpriseJdbcDao(final DataSource ds, final CategoryDao categoryDao){
+    public EnterpriseJdbcDao(final DataSource ds, final CategoryDao categoryDao, ImageDao imageDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(ENTERPRISE_TABLE)
                 .usingGeneratedKeyColumns(ID);
         this.categoryDao = categoryDao;
+        this.imageDao = imageDao;
     }
 
     @Override

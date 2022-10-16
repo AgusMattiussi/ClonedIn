@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
 import ar.edu.itba.paw.interfaces.services.ExperienceService;
 import ar.edu.itba.paw.models.Experience;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public Experience create(long userId, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
-        return experienceDao.create(userId, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
+    public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
+        return experienceDao.create(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
     }
 
     @Override

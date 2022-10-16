@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Education;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +21,7 @@ import java.util.Optional;
 @Repository
 public class EducationJdbcDao implements EducationDao {
 
+    private UserDao userDao;
 
     private static final String EDUCATION_TABLE = "educacion";
     private static final String ID = "id";
@@ -30,26 +34,32 @@ public class EducationJdbcDao implements EducationDao {
     private static final String INSTITUTION_NAME = "institucion";
     private static final String DESCRIPTION = "descripcion";
 
-    private static final RowMapper<Education> EDUCATION_MAPPER = (resultSet, rowNum) ->
-            new Education(resultSet.getLong(ID),
-                    resultSet.getLong(USER_ID),
-                    resultSet.getInt(MONTH_FROM),
-                    resultSet.getInt(YEAR_FROM),
-                    resultSet.getInt(MONTH_TO),
-                    resultSet.getInt(YEAR_TO),
-                    resultSet.getString(TITLE),
-                    resultSet.getString(INSTITUTION_NAME),
-                    resultSet.getString(DESCRIPTION));
+    private final RowMapper<Education> EDUCATION_MAPPER = ((resultSet, rowNum) ->
+    {
+        User user = userDao.findById(resultSet.getLong(USER_ID)).orElseThrow(UserNotFoundException::new);
+
+        return new Education(resultSet.getLong(ID),
+                user,
+                resultSet.getInt(MONTH_FROM),
+                resultSet.getInt(YEAR_FROM),
+                resultSet.getInt(MONTH_TO),
+                resultSet.getInt(YEAR_TO),
+                resultSet.getString(TITLE),
+                resultSet.getString(INSTITUTION_NAME),
+                resultSet.getString(DESCRIPTION));
+    });
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
     @Autowired
-    public EducationJdbcDao(final DataSource ds){
+    public EducationJdbcDao(final DataSource ds, UserDao userDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(EDUCATION_TABLE)
                 .usingGeneratedKeyColumns(ID);
+
+        this.userDao = userDao;
     }
 
     private boolean isMonthValid(int month){
@@ -68,13 +78,13 @@ public class EducationJdbcDao implements EducationDao {
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public Education add(long userId, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+    public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
         if(!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
             throw new InvalidParameterException("La fecha" + monthFrom+ "/" + yearFrom +
                     " - " + monthTo + "/" + yearTo +  " es incorrecta");
 
         final Map<String, Object> values = new HashMap<>();
-        values.put(USER_ID, userId);
+        values.put(USER_ID, user.getId());
         values.put(MONTH_FROM, monthFrom);
         values.put(YEAR_FROM, yearFrom);
         values.put(MONTH_TO, monthTo);
@@ -85,7 +95,7 @@ public class EducationJdbcDao implements EducationDao {
 
         Number educationId = insert.executeAndReturnKey(values);
 
-        return new Education(educationId.longValue(), userId, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
+        return new Education(educationId.longValue(), user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
     }
 
     @Override

@@ -216,7 +216,7 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        Experience experience = experienceService.create(user.getId(), monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+        Experience experience = experienceService.create(user, monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthTo, yearTo,experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
 
@@ -264,7 +264,7 @@ public class UserController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
-        Education education = educationService.add(user.getId(), monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+        Education education = educationService.add(user, monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
                 monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
 
         LOGGER.debug("A new experience was registered under id: {}", education.getId());
