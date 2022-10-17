@@ -46,7 +46,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        final TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u WHERE u.email = :email", User.class);
+        final TypedQuery<User> query = em.createQuery("FROM User AS u WHERE u.email = :email", User.class);
         query.setParameter("email", email);
         return query.getResultList().stream().findFirst();
     }
@@ -59,9 +59,10 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public boolean userExists(String email) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario WHERE email = :email", Boolean.class);
-        query.setParameter("email", email);
-        return (boolean) query.getSingleResult();
+//        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario WHERE email = :email", Integer.class);
+//        query.setParameter("email", email);
+//        return ((Integer) query.getSingleResult()) > 0;
+        return findByEmail(email).isPresent();
     }
 
     @Override

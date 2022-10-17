@@ -28,7 +28,7 @@ public class User {
     private String location;
 
     // FIXME: O OneToMany?
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
     private Category category;
 
@@ -47,7 +47,7 @@ public class User {
     @Column(name = "visibilidad"/*, columnDefinition = "integer default 1"*/)
     private int visibility;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idImagen")
     private Image image;
 
@@ -67,7 +67,17 @@ public class User {
     }
 
     public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
-        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
+//        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.location = location;
+        this.category = category;
+        this.currentPosition = currentPosition;
+        this.description = description;
+        this.education = education;
+        this.visibility = visibility;
+        this.image = image;
     }
 
     /* package */ User() {

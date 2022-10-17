@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +22,10 @@ import java.util.Optional;
 public class EducationHibernateDao implements EducationDao {
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private UserDao userDao;
+
 
     @Override
     public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
@@ -38,9 +45,10 @@ public class EducationHibernateDao implements EducationDao {
 
     @Override
     public List<Education> findByUserId(long userID) {
-        final TypedQuery<Education> query = em.createQuery("FROM Education AS e WHERE e.idUsuario = :userID " +
-                "ORDER BY e.anioDesde DESC, e.mesDesde DESC", Education.class);
-        query.setParameter("userID", userID);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
+        final TypedQuery<Education> query = em.createQuery("FROM Education AS e WHERE e.user = :user " +
+                "ORDER BY e.yearFrom DESC, e.monthFrom DESC", Education.class);
+        query.setParameter("user", user);
         return query.getResultList();
     }
 

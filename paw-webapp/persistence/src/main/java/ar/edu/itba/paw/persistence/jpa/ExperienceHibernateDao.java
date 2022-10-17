@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.postgresql.core.NativeQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +25,9 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
@@ -46,9 +52,10 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public List<Experience> findByUserId(long userID) {
-        final TypedQuery<Experience> query = em.createQuery("FROM Experience AS e WHERE e.idUsuario = :userID " +
-                "ORDER BY e.anioDesde DESC, e.mesDesde DESC", Experience.class);
-        query.setParameter("userID", userID);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
+        final TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience AS e WHERE e.user = :user " +
+                "ORDER BY e.yearFrom DESC, e.monthTo DESC", Experience.class);
+        query.setParameter("user", user);
         return query.getResultList();
     }
 

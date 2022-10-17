@@ -10,13 +10,13 @@ import java.util.Objects;
 public class Experience {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educacion_id_seq")
-    @SequenceGenerator(sequenceName = "educacion_id_seq", name = "educacion_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "experiencia_id_seq")
+    @SequenceGenerator(sequenceName = "experiencia_id_seq", name = "experiencia_id_seq", allocationSize = 1)
     private Long id;
 
     //FIXme: o @OneToMany
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "idUsuario", referencedColumnName="id")
     private User user;
     //FIXme: check
     @Column(name = "mesDesde", columnDefinition = "CHECK(mesDesde BETWEEN 1 AND 12)")

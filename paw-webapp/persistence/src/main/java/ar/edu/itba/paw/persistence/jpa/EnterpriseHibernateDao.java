@@ -66,9 +66,10 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
 
     @Override
     public boolean enterpriseExists(String email) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM empresa WHERE email = :email", Boolean.class);
-        query.setParameter("email", email);
-        return (boolean) query.getSingleResult();
+//        Query query = em.createNativeQuery("SELECT COUNT(*) FROM empresa WHERE email = :email", Boolean.class);
+//        query.setParameter("email", email);
+//        return (boolean) query.getSingleResult();
+        return findByEmail(email).isPresent();
     }
 
     @Override
