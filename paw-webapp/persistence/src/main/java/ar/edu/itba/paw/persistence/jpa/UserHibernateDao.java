@@ -66,7 +66,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return em.createQuery("FROM User u", User.class).getResultList();
     }
 
     //FIXME: Ojo, esta hasheada?

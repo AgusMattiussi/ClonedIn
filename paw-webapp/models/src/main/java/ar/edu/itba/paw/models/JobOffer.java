@@ -14,7 +14,7 @@ public class JobOffer {
     @Column(name = "id")
     private final Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idEmpresa")
     private final Long enterpriseID;
 

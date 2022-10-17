@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
 public class UserJdbcDao implements UserDao {
 
     private static final String USER_TABLE = "usuario";
