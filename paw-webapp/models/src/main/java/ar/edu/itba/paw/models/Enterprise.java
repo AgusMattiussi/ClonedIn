@@ -85,7 +85,7 @@ public class Enterprise {
         return description;
     }
 
-    public Image getImageId() {
+    public Image getImage() {
         return image;
     }
 

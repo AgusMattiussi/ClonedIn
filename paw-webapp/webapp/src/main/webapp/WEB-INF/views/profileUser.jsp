@@ -38,9 +38,9 @@
                         </div>
                         </sec:authorize>
                         <div class="card ml-2 mt-2 mb-2 h-70">
-                            <c:set var="image" value="${imageID}"/>
+                            <c:set var="image" value="${user.image.id}"/>
                             <c:choose>
-                                <c:when test="${image == 0}">
+                                <c:when test="${image == null}">
                                     <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
                                 </c:when>
                                 <c:otherwise>

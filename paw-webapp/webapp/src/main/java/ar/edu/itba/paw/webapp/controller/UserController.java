@@ -86,7 +86,6 @@ public class UserController {
             return new UserNotFoundException();
         });
         mav.addObject("user", user);
-        mav.addObject("imageID", user.getImage() == null? 0 : user.getImage().getId());
         mav.addObject("experiences", experienceService.findByUserId(userId));
         mav.addObject("educations", educationService.findByUserId(userId));
         mav.addObject("skills", userSkillService.getSkillsForUser(userId));
