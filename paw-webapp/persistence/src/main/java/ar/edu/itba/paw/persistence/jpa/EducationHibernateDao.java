@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@Transactional
 public class EducationHibernateDao implements EducationDao {
     @PersistenceContext
     private EntityManager em;

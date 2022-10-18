@@ -23,6 +23,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@Transactional
 public class UserHibernateDao implements UserDao {
 
     private static final int DEFAULT_VISIBILITY = 1;
@@ -133,7 +134,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateName(long userID, String newName) {
         Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID");
         query.setParameter("newName", newName);
@@ -142,7 +142,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateDescription(long userID, String newDescription) {
         Query query = em.createQuery("UPDATE User SET description = :newDescription WHERE id = :userID");
         query.setParameter("newDescription", newDescription);
@@ -151,7 +150,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateLocation(long userID, String newLocation) {
         Query query = em.createQuery("UPDATE User SET location = :newLocation WHERE id = :userID");
         query.setParameter("newLocation", newLocation);
@@ -160,7 +158,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateCurrentPosition(long userID, String newPosition) {
         Query query = em.createQuery("UPDATE User SET currentPosition = :newPosition WHERE id = :userID");
         query.setParameter("newPosition", newPosition);
@@ -170,7 +167,6 @@ public class UserHibernateDao implements UserDao {
 
     //FIXME: Cambiar a Category newCategory?
     @Override
-    @Transactional
     public void updateCategory(long userID, String newCategoryName) {
         Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
 
@@ -181,7 +177,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateEducationLevel(long userID, String newEducationLevel) {
         Query query = em.createQuery("UPDATE User SET education = :newEducationLevel WHERE id = :userID");
         query.setParameter("newEducationLevel", newEducationLevel);
@@ -190,7 +185,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @Transactional
     public void updateVisibility(long userID, int visibility) {
         Query query = em.createQuery("UPDATE User SET visibility = :visibility WHERE id = :userID");
         query.setParameter("visibility", visibility);
@@ -200,7 +194,6 @@ public class UserHibernateDao implements UserDao {
 
     // FIXME: Image o imageID?
     @Override
-    @Transactional
     public void updateUserProfileImage(long userID, long imageId) {
         Image image = imageDao.getImage(imageId).orElseThrow(ImageNotFoundException::new);
 

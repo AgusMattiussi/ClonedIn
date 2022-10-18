@@ -4,12 +4,14 @@ import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 @Primary
 @Repository
+@Transactional
 public class ImageHibernateDao implements ImageDao {
     @PersistenceContext
     private EntityManager em;
