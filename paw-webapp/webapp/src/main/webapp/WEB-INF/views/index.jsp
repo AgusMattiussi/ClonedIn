@@ -85,9 +85,9 @@
                                             <div class="col-auto mb-3">
                                                 <div class="card mt-1 h-100 mx-0" style="width: 15rem;">
                                                     <a class="text-decoration-none" href="<c:url value="/profileUser/${us.id}"/>" style="color: inherit">
-                                                        <c:set var="image" value="${us.imageId}"/>
+                                                        <c:set var="image" value="${us.image.id}"/>
                                                         <c:choose>
-                                                            <c:when test="${image == 0}">
+                                                            <c:when test="${image == null}">
                                                                 <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
                                                             </c:when>
                                                             <c:otherwise>

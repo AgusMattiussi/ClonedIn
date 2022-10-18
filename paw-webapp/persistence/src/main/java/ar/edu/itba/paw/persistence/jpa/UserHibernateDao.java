@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,13 +82,14 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Integer getUsersCount() {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario", Integer.class);
-        return (Integer) query.getSingleResult();
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario");
+        BigInteger bi = (BigInteger) query.getSingleResult();
+        return bi.intValue();
     }
 
     @Override
     public List<User> getUsersList(int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario OFFSET :offset LIMIT :limit", User.class);
+        Query query = em.createNativeQuery("SELECT * FROM usuario WHERE visibilidad=1 OFFSET :offset LIMIT :limit", User.class);
         query.setParameter("offset", pageSize * page);
         query.setParameter("limit", pageSize);
         return (List<User>) query.getResultList();
@@ -126,7 +128,7 @@ public class UserHibernateDao implements UserDao {
     //TODO: Una vez que funcione todo, resolver los filtros
     @Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
-        return null;
+        return getUsersList(page, pageSize);
     }
 
     @Override

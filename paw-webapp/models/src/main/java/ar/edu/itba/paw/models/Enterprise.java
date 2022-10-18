@@ -12,22 +12,29 @@ public class Enterprise {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
     private Long id;
+
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
+
     @Column(name = "contrasenia", length = 100, nullable = false)
     private String password;
+
     @Column(name = "nombre", length = 100, nullable = false)
     private String name;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "ubicacion")
     private String location;
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
     private Category category;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "descripcion")
     private String description;
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idImagen")
     private Image image;
 

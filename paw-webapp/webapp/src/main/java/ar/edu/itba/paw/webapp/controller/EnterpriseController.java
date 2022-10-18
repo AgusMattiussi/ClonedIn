@@ -62,20 +62,18 @@ public class EnterpriseController {
 
         final List<User> usersList;
 
-        final int usersCount = userService.getAllUsers().size();
-
         final int itemsPerPage = 8;
 
         if(request.getParameter("term") == null)
-                usersList = userService.getUsersListByFilters(page-1, itemsPerPage,
-                            filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
+            usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
+                    filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
-            usersList = userService.getUsersListByName(page-1, itemsPerPage, searchForm.getTerm());
+            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
-        mav.addObject("pages", usersCount / itemsPerPage + 1);
+        mav.addObject("pages", usersList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
