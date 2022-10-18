@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferStatuses;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,6 +57,7 @@ public class ContactJdbcDao implements ContactDao {
     private final SimpleJdbcInsert insert;
     private CategoryDao categoryDao;
     private ImageDao imageDao;
+    private EnterpriseDao enterpriseDao;
 
     private final RowMapper<JobOfferWithStatus> JOB_OFFER_WITH_STATUS_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
@@ -64,8 +66,10 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Enterprise enterprise = enterpriseDao.findById(resultSet.getLong(ENTERPRISE_ID)).orElseThrow(UserNotFoundException::new);
+
         return new JobOfferWithStatus(resultSet.getLong(JOB_OFFER_TABLE_ID),
-                resultSet.getLong(ENTERPRISE_ID),
+                enterprise,
                 category,
                 resultSet.getString(POSITION),
                 resultSet.getString(DESCRIPTION),
@@ -83,8 +87,10 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Enterprise enterprise = enterpriseDao.findById(resultSet.getLong(ENTERPRISE_ID)).orElseThrow(UserNotFoundException::new);
+
         return new JobOfferStatusUserData(resultSet.getLong(JOB_OFFER_TABLE_ID),
-                resultSet.getLong(ENTERPRISE_ID),
+                enterprise,
                 category,
                 resultSet.getString(POSITION),
                 resultSet.getString(DESCRIPTION),
@@ -104,8 +110,10 @@ public class ContactJdbcDao implements ContactDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Enterprise enterprise = enterpriseDao.findById(resultSet.getLong(ENTERPRISE_ID)).orElseThrow(UserNotFoundException::new);
+
         return new JobOfferStatusEnterpriseData(resultSet.getLong(JOB_OFFER_TABLE_ID),
-                resultSet.getLong(ENTERPRISE_ID),
+                enterprise,
                 category,
                 resultSet.getString(POSITION),
                 resultSet.getString(DESCRIPTION),
@@ -160,12 +168,13 @@ public class ContactJdbcDao implements ContactDao {
     };
 
     @Autowired
-    public ContactJdbcDao(final DataSource ds, CategoryDao categoryDao, ImageDao imageDao){
+    public ContactJdbcDao(final DataSource ds, CategoryDao categoryDao, ImageDao imageDao, EnterpriseDao enterpriseDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(CONTACT_TABLE);
         this.categoryDao = categoryDao;
         this.imageDao = imageDao;
+        this.enterpriseDao = enterpriseDao;
     }
 
     private List<Long> getEnterpriseIDsForUser(long userID){
