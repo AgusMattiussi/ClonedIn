@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class EnterpriseJdbcDao implements EnterpriseDao {
     private static final String ENTERPRISE_TABLE = "empresa";
     private static final String ID = "id";

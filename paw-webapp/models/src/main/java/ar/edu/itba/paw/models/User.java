@@ -52,7 +52,6 @@ public class User {
     private Image image;
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
-        super();
         this.id = id;
         this.email = email;
         this.password = password;
@@ -67,17 +66,7 @@ public class User {
     }
 
     public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
-//        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.location = location;
-        this.category = category;
-        this.currentPosition = currentPosition;
-        this.description = description;
-        this.education = education;
-        this.visibility = visibility;
-        this.image = image;
+        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
     }
 
     /* package */ User() {

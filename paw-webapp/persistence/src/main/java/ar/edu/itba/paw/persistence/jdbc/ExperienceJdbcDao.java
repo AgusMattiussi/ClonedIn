@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class ExperienceJdbcDao implements ExperienceDao {
     private static final String EXPERIENCE_TABLE = "experiencia";
     private static final String ID = "id";

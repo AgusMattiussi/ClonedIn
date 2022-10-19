@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
-@Repository
 public class SkillJdbcDao implements SkillDao {
 
     private static final String SKILL_TABLE = "aptitud";
