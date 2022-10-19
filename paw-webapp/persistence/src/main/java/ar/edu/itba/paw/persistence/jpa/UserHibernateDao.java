@@ -27,6 +27,7 @@ import java.util.Optional;
 public class UserHibernateDao implements UserDao {
 
     private static final int DEFAULT_VISIBILITY = 1;
+    private static final int UNEXISTING_CATEGORY_ID = 99;
     private static final Image DEFAULT_IMAGE = null;
 
     @PersistenceContext
@@ -134,7 +135,32 @@ public class UserHibernateDao implements UserDao {
     //TODO: Una vez que funcione todo, resolver los filtros
     @Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
-        return getUsersList(page, pageSize);
+        int catId;
+        try {
+            catId = Integer.parseInt(categoryId);
+        } catch (NumberFormatException exception){
+            catId = UNEXISTING_CATEGORY_ID;
+        }
+        Object[] sanitizedInputs = new Object[]{catId, location, educationLevel};
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
+
+        if(!categoryId.isEmpty())
+            filterQuery.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
+
+        if(!location.isEmpty())
+            filterQuery.append(" AND ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
+
+        if(!educationLevel.isEmpty())
+            filterQuery.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
+
+        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
+
+        Query query = em.createNativeQuery(filterQuery.toString(), User.class);
+
+        query.setParameter("offset", pageSize * page);
+        query.setParameter("limit", pageSize);
+        return (List<User>) query.getResultList();
     }
 
     @Override
