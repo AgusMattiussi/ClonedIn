@@ -24,6 +24,10 @@ public class JobOfferSkill {
         this.skill = skill;
     }
 
+    /* package */ JobOfferSkill() {
+        //Just for Hibernate, we love you!
+    }
+
     public JobOffer getJobOffer() {
         return jobOffer;
     }

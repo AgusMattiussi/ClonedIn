@@ -3,29 +3,29 @@ package ar.edu.itba.paw.models.ids;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class UserSkillId implements Serializable {
+public class ContactsId implements Serializable {
     private Long user;
-    private Long skill;
+    private Long jobOffer;
 
-    public UserSkillId(Long user, Long skill) {
+    public ContactsId(Long user, Long jobOffer) {
         this.user = user;
-        this.skill = skill;
+        this.jobOffer = jobOffer;
     }
 
-    public UserSkillId() {
+    public ContactsId() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserSkillId that = (UserSkillId) o;
-        return Objects.equals(user, that.user) && Objects.equals(skill, that.skill);
+        ContactsId that = (ContactsId) o;
+        return Objects.equals(user, that.user) && Objects.equals(jobOffer, that.jobOffer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, skill);
+        return Objects.hash(user, jobOffer);
     }
 
 }

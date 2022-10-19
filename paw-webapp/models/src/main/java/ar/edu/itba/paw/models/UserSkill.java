@@ -24,6 +24,10 @@ public class UserSkill {
         this.skill = skill;
     }
 
+    /* package */ UserSkill() {
+        //Just for Hibernate, we love you!
+    }
+
     public User getUser() {
         return user;
     }
