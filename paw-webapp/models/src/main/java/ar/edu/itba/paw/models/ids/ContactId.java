@@ -3,23 +3,23 @@ package ar.edu.itba.paw.models.ids;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ContactsId implements Serializable {
+public class ContactId implements Serializable {
     private Long user;
     private Long jobOffer;
 
-    public ContactsId(Long user, Long jobOffer) {
+    public ContactId(Long user, Long jobOffer) {
         this.user = user;
         this.jobOffer = jobOffer;
     }
 
-    public ContactsId() {
+    public ContactId() {
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ContactsId that = (ContactsId) o;
+        ContactId that = (ContactId) o;
         return Objects.equals(user, that.user) && Objects.equals(jobOffer, that.jobOffer);
     }
 

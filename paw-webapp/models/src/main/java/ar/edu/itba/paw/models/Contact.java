@@ -1,40 +1,41 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.ids.ContactsId;
+import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "contactado")
-@IdClass(ContactsId.class)
-public class Contacts {
+@IdClass(ContactId.class)
+public class Contact {
+
+    //TODO: chequear mapeo de relaciones
 
     @Id
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idUsuario", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario")
     private User user;
 
-    //FIXme: o @OneToMany
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idEmpresa", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idEmpresa")
     private Enterprise enterprise;
 
     @Id
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOferta", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idOferta")
     private JobOffer jobOffer;
 
     @Column(name = "estado", length = 20, nullable = false)
     private String status;
 
-    public Contacts(User user, Enterprise enterprise, JobOffer jobOffer, String status) {
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status) {
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = status;
     }
 
-    /* package */ Contacts() {
+    /* package */ Contact() {
         //Just for Hibernate, we love you!
     }
 

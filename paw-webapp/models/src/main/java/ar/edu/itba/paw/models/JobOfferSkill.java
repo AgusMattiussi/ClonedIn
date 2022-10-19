@@ -9,13 +9,16 @@ import java.util.Objects;
 @Table(name = "aptitudOfertaLaboral")
 @IdClass(JobOfferSkillId.class)
 public class JobOfferSkill {
+    
+    //TODO: chequear mapeo de relaciones
+
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOferta")
     private JobOffer jobOffer;
 
     @Id
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idAptitud")
     private Skill skill;
 
