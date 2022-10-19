@@ -7,8 +7,8 @@ public class JobOfferWithStatus extends JobOffer{
 
     private final String status;
 
-    public JobOfferWithStatus(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String available, String status) {
-        super(id, enterpriseID, category, position, description, salary, modality, available);
+    public JobOfferWithStatus(long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available, String status) {
+        super(id, enterprise, category, position, description, salary, modality, available);
         this.status = status;
     }
 

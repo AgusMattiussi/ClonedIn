@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.persistence.jdbc;
 
-import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
-import ar.edu.itba.paw.interfaces.persistence.SkillDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,6 +39,7 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert insert;
     private CategoryDao categoryDao;
+    private EnterpriseDao enterpriseDao;
 
     private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(JOB_OFFER_TABLE_CATEGORY_ID);
@@ -48,8 +48,11 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Enterprise enterprise = enterpriseDao.findById(resultSet.getLong(JOB_OFFER_TABLE_ENTERPRISE_ID))
+                .orElseThrow(UserNotFoundException::new);
+
         return new JobOffer(resultSet.getLong(JOB_OFFER_TABLE_ID),
-                resultSet.getLong(JOB_OFFER_TABLE_ENTERPRISE_ID),
+                enterprise,
                 category,
                 resultSet.getString(JOB_OFFER_TABLE_POSITION),
                 resultSet.getString(JOB_OFFER_TABLE_DESCRIPTION),
@@ -59,13 +62,14 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
     });
 
     @Autowired
-    public JobOfferSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final JobOfferDao jobOfferDao, CategoryDao categoryDao){
+    public JobOfferSkillJdbcDao(final DataSource ds, final SkillDao skillDao, final JobOfferDao jobOfferDao, CategoryDao categoryDao, EnterpriseDao enterpriseDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(JOB_OFFER_SKILL_TABLE);
         this.skillDao = skillDao;
         this.jobOfferDao = jobOfferDao;
         this.categoryDao = categoryDao;
+        this.enterpriseDao = enterpriseDao;
     }
 
     @Override
