@@ -60,6 +60,10 @@ public class UserHibernateDao implements UserDao {
         return Optional.ofNullable(em.find(User.class, userId));
     }
 
+
+    /*TypedQuery<Long> query = em.createQuery("SELECT COUNT(u) FROM User AS u WHERE u.id = :id", Long.class);
+        return query.getSingleResult() > 0;*/
+
     @Override
     public boolean userExists(String email) {
 //        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario WHERE email = :email", Integer.class);

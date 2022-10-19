@@ -12,32 +12,32 @@ public class JobOffer {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ofertalaboral_id_seq")
     @SequenceGenerator(sequenceName = "ofertalaboral_id_seq", name = "ofertalaboral_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private final Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idEmpresa")
-    private final Enterprise enterprise;
+    private Enterprise enterprise;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
-    private final Category category;
+    private Category category;
 
     @Column(name = "posicion", nullable = false)
-    private final String position;
+    private String position;
 
     @Column(name = "descripcion")
-    private final String description;
+    private String description;
 
-    @Column(name = "salary")
-    private final BigDecimal salary;
+    @Column(name = "salario")
+    private BigDecimal salary;
 
-    @Column(name = "modality")
-    private final String modality;
+    @Column(name = "modalidad")
+    private String modality;
 
-    @Column(name = "available")
-    private final String available;
+    @Column(name = "disponible")
+    private String available;
 
-    public JobOffer(long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
+    public JobOffer(Long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.id = id;
         this.enterprise = enterprise;
         this.category = category;
@@ -48,7 +48,22 @@ public class JobOffer {
         this.available = available;
     }
 
-    public long getId() {
+    public JobOffer(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {;
+        this.enterprise = enterprise;
+        this.category = category;
+        this.position = position;
+        this.description = description;
+        this.salary = salary;
+        this.modality = modality;
+        this.available = available;
+    }
+
+    /* package */ JobOffer() {
+        // Just for Hibernate, we love you!
+    }
+
+
+    public Long getId() {
         return id;
     }
 

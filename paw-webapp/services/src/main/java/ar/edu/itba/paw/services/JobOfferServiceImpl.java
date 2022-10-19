@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
+import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,10 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary, String modality) {
-        return jobOfferDao.create(enterpriseID, categoryID, position, description, salary, modality);
+    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
+        return jobOfferDao.create(enterprise, category, position, description, salary, modality);
     }
+
 
     @Override
     public Optional<JobOffer> findById(long id) {
@@ -59,7 +62,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID) {
+    public Integer getJobOffersCountForEnterprise(long enterpriseID) {
         return jobOfferDao.getJobOffersCountForEnterprise(enterpriseID);
     }
 

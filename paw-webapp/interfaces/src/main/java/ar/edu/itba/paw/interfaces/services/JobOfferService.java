@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 
@@ -10,7 +12,7 @@ import java.util.Optional;
 
 public interface JobOfferService {
 
-    JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary, String modality);
+    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality);
 
     Optional<JobOffer> findById(long id);
 
@@ -21,7 +23,7 @@ public interface JobOfferService {
 
     List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize);
 
-    Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID);
+    Integer getJobOffersCountForEnterprise(long enterpriseID);
 
     Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize);
 

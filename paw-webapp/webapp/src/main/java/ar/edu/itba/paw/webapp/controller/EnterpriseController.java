@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -85,7 +86,7 @@ public class EnterpriseController {
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         final int itemsPerPage = 3;
-        int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId).orElseThrow(RuntimeException::new);
+        int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId);
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
             return new UserNotFoundException();
@@ -202,11 +203,13 @@ public class EnterpriseController {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
         });
-        long categoryID = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(() -> {
+
+        Category category = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(() -> {
             LOGGER.error("Category not found");
-            return new UserNotFoundException();
-        }).getId();
-        JobOffer jobOffer = jobOfferService.create(enterprise.getId(), categoryID, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+            return new CategoryNotFoundException();
+        });
+
+        JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
 
         if(!jobOfferForm.getSkill1().isEmpty())
             jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());

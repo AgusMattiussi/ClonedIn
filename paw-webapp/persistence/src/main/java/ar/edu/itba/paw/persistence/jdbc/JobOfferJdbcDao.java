@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.*;
 
-@Repository
 public class JobOfferJdbcDao implements JobOfferDao {
 
     private static final String JOB_OFFER_TABLE = "ofertaLaboral";
@@ -80,22 +79,18 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
 
     @Override
-    public JobOffer create(long enterpriseID, long categoryID, String position, String description, BigDecimal salary, String modality) {
+    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
         if(salary != null) {
             if (salary.compareTo(BigDecimal.valueOf(0)) <= 0)
                 throw new InvalidParameterException("El salario no puede <= 0");
         }
 
-        Category category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
-
         if(!modalitiesSet.contains(modality))
             modality = JobOfferModalities.NOT_SPECIFIED.getModality();
 
-        Enterprise enterprise = enterpriseDao.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
-
         final Map<String, Object> values = new HashMap<>();
-        values.put(ENTERPRISE_ID, enterpriseID);
-        values.put(CATEGORY_ID, categoryID);
+        values.put(ENTERPRISE_ID, enterprise.getId());
+        values.put(CATEGORY_ID, category.getId());
         values.put(POSITION, position);
         values.put(DESCRIPTION, description);
         values.put(SALARY, salary);
@@ -138,9 +133,9 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
-    public Optional<Integer> getJobOffersCountForEnterprise(long enterpriseID) {
-        return template.query("SELECT COUNT(*) FROM ofertaLaboral WHERE idEmpresa = ?",
-                new Object[]{ enterpriseID}, COUNT_ROW_MAPPER).stream().findFirst();
+    public Integer getJobOffersCountForEnterprise(long enterpriseID) {
+        return template.queryForObject("SELECT COUNT(*) FROM ofertaLaboral WHERE idEmpresa = ?",
+                new Object[]{ enterpriseID}, Integer.class);
     }
 
     @Override
