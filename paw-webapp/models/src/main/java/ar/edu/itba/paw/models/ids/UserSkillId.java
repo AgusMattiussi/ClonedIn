@@ -1,15 +1,18 @@
-package ar.edu.itba.paw.models;
+package ar.edu.itba.paw.models.ids;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class UserSkillId implements Serializable {
-    private Long userId;
-    private Long skillId;
+    private Long user;
+    private Long skill;
 
-    public UserSkillId(Long userId, Long skillId) {
-        this.userId = userId;
-        this.skillId = skillId;
+    public UserSkillId(Long user, Long skill) {
+        this.user = user;
+        this.skill = skill;
+    }
+
+    public UserSkillId() {
     }
 
     @Override
@@ -17,12 +20,12 @@ public class UserSkillId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserSkillId that = (UserSkillId) o;
-        return userId.equals(that.userId) && skillId.equals(that.skillId);
+        return user.equals(that.user) && skill.equals(that.skill);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, skillId);
+        return Objects.hash(user, skill);
     }
 
 }
