@@ -70,24 +70,24 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return ds;
     }
 
-    /*@Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
-        final DataSourceInitializer dsInit = new DataSourceInitializer();
-
-        dsInit.setDataSource(ds);
-        dsInit.setDatabasePopulator(dataSourcePopulator());
-
-        return dsInit;
-    }*/
-
-    /*private DatabasePopulator dataSourcePopulator() {
-        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-
-        //dbp.addScript(schemaSql);
-        dbp.addScript(categorySql);
-
-        return dbp;
-    }*/
+//    @Bean
+//    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
+//        final DataSourceInitializer dsInit = new DataSourceInitializer();
+//
+//        dsInit.setDataSource(ds);
+//        dsInit.setDatabasePopulator(dataSourcePopulator());
+//
+//        return dsInit;
+//    }
+//
+//    private DatabasePopulator dataSourcePopulator() {
+//        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+//
+//        //dbp.addScript(schemaSql);
+//        dbp.addScript(categorySql);
+//
+//        return dbp;
+//    }
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "educacion")
+@Check(constraints = "(anioDesde BETWEEN 1900 AND 2100) AND ((mesHasta IS NULL AND anioHasta IS NULL) OR ((mesHasta BETWEEN 1 AND 12) AND (anioHasta BETWEEN 1900 AND 2100))) AND ((mesHasta IS NULL AND anioHasta IS NULL) OR (anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))")
 public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educacion_id_seq")
@@ -18,13 +20,13 @@ public class Education {
     @JoinColumn(name = "idUsuario")
     private User user;
     //FIXme: check
-    @Column(name = "mesDesde", columnDefinition = "CHECK(mesDesde BETWEEN 1 AND 12)")
+    @Column(name = "mesDesde")
     private int monthFrom;
-    @Column(name = "anioDesde", columnDefinition = "CHECK(anioDesde BETWEEN 1900 AND 2100)")
+    @Column(name = "anioDesde")
     private int yearFrom;
-    @Column(name = "mesHasta", columnDefinition = "CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR ((mesHasta BETWEEN 1 AND 12) AND (anioHasta BETWEEN 1900 AND 2100)))")
+    @Column(name = "mesHasta")
     private int monthTo;
-    @Column(name = "anioHasta", columnDefinition = "CHECK((mesHasta IS NULL AND anioHasta IS NULL) OR (anioHasta > anioDesde) OR (anioHasta = anioDesde AND mesHasta >= mesDesde))")
+    @Column(name = "anioHasta")
     private int yearTo;
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "titulo", nullable = false)
