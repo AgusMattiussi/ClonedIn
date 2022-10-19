@@ -306,7 +306,6 @@ public class UserController {
             LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formSkill(loggedUser, skillForm, userId);
         }
-
         userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
 
         LOGGER.debug("A new skill has been added to user {}", user.getId());
