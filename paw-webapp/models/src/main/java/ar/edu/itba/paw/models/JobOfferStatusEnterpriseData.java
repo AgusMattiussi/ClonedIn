@@ -7,9 +7,9 @@ public class JobOfferStatusEnterpriseData extends JobOfferWithStatus{
     
     private final String enterpriseName;
 
-    public JobOfferStatusEnterpriseData(long id, long enterpriseID, Category category, String position, String description,
+    public JobOfferStatusEnterpriseData(long id, Enterprise enterprise, Category category, String position, String description,
                                         BigDecimal salary, String modality, String available, String status, String enterpriseName) {
-        super(id, enterpriseID, category, position, description, salary, modality, available,  status);
+        super(id, enterprise, category, position, description, salary, modality, available,  status);
         this.enterpriseName = enterpriseName;
     }
 

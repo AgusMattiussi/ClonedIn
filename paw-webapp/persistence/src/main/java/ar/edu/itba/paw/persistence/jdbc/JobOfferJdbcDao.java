@@ -2,12 +2,15 @@ package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
+import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModalities;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,6 +44,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
     private CategoryDao categoryDao;
     private ContactDao contactDao;
+    private EnterpriseDao enterpriseDao;
 
     private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
@@ -48,8 +52,10 @@ public class JobOfferJdbcDao implements JobOfferDao {
         if(categoryID != 0)
             category = categoryDao.findById(categoryID).orElseThrow(CategoryNotFoundException::new);
 
+        Enterprise enterprise = enterpriseDao.findById(resultSet.getLong(ENTERPRISE_ID)).orElseThrow(UserNotFoundException::new);
+
         return new JobOffer(resultSet.getLong(ID),
-                resultSet.getLong(ENTERPRISE_ID),
+                enterprise,
                 category,
                 resultSet.getString(POSITION),
                 resultSet.getString(DESCRIPTION),
@@ -62,13 +68,14 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
 
     @Autowired
-    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao, ContactDao contactDao){
+    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao, ContactDao contactDao, EnterpriseDao enterpriseDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(JOB_OFFER_TABLE)
                 .usingGeneratedKeyColumns(ID);
         this.categoryDao = categoryDao;
         this.contactDao = contactDao;
+        this.enterpriseDao = enterpriseDao;
     }
 
 
@@ -84,6 +91,8 @@ public class JobOfferJdbcDao implements JobOfferDao {
         if(!modalitiesSet.contains(modality))
             modality = JobOfferModalities.NOT_SPECIFIED.getModality();
 
+        Enterprise enterprise = enterpriseDao.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
+
         final Map<String, Object> values = new HashMap<>();
         values.put(ENTERPRISE_ID, enterpriseID);
         values.put(CATEGORY_ID, categoryID);
@@ -95,7 +104,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
         Number jobOfferID = insert.executeAndReturnKey(values);
 
-        return new JobOffer(jobOfferID.longValue(), enterpriseID, category, position, description, salary, modality, JobOfferAvailability.ACTIVE.getStatus());
+        return new JobOffer(jobOfferID.longValue(), enterprise, category, position, description, salary, modality, JobOfferAvailability.ACTIVE.getStatus());
     }
 
     @Override

@@ -14,9 +14,9 @@ public class JobOffer {
     @Column(name = "id")
     private final Long id;
 
-//    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idEmpresa")
-    private final Long enterpriseID;
+    private final Enterprise enterprise;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRubro")
@@ -37,9 +37,9 @@ public class JobOffer {
     @Column(name = "available")
     private final String available;
 
-    public JobOffer(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary, String modality, String available) {
+    public JobOffer(long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.id = id;
-        this.enterpriseID = enterpriseID;
+        this.enterprise = enterprise;
         this.category = category;
         this.position = position;
         this.description = description;
@@ -52,8 +52,12 @@ public class JobOffer {
         return id;
     }
 
-    public long getEnterpriseID() {
-        return enterpriseID;
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public Long getEnterpriseID() {
+        return enterprise.getId();
     }
 
     public Category getCategory() {
@@ -84,7 +88,7 @@ public class JobOffer {
     public String toString() {
         return "JobOffer{" +
                 "id=" + id +
-                ", enterpriseID=" + enterpriseID +
+                ", enterprise=" + enterprise +
                 ", category=" + category +
                 ", position='" + position + '\'' +
                 ", description='" + description + '\'' +
@@ -99,11 +103,11 @@ public class JobOffer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobOffer jobOffer = (JobOffer) o;
-        return id == jobOffer.id && enterpriseID == jobOffer.enterpriseID;
+        return id.equals(jobOffer.id) && enterprise.equals(jobOffer.enterprise);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, enterpriseID);
+        return Objects.hash(id, enterprise);
     }
 }

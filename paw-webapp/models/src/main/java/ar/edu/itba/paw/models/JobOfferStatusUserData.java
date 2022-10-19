@@ -8,9 +8,9 @@ public class JobOfferStatusUserData extends JobOfferWithStatus {
     private final String userName;
     private final long userId;
 
-    public JobOfferStatusUserData(long id, long enterpriseID, Category category, String position, String description, BigDecimal salary,
+    public JobOfferStatusUserData(long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary,
                                   String modality, String available, String status, String userName, long userId) {
-        super(id, enterpriseID, category, position, description, salary, modality, available, status);
+        super(id, enterprise, category, position, description, salary, modality, available, status);
         this.userName = userName;
         this.userId = userId;
     }
