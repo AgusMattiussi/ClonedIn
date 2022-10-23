@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Skill;
@@ -34,7 +35,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
     @Autowired
     private SkillDao skillDao;
     @Autowired
-    private UserService userService;
+    private UserDao userDao;
 
     @Override
     public void addSkillToUser(Skill skill, User user) {
@@ -50,7 +51,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
         if(!skill.isPresent())
             return false;
 
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
 
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
         query.setParameter("skill", skill.get());
@@ -64,7 +65,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
         Optional<Skill> skill = skillDao.findById(skillID);
         if(!skill.isPresent())
             return false;
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
 
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
         query.setParameter("skill", skill.get());
@@ -82,6 +83,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getSingleResult() > 0;
     }
 
+    //TODO: Si no se usa, borrar
     @Override
     public List<User> getUsersWithSkill(String skillDescription) {
         Skill skill = skillDao.findByDescription(skillDescription).orElseThrow(SkillNotFoundException::new);
@@ -92,6 +94,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getResultList();
     }
 
+    //TODO: Si no se usa, borrar
     @Override
     public List<User> getUsersWithSkill(long skillID) {
         Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
@@ -103,8 +106,16 @@ public class UserSkillHibernateDao implements UserSkillDao {
     }
 
     @Override
+    public List<User> getUsersWithSkill(Skill skill) {
+        TypedQuery<User> query = em.createQuery("SELECT us.user FROM UserSkill AS us WHERE us.skill = :skill", User.class);
+        query.setParameter("skill", skill);
+
+        return query.getResultList();
+    }
+
+    @Override
     public List<Skill> getSkillsForUser(long userID) {
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
 
         TypedQuery<Skill> query = em.createQuery("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user", Skill.class);
         query.setParameter("user", user);
@@ -112,9 +123,10 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getResultList();
     }
 
+
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
         Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
 
         Query query = em.createQuery("DELETE FROM UserSkill WHERE user = :user AND skill = :skill");
@@ -122,4 +134,6 @@ public class UserSkillHibernateDao implements UserSkillDao {
         query.setParameter("skill", skill);
         query.executeUpdate();
     }
+
+
 }

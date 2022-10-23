@@ -34,7 +34,7 @@ public class SkillHibernateDao implements SkillDao {
 
     @Override
     public Optional<Skill> findByDescription(String description) {
-        final TypedQuery<Skill> query = em.createQuery("FROM Skill AS s WHERE s.description = :description", Skill.class);
+        final TypedQuery<Skill> query = em.createQuery("SELECT s FROM Skill AS s WHERE s.description = :description", Skill.class);
         query.setParameter("description", description);
         return query.getResultList().stream().findFirst();
     }

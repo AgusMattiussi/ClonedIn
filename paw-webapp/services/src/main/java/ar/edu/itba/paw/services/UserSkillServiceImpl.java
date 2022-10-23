@@ -53,6 +53,11 @@ public class UserSkillServiceImpl implements UserSkillService {
     }
 
     @Override
+    public List<User> getUsersWithSkill(Skill skill) {
+        return userSkillDao.getUsersWithSkill(skill);
+    }
+
+    @Override
     public List<Skill> getSkillsForUser(long userID) {
         return userSkillDao.getSkillsForUser(userID);
     }

@@ -122,6 +122,11 @@ public class UserSkillJdbcDao implements UserSkillDao {
         return skill.isPresent() ? getUsersWithSkill(skill.get().getId()) : new ArrayList<>();
     }
 
+    @Override
+    public List<User> getUsersWithSkill(Skill skill) {
+        return getUsersWithSkill(skill.getId());
+    }
+
     private List<Long> getSkillIDsForUser(long userID){
         return template.query("SELECT idAptitud FROM aptitudUsuario WHERE idUsuario = ?",
                 new Object[]{ userID }, (resultSet, rowNum) ->
@@ -130,11 +135,11 @@ public class UserSkillJdbcDao implements UserSkillDao {
 
     @Override
     public List<Skill> getSkillsForUser(long userID) {
-
         return template.query("SELECT a.id, a.descripcion FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario " +
                         "JOIN aptitud a ON a.id = au.idAptitud WHERE au.idUsuario = ?",
                 new Object[]{userID}, SKILL_MAPPER);
     }
+
 
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {

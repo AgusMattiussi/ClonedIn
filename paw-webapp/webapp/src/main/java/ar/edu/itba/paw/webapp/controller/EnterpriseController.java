@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
+@Transactional
 @Controller
 public class EnterpriseController {
 
@@ -332,6 +334,7 @@ public class EnterpriseController {
     }
 
     private long getLoggerUserId(Authentication loggedUser){
+
         if(isUser(loggedUser)) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
                 LOGGER.error("User not found");

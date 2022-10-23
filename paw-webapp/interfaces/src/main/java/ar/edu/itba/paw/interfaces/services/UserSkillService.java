@@ -19,6 +19,8 @@ public interface UserSkillService {
 
     List<User> getUsersWithSkill(long skillID);
 
+    List<User> getUsersWithSkill(Skill skill);
+
     List<Skill> getSkillsForUser(long userID);
 
     void deleteSkillFromUser(long userID, long skillID);

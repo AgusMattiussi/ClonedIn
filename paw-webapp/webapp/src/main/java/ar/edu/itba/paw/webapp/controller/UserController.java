@@ -11,6 +11,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.io.IOException;
 
+@Transactional
 @Controller
 public class UserController {
     private final UserService userService;
@@ -48,7 +50,7 @@ public class UserController {
                           final EducationService educationService, final UserSkillService userSkillService,
                           final EmailService emailService, final JobOfferService jobOfferService,
                           final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
-                          final ImageService imageService, final CategoryService categoryService, SkillService skillService){
+                          final ImageService imageService, final CategoryService categoryService, final SkillService skillService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
