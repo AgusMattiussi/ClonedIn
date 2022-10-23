@@ -35,6 +35,7 @@ public class UserController {
     private final EnterpriseService enterpriseService;
     private final ImageService imageService;
     private final CategoryService categoryService;
+    private final SkillService skillService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
 
@@ -47,7 +48,7 @@ public class UserController {
                           final EducationService educationService, final UserSkillService userSkillService,
                           final EmailService emailService, final JobOfferService jobOfferService,
                           final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
-                          final ImageService imageService, final CategoryService categoryService){
+                          final ImageService imageService, final CategoryService categoryService, SkillService skillService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -59,6 +60,7 @@ public class UserController {
         this.contactService = contactService;
         this.categoryService = categoryService;
         this.imageService = imageService;
+        this.skillService = skillService;
 
         monthToNumber.put("No-especificado", 0);
         monthToNumber.put("Enero", 1);
@@ -301,12 +303,15 @@ public class UserController {
             return new UserNotFoundException();
         });
 
+        Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
+
         if (errors.hasErrors() || userSkillService.alreadyExists(skillForm.getSkill(), user.getId())) {
             errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
             LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formSkill(loggedUser, skillForm, userId);
         }
-        userSkillService.addSkillToUser(skillForm.getSkill(), user.getId());
+
+        userSkillService.addSkillToUser(skill, user);
 
         LOGGER.debug("A new skill has been added to user {}", user.getId());
         LOGGER.info("A new skill has been added to user");

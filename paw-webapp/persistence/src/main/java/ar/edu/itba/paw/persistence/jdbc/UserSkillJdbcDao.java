@@ -77,20 +77,12 @@ public class UserSkillJdbcDao implements UserSkillDao {
     }
 
     @Override
-    public boolean addSkillToUser(String skillDescription, long userID) {
-        Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-        if(skill != null)
-            return addSkillToUser(skill.getId(), userID);
-        return false;
-    }
-
-    @Override
-    public boolean addSkillToUser(long skillID, long userID) {
+    public void addSkillToUser(Skill skill, User user) {
         final Map<String, Object> values = new HashMap<>();
-        values.put(USER_ID, userID);
-        values.put(SKILL_ID, skillID);
+        values.put(USER_ID, user.getId());
+        values.put(SKILL_ID, skill.getId());
 
-        return insert.execute(values) > 0;
+        insert.execute(values);
     }
 
     @Override

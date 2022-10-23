@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface UserSkillService {
 
-    boolean addSkillToUser(String skillDescription, long userID);
-
-    boolean addSkillToUser(long skillID, long userID);
+    void addSkillToUser(Skill skill, User user);
 
     boolean alreadyExists(String skillDescription, long userID);
 

@@ -37,25 +37,11 @@ public class UserSkillHibernateDao implements UserSkillDao {
     private UserService userService;
 
     @Override
-    public boolean addSkillToUser(String skillDescription, long userID) {
-        Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
-
+    public void addSkillToUser(Skill skill, User user) {
         UserSkill userSkill = new UserSkill(user, skill);
         em.persist(userSkill);
-        return true;
-        //return userSkill;
     }
 
-    @Override
-    public boolean addSkillToUser(long skillID, long userID) {
-        Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
-
-        UserSkill userSkill = new UserSkill(user, skill);
-        em.persist(userSkill);
-        return true;
-    }
 
     //FIXME: Chequear si funciona
     @Override

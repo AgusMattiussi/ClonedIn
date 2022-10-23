@@ -21,14 +21,10 @@ public class UserSkillServiceImpl implements UserSkillService {
         this.userSkillDao = userSkillDao;
     }
 
-    @Override
-    public boolean addSkillToUser(String skillDescription, long userID) {
-        return userSkillDao.addSkillToUser(skillDescription, userID);
-    }
 
     @Override
-    public boolean addSkillToUser(long skillID, long userID) {
-        return userSkillDao.addSkillToUser(skillID, userID);
+    public void addSkillToUser(Skill skill, User user) {
+        userSkillDao.addSkillToUser(skill, user);
     }
 
     @Override
