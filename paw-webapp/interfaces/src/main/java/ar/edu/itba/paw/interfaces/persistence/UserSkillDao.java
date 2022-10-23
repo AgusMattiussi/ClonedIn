@@ -19,9 +19,11 @@ public interface UserSkillDao {
 
     List<User> getUsersWithSkill(long skillID);
 
+    List<User> getUsersWithSkill(Skill skill);
+
     List<Skill> getSkillsForUser(long userID);
 
-    List<User> getUsersWithSkill(Skill skill);
+    List<Skill> getSkillsForUser(User user);
 
     void deleteSkillFromUser(long userID, long skillID);
 }

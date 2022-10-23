@@ -123,6 +123,14 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getResultList();
     }
 
+    @Override
+    public List<Skill> getSkillsForUser(User user) {
+        TypedQuery<Skill> query = em.createQuery("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user", Skill.class);
+        query.setParameter("user", user);
+
+        return query.getResultList();
+    }
+
 
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {

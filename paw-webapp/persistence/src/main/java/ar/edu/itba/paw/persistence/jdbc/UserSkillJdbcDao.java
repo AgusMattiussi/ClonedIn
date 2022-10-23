@@ -140,6 +140,11 @@ public class UserSkillJdbcDao implements UserSkillDao {
                 new Object[]{userID}, SKILL_MAPPER);
     }
 
+    @Override
+    public List<Skill> getSkillsForUser(User user) {
+        return getSkillsForUser(user.getId());
+    }
+
 
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {
