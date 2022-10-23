@@ -1,16 +1,9 @@
 package ar.edu.itba.paw.persistence.jpa;
 
-import ar.edu.itba.paw.interfaces.persistence.SkillDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
-import ar.edu.itba.paw.models.exceptions.SkillNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +13,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Optional;
 
 @Primary
 @Repository
@@ -29,13 +21,6 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
     @PersistenceContext
     private EntityManager em;
-
-    //TODO: Cambiar para seguir filosofia JPA
-
-    @Autowired
-    private SkillDao skillDao;
-    @Autowired
-    private UserDao userDao;
 
     @Override
     public void addSkillToUser(Skill skill, User user) {
@@ -47,31 +32,21 @@ public class UserSkillHibernateDao implements UserSkillDao {
     //FIXME: Chequear si funciona
     @Override
     public boolean alreadyExists(String skillDescription, long userID) {
-        Optional<Skill> skill = skillDao.findByDescription(skillDescription);
-        if(!skill.isPresent())
-            return false;
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM aptitudUsuario au JOIN aptitud a ON au.idAptitud = a.id " +
+                "WHERE a.descripcion = :skillDescription AND au.idUsuario = :userID", Long.class);
+        query.setParameter("skillDescription", skillDescription);
+        query.setParameter("userID",userID);
 
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
-
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
-        query.setParameter("skill", skill.get());
-        query.setParameter("user",user);
-
-        return query.getSingleResult() > 0;
+        return ((Long) query.getSingleResult()) > 0;
     }
 
     @Override
     public boolean alreadyExists(long skillID, long userID) {
-        Optional<Skill> skill = skillDao.findById(skillID);
-        if(!skill.isPresent())
-            return false;
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM aptitudUsuario WHERE idAptitud = :skillID AND idUsuario = :userID", Long.class);
+        query.setParameter("skillID", skillID);
+        query.setParameter("userID",userID);
 
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
-        query.setParameter("skill", skill.get());
-        query.setParameter("user",user);
-
-        return query.getSingleResult() > 0;
+        return ((Long) query.getSingleResult()) > 0;
     }
 
     @Override
@@ -83,26 +58,21 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getSingleResult() > 0;
     }
 
-    //TODO: Si no se usa, borrar
     @Override
     public List<User> getUsersWithSkill(String skillDescription) {
-        Skill skill = skillDao.findByDescription(skillDescription).orElseThrow(SkillNotFoundException::new);
+        Query query = em.createNativeQuery("SELECT * FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario JOIN aptitud a ON a.id = au.idAptitud " +
+                "WHERE a.descripcion = :skillDescription", User.class);
+        query.setParameter("skillDescription", skillDescription);
 
-        TypedQuery<User> query = em.createQuery("SELECT us.user FROM UserSkill AS us WHERE us.skill = :skill", User.class);
-        query.setParameter("skill", skill);
-
-        return query.getResultList();
+        return (List<User>) query.getResultList();
     }
 
-    //TODO: Si no se usa, borrar
     @Override
     public List<User> getUsersWithSkill(long skillID) {
-        Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
+        Query query = em.createNativeQuery("SELECT * FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario WHERE au.idAptitud = :skillID", User.class);
+        query.setParameter("skillID", skillID);
 
-        TypedQuery<User> query = em.createQuery("SELECT us.user FROM UserSkill AS us WHERE us.skill = :skill", User.class);
-        query.setParameter("skill", skill);
-
-        return query.getResultList();
+        return (List<User>) query.getResultList();
     }
 
     @Override
@@ -115,12 +85,10 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
     @Override
     public List<Skill> getSkillsForUser(long userID) {
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
+        Query query = em.createNativeQuery("SELECT a.id, a.descripcion FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario " +
+                        "JOIN aptitud a ON a.id = au.idAptitud WHERE au.idUsuario = ?", Skill.class);
 
-        TypedQuery<Skill> query = em.createQuery("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user", Skill.class);
-        query.setParameter("user", user);
-
-        return query.getResultList();
+        return (List<Skill>) query.getResultList();
     }
 
     @Override
@@ -134,12 +102,9 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
     @Override
     public void deleteSkillFromUser(long userID, long skillID) {
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
-        Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
-
-        Query query = em.createQuery("DELETE FROM UserSkill WHERE user = :user AND skill = :skill");
-        query.setParameter("user", user);
-        query.setParameter("skill", skill);
+        Query query = em.createNativeQuery("DELETE FROM aptitudUsuario WHERE idUsuario = :userID AND idAptitud = :skillID");
+        query.setParameter("userID", userID);
+        query.setParameter("skillID", skillID);
         query.executeUpdate();
     }
 
