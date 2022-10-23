@@ -14,7 +14,7 @@ public class JobOffer {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idEmpresa")
     private Enterprise enterprise;
 

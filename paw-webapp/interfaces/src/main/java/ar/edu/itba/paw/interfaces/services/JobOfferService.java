@@ -14,6 +14,12 @@ public interface JobOfferService {
 
     JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality);
 
+    List<JobOffer> getAllJobOffers();
+
+    Integer getJobOffersCount();
+
+    List<JobOffer> getJobOffersList(int page, int pageSize);
+
     Optional<JobOffer> findById(long id);
 
     List<JobOffer> findByEnterpriseId(long enterpriseID);

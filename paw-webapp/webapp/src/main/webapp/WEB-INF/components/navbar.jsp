@@ -51,6 +51,14 @@
                 </a>
                 <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/home"/>">
+                            <spring:message code="navbarMyNetwork"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
                             <spring:message code="navbarMyProfile"/>
                             <span class="sr-only">(current)</span>

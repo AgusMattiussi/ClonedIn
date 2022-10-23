@@ -17,7 +17,7 @@
         <div class="col-sm-2 sidebar">
             <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
                 <h5 class="row ml-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
-                <div class="row d-flex flex-column ">
+                <div class="row d-flex ml-2 mr-2">
                     <a href="<c:url value="?status=aceptada"/>">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                             <spring:message code="aceptada"/>

@@ -80,6 +80,25 @@ public class UserController {
         monthToNumber.put("Diciembre", 12);
 
     }
+    @RequestMapping(value = "/home", method = { RequestMethod.GET })
+    public ModelAndView profileUser(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
+                                    @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                                    @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                                    HttpServletRequest request) {
+        final ModelAndView mav = new ModelAndView("home");
+
+        final List<JobOffer> jobOfferList = jobOfferService.getAllJobOffers();
+
+        final int itemsPerPage = 8;
+
+        //FIXME: HACER FILTROS PARA LAS JOBOFFER y USAR LA LISTA PAGINA QUE PREGUNTA POR AVAILABLE
+
+        mav.addObject("jobOffers", jobOfferList);
+//        mav.addObject("pages", jobOfferList.size() / itemsPerPage + 1);
+//        mav.addObject("currentPage", page);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        return mav;
+    }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")

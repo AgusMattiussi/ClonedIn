@@ -71,6 +71,7 @@ public class EnterpriseController {
             usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
                     filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
         else
+            //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
 
         mav.addObject("users", usersList);
