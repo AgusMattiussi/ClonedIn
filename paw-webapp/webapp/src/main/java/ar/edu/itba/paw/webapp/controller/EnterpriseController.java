@@ -328,7 +328,7 @@ public class EnterpriseController {
     }
 
     private boolean isUser(Authentication loggedUser){
-        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
+        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getEnterpriseSimpleGrantedAuthority());
     }
 
     private long getLoggerUserId(Authentication loggedUser){
