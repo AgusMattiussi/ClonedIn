@@ -151,4 +151,9 @@ public class UserSkillJdbcDao implements UserSkillDao {
         template.update("DELETE FROM aptitudUsuario WHERE idUsuario = ? AND idAptitud = ?",
                 userID, skillID);
     }
+
+    @Override
+    public void deleteSkillFromUser(User user, Skill skill) {
+        deleteSkillFromUser(user.getId(), skill.getId());
+    }
 }

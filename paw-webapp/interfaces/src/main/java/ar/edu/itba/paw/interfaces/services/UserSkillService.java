@@ -27,4 +27,6 @@ public interface UserSkillService {
 
     void deleteSkillFromUser(long userID, long skillID);
 
+    void deleteSkillFromUser(User user, Skill skill);
+
 }

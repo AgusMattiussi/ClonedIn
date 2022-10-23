@@ -143,5 +143,13 @@ public class UserSkillHibernateDao implements UserSkillDao {
         query.executeUpdate();
     }
 
+    @Override
+    public void deleteSkillFromUser(User user, Skill skill) {
+        Query query = em.createQuery("DELETE FROM UserSkill WHERE user = :user AND skill = :skill");
+        query.setParameter("user", user);
+        query.setParameter("skill", skill);
+        query.executeUpdate();
+    }
+
 
 }
