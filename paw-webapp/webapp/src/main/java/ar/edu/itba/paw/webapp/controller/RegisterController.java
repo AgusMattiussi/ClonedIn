@@ -93,7 +93,7 @@ public class RegisterController {
         authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
         LOGGER.debug("A new enterprise was registered under id: {}", e.getId());
         LOGGER.info("A new enterprise was registered");
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/profileEnterprise/" + e.getId());
     }
 
     @RequestMapping(value = "/login", method = { RequestMethod.GET })
