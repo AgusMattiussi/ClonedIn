@@ -13,6 +13,8 @@ public interface UserSkillDao {
 
     boolean alreadyExists(long skillID, long userID);
 
+    boolean alreadyExists(Skill skill, User user);
+
     List<User> getUsersWithSkill(String skillDescription);
 
     List<User> getUsersWithSkill(long skillID);

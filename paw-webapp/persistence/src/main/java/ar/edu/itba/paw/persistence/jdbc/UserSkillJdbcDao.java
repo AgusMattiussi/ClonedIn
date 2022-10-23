@@ -99,6 +99,11 @@ public class UserSkillJdbcDao implements UserSkillDao {
        return alreadyExists(skill.get().getId(), userID);
     }
 
+    @Override
+    public boolean alreadyExists(Skill skill, User user) {
+        return alreadyExists(skill.getId(), user.getId());
+    }
+
     private List<Long> getUserIDsWithSkill(long skillID){
         return template.query("SELECT idUsuario FROM aptitudUsuario WHERE idAptitud = ?",
                 new Object[]{ skillID }, (resultSet, rowNum) ->

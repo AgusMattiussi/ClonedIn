@@ -305,7 +305,7 @@ public class UserController {
 
         Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
-        if (errors.hasErrors() || userSkillService.alreadyExists(skillForm.getSkill(), user.getId())) {
+        if (errors.hasErrors() || userSkillService.alreadyExists(skill, user)) {
             errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
             LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formSkill(loggedUser, skillForm, userId);

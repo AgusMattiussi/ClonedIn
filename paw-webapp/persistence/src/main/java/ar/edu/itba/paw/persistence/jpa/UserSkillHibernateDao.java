@@ -74,6 +74,15 @@ public class UserSkillHibernateDao implements UserSkillDao {
     }
 
     @Override
+    public boolean alreadyExists(Skill skill, User user) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
+        query.setParameter("skill", skill);
+        query.setParameter("user",user);
+
+        return query.getSingleResult() > 0;
+    }
+
+    @Override
     public List<User> getUsersWithSkill(String skillDescription) {
         Skill skill = skillDao.findByDescription(skillDescription).orElseThrow(SkillNotFoundException::new);
 
