@@ -150,11 +150,11 @@
                                                         <spring:message code="profileEnterpriseCloseJobOfferButton"/>
                                                     </button>
                                                 </a>
-                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>" >
-                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">
-                                                        <spring:message code="profileEnterpriseCancelJobOfferButton"/>
-                                                    </button>
-                                                </a>
+<%--                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>" >--%>
+<%--                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">--%>
+<%--                                                        <spring:message code="profileEnterpriseCancelJobOfferButton"/>--%>
+<%--                                                    </button>--%>
+<%--                                                </a>--%>
                                             </div>
                                             </c:if>
                                             <c:if test="${joboffer.available == 'Cancelada'}">

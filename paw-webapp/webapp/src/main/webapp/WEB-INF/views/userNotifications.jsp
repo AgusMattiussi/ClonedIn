@@ -15,36 +15,36 @@
 <div class="row h-100 w-100">
     <div class="col-sm-2 sidebar">
         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-            <h5 class="ml-2 mt-2"><spring:message code="notificationsFilter"/></h5>
-            <div class="d-flex flex-column ">
+            <h5 class="row ml-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
+            <div class="row d-flex flex-column ">
                 <a href="<c:url value="?status=aceptada"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                         <spring:message code="aceptada"/>
                     </button>
                 </a>
                 <a href="<c:url value="?status=rechazada"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                         <spring:message code="rechazada"/>
                     </button>
                 </a>
                 <a href="<c:url value="?status=pendiente"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                         <spring:message code="pendiente"/>
                     </button>
                 </a>
                 <a href="<c:url value="?status=cerrada"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                         <spring:message code="cerrada"/>
                     </button>
                 </a>
                 <a href="<c:url value="?status=cancelada"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                         <spring:message code="cancelada"/>
                     </button>
                 </a>
                 <a href="<c:url value="?"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-dark mt-2">
-                        <spring:message code="indexClearFilter"/>
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                        <spring:message code="notificationsNOFilter"/>
                     </button>
                 </a>
             </div>

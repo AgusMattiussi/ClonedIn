@@ -21,12 +21,12 @@
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="searchForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
+                            <h5 style="color:white"><spring:message code="navbarSearch" var="searchBarPlaceholder"/></h5>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
-                            <button class="btn btn-secondary filterbtn btn-outline-dark mt-2" type="submit"><i class="bi bi-search"></i></button>
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
                     </form:form>
-                    <h5 class="ml-2 mt-2"><spring:message code="indexFilter"/></h5>
+                    <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="filterForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2">
@@ -57,13 +57,13 @@
                         </div>
                         <div class="dropdown ml-2 mt-2">
                             <a href="<c:url value="/?page=1"/>">
-                                <button class="btn btn-secondary filterbtn btn-outline-dark" type="button">
+                                <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
                                     <spring:message code="indexClearFilter"/>
                                 </button>
                             </a>
                         </div>
                         <div class="dropdown ml-2 mt-2">
-                            <button class="btn btn-secondary filterbtn btn-outline-dark" type="submit">
+                            <button class="btn btn-secondary filterbtn btn-outline-light" type="submit">
                                 <spring:message code="indexFilterBtn"/>
                             </button>
                         </div>
@@ -148,9 +148,6 @@
 
                                                         </div>
                                                     </a>
-                                                    <div class="card-footer second bg-white text-right mt-auto">
-                                                        <a href="<c:url value="/contact/${us.id}"/>"><button type="button" class="btn btn-outline-dark"><spring:message code="profileContactButton"/></button></a>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </c:forEach>
