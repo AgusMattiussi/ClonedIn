@@ -3,10 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
-import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -35,6 +32,21 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferDao.create(enterprise, category, position, description, salary, modality);
     }
 
+
+    @Override
+    public List<JobOffer> getAllJobOffers() {
+        return jobOfferDao.getAllJobOffers();
+    }
+
+    @Override
+    public Integer getJobOffersCount() {
+        return jobOfferDao.getJobOffersCount();
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersList(int page, int pageSize) {
+        return jobOfferDao.getJobOffersList(page, pageSize);
+    }
 
     @Override
     public Optional<JobOffer> findById(long id) {

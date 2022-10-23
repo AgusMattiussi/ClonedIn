@@ -127,6 +127,21 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
+    public List<JobOffer> getAllJobOffers() {
+        return null;
+    }
+
+    @Override
+    public Integer getJobOffersCount() {
+        return null;
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersList(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
         return template.query("SELECT * FROM ofertaLaboral WHERE idEmpresa = ? AND disponible = ? ORDER BY id DESC OFFSET ? LIMIT ?",
                 new Object[]{ enterpriseID, JobOfferAvailability.ACTIVE.getStatus(), pageSize * page, pageSize }, JOB_OFFER_MAPPER);

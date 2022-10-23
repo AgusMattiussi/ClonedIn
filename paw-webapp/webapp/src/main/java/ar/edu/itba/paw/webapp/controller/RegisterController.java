@@ -72,7 +72,7 @@ public class RegisterController {
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
         LOGGER.debug("A new user was registered under id: {}", u.getId());
         LOGGER.info("A new user was registered");
-        return new ModelAndView("redirect:/profileUser/" + u.getId());
+        return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(value ="/createEnterprise", method = { RequestMethod.GET })

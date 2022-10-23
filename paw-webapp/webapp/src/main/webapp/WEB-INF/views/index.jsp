@@ -17,15 +17,27 @@
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
-                    <h5 class="ml-2 mt-2"><spring:message code="indexSearchFilter"/></h5>
+                    <!-- FIXME: NO SE COMO HACER PARA MANTENER LOS DOS BUSCADORES SIN QUE SE ROMPA -->
+                    <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="searchForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                            <h5 style="color:white"><spring:message code="navbarSearch" var="searchBarPlaceholder"/></h5>
+                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
                     </form:form>
+<%--                    <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter2"/></h5>--%>
+<%--                    <c:url value="/" var="getPath"/>--%>
+<%--                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">--%>
+<%--                        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">--%>
+<%--                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>--%>
+<%--                            <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>--%>
+<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>--%>
+<%--                        </div>--%>
+<%--                    </form:form>--%>
+                    <!-- FIXME: AGREGAR FILTRO POR AÑOS DE EXPERIENCIA (PODRIAMOS HACER UN SELECTOR??) -->
+                    <!-- FIXME: UNA VEZ DEJADO LAS PROVINCIAS FIJAS - PASARLO A UN SELECTOR -->
                     <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="filterForm" action="${getPath}" method="get">
@@ -117,7 +129,7 @@
                                                                     <spring:message code="profileInfoNotSpecified"/>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <c:out value="${position}"/></p>
+                                                                    <c:out value="${position}"/>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </p>
@@ -146,6 +158,8 @@
                                                                 </c:choose>
                                                             </p>
 
+                                                            <!-- FIXME: MOSTRAR LAS PRIMERAS 3 SKILLS DEL USUARIO -->
+
                                                         </div>
                                                     </a>
                                                 </div>
@@ -164,6 +178,5 @@
                     </div>
                 </div>
             </div>
-        </div>
     </body>
 </html>

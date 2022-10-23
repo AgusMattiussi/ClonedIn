@@ -67,6 +67,26 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
+    public List<JobOffer> getAllJobOffers() {
+        return em.createQuery("FROM JobOffer j", JobOffer.class).getResultList();
+    }
+
+    @Override
+    public Integer getJobOffersCount() {
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM ofertaLaboral");
+        BigInteger bi = (BigInteger) query.getSingleResult();
+        return bi.intValue();
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersList(int page, int pageSize) {
+        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE available = :active OFFSET :offset LIMIT :limit", JobOffer.class);
+        query.setParameter("offset", pageSize * page);
+        query.setParameter("limit", pageSize);
+        return (List<JobOffer>) query.getResultList();
+    }
+
+    @Override
     public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
         Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID AND disponible = :active " +
                 "OFFSET :offset LIMIT :limit ", JobOffer.class);
