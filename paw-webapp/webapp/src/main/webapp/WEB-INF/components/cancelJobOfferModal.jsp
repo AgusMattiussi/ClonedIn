@@ -2,21 +2,21 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
-<div class="modal fade" id="closeJobOfferModal" tabindex="-1" aria-labelledby="closeJobOfferLabel" aria-hidden="true">
+<div class="modal fade" id="cancelJobOfferModal" tabindex="-1" aria-labelledby="cancelJobOfferLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="closeJobOfferLabel"><spring:message code="closeJobOfferModalTitle"/></h5>
+        <h5 class="modal-title" id="cancelJobOfferLabel"><spring:message code="closeJobOfferModalTitle"/></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <spring:message code="closeJobOfferModalMsg"/>
+        <spring:message code="cancelJobOfferModalMsg"/>
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
           <spring:message code="closeJobOfferModalCancelButton"/>
         </button>
-        <a href="<c:url value="/closeJobOffer/${param.jobOfferId}"/>" >
+        <a href="<c:url value="/cancelJobOffer/${param.contactUserId}/${param.contactId}"/>" >
           <button class="btn btn-danger" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
             <spring:message code="cancelJobOfferModalConfirmButton"/>
           </button>
