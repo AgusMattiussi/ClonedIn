@@ -22,14 +22,14 @@
                             <c:choose>
                                 <c:when test="${user.visibility == 1}">
                                     <a href="<c:url value="/hideUserProfile/${user.id}"/>">
-                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content" data-bs-toggle="modal" data-bs-target="#profileVisibilityModal">
                                             <spring:message code="hideProfile"/>
                                         </button>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
                                     <a href="<c:url value="/showUserProfile/${user.id}"/>">
-                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content" data-bs-toggle="modal" data-bs-target="#profileVisibilityModal">
                                             <spring:message code="showProfile"/>
                                         </button>
                                     </a>
@@ -287,5 +287,7 @@
                 </div>
             </div>
     </div>
+    <!-- Modal -->
+    <jsp:include page="../components/profileVisibilityModal.jsp"/>
     </body>
 </html>
