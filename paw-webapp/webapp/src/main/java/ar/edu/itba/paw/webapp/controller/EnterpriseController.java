@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
-@Transactional
+//@Transactional
 @Controller
 public class EnterpriseController {
 
@@ -103,7 +103,7 @@ public class EnterpriseController {
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
-        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("pages", jobOfferList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;

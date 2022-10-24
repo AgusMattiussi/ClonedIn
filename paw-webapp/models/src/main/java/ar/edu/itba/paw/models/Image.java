@@ -15,13 +15,17 @@ public class Image {
     @Column(name = "bytes")
     private byte[] bytes;
 
-    /* package */ Image() {
-        //Just for Hibernate, we love you!
-    }
-
     public Image(Long id, byte[] bytes) {
         this.id = id;
         this.bytes = bytes;
+    }
+
+    public Image(byte[] bytes) {
+        this(null, bytes);
+    }
+
+    /* package */ Image() {
+        //Just for Hibernate, we love you!
     }
 
     public Long getId() {

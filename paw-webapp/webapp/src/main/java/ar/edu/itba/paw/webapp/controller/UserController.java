@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.io.IOException;
 
-@Transactional
+//@Transactional
 @Controller
 public class UserController {
     private final UserService userService;
@@ -347,6 +347,7 @@ public class UserController {
         userSkillService.deleteSkillFromUser(userId, skillId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
+
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
