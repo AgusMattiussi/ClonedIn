@@ -92,7 +92,16 @@
                                                 <spring:message code="profileInfoNotSpecified"/>
                                             </c:when>
                                             <c:otherwise>
-                                        <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                                <sec:authorize access="hasRole('USER')">
+                                                    <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                                </sec:authorize>
+                                                <sec:authorize access="hasRole('ENTERPRISE')">
+                                                    <a href="<c:url value="/?category=${user.category.id}&location=&educationLevel="/>">
+                                                        <span class="badge badge-pill badge-success">
+                                                            <spring:message code="${categoryName}"/>
+                                                        </span>
+                                                    </a>
+                                                </sec:authorize>
                                             </c:otherwise>
                                         </c:choose>
                                     </p>
