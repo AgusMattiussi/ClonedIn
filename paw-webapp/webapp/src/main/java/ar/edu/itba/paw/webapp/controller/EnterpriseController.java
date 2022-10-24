@@ -214,10 +214,14 @@ public class EnterpriseController {
 
         JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
 
-        if(!jobOfferForm.getSkill1().isEmpty())
-            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill1(), jobOffer.getId());
-        if(!jobOfferForm.getSkill2().isEmpty())
-            jobOfferSkillService.addSkillToJobOffer(jobOfferForm.getSkill2(), jobOffer.getId());
+        if(!jobOfferForm.getSkill1().isEmpty()) {
+            Skill skill1 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill1());
+            jobOfferSkillService.addSkillToJobOffer(skill1, jobOffer);
+        }
+        if(!jobOfferForm.getSkill2().isEmpty()) {
+            Skill skill2 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill2());
+            jobOfferSkillService.addSkillToJobOffer(skill2, jobOffer);
+        }
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");

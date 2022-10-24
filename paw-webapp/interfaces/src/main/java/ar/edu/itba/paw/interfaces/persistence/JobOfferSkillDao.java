@@ -6,10 +6,8 @@ import ar.edu.itba.paw.models.Skill;
 import java.util.List;
 
 public interface JobOfferSkillDao {
-    
-    boolean addSkillToJobOffer(String skillDescription, long jobOfferID);
 
-    boolean addSkillToJobOffer(long skillID, long jobOfferID);
+    void addSkillToJobOffer(Skill skill, JobOffer jobOffer);
 
     List<JobOffer> getJobOffersWithSkill(String skillDescription);
 

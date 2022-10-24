@@ -22,13 +22,8 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
     }
 
     @Override
-    public boolean addSkillToJobOffer(String skillDescription, long jobOfferID) {
-        return jobOfferSkillDao.addSkillToJobOffer(skillDescription, jobOfferID);
-    }
-
-    @Override
-    public boolean addSkillToJobOffer(long skillID, long jobOfferID) {
-        return jobOfferSkillDao.addSkillToJobOffer(skillID, jobOfferID);
+    public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
+        jobOfferSkillDao.addSkillToJobOffer(skill, jobOffer);
     }
 
     @Override

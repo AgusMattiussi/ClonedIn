@@ -72,8 +72,7 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
         this.enterpriseDao = enterpriseDao;
     }
 
-    @Override
-    public boolean addSkillToJobOffer(long skillID, long jobOfferID) {
+    private boolean addSkillToJobOffer(long skillID, long jobOfferID) {
         final Map<String, Object> values = new HashMap<>();
         values.put(JOB_OFFER_ID, jobOfferID);
         values.put(SKILL_ID, skillID);
@@ -82,9 +81,8 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
     }
 
     @Override
-    public boolean addSkillToJobOffer(String skillDescription, long jobOfferID) {
-        Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-        return addSkillToJobOffer(skill.getId(), jobOfferID);
+    public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
+        addSkillToJobOffer(skill.getId(), jobOffer.getId());
     }
 
     private List<Long> getJobOfferIDsWithSkill(long skillID){
@@ -98,6 +96,7 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
         return template.query("SELECT * FROM aptitudOfertaLaboral aol JOIN ofertaLaboral ol ON aol.idOferta = ol.id WHERE aol.idAptitud = ?",
                 new Object[]{ skillID }, JOB_OFFER_MAPPER);
     }
+
 
     @Override
     public List<JobOffer> getJobOffersWithSkill(String skillDescription) {

@@ -35,24 +35,9 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     private JobOfferDao jobOfferDao;
 
     @Override
-    public boolean addSkillToJobOffer(String skillDescription, long jobOfferID) {
-        Skill skill = skillDao.findByDescriptionOrCreate(skillDescription);
-        JobOffer jobOffer = jobOfferDao.findById(jobOfferID).orElseThrow(JobOfferNotFoundException::new);
-
+    public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
         JobOfferSkill jobOfferSkill = new JobOfferSkill(jobOffer, skill);
         em.persist(jobOfferSkill);
-        return true;
-        //return jobOfferSkill;
-    }
-
-    @Override
-    public boolean addSkillToJobOffer(long skillID, long jobOfferID) {
-        Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
-        JobOffer jobOffer = jobOfferDao.findById(jobOfferID).orElseThrow(JobOfferNotFoundException::new);
-
-        JobOfferSkill jobOfferSkill = new JobOfferSkill(jobOffer, skill);
-        em.persist(jobOfferSkill);
-        return true;
     }
 
     @Override
