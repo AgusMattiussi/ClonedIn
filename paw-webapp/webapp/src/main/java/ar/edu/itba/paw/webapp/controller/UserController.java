@@ -81,21 +81,28 @@ public class UserController {
 
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
-    public ModelAndView profileUser(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                                    @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+    public ModelAndView Home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
+                                    @Valid @ModelAttribute("filtersForm") final FiltersForm filtersForm,
                                     @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                                     HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("home");
 
-        final List<JobOffer> jobOfferList = jobOfferService.getAllJobOffers();
+        final List<JobOffer> jobOfferList;
 
         final int itemsPerPage = 8;
 
-        //FIXME: HACER FILTROS PARA LAS JOBOFFER y USAR LA LISTA PAGINA QUE PREGUNTA POR AVAILABLE
+        final int jobOffersCount = jobOfferService.getJobOffersCount();
+
+        //if(request.getParameter("term") == null)
+            jobOfferList = jobOfferService.getjobOffersListByFilters(page - 1, itemsPerPage,
+                    filtersForm.getCategory(), filtersForm.getModality());
+//        else
+//            jobOfferList = jobOfferService.getJobOffersListByEnterprise(page - 1, itemsPerPage, searchForm.getTerm());
 
         mav.addObject("jobOffers", jobOfferList);
-//        mav.addObject("pages", jobOfferList.size() / itemsPerPage + 1);
-//        mav.addObject("currentPage", page);
+        mav.addObject("categories", categoryService.getAllCategories());
+        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }

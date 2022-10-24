@@ -32,7 +32,6 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferDao.create(enterprise, category, position, description, salary, modality);
     }
 
-
     @Override
     public List<JobOffer> getAllJobOffers() {
         return jobOfferDao.getAllJobOffers();
@@ -76,6 +75,16 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public Integer getJobOffersCountForEnterprise(long enterpriseID) {
         return jobOfferDao.getJobOffersCountForEnterprise(enterpriseID);
+    }
+
+    @Override
+    public List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
+        return jobOfferDao.getjobOffersListByFilters(page, pageSize, categoryId, modality);
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term) {
+        return jobOfferDao.getJobOffersListByEnterprise(page, pageSize, term);
     }
 
     @Override
