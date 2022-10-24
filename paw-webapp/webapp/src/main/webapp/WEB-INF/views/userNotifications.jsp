@@ -109,16 +109,17 @@
                                             <spring:message code="notificationsStatus"/><spring:message code="${job.status}"/>
                                         </h5>
                                         <c:if test="${job.status == 'pendiente'}">
-                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >
-                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#answerModal">
+                                            <c:set var="jobOfferId" value="${job.id}"/>
+<%--                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >--%>
+                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
-                                            </a>
-                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/0"/>" >
-                                                <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#answerModal">
+<%--                                            </a>--%>
+<%--                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/0"/>" >--%>
+                                                <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#rejectJobOfferModal">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
-                                            </a>
+<%--                                            </a>--%>
                                         </c:if>
                                     </div>
                                 </div>
@@ -146,6 +147,14 @@
     </div>
 </div>
 <!-- Modal -->
-<jsp:include page="../components/answerModal.jsp"/>
+<jsp:include page="../components/acceptJobOfferModal.jsp">
+    <jsp:param name="userId" value="${user.id}"/>
+    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
+</jsp:include>
+<!-- Modal -->
+<jsp:include page="../components/rejectJobOfferModal.jsp">
+    <jsp:param name="userId" value="${user.id}"/>
+    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
+</jsp:include>
 </body>
 </html>

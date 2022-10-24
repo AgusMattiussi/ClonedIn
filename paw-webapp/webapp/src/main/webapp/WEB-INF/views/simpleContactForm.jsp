@@ -58,7 +58,7 @@
                           <a onclick="history.back()">
                             <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                           </a>
-                          <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#mailConfirmationModal">
+                          <button type="submit" class="btn action-button" <%--data-bs-toggle="modal" data-bs-target="#mailConfirmationModal"--%>>
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
                         </fieldset>
