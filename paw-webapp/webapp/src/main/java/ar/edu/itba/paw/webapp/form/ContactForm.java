@@ -6,7 +6,7 @@ public class ContactForm {
     @Size(max=100)
     private String message;
 
-    private long category;
+    private long jobOfferId;
 
     public String getMessage() {
         return message;
@@ -16,11 +16,11 @@ public class ContactForm {
         this.message = message;
     }
 
-    public long getCategory() {
-        return category;
+    public long getJobOfferId() {
+        return jobOfferId;
     }
 
-    public void setCategory(long category) {
-        this.category = category;
+    public void setJobOfferId(long jobOfferId) {
+        this.jobOfferId = jobOfferId;
     }
 }

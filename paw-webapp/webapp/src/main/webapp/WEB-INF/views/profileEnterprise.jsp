@@ -52,11 +52,14 @@
                                     <spring:message code="profileInfoNotSpecified"/>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                    <a href="<c:url value="/?category=${enterprise.category.id}&location=&educationLevel="/>">
+                                        <span class="badge badge-pill badge-success">
+                                            <spring:message code="${categoryName}"/>
+                                        </span>
+                                    </a>
                                 </c:otherwise>
                             </c:choose>
                         </p>
-
                         <c:set var="location" value="${enterprise.location}"/>
                         <p class="card-text"><spring:message code="profileLocation"/>
                             <c:choose>
@@ -101,9 +104,11 @@
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
                                             <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
                                             <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
-                                            <span class="badge badge-pill badge-success p-2 mb-2">
-                                                <spring:message code="${jobOfferCategoryName}"/>
-                                            </span>
+                                                <a href="<c:url value="/?category=${joboffer.category.id}&location=&educationLevel="/>">
+                                                    <span class="badge badge-pill badge-success p-2 mb-2">
+                                                        <spring:message code="${jobOfferCategoryName}"/>
+                                                    </span>
+                                                </a>
                                             </c:if>
                                         </div>
                                     </div>
@@ -145,11 +150,10 @@
                                             <p><c:out value="${joboffer.description}"/></p>
                                             <c:if test="${joboffer.available == 'Activa'}">
                                             <div class="d-flex flex-column">
-                                                <a href="<c:url value="/closeJobOffer/${joboffer.id}"/>" >
-                                                    <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
+                                                    <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
                                                         <spring:message code="profileEnterpriseCloseJobOfferButton"/>
+                                                        <c:set var="jobOffer" value="${joboffer.id}"/>
                                                     </button>
-                                                </a>
 <%--                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>" >--%>
 <%--                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">--%>
 <%--                                                        <spring:message code="profileEnterpriseCancelJobOfferButton"/>--%>
@@ -158,14 +162,14 @@
                                             </div>
                                             </c:if>
                                             <c:if test="${joboffer.available == 'Cancelada'}">
-                                            <span class="badge badge-danger p-2 mb-2">
-                                                    <spring:message code="profileEnterpriseCancelJobOffer"/>
-                                            </span>
+                                                <span class="badge badge-danger p-2 mb-2">
+                                                        <spring:message code="profileEnterpriseCancelJobOffer"/>
+                                                </span>
                                             </c:if>
                                             <c:if test="${joboffer.available == 'Cerrada'}">
-                                            <span class="badge badge-danger p-2 mb-2">
-                                                <spring:message code="profileEnterpriseCloseJobOffer"/>
-                                            </span>
+                                                <span class="badge badge-danger p-2 mb-2">
+                                                    <spring:message code="profileEnterpriseCloseJobOffer"/>
+                                                </span>
                                             </c:if>
                                         </div>
                                     </div>
@@ -189,5 +193,9 @@
         </div>
     </div>
     </div>
+    <!-- Modal -->
+    <jsp:include page="../components/closeJobOfferModal.jsp">
+        <jsp:param name="jobOfferId" value="${jobOffer}"/>
+    </jsp:include>
     </body>
 </html>
