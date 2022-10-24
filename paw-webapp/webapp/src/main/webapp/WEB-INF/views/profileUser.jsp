@@ -239,7 +239,7 @@
                         </div>
                         </div>
                         <div class="row mr-2">
-                        <div class="card mt-2">
+                        <div class="card mt-2 mb-5">
                             <div class="card-body pb-0">
                                 <div class="d-flex flex-wrap justify-content-between">
                                     <h5 class="card-title"><spring:message code="profileSkills"/></h5>

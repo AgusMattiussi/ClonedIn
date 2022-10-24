@@ -41,7 +41,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
         Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
 
-        final Enterprise enterprise = new Enterprise(email, name, password, location, category, description, DEFAULT_IMAGE);
+        final Enterprise enterprise = new Enterprise(name, email, password, location, category, description, DEFAULT_IMAGE);
         em.persist(enterprise);
         return enterprise;
     }
