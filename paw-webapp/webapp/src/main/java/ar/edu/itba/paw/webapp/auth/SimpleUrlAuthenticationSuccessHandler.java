@@ -70,7 +70,7 @@ public class SimpleUrlAuthenticationSuccessHandler
             switch (authorityName) {
                 case "ROLE_USER":
                     User user = userService.findByEmail(accountEmail).orElseThrow(UserNotFoundException::new);
-                    return redirectURL + "/home";
+                    return redirectURL + "home";
                 case "ROLE_ENTERPRISE":
                     return redirectURL;
                 default:

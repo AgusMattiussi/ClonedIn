@@ -114,6 +114,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         query.setParameter("offset", pageSize * page);
         query.setParameter("limit", pageSize);
         query.setParameter("name", name);
+        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         return (List<JobOffer>) query.getResultList();
     }
 
@@ -128,7 +129,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         }
         Object[] sanitizedInputs = new Object[]{catId, modality};
         StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM ofertaLaboral WHERE disponible = :active");
+        filterQuery.append("SELECT * FROM ofertaLaboral WHERE disponible = 'Activa'");
 
         if(!categoryId.isEmpty())
             filterQuery.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
@@ -138,7 +139,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
 
-        Query query = em.createNativeQuery(filterQuery.toString(), User.class);
+        Query query = em.createNativeQuery(filterQuery.toString(), JobOffer.class);
 
         query.setParameter("offset", pageSize * page);
         query.setParameter("limit", pageSize);

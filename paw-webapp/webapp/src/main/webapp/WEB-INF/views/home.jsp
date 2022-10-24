@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: SolChiSol
-  Date: 23/10/22
-  Time: 18:44
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -25,7 +18,7 @@
         <div class="row h-100 w-100">
             <div class="col-sm-2 sidebar">
                 <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
-                <c:url value="/" var="getPath"/>
+                <c:url value="/home" var="getPath"/>
                 <form:form modelAttribute="filtersForm" action="${getPath}" method="get">
                     <div class="d-flex flex-wrap justify-content-center ml-2">
                         <form:select path="category" cssClass="form-select">
@@ -47,7 +40,7 @@
                         </form:select>
                     </div>
                     <div class="dropdown ml-2 mt-2">
-                        <a href="<c:url value="/?page=1"/>">
+                        <a href="<c:url value="/home?page=1"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
                                 <spring:message code="indexClearFilter"/>
                             </button>
