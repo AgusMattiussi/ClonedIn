@@ -92,7 +92,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendRegisterUserConfirmationEmail(User user, Locale locale) {
-        sendRegisterConfirmationEmail(user.getEmail(), user.getName(), locale, "profileUser/" + user.getId());
+        sendRegisterConfirmationEmail(user.getEmail(), user.getName(), locale, "home");
     }
 
     @Async
