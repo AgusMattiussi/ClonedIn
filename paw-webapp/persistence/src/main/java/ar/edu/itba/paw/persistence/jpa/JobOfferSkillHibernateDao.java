@@ -65,7 +65,11 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     @Override
     public List<Skill> getSkillsForJobOffer(long jobOfferID) {
         JobOffer jobOffer = jobOfferDao.findById(jobOfferID).orElseThrow(JobOfferNotFoundException::new);
+        return getSkillsForJobOffer(jobOffer);
+    }
 
+    @Override
+    public List<Skill> getSkillsForJobOffer(JobOffer jobOffer) {
         TypedQuery<Skill> query = em.createQuery("SELECT jos.skill FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer", Skill.class);
         query.setParameter("jobOffer", jobOffer);
 

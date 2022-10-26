@@ -121,4 +121,9 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
                 "aptitud a ON aol.idAptitud = a.id WHERE aol.idOferta = ?",
                 new Object[]{jobOfferID}, SKILL_MAPPER);
     }
+
+    @Override
+    public List<Skill> getSkillsForJobOffer(JobOffer jobOffer) {
+        return getSkillsForJobOffer(jobOffer.getId());
+    }
 }

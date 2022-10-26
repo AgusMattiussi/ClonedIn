@@ -16,4 +16,6 @@ public interface JobOfferSkillDao {
     List<JobOffer> getJobOffersWithSkill(Skill skill);
 
     List<Skill> getSkillsForJobOffer(long jobOfferID);
+
+    List<Skill> getSkillsForJobOffer(JobOffer jobOffer);
 }
