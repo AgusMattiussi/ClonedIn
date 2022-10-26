@@ -36,8 +36,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<User> getUsersForEnterprise(long enterpriseID) {
-        return contactDao.getUsersForEnterprise(enterpriseID);
+    public List<User> getUsersForEnterprise(Enterprise enterprise) {
+        return contactDao.getUsersForEnterprise(enterprise);
     }
 
     @Override

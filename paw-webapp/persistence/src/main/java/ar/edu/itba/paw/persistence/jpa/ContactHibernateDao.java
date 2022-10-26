@@ -29,8 +29,10 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<User> getUsersForEnterprise(long enterpriseID) {
-        return null;
+    public List<User> getUsersForEnterprise(Enterprise enterprise) {
+        TypedQuery<User> query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise", User.class);
+        query.setParameter("enterprise", enterprise);
+        return query.getResultList();
     }
 
     @Override

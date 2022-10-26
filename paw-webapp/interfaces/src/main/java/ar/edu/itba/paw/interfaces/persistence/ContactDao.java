@@ -10,7 +10,7 @@ public interface ContactDao {
 
     List<Enterprise> getEnterprisesForUser(User user);
 
-    List<User> getUsersForEnterprise(long enterpriseID);
+    List<User> getUsersForEnterprise(Enterprise enterprise);
 
     List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId);
 

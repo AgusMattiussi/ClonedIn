@@ -210,10 +210,10 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     @Override
-    public List<User> getUsersForEnterprise(long enterpriseID) {
+    public List<User> getUsersForEnterprise(Enterprise enterprise) {
         return template.query("SELECT u.id, u.nombre, u.email, u.contrasenia, u.ubicacion, u.idRubro, u.posicionActual, u.descripcion, u.educacion, u.visibilidad, " +
                         "u.idImagen FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idEmpresa = ?",
-                new Object[]{ enterpriseID }, USER_MAPPER);
+                new Object[]{ enterprise.getId() }, USER_MAPPER);
     }
 
     private List<Long> getJobOfferIDsForUser(long userId){
