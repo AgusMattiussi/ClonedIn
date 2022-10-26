@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -28,13 +29,6 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     @PersistenceContext
     private EntityManager em;
 
-    //TODO: Cambiar para seguir filosofia JPA
-
-    @Autowired
-    private SkillDao skillDao;
-    @Autowired
-    private JobOfferDao jobOfferDao;
-
     @Override
     public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
         JobOfferSkill jobOfferSkill = new JobOfferSkill(jobOffer, skill);
@@ -44,14 +38,19 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
 
     @Override
     public List<JobOffer> getJobOffersWithSkill(String skillDescription) {
-        Skill skill = skillDao.findByDescription(skillDescription).orElseThrow(SkillNotFoundException::new);
-        return getJobOffersWithSkill(skill);
+        Query query = em.createNativeQuery("SELECT ol.id, ol.idEmpresa, ol.idRubro, ol.posicion, ol.descripcion, ol.salario, ol.modalidad, ol.disponible " +
+                "FROM aptitudOfertaLaboral aol JOIN ofertaLaboral ol ON aol.idOferta = ol.id "+
+                " JOIN aptitud a ON aol.idAptitud = a.id WHERE a.descripcion = :skillDescription", JobOffer.class);
+        query.setParameter("skillDescription", skillDescription);
+        return (List<JobOffer>) query.getResultList();
     }
 
     @Override
     public List<JobOffer> getJobOffersWithSkill(long skillID) {
-        Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
-        return getJobOffersWithSkill(skill);
+        Query query = em.createNativeQuery("SELECT * FROM aptitudOfertaLaboral aol JOIN ofertaLaboral ol ON aol.idOferta = ol.id " +
+                "WHERE aol.idAptitud = :skillID", JobOffer.class);
+        query.setParameter("skillID", skillID);
+        return (List<JobOffer>) query.getResultList();
     }
 
     @Override
@@ -64,8 +63,10 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
 
     @Override
     public List<Skill> getSkillsForJobOffer(long jobOfferID) {
-        JobOffer jobOffer = jobOfferDao.findById(jobOfferID).orElseThrow(JobOfferNotFoundException::new);
-        return getSkillsForJobOffer(jobOffer);
+        Query query = em.createNativeQuery("SELECT a.id, a.descripcion FROM aptitudOfertaLaboral aol JOIN " +
+                "aptitud a ON aol.idAptitud = a.id WHERE aol.idOferta = :jobOfferID", Skill.class);
+        query.setParameter("jobOfferID", jobOfferID);
+        return (List<Skill>) query.getResultList();
     }
 
     @Override
