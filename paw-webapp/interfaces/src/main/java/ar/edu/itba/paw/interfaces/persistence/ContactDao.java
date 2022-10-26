@@ -8,7 +8,7 @@ public interface ContactDao {
 
     void addContact(Enterprise enterprise, User user, JobOffer jobOffer);
 
-    List<Enterprise> getEnterprisesForUser(long userID);
+    List<Enterprise> getEnterprisesForUser(User user);
 
     List<User> getUsersForEnterprise(long enterpriseID);
 

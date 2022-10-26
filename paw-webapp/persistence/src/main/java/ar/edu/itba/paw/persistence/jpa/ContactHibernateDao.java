@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -21,8 +22,10 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Enterprise> getEnterprisesForUser(long userID) {
-        return null;
+    public List<Enterprise> getEnterprisesForUser(User user) {
+        TypedQuery<Enterprise> query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user", Enterprise.class);
+        query.setParameter("user", user);
+        return query.getResultList();
     }
 
     @Override
