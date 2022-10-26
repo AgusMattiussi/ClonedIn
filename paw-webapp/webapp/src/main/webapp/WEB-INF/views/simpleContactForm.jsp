@@ -45,12 +45,12 @@
                             <div class="d-flex">
                               <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="contactFormJobOfferSelect"/></label>
                               <div style="margin-left: 15px; margin-top: 1.2rem;">
-                                <form:select path="category" cssClass="list-dt ml-auto">
+                                <form:select path="jobOfferId" cssClass="list-dt ml-auto">
                                   <c:forEach items="${jobOffers}" var="jobOffer">
                                     <form:option value="${jobOffer.id}">${jobOffer.position}</form:option>
                                   </c:forEach>
                                 </form:select>
-                                <form:errors path="category" cssClass="formError" element="p"/>
+                                <form:errors path="jobOfferId" cssClass="formError" element="p"/>
                               </div>
                             </div>
                           </div>
@@ -58,7 +58,7 @@
                           <a onclick="history.back()">
                             <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
                           </a>
-                          <button type="submit" class="btn action-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          <button type="submit" class="btn action-button" <%--data-bs-toggle="modal" data-bs-target="#mailConfirmationModal"--%>>
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
                         </fieldset>

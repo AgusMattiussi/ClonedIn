@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +27,10 @@ public interface JobOfferService {
     List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize);
 
     Integer getJobOffersCountForEnterprise(long enterpriseID);
+
+    List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
+
+    List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term);
 
     Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize);
 

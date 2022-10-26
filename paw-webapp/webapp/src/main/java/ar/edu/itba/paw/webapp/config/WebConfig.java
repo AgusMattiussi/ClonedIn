@@ -89,11 +89,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //        return dbp;
 //    }
 //
-//    @Bean(name = "multipartResolver")
-//    public CommonsMultipartResolver multipartResolver() {
-//        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-//        return multipartResolver;
-//    }
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        return multipartResolver;
+    }
 
     @Bean
     public MessageSource messageSource() {

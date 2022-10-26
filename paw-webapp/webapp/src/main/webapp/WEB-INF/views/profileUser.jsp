@@ -22,14 +22,14 @@
                             <c:choose>
                                 <c:when test="${user.visibility == 1}">
                                     <a href="<c:url value="/hideUserProfile/${user.id}"/>">
-                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content" data-bs-toggle="modal" data-bs-target="#profileVisibilityModal">
                                             <spring:message code="hideProfile"/>
                                         </button>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
                                     <a href="<c:url value="/showUserProfile/${user.id}"/>">
-                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content">
+                                        <button type="button" class="btn waves-effect" style="background-color: #459F78; color: white; margin-bottom: 0.75rem; width: fit-content" data-bs-toggle="modal" data-bs-target="#profileVisibilityModal">
                                             <spring:message code="showProfile"/>
                                         </button>
                                     </a>
@@ -92,7 +92,16 @@
                                                 <spring:message code="profileInfoNotSpecified"/>
                                             </c:when>
                                             <c:otherwise>
-                                        <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                                <sec:authorize access="hasRole('USER')">
+                                                    <span class="badge badge-pill badge-success"><spring:message code="${categoryName}"/></span>
+                                                </sec:authorize>
+                                                <sec:authorize access="hasRole('ENTERPRISE')">
+                                                    <a href="<c:url value="/?category=${user.category.id}&location=&educationLevel="/>">
+                                                        <span class="badge badge-pill badge-success">
+                                                            <spring:message code="${categoryName}"/>
+                                                        </span>
+                                                    </a>
+                                                </sec:authorize>
                                             </c:otherwise>
                                         </c:choose>
                                     </p>
@@ -239,7 +248,7 @@
                         </div>
                         </div>
                         <div class="row mr-2">
-                        <div class="card mt-2">
+                        <div class="card mt-2 mb-5">
                             <div class="card-body pb-0">
                                 <div class="d-flex flex-wrap justify-content-between">
                                     <h5 class="card-title"><spring:message code="profileSkills"/></h5>
@@ -278,5 +287,7 @@
                 </div>
             </div>
     </div>
+    <!-- Modal -->
+    <jsp:include page="../components/profileVisibilityModal.jsp"/>
     </body>
 </html>

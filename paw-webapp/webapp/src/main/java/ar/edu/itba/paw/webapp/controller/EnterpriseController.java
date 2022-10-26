@@ -67,6 +67,8 @@ public class EnterpriseController {
 
         final int itemsPerPage = 8;
 
+        final int usersCount = userService.getUsersCount();
+
         if(request.getParameter("term") == null)
             usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
                     filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
@@ -77,7 +79,7 @@ public class EnterpriseController {
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
-        mav.addObject("pages", usersList.size() / itemsPerPage + 1);
+        mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
@@ -101,7 +103,7 @@ public class EnterpriseController {
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
-        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("pages", jobOfferList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
@@ -308,12 +310,12 @@ public class EnterpriseController {
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
                                 final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getCategory())) {
-            errors.rejectValue("category", "ExistingJobOffer", "You've already sent this job offer to this user.");
+        if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getJobOfferId())) {
+            errors.rejectValue("jobOfferId", "ExistingJobOffer", "You've already sent this job offer to this user.");
             LOGGER.warn("Contact form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return contactForm(loggedUser, form, userId);
         }
-        long jobOfferId = form.getCategory();
+        long jobOfferId = form.getJobOfferId();
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
             LOGGER.error("Job Offer not found");

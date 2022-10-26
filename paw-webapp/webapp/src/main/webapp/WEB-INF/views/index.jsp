@@ -116,9 +116,11 @@
                                                                             <spring:message code="profileInfoNotSpecified"/>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <span class="badge badge-pill badge-success">
-                                                                            <spring:message code="${categoryName}"/>
-                                                                            </span>
+                                                                            <a href="<c:url value="?category=${us.category.id}&location=&educationLevel="/>">
+                                                                                <span class="badge badge-pill badge-success">
+                                                                                    <spring:message code="${categoryName}"/>
+                                                                                </span>
+                                                                            </a>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </p>

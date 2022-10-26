@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: SolChiSol
-  Date: 23/10/22
-  Time: 18:44
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -24,6 +17,41 @@
         </jsp:include>
         <div class="row h-100 w-100">
             <div class="col-sm-2 sidebar">
+                <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
+                <c:url value="/home" var="getPath"/>
+                <form:form modelAttribute="filtersForm" action="${getPath}" method="get">
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <form:select path="category" cssClass="form-select">
+                            <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>
+                            <c:forEach items="${categories}" var="category">
+                                <c:if test="${category.name.compareTo('No-Especificado') != 0}">
+                                    <form:option value="${category.id}"><spring:message code="${category.name}"/></form:option>
+                                </c:if>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+                    <br>
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <form:select path="modality" cssClass="form-select">
+                            <form:option value=""><spring:message code="indexModalityFilter"/></form:option>
+                            <form:option value="Remoto"><spring:message code="selectModeVirtual"/></form:option>
+                            <form:option value="Presencial"><spring:message code="selectModeOnSite"/></form:option>
+                            <form:option value="Mixto"><spring:message code="selectModeMixed"/></form:option>
+                        </form:select>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <a href="<c:url value="/home?page=1"/>">
+                            <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
+                                <spring:message code="indexClearFilter"/>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="dropdown ml-2 mt-2">
+                        <button class="btn btn-secondary filterbtn btn-outline-light" type="submit">
+                            <spring:message code="indexFilterBtn"/>
+                        </button>
+                    </div>
+                </form:form>
             </div>
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">

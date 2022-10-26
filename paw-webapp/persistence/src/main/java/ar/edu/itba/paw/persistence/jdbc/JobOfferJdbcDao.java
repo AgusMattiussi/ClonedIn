@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -151,6 +150,16 @@ public class JobOfferJdbcDao implements JobOfferDao {
     public Integer getJobOffersCountForEnterprise(long enterpriseID) {
         return template.queryForObject("SELECT COUNT(*) FROM ofertaLaboral WHERE idEmpresa = ?",
                 new Object[]{ enterpriseID}, Integer.class);
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String name) {
+        return null;
+    }
+
+    @Override
+    public List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
+        return null;
     }
 
     @Override
