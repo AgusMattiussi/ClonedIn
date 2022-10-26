@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public interface EmailService {
-    void sendEmail(String to, String subject, String body, Map<String, Object> variables);
     void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message, Locale locale);
     void sendRegisterUserConfirmationEmail(User user, Locale locale);
     void sendRegisterEnterpriseConfirmationEmail(String email, String enterpriseName, Locale locale);
