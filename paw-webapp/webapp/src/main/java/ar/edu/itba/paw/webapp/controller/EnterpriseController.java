@@ -310,12 +310,14 @@ public class EnterpriseController {
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
                                 final BindingResult errors, @PathVariable("userId") final long userId) {
-        if (errors.hasErrors() || contactService.alreadyContacted(userId, form.getJobOfferId())) {
+
+        long jobOfferId = form.getJobOfferId();
+
+        if (errors.hasErrors() || contactService.alreadyContacted(userId, jobOfferId)) {
             errors.rejectValue("jobOfferId", "ExistingJobOffer", "You've already sent this job offer to this user.");
             LOGGER.warn("Contact form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return contactForm(loggedUser, form, userId);
         }
-        long jobOfferId = form.getJobOfferId();
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
             LOGGER.error("Job Offer not found");

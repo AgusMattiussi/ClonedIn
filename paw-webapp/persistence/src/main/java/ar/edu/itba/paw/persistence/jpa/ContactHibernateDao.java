@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
+    // TODO: Esto se podria solucionar con variaciones de getContact
+
     @Override
     public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
         return null;
@@ -62,7 +65,11 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
-        return false;
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID", Long.class);
+        query.setParameter("userID", userID);
+        query.setParameter("jobOfferID", jobOfferID);
+
+        return ((Long) query.getSingleResult()) > 0;
     }
 
     @Override
