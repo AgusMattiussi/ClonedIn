@@ -97,6 +97,11 @@ public class JobOfferSkillJdbcDao implements JobOfferSkillDao {
                 new Object[]{ skillID }, JOB_OFFER_MAPPER);
     }
 
+    @Override
+    public List<JobOffer> getJobOffersWithSkill(Skill skill) {
+        return getJobOffersWithSkill(skill.getId());
+    }
+
 
     @Override
     public List<JobOffer> getJobOffersWithSkill(String skillDescription) {

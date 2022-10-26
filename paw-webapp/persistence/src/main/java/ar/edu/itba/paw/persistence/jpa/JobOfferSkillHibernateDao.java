@@ -12,6 +12,7 @@ import ar.edu.itba.paw.models.exceptions.SkillNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -40,20 +41,21 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
         em.persist(jobOfferSkill);
     }
 
+
     @Override
     public List<JobOffer> getJobOffersWithSkill(String skillDescription) {
         Skill skill = skillDao.findByDescription(skillDescription).orElseThrow(SkillNotFoundException::new);
-
-        TypedQuery<JobOffer> query = em.createQuery("SELECT jos.jobOffer FROM JobOfferSkill AS jos WHERE jos.skill = :skill", JobOffer.class);
-        query.setParameter("skill", skill);
-
-        return query.getResultList();
+        return getJobOffersWithSkill(skill);
     }
 
     @Override
     public List<JobOffer> getJobOffersWithSkill(long skillID) {
         Skill skill = skillDao.findById(skillID).orElseThrow(SkillNotFoundException::new);
+        return getJobOffersWithSkill(skill);
+    }
 
+    @Override
+    public List<JobOffer> getJobOffersWithSkill(Skill skill) {
         TypedQuery<JobOffer> query = em.createQuery("SELECT jos.jobOffer FROM JobOfferSkill AS jos WHERE jos.skill = :skill", JobOffer.class);
         query.setParameter("skill", skill);
 
