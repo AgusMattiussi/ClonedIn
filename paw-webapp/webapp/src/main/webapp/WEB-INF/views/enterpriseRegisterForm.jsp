@@ -57,10 +57,12 @@
                                                     <form:errors path="aboutUs" cssClass="formError" element="p"/>
                                                 </div>
                                                 <p><spring:message code="registerRequiredMsg"/></p>
-                                                <a href="<c:url value="/login"/>">
-                                                <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                                                </a>
                                                 <button type="submit" class="btn next action-button"><spring:message code="registerButtonMsg"/></button>
+                                                <div class="row">
+                                                    <a href="<c:url value="/login"/>">
+                                                        <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                                                    </a>
+                                                </div>
                                             </fieldset>
                                         </form:form>
                                     </div>

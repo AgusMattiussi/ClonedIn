@@ -41,16 +41,20 @@
                         </div>
                     </div>
                     <sec:authorize access="hasRole('ENTERPRISE')">
-                      <a href="<c:url value="/profileEnterprise/${enterprise.id}"/>">
-                        <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                      </a>
                       <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                      <div class="row">
+                        <a href="<c:url value="/profileEnterprise/${enterprise.id}"/>">
+                          <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                        </a>
+                      </div>
                     </sec:authorize>
                     <sec:authorize access="hasRole('USER')">
-                      <a href="<c:url value="/profileUser/${user.id}"/>">
-                        <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                      </a>
                       <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                      <div class="row">
+                        <a href="<c:url value="/profileUser/${user.id}"/>">
+                          <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                        </a>
+                      </div>
                     </sec:authorize>
                   </fieldset>
                 </form:form>

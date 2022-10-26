@@ -21,10 +21,10 @@
                     <c:set var="image" value="${enterprise.image.id}"/>
                     <c:choose>
                         <c:when test="${image == null}">
-                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200">
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/assets/images/defaultProfilePicture.png"/>" width="100" height="200" style="object-fit: cover">
                         </c:when>
                         <c:otherwise>
-                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${enterprise.id}/image/${image}"/>" width="100" height="200">
+                            <img class="card-img-top small" alt="profile_image" src="<c:url value="/${enterprise.id}/image/${image}"/>" width="100" height="200" style="object-fit: cover">
                         </c:otherwise>
                     </c:choose>
                     <div class="card-body p-0">

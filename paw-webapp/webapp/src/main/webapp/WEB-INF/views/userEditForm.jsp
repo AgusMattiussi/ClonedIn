@@ -10,7 +10,9 @@
     <title><spring:message code="editPageTitle"/></title>
   </head>
   <body>
-    <jsp:include page="../components/navbar.jsp"/>
+    <jsp:include page="../components/navbar.jsp">
+      <jsp:param name="id" value="${user.id}"/>
+    </jsp:include>
       <div class="d-flex justify-content-between mt-2">
         <div class="container-fluid">
           <div class="row justify-content-center mt-0">
@@ -73,10 +75,12 @@
                           <form:textarea path="aboutMe" rows="3" cssStyle="resize: none" placeholder="${user.description}"/>
                           <form:errors path="aboutMe" cssClass="formError" element="p"/>
                         </div>
-                        <a href="<c:url value="/profileUser/${user.id}"/>">
-                          <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                        </a>
                         <button type="submit" class="btn action-button"><spring:message code="educationFormButtonMsg"/></button>
+                        <div class="row">
+                          <a href="<c:url value="/profileUser/${user.id}"/>">
+                            <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                          </a>
+                        </div>
                       </fieldset>
                       </form:form>
                       </div>

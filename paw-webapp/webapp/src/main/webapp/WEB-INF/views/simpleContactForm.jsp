@@ -55,12 +55,14 @@
                             </div>
                           </div>
                           <p><spring:message code="contactFormRequiredMsg"/></p>
-                          <a onclick="history.back()">
-                            <button type="button" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                          </a>
                           <button type="submit" class="btn action-button" <%--data-bs-toggle="modal" data-bs-target="#mailConfirmationModal"--%>>
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
+                          <div class="row">
+                            <a href="<c:url value="/profileUser/${user.id}"/>">
+                              <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                            </a>
+                          </div>
                         </fieldset>
                       </form:form>
                     </c:otherwise>

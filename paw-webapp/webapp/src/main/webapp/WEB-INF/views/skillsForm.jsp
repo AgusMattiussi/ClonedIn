@@ -33,10 +33,12 @@
                     <form:errors path="skill" cssClass="formError" element="p"/>
                   </div>
                     <p><spring:message code="skillsFormRequiredMsg"/></p>
-                    <a href="<c:url value="/profileUser/${user.id}"/>">
-                      <button type="button" name="end" class="btn next action-button"><spring:message code="returnButtonMsg"/></button>
-                    </a>
                     <button type="submit" name="end" class="btn action-button"><spring:message code="skillsFormButtonMsg"/></button>
+                    <div class="row">
+                      <a href="<c:url value="/profileUser/${user.id}"/>">
+                        <button type="button" class="btn next btn-outline" style="color: #459F78"><spring:message code="returnButtonMsg"/></button>
+                      </a>
+                    </div>
                   </fieldset>
                 </form:form>
               </div>
