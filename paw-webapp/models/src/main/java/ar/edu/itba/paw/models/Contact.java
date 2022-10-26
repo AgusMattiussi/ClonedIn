@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.enums.JobOfferStatuses;
 import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
@@ -33,6 +34,13 @@ public class Contact {
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = status;
+    }
+
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer) {
+        this.user = user;
+        this.enterprise = enterprise;
+        this.jobOffer = jobOffer;
+        this.status = JobOfferStatuses.PENDING.getStatus();
     }
 
     /* package */ Contact() {

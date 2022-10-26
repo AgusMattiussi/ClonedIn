@@ -331,7 +331,7 @@ public class EnterpriseController {
         });
 
         emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage(), LocaleContextHolder.getLocale());
-        contactService.addContact(enterprise.getId(), user.getId(), jobOfferId);
+        contactService.addContact(enterprise, user, jobOffer);
 
         return new ModelAndView("redirect:/");
     }

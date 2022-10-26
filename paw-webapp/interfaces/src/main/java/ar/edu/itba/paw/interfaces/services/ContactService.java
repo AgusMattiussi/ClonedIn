@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface ContactService {
 
-    void addContact(long enterpriseID, long userID, long jobOfferID);
+    void addContact(Enterprise enterprise, User user, JobOffer jobOffer);
 
     List<Enterprise> getEnterprisesForUser(long userID);
 

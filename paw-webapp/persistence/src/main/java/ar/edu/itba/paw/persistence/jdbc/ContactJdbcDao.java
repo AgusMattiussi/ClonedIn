@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
+@Primary
 @Repository
 public class ContactJdbcDao implements ContactDao {
 
@@ -184,6 +186,17 @@ public class ContactJdbcDao implements ContactDao {
     }
 
     @Override
+    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer) {
+        final Map<String, Object> values = new HashMap<>();
+        values.put(ENTERPRISE_ID, enterprise.getId());
+        values.put(USER_ID, user.getId());
+        values.put(JOB_OFFER_ID, jobOffer.getId());
+        values.put(STATUS, JobOfferStatuses.PENDING.getStatus());
+
+        insert.execute(values);
+    }
+
+    @Override
     public List<Enterprise> getEnterprisesForUser(long userID) {
         return template.query("SELECT e.id, e.nombre, e.email, e.contrasenia, e.ubicacion, e.idRubro, e.descripcion, e.idImagen " +
                         "FROM contactado c JOIN empresa e ON c.idEmpresa = e.id JOIN usuario u ON c.idUsuario = u.id WHERE c.idUsuario = ?",
@@ -300,16 +313,6 @@ public class ContactJdbcDao implements ContactDao {
         updateStatusForEveryone(jobOfferID, JobOfferStatuses.CLOSED.getStatus());
     }
 
-    @Override
-    public void addContact(long enterpriseID, long userID, long jobOfferID) {
-        final Map<String, Object> values = new HashMap<>();
-        values.put(ENTERPRISE_ID, enterpriseID);
-        values.put(USER_ID, userID);
-        values.put(JOB_OFFER_ID, jobOfferID);
-        values.put(STATUS, JobOfferStatuses.PENDING.getStatus());
-
-        insert.execute(values);
-    }
 
     @Override
     public long getContactsCountForEnterprise(long enterpriseID) {

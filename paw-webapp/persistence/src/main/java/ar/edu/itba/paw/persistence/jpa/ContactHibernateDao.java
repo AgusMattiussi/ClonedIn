@@ -2,16 +2,22 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
 public class ContactHibernateDao implements ContactDao {
 
-    @Override
-    public void addContact(long enterpriseID, long userID, long jobOfferID) {
+    @Autowired
+    private EntityManager em;
 
+    @Override
+    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer) {
+        Contact contact = new Contact(user, enterprise, jobOffer);
+        em.persist(contact);
     }
 
     @Override
