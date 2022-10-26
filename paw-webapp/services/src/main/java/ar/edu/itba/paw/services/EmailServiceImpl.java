@@ -40,8 +40,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ACCEPT = "acceptMsg";
 
     @Async
-    @Override
-    public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
+    void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MULTIPART_MODE, ENCODING);
@@ -101,7 +100,6 @@ public class EmailServiceImpl implements EmailService {
         sendRegisterConfirmationEmail(email, enterpriseName, locale, "");
     }
 
-    @Async
     void sendRegisterConfirmationEmail(String email, String username, Locale locale, String callToActionMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", username);
@@ -144,7 +142,6 @@ public class EmailServiceImpl implements EmailService {
         sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CANCEL, locale);
     }
 
-    @Async
     void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 

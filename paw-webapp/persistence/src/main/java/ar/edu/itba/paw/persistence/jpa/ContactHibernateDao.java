@@ -10,7 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Repository
+//@Repository
 public class ContactHibernateDao implements ContactDao {
 
     @Autowired

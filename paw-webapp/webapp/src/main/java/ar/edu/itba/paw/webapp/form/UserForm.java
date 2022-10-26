@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validators.ExistingEmail;
+import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
-    @ExistingEmail
+    @NotExistingEmail
     @Email
     @NotEmpty
     @Size(max=100)

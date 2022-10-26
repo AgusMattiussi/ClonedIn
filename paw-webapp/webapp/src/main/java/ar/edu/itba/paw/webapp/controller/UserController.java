@@ -41,9 +41,7 @@ public class UserController {
     private final SkillService skillService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
-
     private static final Map<String, Integer> monthToNumber = new HashMap<>();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired

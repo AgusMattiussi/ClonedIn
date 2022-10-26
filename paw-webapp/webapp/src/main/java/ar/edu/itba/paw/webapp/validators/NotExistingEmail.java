@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotExistingEmail {
-    String message() default "This email is not registered.";
+    String message() default "This email is already registered.";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
