@@ -54,7 +54,7 @@ public interface ContactDao {
 
     void cancelJobOfferForEveryone(long jobOfferID);
 
-    void closeJobOffer(long userID, long jobOfferID);
+    void closeJobOffer(User user, JobOffer jobOffer);
 
     void closeJobOfferForEveryone(long jobOfferID);
 
