@@ -54,7 +54,7 @@ public interface ContactService {
 
     void cancelJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOfferForEveryone(long jobOfferID);
+    void cancelJobOfferForEveryone(JobOffer jobOffer);
 
     void closeJobOffer(User user, JobOffer jobOffer);
 

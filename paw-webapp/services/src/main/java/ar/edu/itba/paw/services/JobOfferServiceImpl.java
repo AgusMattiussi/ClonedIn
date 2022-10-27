@@ -103,7 +103,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public void cancelJobOffer(long jobOfferID) {
-        jobOfferDao.cancelJobOffer(jobOfferID);
+    public void cancelJobOffer(JobOffer jobOffer) {
+        jobOfferDao.cancelJobOffer(jobOffer);
     }
 }

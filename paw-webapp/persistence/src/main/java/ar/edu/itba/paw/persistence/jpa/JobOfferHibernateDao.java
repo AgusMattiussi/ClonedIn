@@ -160,8 +160,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public void cancelJobOffer(long jobOfferID) {
-        updateJobOfferAvailability(jobOfferID, JobOfferAvailability.CANCELLED);
-        contactDao.cancelJobOfferForEveryone(jobOfferID);
+    public void cancelJobOffer(JobOffer jobOffer) {
+        updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CANCELLED);
+        contactDao.cancelJobOfferForEveryone(jobOffer);
     }
 }

@@ -177,6 +177,14 @@ public class ContactHibernateDao implements ContactDao {
         query.executeUpdate();
     }
 
+    private void updateJobOfferStatusForEveryone(JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+        Query query = em.createQuery("UPDATE Contact SET status = :status WHERE user = :user AND jobOffer = :jobOffer");
+        query.setParameter("status", jobOfferStatus.getStatus());
+        query.setParameter("jobOffer", jobOffer);
+
+        query.executeUpdate();
+    }
+
     @Override
     public void acceptJobOffer(User user, JobOffer jobOffer) {
         updateJobOfferStatus(user, jobOffer, JobOfferStatus.ACCEPTED);
@@ -193,8 +201,8 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public void cancelJobOfferForEveryone(long jobOfferID) {
-
+    public void cancelJobOfferForEveryone(JobOffer jobOffer) {
+        updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CANCELLED);
     }
 
     @Override
