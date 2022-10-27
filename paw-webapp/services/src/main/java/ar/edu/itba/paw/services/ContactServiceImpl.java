@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Primary
 @Service
@@ -121,8 +122,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public String getStatus(long userID, long jobOfferID) {
-        return contactDao.getStatus(userID, jobOfferID);
+    public Optional<String> getStatus(User user, JobOffer jobOffer) {
+        return contactDao.getStatus(user, jobOffer);
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ContactHibernateDao implements ContactDao {
@@ -158,8 +159,12 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public String getStatus(long userID, long jobOfferID) {
-        return null;
+    public Optional<String> getStatus(User user, JobOffer jobOffer) {
+        TypedQuery<String> query = em.createQuery("SELECT c.status FROM Contact c WHERE c.user = :user AND c.jobOffer = :jobOffer", String.class);
+        query.setParameter("jobOffer", jobOffer);
+        query.setParameter("user", user);
+
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     @Override

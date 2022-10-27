@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.*;
 import java.util.List;
+import java.util.Optional;
 
 public interface ContactDao {
 
@@ -43,7 +44,7 @@ public interface ContactDao {
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
-    String getStatus(long userID, long jobOfferID);
+    Optional<String> getStatus(User user, JobOffer jobOffer);
 
     void acceptJobOffer(long userID, long jobOfferID);
 
