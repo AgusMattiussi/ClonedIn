@@ -10,7 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-//@Repository
+@Repository
 public class ContactHibernateDao implements ContactDao {
 
     @Autowired
@@ -60,6 +60,56 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer) {
+        return null;
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize) {
         return null;
     }
 
