@@ -50,7 +50,7 @@ public interface ContactDao {
 
     void rejectJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOffer(long userID, long jobOfferID);
+    void cancelJobOffer(User user, JobOffer jobOffer);
 
     void cancelJobOfferForEveryone(long jobOfferID);
 

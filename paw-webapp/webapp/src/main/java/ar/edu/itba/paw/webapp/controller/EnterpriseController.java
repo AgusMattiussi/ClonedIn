@@ -154,7 +154,7 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
 
-        contactService.cancelJobOffer(userId, jobOfferId);
+        contactService.cancelJobOffer(user, jobOffer);
         emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());

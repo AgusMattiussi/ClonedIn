@@ -188,8 +188,8 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public void cancelJobOffer(long userID, long jobOfferID) {
-
+    public void cancelJobOffer(User user, JobOffer jobOffer) {
+        updateJobOfferStatus(user, jobOffer, JobOfferStatus.CANCELLED);
     }
 
     @Override
