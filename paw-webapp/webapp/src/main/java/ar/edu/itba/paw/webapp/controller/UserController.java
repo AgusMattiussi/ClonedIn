@@ -144,11 +144,11 @@ public class UserController {
         });
 
         if(answer==0) {
-            contactService.rejectJobOffer(user.getId(), jobOfferId);
+            contactService.rejectJobOffer(user, jobOffer);
             emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
         }
         else {
-            contactService.acceptJobOffer(user.getId(), jobOfferId);
+            contactService.acceptJobOffer(user, jobOffer);
             emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
         }
 

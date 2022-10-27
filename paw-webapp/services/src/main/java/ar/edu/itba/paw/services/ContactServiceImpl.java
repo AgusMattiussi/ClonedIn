@@ -127,13 +127,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void acceptJobOffer(long userID, long jobOfferID) {
-        contactDao.acceptJobOffer(userID, jobOfferID);
+    public void acceptJobOffer(User user, JobOffer jobOffer) {
+        contactDao.acceptJobOffer(user, jobOffer);
     }
 
     @Override
-    public void rejectJobOffer(long userID, long jobOfferID) {
-        contactDao.rejectJobOffer(userID, jobOfferID);
+    public void rejectJobOffer(User user, JobOffer jobOffer) {
+        contactDao.rejectJobOffer(user, jobOffer);
     }
 
     @Override

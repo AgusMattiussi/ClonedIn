@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
-import ar.edu.itba.paw.models.enums.JobOfferStatuses;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.jdbc.ContactJdbcDao;
 import org.junit.Assert;

@@ -2,16 +2,14 @@ package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.enums.JobOfferStatuses;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -189,7 +187,7 @@ public class ContactJdbcDao {
         values.put(ENTERPRISE_ID, enterprise.getId());
         values.put(USER_ID, user.getId());
         values.put(JOB_OFFER_ID, jobOffer.getId());
-        values.put(STATUS, JobOfferStatuses.PENDING.getStatus());
+        values.put(STATUS, JobOfferStatus.PENDING.getStatus());
 
         insert.execute(values);
     }
@@ -283,32 +281,32 @@ public class ContactJdbcDao {
 
     
     public void acceptJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, JobOfferStatuses.ACCEPTED.getStatus());
+        updateStatus(userID, jobOfferID, JobOfferStatus.ACCEPTED.getStatus());
     }
 
     
     public void rejectJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, JobOfferStatuses.DECLINED.getStatus());
+        updateStatus(userID, jobOfferID, JobOfferStatus.DECLINED.getStatus());
     }
 
     
     public void cancelJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, JobOfferStatuses.CANCELLED.getStatus());
+        updateStatus(userID, jobOfferID, JobOfferStatus.CANCELLED.getStatus());
     }
 
     
     public void cancelJobOfferForEveryone(long jobOfferID) {
-        updateStatusForEveryone(jobOfferID, JobOfferStatuses.CANCELLED.getStatus());
+        updateStatusForEveryone(jobOfferID, JobOfferStatus.CANCELLED.getStatus());
     }
 
     
     public void closeJobOffer(long userID, long jobOfferID) {
-        updateStatus(userID, jobOfferID, JobOfferStatuses.CLOSED.getStatus());
+        updateStatus(userID, jobOfferID, JobOfferStatus.CLOSED.getStatus());
     }
 
     
     public void closeJobOfferForEveryone(long jobOfferID) {
-        updateStatusForEveryone(jobOfferID, JobOfferStatuses.CLOSED.getStatus());
+        updateStatusForEveryone(jobOfferID, JobOfferStatus.CLOSED.getStatus());
     }
 
 

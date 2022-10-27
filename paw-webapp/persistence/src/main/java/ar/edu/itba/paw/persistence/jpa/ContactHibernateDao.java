@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -167,14 +168,23 @@ public class ContactHibernateDao implements ContactDao {
         return Optional.ofNullable(query.getSingleResult());
     }
 
-    @Override
-    public void acceptJobOffer(long userID, long jobOfferID) {
+    private void updateJobOfferStatus(User user, JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+        Query query = em.createQuery("UPDATE Contact SET status = :status WHERE user = :user AND jobOffer = :jobOffer");
+        query.setParameter("status", jobOfferStatus.getStatus());
+        query.setParameter("user", user);
+        query.setParameter("jobOffer", jobOffer);
 
+        query.executeUpdate();
     }
 
     @Override
-    public void rejectJobOffer(long userID, long jobOfferID) {
+    public void acceptJobOffer(User user, JobOffer jobOffer) {
+        updateJobOfferStatus(user, jobOffer, JobOfferStatus.ACCEPTED);
+    }
 
+    @Override
+    public void rejectJobOffer(User user, JobOffer jobOffer) {
+        updateJobOfferStatus(user, jobOffer, JobOfferStatus.DECLINED);
     }
 
     @Override

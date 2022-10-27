@@ -48,9 +48,9 @@ public interface ContactService {
 
     Optional<String> getStatus(User user, JobOffer jobOffer);
 
-    void acceptJobOffer(long userID, long jobOfferID);
+    void acceptJobOffer(User user, JobOffer jobOffer);
 
-    void rejectJobOffer(long userID, long jobOfferID);
+    void rejectJobOffer(User user, JobOffer jobOffer);
 
     void cancelJobOffer(long userID, long jobOfferID);
 
