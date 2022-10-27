@@ -113,12 +113,20 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user) {
-        return null;
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+        query.setParameter("user", user);
+        query.setParameter("enterprise", enterprise);
+        return query.getResultList();
     }
 
     @Override
     public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize) {
-        return null;
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+        query.setParameter("user", user);
+        query.setParameter("enterprise", enterprise);
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+
+        return query.getResultList();
     }
 
     @Override
