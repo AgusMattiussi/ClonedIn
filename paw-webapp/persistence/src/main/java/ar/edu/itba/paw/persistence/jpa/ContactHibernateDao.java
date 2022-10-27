@@ -131,14 +131,23 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer) {
-        return null;
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+        query.setParameter("jobOffer", jobOffer);
+        query.setParameter("enterprise", enterprise);
+        return query.getResultList();
     }
 
     @Override
     public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize) {
-        return null;
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+        query.setParameter("jobOffer", jobOffer);
+        query.setParameter("enterprise", enterprise);
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+
+        return query.getResultList();
     }
 
+    // FIXME: Puede no funcionar
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID", Long.class);
