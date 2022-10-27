@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.*;
-
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 public interface ContactDao {
