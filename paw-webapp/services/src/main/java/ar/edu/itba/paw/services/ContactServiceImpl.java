@@ -152,8 +152,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void closeJobOfferForEveryone(long jobOfferID) {
-        contactDao.closeJobOfferForEveryone(jobOfferID);
+    public void closeJobOfferForEveryone(JobOffer jobOffer) {
+        contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override

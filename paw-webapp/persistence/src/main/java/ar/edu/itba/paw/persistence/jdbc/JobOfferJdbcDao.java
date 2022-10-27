@@ -166,9 +166,9 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
-    public void closeJobOffer(long jobOfferID) {
-        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOfferID);
-        contactDao.closeJobOfferForEveryone(jobOfferID);
+    public void closeJobOffer(JobOffer jobOffer) {
+        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOffer.getId());
+        contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
 

@@ -70,7 +70,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> getAllJobOffers() {
-        return em.createQuery("FROM JobOffer j", JobOffer.class).getResultList();
+        return em.createQuery("SELECT j FROM JobOffer j", JobOffer.class).getResultList();
     }
 
     @Override
@@ -154,9 +154,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public void closeJobOffer(long jobOfferID) {
-        updateJobOfferAvailability(jobOfferID, JobOfferAvailability.CLOSED);
-        contactDao.closeJobOfferForEveryone(jobOfferID);
+    public void closeJobOffer(JobOffer jobOffer) {
+        updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CLOSED);
+        contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override

@@ -98,8 +98,8 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public void closeJobOffer(long jobOfferID) {
-        jobOfferDao.closeJobOffer(jobOfferID);
+    public void closeJobOffer(JobOffer jobOffer) {
+        jobOfferDao.closeJobOffer(jobOffer);
     }
 
     @Override

@@ -211,8 +211,8 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public void closeJobOfferForEveryone(long jobOfferID) {
-
+    public void closeJobOfferForEveryone(JobOffer jobOffer) {
+        updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CLOSED);
     }
 
     @Override
