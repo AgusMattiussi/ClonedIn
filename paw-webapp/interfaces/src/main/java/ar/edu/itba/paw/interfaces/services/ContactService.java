@@ -23,6 +23,26 @@ public interface ContactService {
 
     List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
 
+    List<Contact> getContactsForUser(User user);
+
+    List<Contact> getContactsForUser(User user, int page, int pageSize);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize);
+
+    List<Contact> getContactsForJobOffer(JobOffer jobOffer);
+
+    List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize);
+
+    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user);
+
+    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize);
+
+    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer);
+
+    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize);
+
     boolean alreadyContacted(long userID, long jobOfferID);
 
     String getStatus(long userID, long jobOfferID);

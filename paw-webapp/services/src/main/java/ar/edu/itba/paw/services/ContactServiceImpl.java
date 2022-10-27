@@ -66,6 +66,56 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public List<Contact> getContactsForUser(User user) {
+        return contactDao.getContactsForUser(user);
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, int page, int pageSize) {
+        return contactDao.getContactsForUser(user, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise) {
+        return contactDao.getContactsForEnterprise(enterprise);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
+        return contactDao.getContactsForEnterprise(enterprise, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer) {
+        return contactDao.getContactsForJobOffer(jobOffer);
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
+        return contactDao.getContactsForJobOffer(jobOffer, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user) {
+        return contactDao.getContactsForEnterpriseAndUser(enterprise, user);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize) {
+        return contactDao.getContactsForEnterpriseAndUser(enterprise, user, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer) {
+        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize) {
+        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer, page, pageSize);
+    }
+
+    @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
         return contactDao.alreadyContacted(userID, jobOfferID);
     }
