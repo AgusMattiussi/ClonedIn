@@ -22,6 +22,10 @@ public interface ContactService {
 
     List<Contact> getContactsForUser(User user, int page, int pageSize);
 
+    List<Contact> getContactsForUser(User user, String status);
+
+    List<Contact> getContactsForUser(User user, String status, int page, int pageSize);
+
     List<Contact> getContactsForEnterprise(Enterprise enterprise);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize);
