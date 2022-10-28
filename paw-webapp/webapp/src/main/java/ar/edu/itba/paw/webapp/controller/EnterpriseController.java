@@ -65,22 +65,23 @@ public class EnterpriseController {
         final List<User> usersList;
         final int itemsPerPage = 8;
         final int usersCount;
+        StringBuilder path = new StringBuilder();
 
         if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
                     filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
             usersCount = userService.getUsersCountByFilters(filterForm.getCategory(), filterForm.getLocation(),
                     filterForm.getEducationLevel());
+            path.append("?category=").append(filterForm.getCategory())
+                    .append("&location=").append(filterForm.getLocation())
+                    .append("&educationLevel=").append(filterForm.getEducationLevel());
         }
         else {
             //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
             usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
             usersCount = usersList.size();
+            path.append("?term=").append(searchForm.getTerm());
         }
-
-        StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory())
-                        .append("&location=").append(filterForm.getLocation())
-                        .append("&educationLevel=").append(filterForm.getEducationLevel());
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -201,6 +202,7 @@ public class EnterpriseController {
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
+        mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;

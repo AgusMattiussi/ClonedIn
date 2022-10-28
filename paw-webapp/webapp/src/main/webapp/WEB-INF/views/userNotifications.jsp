@@ -181,7 +181,7 @@
                 </c:forEach>
                 <!-- Pagination -->
                 <jsp:include page="../components/pagination.jsp">
-                    <jsp:param name="path" value="notificationsUser/${user.id}/"/>
+                    <jsp:param name="path" value="/notificationsUser/${user.id}/?"/>
                     <jsp:param name="currentPage" value="${currentPage}" />
                     <jsp:param name="pages" value="${pages}" />
                 </jsp:include>

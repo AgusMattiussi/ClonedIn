@@ -154,7 +154,7 @@
                     </table>
                         <!-- Pagination -->
                         <jsp:include page="../components/pagination.jsp">
-                            <jsp:param name="path" value="contactsEnterprise/${enterpriseId}/"/>
+                            <jsp:param name="path" value="/contactsEnterprise/${enterpriseId}/?"/>
                             <jsp:param name="currentPage" value="${currentPage}" />
                             <jsp:param name="pages" value="${pages}" />
                         </jsp:include>
