@@ -78,7 +78,6 @@ public class UserHibernateDao implements UserDao {
         return em.createQuery("FROM User u", User.class).getResultList();
     }
 
-    //FIXME: Ojo, esta hasheada?
     @Override
     public void changePassword(String email, String password) {
         Query query = em.createQuery("UPDATE User SET password = :password WHERE email = :email");
@@ -132,9 +131,33 @@ public class UserHibernateDao implements UserDao {
         return (List<User>) query.getResultList();
     }
 
-    //TODO: Una vez que funcione todo, resolver los filtros
     @Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
+
+        filterQuery = buildFilterQuery(filterQuery, categoryId, location, educationLevel);
+        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
+
+        Query query = em.createNativeQuery(filterQuery.toString(), User.class);
+        query.setParameter("offset", pageSize * page);
+        query.setParameter("limit", pageSize);
+        return (List<User>) query.getResultList();
+    }
+
+    @Override
+    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel) {
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT COUNT(*) FROM usuario WHERE visibilidad=1");
+
+        filterQuery = buildFilterQuery(filterQuery, categoryId, location, educationLevel);
+
+        Query query = em.createNativeQuery(filterQuery.toString());
+        BigInteger bi = (BigInteger) query.getSingleResult();
+        return bi.intValue();
+    }
+
+    private StringBuilder buildFilterQuery(StringBuilder query, String categoryId, String location, String educationLevel){
         int catId;
         try {
             catId = Integer.parseInt(categoryId);
@@ -142,25 +165,17 @@ public class UserHibernateDao implements UserDao {
             catId = UNEXISTING_CATEGORY_ID;
         }
         Object[] sanitizedInputs = new Object[]{catId, location, educationLevel};
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
 
         if(!categoryId.isEmpty())
-            filterQuery.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
+            query.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
 
         if(!location.isEmpty())
-            filterQuery.append(" AND ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
+            query.append(" AND ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
 
         if(!educationLevel.isEmpty())
-            filterQuery.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
+            query.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
 
-        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
-
-        Query query = em.createNativeQuery(filterQuery.toString(), User.class);
-
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        return (List<User>) query.getResultList();
+        return query;
     }
 
     @Override

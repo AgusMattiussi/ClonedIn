@@ -147,6 +147,11 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel) {
+        return null;
+    }
+
+    @Override
     public List<User> getUsersList(int page, int pageSize) {
         return template.query("SELECT * FROM usuario OFFSET ? LIMIT ? ",
                 new Object[]{ pageSize * page, pageSize }, USER_MAPPER);

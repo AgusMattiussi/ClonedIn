@@ -68,6 +68,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel) {
+        return userDao.getUsersCountByFilters(categoryId, location, educationLevel);
+    }
+
+    @Override
     public List<User> getUsersList(int page, int pageSize) {
         return userDao.getUsersList(page, pageSize);
     }
