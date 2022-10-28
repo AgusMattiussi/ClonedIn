@@ -78,9 +78,14 @@ public class EnterpriseController {
             usersCount = usersList.size();
         }
 
+        StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory())
+                        .append("&location=").append(filterForm.getLocation())
+                        .append("&educationLevel=").append(filterForm.getEducationLevel());
+
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
+        mav.addObject("path", path.toString());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
