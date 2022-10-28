@@ -61,6 +61,7 @@ public interface ContactService {
     void closeJobOfferForEveryone(JobOffer jobOffer);
 
     long getContactsCountForEnterprise(long enterpriseID);
+    long getContactsCountForEnterprise(Enterprise enterprise);
 
     long getContactsCountForUser(long userID);
 

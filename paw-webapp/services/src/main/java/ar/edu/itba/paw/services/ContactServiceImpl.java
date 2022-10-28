@@ -160,6 +160,11 @@ public class ContactServiceImpl implements ContactService {
     public long getContactsCountForEnterprise(long enterpriseID) {
         return contactDao.getContactsCountForEnterprise(enterpriseID);
     }
+
+    @Override
+    public long getContactsCountForEnterprise(Enterprise enterprise) {
+        return contactDao.getContactsCountForEnterprise(enterprise);
+    }
     @Override
     public long getContactsCountForUser(long userID) {
         return contactDao.getContactsCountForUser(userID);

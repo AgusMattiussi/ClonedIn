@@ -58,6 +58,8 @@ public interface ContactDao {
 
     void closeJobOfferForEveryone(JobOffer jobOffer);
 
+    long getContactsCountForEnterprise(Enterprise enterprise);
+
     long getContactsCountForEnterprise(long enterpriseID);
 
     long getContactsCountForUser(long userID);
