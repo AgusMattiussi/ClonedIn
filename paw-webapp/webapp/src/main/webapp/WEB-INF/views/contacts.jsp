@@ -18,31 +18,76 @@
             <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
                 <h5 class="row ml-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
                 <div class="row d-flex ml-2 mr-2">
-                    <a href="<c:url value="?status=aceptada"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="aceptada"/>
-                        </button>
-                    </a>
-                    <a href="<c:url value="?status=rechazada"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="rechazada"/>
-                        </button>
-                    </a>
-                    <a href="<c:url value="?status=pendiente"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="pendiente"/>
-                        </button>
-                    </a>
-                    <a href="<c:url value="?status=cerrada"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="cerrada"/>
-                        </button>
-                    </a>
-                    <a href="<c:url value="?status=cancelada"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="cancelada"/>
-                        </button>
-                    </a>
+                    <c:choose>
+                        <c:when test = "${status == 'aceptada'}">
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
+                                <spring:message code="aceptada"/>
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="?status=aceptada"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                                    <spring:message code="aceptada"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test = "${status == 'rechazada'}">
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
+                                <spring:message code="rechazada"/>
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="?status=rechazada"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                                    <spring:message code="rechazada"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test = "${status == 'pendiente'}">
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
+                                <spring:message code="pendiente"/>
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="?status=pendiente"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                                    <spring:message code="pendiente"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test = "${status == 'cerrada'}">
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
+                                <spring:message code="cerrada"/>
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="?status=cerrada"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                                    <spring:message code="cerrada"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test = "${status == 'cancelada'}">
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
+                                <spring:message code="cancelada"/>
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="?status=cancelada"/>">
+                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
+                                    <spring:message code="cancelada"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
                     <a href="<c:url value="?"/>">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                             <spring:message code="notificationsNOFilter"/>

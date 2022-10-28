@@ -181,6 +181,7 @@ public class UserController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("jobOffers", jobOffersList);
         mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
+        mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
