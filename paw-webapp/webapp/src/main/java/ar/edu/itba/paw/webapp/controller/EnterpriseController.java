@@ -185,8 +185,7 @@ public class EnterpriseController {
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
         if(request.getParameter("status") == null)
-            System.out.println("LOL");
-            //TODO: jobOffersList = contactService.getAllJobOffersWithStatusUserData(enterpriseId,page - 1, itemsPerPage);
+            contactList = contactService.getContactsForEnterprise(enterprise,page - 1, itemsPerPage);
         else
             contactList = contactService.getContactsForEnterprise(enterprise, status,page - 1, itemsPerPage);
 

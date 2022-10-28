@@ -38,10 +38,6 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    @Override
-    public List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
-        return null;
-    }
 
     @Override
     public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
