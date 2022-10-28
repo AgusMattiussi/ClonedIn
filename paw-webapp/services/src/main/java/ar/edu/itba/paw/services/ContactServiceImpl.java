@@ -171,6 +171,11 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public long getContactsCountForUser(User user) {
+        return contactDao.getContactsCountForUser(user);
+    }
+
+    @Override
     public Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList) {
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
         for (JobOffer jobOffer : jobOfferList) {

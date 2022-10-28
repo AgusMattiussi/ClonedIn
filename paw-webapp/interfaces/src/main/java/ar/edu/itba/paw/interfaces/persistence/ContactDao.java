@@ -62,6 +62,7 @@ public interface ContactDao {
 
     long getContactsCountForEnterprise(long enterpriseID);
 
+    long getContactsCountForUser(User user);
     long getContactsCountForUser(long userID);
 
 }

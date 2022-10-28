@@ -230,7 +230,16 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
+    public long getContactsCountForUser(User user) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.user = :user", Long.class);
+        query.setParameter("user", user);
+        return query.getSingleResult();
+    }
+
+    @Override
     public long getContactsCountForUser(long userID) {
-        return 0;
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID", Long.class);
+        query.setParameter("userID", userID);
+        return (Long) query.getSingleResult();
     }
 }

@@ -65,6 +65,8 @@ public interface ContactService {
 
     long getContactsCountForUser(long userID);
 
+    long getContactsCountForUser(User user);
+
     Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList);
 
 }
