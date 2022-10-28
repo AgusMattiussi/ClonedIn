@@ -103,7 +103,7 @@
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
             <div class="container">
                 <c:choose>
-                    <c:when test = "${jobOffers.size() == 0}">
+                    <c:when test = "${contactList.size() == 0}">
                         <h4 class="mt-5 mb-5"><spring:message code="noContactsMsg"/></h4>
                     </c:when>
                     <c:otherwise>
@@ -117,10 +117,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="contact" items="${jobOffers}">
+                            <c:forEach var="contact" items="${contactList}">
                                 <tr>
-                                    <td><c:out value="${contact.position}"/></td>
-                                    <c:set var="categoryName" value="${contact.category.name}"/>
+                                    <td><c:out value="${contact.jobOffer.position}"/></td>
+                                    <c:set var="categoryName" value="${contact.jobOffer.category.name}"/>
                                     <td>
                                         <c:choose>
                                             <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
@@ -133,15 +133,15 @@
 
                                     </td>
                                     <td>
-                                        <a href="<c:url value="/profileUser/${contact.userId}"/>" class="text-decoration-none">
-                                            <c:out value="${contact.userName}"/>
+                                        <a href="<c:url value="/profileUser/${contact.user.id}"/>" class="text-decoration-none">
+                                            <c:out value="${contact.user.name}"/>
                                         </a>
                                     </td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
                                     <c:if test="${statusName == 'pendiente'}">
-                                        <c:set var="contactId" value="${contact.id}"/>
-                                        <c:set var="contactUserId" value="${contact.userId}"/>
+                                        <c:set var="contactId" value="${contact.jobOffer.id}"/>
+                                        <c:set var="contactUserId" value="${contact.user.id}"/>
                                         <td>
                                             <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal">
                                                 <spring:message code="contactsCancelBtn"/>

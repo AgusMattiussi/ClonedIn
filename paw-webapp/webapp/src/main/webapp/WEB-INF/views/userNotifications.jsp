@@ -102,15 +102,15 @@
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
     <div class="container">
         <c:choose>
-            <c:when test = "${jobOffers.size() == 0}">
+            <c:when test = "${contactList.size() == 0}">
                 <h5 class="mt-5 mb-5"><spring:message code="noNotificationsMsg"/></h5>
             </c:when>
             <c:otherwise>
-                <c:forEach var="job" items="${jobOffers}">
+                <c:forEach var="contact" items="${contactList}">
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><c:out value="${job.enterpriseName} | ${job.position}"/></h5>
-                            <c:set var="jobCategoryName" value="${job.category.name}"/>
+                            <h5><c:out value="${contact.enterprise.name} | ${contact.jobOffer.position}"/></h5>
+                            <c:set var="jobCategoryName" value="${contact.jobOffer.category.name}"/>
                             <c:if test="${jobCategoryName.compareTo('No-Especificado') != 0}">
                             <span class="badge badge-pill badge-success p-2"><spring:message code="${jobCategoryName}"/></span>
                             </c:if>
@@ -120,13 +120,13 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsMode"/></h5>
-                                        <p class="card-text"><c:out value="${job.modality}"/></p>
+                                        <p class="card-text"><c:out value="${contact.jobOffer.modality}"/></p>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSalary"/></h5>
-                                        <c:set var="salary" value="${job.salary}"/>
+                                        <c:set var="salary" value="${contact.jobOffer.salary}"/>
                                         <c:choose>
                                             <c:when test="${salary == null}">
                                                 <spring:message code="profileInfoNotSpecified"/>
@@ -140,10 +140,10 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-                                            <c:if test="${jobOffersSkillMap[job.id].size() == 0}">
+                                            <c:if test="${jobOffersSkillMap[contact.jobOffer.id].size() == 0}">
                                                 <p><spring:message code="profileInfoNotSpecified"/></p>
                                             </c:if>
-                                            <c:forEach items="${jobOffersSkillMap[job.id]}" var="skill">
+                                            <c:forEach items="${jobOffersSkillMap[contact.jobOffer.id]}" var="skill">
                                                 <p><c:out value="${skill.description}"/></p>
                                             </c:forEach>
                                     </div>
@@ -151,10 +151,10 @@
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">
-                                            <spring:message code="notificationsStatus"/><spring:message code="${job.status}"/>
+                                            <spring:message code="notificationsStatus"/><spring:message code="${contact.status}"/>
                                         </h5>
-                                        <c:if test="${job.status == 'pendiente'}">
-                                            <c:set var="jobOfferId" value="${job.id}"/>
+                                        <c:if test="${contact.status == 'pendiente'}">
+                                            <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
 <%--                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >--%>
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
                                                     <spring:message code="notificationsAccept"/>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <c:set var="desc" value="${job.description}"/>
+                                <c:set var="desc" value="${contact.jobOffer.description}"/>
                                 <c:if test="${desc.compareTo('') != 0}">
                                     <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                     <p class="card-text">${desc}</p>

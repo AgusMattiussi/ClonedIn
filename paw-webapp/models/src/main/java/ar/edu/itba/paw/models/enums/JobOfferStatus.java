@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.enums;
 
-public enum JobOfferStatuses {
+public enum JobOfferStatus {
     PENDING("pendiente"),
     CLOSED("cerrada"),
     CANCELLED("cancelada"),
@@ -9,7 +9,7 @@ public enum JobOfferStatuses {
 
     private final String status;
 
-    JobOfferStatuses(String status) {
+    JobOfferStatus(String status) {
         this.status = status;
     }
 

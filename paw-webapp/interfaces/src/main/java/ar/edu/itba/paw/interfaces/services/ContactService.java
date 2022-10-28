@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ContactService {
 
@@ -13,36 +14,56 @@ public interface ContactService {
 
     List<User> getUsersForEnterprise(Enterprise enterprise);
 
-    List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId);
+    List<Contact> getContactsForUser(User user);
 
-    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status);
+    List<Contact> getContactsForUser(User user, int page, int pageSize);
 
-    List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, String status);
 
-    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
+    List<Contact> getContactsForUser(User user, String status, int page, int pageSize);
 
-    List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
+    List<Contact> getContactsForEnterprise(Enterprise enterprise);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, String status);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize);
+
+
+    List<Contact> getContactsForJobOffer(JobOffer jobOffer);
+
+    List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize);
+
+    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user);
+
+    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize);
+
+    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer);
+
+    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize);
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
-    String getStatus(long userID, long jobOfferID);
+    Optional<String> getStatus(User user, JobOffer jobOffer);
 
-    void acceptJobOffer(long userID, long jobOfferID);
+    void acceptJobOffer(User user, JobOffer jobOffer);
 
-    void rejectJobOffer(long userID, long jobOfferID);
+    void rejectJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOffer(long userID, long jobOfferID);
+    void cancelJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOfferForEveryone(long jobOfferID);
+    void cancelJobOfferForEveryone(JobOffer jobOffer);
 
-    void closeJobOffer(long userID, long jobOfferID);
+    void closeJobOffer(User user, JobOffer jobOffer);
 
-    void closeJobOfferForEveryone(long jobOfferID);
+    void closeJobOfferForEveryone(JobOffer jobOffer);
 
     long getContactsCountForEnterprise(long enterpriseID);
+    long getContactsCountForEnterprise(Enterprise enterprise);
 
     long getContactsCountForUser(long userID);
 
-    Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList);
+    long getContactsCountForUser(User user);
 
 }

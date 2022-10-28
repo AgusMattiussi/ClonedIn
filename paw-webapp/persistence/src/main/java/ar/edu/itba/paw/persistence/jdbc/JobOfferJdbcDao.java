@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModalities;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,6 +44,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
     private CategoryDao categoryDao;
     private ContactDao contactDao;
     private EnterpriseDao enterpriseDao;
+    private JobOfferDao jobOfferDao;
 
     private final RowMapper<JobOffer> JOB_OFFER_MAPPER = ((resultSet, rowNum) -> {
         long categoryID = resultSet.getLong(CATEGORY_ID);
@@ -66,7 +68,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
 
 
     @Autowired
-    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao, ContactDao contactDao, EnterpriseDao enterpriseDao){
+    public JobOfferJdbcDao(final DataSource ds, CategoryDao categoryDao, ContactDao contactDao, EnterpriseDao enterpriseDao, JobOfferDao jobOfferDao){
         this.template = new JdbcTemplate(ds);
         this.insert = new SimpleJdbcInsert(ds)
                 .withTableName(JOB_OFFER_TABLE)
@@ -74,6 +76,7 @@ public class JobOfferJdbcDao implements JobOfferDao {
         this.categoryDao = categoryDao;
         this.contactDao = contactDao;
         this.enterpriseDao = enterpriseDao;
+        this.jobOfferDao = jobOfferDao;
     }
 
 
@@ -163,14 +166,15 @@ public class JobOfferJdbcDao implements JobOfferDao {
     }
 
     @Override
-    public void closeJobOffer(long jobOfferID) {
-        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOfferID);
-        contactDao.closeJobOfferForEveryone(jobOfferID);
+    public void closeJobOffer(JobOffer jobOffer) {
+        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CLOSED.getStatus(), jobOffer.getId());
+        contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
+
     @Override
-    public void cancelJobOffer(long jobOfferID) {
-        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CANCELLED.getStatus(), jobOfferID);
-        contactDao.cancelJobOfferForEveryone(jobOfferID);
+    public void cancelJobOffer(JobOffer jobOffer) {
+        template.update("UPDATE ofertaLaboral SET disponible = ? WHERE id = ?", JobOfferAvailability.CANCELLED.getStatus(), jobOffer.getId());
+        contactDao.cancelJobOfferForEveryone(jobOffer);
     }
 }

@@ -13,12 +13,12 @@ public class JobOfferSkill {
     //TODO: chequear mapeo de relaciones
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOferta")
     private JobOffer jobOffer;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idAptitud")
     private Skill skill;
 

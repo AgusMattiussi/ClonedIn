@@ -34,8 +34,8 @@ public interface JobOfferDao {
     //TODO: Una vez que funcione todo, resolver los filtros
     List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
 
-    void closeJobOffer(long jobOfferID);
+    void closeJobOffer(JobOffer jobOffer);
 
-    void cancelJobOffer(long jobOfferID);
+    void cancelJobOffer(JobOffer jobOffer);
 
 }
