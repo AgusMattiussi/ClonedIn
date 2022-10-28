@@ -29,6 +29,16 @@ public class Enterprise {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
     private Category category;
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "empleados")
+    private String workers;
+
+    @Column(name = "año")
+    private Integer year;
+
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(name = "link")
+    private String link;
 
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "descripcion")
@@ -38,19 +48,37 @@ public class Enterprise {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    @Override
+    public String toString() {
+        return "Enterprise{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", category=" + category +
+                ", workers=" + workers +
+                ", year=" + year +
+                ", link='" + link + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 
-    public Enterprise(Long id, String name, String email, String password, String location, Category category, String description, Image image) {
+    public Enterprise(Long id, String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.location = location;
         this.category = category;
+        this.workers = workers;
+        this.year = year;
+        this.link = link;
         this.description = description;
         this.image = image;
     }
-    public Enterprise(String name, String email, String password, String location, Category category, String description, Image image) {
-        this(null, name, email, password, location, category, description, image);
+    public Enterprise(String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
+        this(null, name, email, password, location, category, workers, year, link, description, image);
     }
 
     /* package */ Enterprise() {
@@ -81,6 +109,19 @@ public class Enterprise {
         return category;
     }
 
+    public String getWorkers() {
+        return workers;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+
     public String getDescription() {
         return description;
     }
@@ -89,17 +130,6 @@ public class Enterprise {
         return image;
     }
 
-    @Override
-    public String toString() {
-        return "Enterprise{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", location='" + location + '\'' +
-                ", category=" + category.toString() +
-                ", description='" + description + '\'' +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

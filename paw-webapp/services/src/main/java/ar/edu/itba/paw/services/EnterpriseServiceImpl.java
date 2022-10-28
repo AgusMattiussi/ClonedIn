@@ -30,8 +30,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
-        return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, categoryName, description);
+    public Enterprise create(String email, String name, String password, String location, String categoryName, String workers, Integer year, String link, String description) {
+        return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, categoryName, workers, year, link, description);
     }
 
     @Override
@@ -62,6 +62,21 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public void updateDescription(long enterpriseID, String newDescription) {
         enterpriseDao.updateDescription(enterpriseID, newDescription);
+    }
+
+    @Override
+    public void updateWorkers(long enterpriseID, String newWorkers) {
+        enterpriseDao.updateWorkers(enterpriseID, newWorkers);
+    }
+
+    @Override
+    public void updateYear(long enterpriseID, Integer newYear) {
+        enterpriseDao.updateYear(enterpriseID, newYear);
+    }
+
+    @Override
+    public void updateLink(long enterpriseID, String newLink) {
+        enterpriseDao.updateLink(enterpriseID, newLink);
     }
 
     @Override

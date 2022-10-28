@@ -31,7 +31,7 @@
                         <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/uploadEnterpriseProfileImage/${enterprise.id}"/>">
                                 <button class="btn btn-block waves-effect mb-2" style="white-space:normal; background-color: #459F78; color: white;">
-                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn"/>
+                                    <i class="bi bi-plus-square pr-2"></i><spring:message code="imageFormBtn2"/>
                                 </button>
                             </a>
                         </sec:authorize>
@@ -68,6 +68,41 @@
                                 </c:when>
                                 <c:otherwise>
                                     <c:out value="${location}"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                        <c:set var="workers" value="${enterprise.workers}"/>
+                        <p class="card-text"><spring:message code="profileWorkers"/>
+                            <c:choose>
+                                <c:when test="${workers.compareTo('') == 0}">
+                                    <spring:message code="profileInfoNotSpecified"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:out value="${workers}"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                        <c:set var="year" value="${enterprise.year}"/>
+                        <p class="card-text"><spring:message code="profileYear"/>
+                            <c:choose>
+                                <c:when test="${year != null}">
+                                    <spring:message code="profileInfoNotSpecified"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:out value="${year}"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                        <c:set var="link" value="${enterprise.link}"/>
+                        <p class="card-text"><spring:message code="profileLink"/>
+                            <c:choose>
+                                <c:when test="${link.compareTo('') == 0}">
+                                    <spring:message code="profileInfoNotSpecified"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="<c:url value="${link}"/>" target="_blank" class="text-decoration-none">
+                                        <c:out value="${link}"/>
+                                    </a>
                                 </c:otherwise>
                             </c:choose>
                         </p>

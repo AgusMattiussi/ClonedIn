@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import java.util.Optional;
 
 public interface EnterpriseDao {
-    Enterprise create(String email, String name, String password,  String location, String categoryName, String description);
+    Enterprise create(String email, String name, String password,  String location, String categoryName, String workers, Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);
 
@@ -17,6 +17,12 @@ public interface EnterpriseDao {
     boolean enterpriseExists(String email);
 
     void updateName(long enterpriseID, String newName);
+
+    void updateWorkers(long enterpriseID, String newWorkers);
+
+    void updateYear(long enterpriseID, Integer newYear);
+
+    void updateLink(long enterpriseID, String newLink);
 
     void updateDescription(long enterpriseID, String newDescription);
 
