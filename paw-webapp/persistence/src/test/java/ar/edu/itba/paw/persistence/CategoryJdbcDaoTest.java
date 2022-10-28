@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.jdbc.CategoryJdbcDao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
