@@ -33,8 +33,8 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public List<Education> findByUserId(long userID) {
-        return educationDao.findByUserId(userID);
+    public List<Education> findByUser(User user) {
+        return educationDao.findByUser(user);
     }
 
     @Override

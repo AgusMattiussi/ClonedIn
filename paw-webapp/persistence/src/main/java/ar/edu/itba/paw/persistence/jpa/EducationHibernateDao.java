@@ -46,11 +46,10 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
-    public List<Education> findByUserId(long userID) {
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
-        final TypedQuery<Education> query = em.createQuery("FROM Education AS e WHERE e.user = :user " +
-                "ORDER BY e.yearFrom DESC, e.monthFrom DESC", Education.class);
+    public List<Education> findByUser(User user) {
+        TypedQuery<Education> query = em.createQuery("SELECT e FROM Education e WHERE e.user = :user", Education.class);
         query.setParameter("user", user);
+
         return query.getResultList();
     }
 

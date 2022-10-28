@@ -12,7 +12,7 @@ public interface EducationService {
 
     Optional<Education> findById(long educationID);
 
-    List<Education> findByUserId(long userID);
+    List<Education> findByUser(User user);
 
     void deleteEducation(long educationId);
 }
