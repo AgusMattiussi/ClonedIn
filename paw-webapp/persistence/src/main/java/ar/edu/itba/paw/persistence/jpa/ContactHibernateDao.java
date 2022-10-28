@@ -39,11 +39,6 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
-        return null;
-    }
-
-    @Override
     public List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
         return null;
     }
@@ -85,6 +80,24 @@ public class ContactHibernateDao implements ContactDao {
     public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
         query.setParameter("enterprise", enterprise);
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status) {
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize) {
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", status);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
 
         return query.getResultList();

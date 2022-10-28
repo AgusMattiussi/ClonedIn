@@ -14,8 +14,6 @@ public interface ContactService {
 
     List<User> getUsersForEnterprise(Enterprise enterprise);
 
-    List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status);
-
     List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize);
 
     List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
@@ -29,6 +27,11 @@ public interface ContactService {
     List<Contact> getContactsForEnterprise(Enterprise enterprise);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, String status);
+
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize);
+
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer);
 

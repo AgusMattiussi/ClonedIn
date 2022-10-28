@@ -42,11 +42,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
-        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize, status);
-    }
-
-    @Override
     public List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
         return contactDao.getAllJobOffersWithStatusUserData(enterpriseID, page, pageSize);
     }
@@ -78,6 +73,16 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
+        return contactDao.getContactsForEnterprise(enterprise, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status) {
+        return contactDao.getContactsForEnterprise(enterprise, status);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize) {
         return contactDao.getContactsForEnterprise(enterprise, page, pageSize);
     }
 
