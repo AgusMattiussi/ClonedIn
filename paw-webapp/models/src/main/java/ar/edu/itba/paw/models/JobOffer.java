@@ -2,7 +2,10 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "ofertaLaboral")
@@ -36,6 +39,9 @@ public class JobOffer {
 
     @Column(name = "disponible")
     private String available;
+
+    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.EAGER)
+    private Set<JobOfferSkill> jobOfferSkillSet;
 
     public JobOffer(Long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.id = id;
@@ -97,6 +103,14 @@ public class JobOffer {
 
     public String getAvailable() {
         return available;
+    }
+
+    public Set<JobOfferSkill> getJobOfferSkillSet() {
+        return jobOfferSkillSet;
+    }
+
+    public List<Skill> getSkills() {
+        return jobOfferSkillSet.stream().map(JobOfferSkill::getSkill).collect(Collectors.toList());
     }
 
     @Override

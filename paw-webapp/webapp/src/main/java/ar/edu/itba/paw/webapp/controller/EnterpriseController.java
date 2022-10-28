@@ -120,7 +120,13 @@ public class EnterpriseController {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
         });
-        jobOfferService.closeJobOffer(jobOfferId);
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new JobOfferNotFoundException();
+        });
+
+        jobOfferService.closeJobOffer(jobOffer);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
@@ -133,7 +139,13 @@ public class EnterpriseController {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
         });
-        jobOfferService.cancelJobOffer(jobOfferId);
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new JobOfferNotFoundException();
+        });
+
+        jobOfferService.cancelJobOffer(jobOffer);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
@@ -156,7 +168,7 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
 
-        contactService.cancelJobOffer(userId, jobOfferId);
+        contactService.cancelJobOffer(user, jobOffer);
         emailService.sendCancelJobOfferEmail(user, enterprise.getName(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
@@ -170,19 +182,20 @@ public class EnterpriseController {
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("contacts");
         final int itemsPerPage = 12;
-        List<JobOfferStatusUserData> jobOffersList;
+        List<Contact> contactList = new ArrayList<>();
+
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
         if(request.getParameter("status") == null)
-            jobOffersList = contactService.getAllJobOffersWithStatusUserData(enterpriseId,page - 1, itemsPerPage);
+            contactList = contactService.getContactsForEnterprise(enterprise,page - 1, itemsPerPage);
         else
-            jobOffersList = contactService.getJobOffersWithStatusUserData(enterpriseId,page - 1, itemsPerPage, status);
+            contactList = contactService.getContactsForEnterprise(enterprise, status,page - 1, itemsPerPage);
 
-        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : jobOffersList.size();
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
 
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", jobOffersList);
-        mav.addObject("status", status);
+        mav.addObject("contactList", contactList);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;

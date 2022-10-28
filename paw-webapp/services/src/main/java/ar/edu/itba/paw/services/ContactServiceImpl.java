@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Primary
 @Service
@@ -40,29 +41,75 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.getUsersForEnterprise(enterprise);
     }
 
+
     @Override
-    public List<JobOfferWithStatus> getJobOffersWithStatusForUser(long userId) {
-        return contactDao.getJobOffersWithStatusForUser(userId);
+    public List<Contact> getContactsForUser(User user) {
+        return contactDao.getContactsForUser(user);
     }
 
     @Override
-    public List<JobOfferStatusUserData> getJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize, String status) {
-        return contactDao.getJobOffersWithStatusUserData(enterpriseID, page, pageSize, status);
+    public List<Contact> getContactsForUser(User user, int page, int pageSize) {
+        return contactDao.getContactsForUser(user, page, pageSize);
     }
 
     @Override
-    public List<JobOfferStatusUserData> getAllJobOffersWithStatusUserData(long enterpriseID, int page, int pageSize) {
-        return contactDao.getAllJobOffersWithStatusUserData(enterpriseID, page, pageSize);
+    public List<Contact> getContactsForUser(User user, String status) {
+        return contactDao.getContactsForUser(user, status);
     }
 
     @Override
-    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
-        return contactDao.getJobOffersWithStatusEnterpriseData(userID, page, pageSize, status);
+    public List<Contact> getContactsForUser(User user, String status, int page, int pageSize) {
+        return contactDao.getContactsForUser(user, status, page, pageSize);
     }
 
     @Override
-    public List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
-        return contactDao.getAllJobOffersWithStatusEnterpriseData(userID, page, pageSize);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise) {
+        return contactDao.getContactsForEnterprise(enterprise);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
+        return contactDao.getContactsForEnterprise(enterprise, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status) {
+        return contactDao.getContactsForEnterprise(enterprise, status);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize) {
+        return contactDao.getContactsForEnterprise(enterprise, status, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer) {
+        return contactDao.getContactsForJobOffer(jobOffer);
+    }
+
+    @Override
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
+        return contactDao.getContactsForJobOffer(jobOffer, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user) {
+        return contactDao.getContactsForEnterpriseAndUser(enterprise, user);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize) {
+        return contactDao.getContactsForEnterpriseAndUser(enterprise, user, page, pageSize);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer) {
+        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer);
+    }
+
+    @Override
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize) {
+        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer, page, pageSize);
     }
 
     @Override
@@ -71,43 +118,48 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public String getStatus(long userID, long jobOfferID) {
-        return contactDao.getStatus(userID, jobOfferID);
+    public Optional<String> getStatus(User user, JobOffer jobOffer) {
+        return contactDao.getStatus(user, jobOffer);
     }
 
     @Override
-    public void acceptJobOffer(long userID, long jobOfferID) {
-        contactDao.acceptJobOffer(userID, jobOfferID);
+    public void acceptJobOffer(User user, JobOffer jobOffer) {
+        contactDao.acceptJobOffer(user, jobOffer);
     }
 
     @Override
-    public void rejectJobOffer(long userID, long jobOfferID) {
-        contactDao.rejectJobOffer(userID, jobOfferID);
+    public void rejectJobOffer(User user, JobOffer jobOffer) {
+        contactDao.rejectJobOffer(user, jobOffer);
     }
 
     @Override
-    public void cancelJobOffer(long userID, long jobOfferID) {
-        contactDao.cancelJobOffer(userID, jobOfferID);
+    public void cancelJobOffer(User user, JobOffer jobOffer) {
+        contactDao.cancelJobOffer(user, jobOffer);
     }
 
     @Override
-    public void cancelJobOfferForEveryone(long jobOfferID) {
-        contactDao.cancelJobOfferForEveryone(jobOfferID);
+    public void cancelJobOfferForEveryone(JobOffer jobOffer) {
+        contactDao.cancelJobOfferForEveryone(jobOffer);
     }
 
     @Override
-    public void closeJobOffer(long userID, long jobOfferID) {
-        contactDao.closeJobOffer(userID, jobOfferID);
+    public void closeJobOffer(User user, JobOffer jobOffer) {
+        contactDao.closeJobOffer(user, jobOffer);
     }
 
     @Override
-    public void closeJobOfferForEveryone(long jobOfferID) {
-        contactDao.closeJobOfferForEveryone(jobOfferID);
+    public void closeJobOfferForEveryone(JobOffer jobOffer) {
+        contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override
     public long getContactsCountForEnterprise(long enterpriseID) {
         return contactDao.getContactsCountForEnterprise(enterpriseID);
+    }
+
+    @Override
+    public long getContactsCountForEnterprise(Enterprise enterprise) {
+        return contactDao.getContactsCountForEnterprise(enterprise);
     }
     @Override
     public long getContactsCountForUser(long userID) {
@@ -115,11 +167,16 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public long getContactsCountForUser(User user) {
+        return contactDao.getContactsCountForUser(user);
+    }
+
+    /*@Override
     public Map<Long, List<Skill>> getJobOfferSkillsMapForUser(List<JobOfferStatusEnterpriseData> jobOfferList) {
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
         for (JobOffer jobOffer : jobOfferList) {
             jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));
         }
         return jobOfferSkillMap;
-    }
+    }*/
 }

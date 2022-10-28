@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "aptitud")
@@ -17,6 +18,10 @@ public class Skill {
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "descripcion")
     private String description;
+
+    @OneToMany(mappedBy = "skill")
+    private Set<JobOfferSkill> jobOfferSkillSet;
+
 
     public Skill(Long id, String description) {
         this.id = id;
@@ -45,6 +50,10 @@ public class Skill {
         if (o == null || getClass() != o.getClass()) return false;
         Skill skill = (Skill) o;
         return id.equals(skill.id) && description.equals(skill.description);
+    }
+
+    public Set<JobOfferSkill> getJobOfferSkillSet() {
+        return jobOfferSkillSet;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.enums.JobOfferStatuses;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
@@ -13,16 +13,16 @@ public class Contact {
     //TODO: chequear mapeo de relaciones
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idEmpresa")
     private Enterprise enterprise;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOferta")
     private JobOffer jobOffer;
 
@@ -40,7 +40,7 @@ public class Contact {
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
-        this.status = JobOfferStatuses.PENDING.getStatus();
+        this.status = JobOfferStatus.PENDING.getStatus();
     }
 
     /* package */ Contact() {
