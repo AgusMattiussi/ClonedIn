@@ -116,7 +116,7 @@ public class UserController {
         });
         mav.addObject("user", user);
         mav.addObject("experiences", experienceService.findByUserId(userId));
-        mav.addObject("educations", educationService.findByUserId(userId));
+        mav.addObject("educations", educationService.findByUser(user));
         mav.addObject("skills", userSkillService.getSkillsForUser(user));
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
