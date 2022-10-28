@@ -176,8 +176,13 @@ public class UserController {
         else
             contactList = contactService.getContactsForUser(user, status, page - 1, itemsPerPage);
 
-        //TODO: OneToMany
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();//TODO: contactService.getJobOfferSkillsMapForUser(contactList);
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
+
+        for (Contact contact : contactList) {
+            JobOffer contactJobOffer = contact.getJobOffer();
+            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+        }
+
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
