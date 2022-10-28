@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -12,6 +13,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Repository
 public class ContactHibernateDao implements ContactDao {
 
@@ -38,17 +40,6 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-
-    @Override
-    public List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status) {
-        return null;
-    }
-
-    @Override
-    public List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize) {
-        return null;
-    }
-
     @Override
     public List<Contact> getContactsForUser(User user) {
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
@@ -63,6 +54,20 @@ public class ContactHibernateDao implements ContactDao {
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, String status) {
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
+        query.setParameter("user", user);
+        query.setParameter("status", status);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, String status, int page, int pageSize) {
+        return null;
     }
 
     @Override

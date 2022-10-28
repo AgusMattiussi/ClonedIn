@@ -12,10 +12,6 @@ public interface ContactDao {
 
     List<User> getUsersForEnterprise(Enterprise enterprise);
 
-    List<JobOfferStatusEnterpriseData> getJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize, String status);
-
-    List<JobOfferStatusEnterpriseData> getAllJobOffersWithStatusEnterpriseData(long userID, int page, int pageSize);
-
     List<Contact> getContactsForUser(User user);
 
     List<Contact> getContactsForUser(User user, int page, int pageSize);

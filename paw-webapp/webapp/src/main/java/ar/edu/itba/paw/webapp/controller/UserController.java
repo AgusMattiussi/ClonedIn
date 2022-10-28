@@ -163,23 +163,26 @@ public class UserController {
                                           HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         final int itemsPerPage = 4;
+
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
-        List<JobOfferStatusEnterpriseData> jobOffersList;
+
+        List<Contact> contactList;
 
         if(request.getParameter("status") == null)
-            jobOffersList = contactService.getAllJobOffersWithStatusEnterpriseData(userId,page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user,page - 1, itemsPerPage);
         else
-            jobOffersList = contactService.getJobOffersWithStatusEnterpriseData(userId,page - 1, itemsPerPage, status);
+            contactList = contactService.getContactsForUser(user, status, page - 1, itemsPerPage);
 
-        Map<Long, List<Skill>> jobOfferSkillMap = contactService.getJobOfferSkillsMapForUser(jobOffersList);
-        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : jobOffersList.size();
+        //TODO: OneToMany
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();//TODO: contactService.getJobOfferSkillsMapForUser(contactList);
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
-        mav.addObject("jobOffers", jobOffersList);
+        mav.addObject("contactList", contactList);
         mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
