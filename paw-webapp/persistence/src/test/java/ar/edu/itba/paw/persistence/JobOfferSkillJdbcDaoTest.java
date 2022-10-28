@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.jdbc.JobOfferSkillJdbcDao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

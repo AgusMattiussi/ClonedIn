@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.jdbc.UserJdbcDao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
