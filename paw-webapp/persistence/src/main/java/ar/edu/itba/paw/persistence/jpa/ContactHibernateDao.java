@@ -4,20 +4,24 @@ import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 @Transactional
+@Primary
 @Repository
 public class ContactHibernateDao implements ContactDao {
 
-    @Autowired
+    @PersistenceContext
     private EntityManager em;
 
     @Override
@@ -159,11 +163,11 @@ public class ContactHibernateDao implements ContactDao {
     // FIXME: Puede no funcionar
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID", Long.class);
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID");
         query.setParameter("userID", userID);
         query.setParameter("jobOfferID", jobOfferID);
 
-        return ((Long) query.getSingleResult()) > 0;
+        return ((BigInteger) query.getSingleResult()).longValue() > 0;
     }
 
     @Override
@@ -231,9 +235,9 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public long getContactsCountForEnterprise(long enterpriseID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID", Long.class);
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID");
         query.setParameter("enterpriseID", enterpriseID);
-        return (Long) query.getSingleResult();
+        return ((BigInteger) query.getSingleResult()).longValue();
     }
 
     @Override
@@ -245,8 +249,8 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public long getContactsCountForUser(long userID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID", Long.class);
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID");
         query.setParameter("userID", userID);
-        return (Long) query.getSingleResult();
+        return ((BigInteger) query.getSingleResult()).longValue();
     }
 }
