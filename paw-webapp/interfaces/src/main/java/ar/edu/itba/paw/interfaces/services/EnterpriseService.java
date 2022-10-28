@@ -31,7 +31,7 @@ public interface EnterpriseService {
 
     void updateCategory(long enterpriseID, String newCategoryName);
 
-    void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName);
+    void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName, String newLink, Integer newYear, String newWorkers);
 
     void updateProfileImage(long enterpriseID, byte[] imageId);
 

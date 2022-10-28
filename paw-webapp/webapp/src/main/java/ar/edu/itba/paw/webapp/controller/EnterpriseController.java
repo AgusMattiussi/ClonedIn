@@ -278,7 +278,8 @@ public class EnterpriseController {
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         enterpriseService.updateEnterpriseInformation(enterprise, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
-                editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory());
+                editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory(), editEnterpriseForm.getLink(),
+                Integer.valueOf(editEnterpriseForm.getYear()), editEnterpriseForm.getWorkers());
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }
 

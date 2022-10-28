@@ -60,15 +60,15 @@
                                                         <div style="margin-left: 15px; margin-top: 1.2rem;">
                                                             <form:select path="workers" cssClass="list-dt ml-auto">
                                                                 <form:option value="No-especificado"><spring:message code="No-especificado"/></form:option>
-                                                                <form:option value="1-10"><spring:message code="range1"/></form:option>
-                                                                <form:option value="11-50"><spring:message code="range2"/></form:option>
-                                                                <form:option value="51-100"><spring:message code="range3"/></form:option>
-                                                                <form:option value="101-200"><spring:message code="range4"/></form:option>
-                                                                <form:option value="201-500"><spring:message code="range5"/></form:option>
-                                                                <form:option value="501-1000"><spring:message code="range6"/></form:option>
-                                                                <form:option value="1001-5000"><spring:message code="range7"/></form:option>
-                                                                <form:option value="5001-10000"><spring:message code="range8"/></form:option>
-                                                                <form:option value="10000+"><spring:message code="range9"/></form:option>
+                                                                <form:option value="1-10"><spring:message code="1-10"/></form:option>
+                                                                <form:option value="11-50"><spring:message code="11-50"/></form:option>
+                                                                <form:option value="51-100"><spring:message code="51-100"/></form:option>
+                                                                <form:option value="101-200"><spring:message code="101-200"/></form:option>
+                                                                <form:option value="201-500"><spring:message code="201-500"/></form:option>
+                                                                <form:option value="501-1000"><spring:message code="501-1000"/></form:option>
+                                                                <form:option value="1001-5000"><spring:message code="1001-5000"/></form:option>
+                                                                <form:option value="5001-10000"><spring:message code="5001-10000"/></form:option>
+                                                                <form:option value="10000+"><spring:message code="10001+"/></form:option>
                                                             </form:select>
                                                         </div>
                                                     </div>

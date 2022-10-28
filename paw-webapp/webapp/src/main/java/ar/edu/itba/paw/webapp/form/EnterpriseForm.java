@@ -32,7 +32,7 @@ public class EnterpriseForm {
     @NotEmpty
     private String workers;
 
-    @Pattern(regexp = "1([0-9]{3})")
+    @Pattern(regexp = "(1([0-9]{3}))?")
     private String year;
 
     @Size(max=600)
