@@ -109,7 +109,11 @@
                 <c:forEach var="contact" items="${contactList}">
                     <div class="card justify-content-center mt-2 pt-2" >
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5><c:out value="${contact.enterprise.name} | ${contact.jobOffer.position}"/></h5>
+                            <h5>
+                                <a href="<c:url value="/profileEnterprise/${contact.enterprise.id}"/>" class="text-decoration-none">
+                                    <c:out value="${contact.enterprise.name}"/>
+                                </a>
+                            <c:out value=" | ${contact.jobOffer.position}"/></h5>
                             <c:set var="jobCategoryName" value="${contact.jobOffer.category.name}"/>
                             <c:if test="${jobCategoryName.compareTo('No-Especificado') != 0}">
                             <span class="badge badge-pill badge-success p-2"><spring:message code="${jobCategoryName}"/></span>
