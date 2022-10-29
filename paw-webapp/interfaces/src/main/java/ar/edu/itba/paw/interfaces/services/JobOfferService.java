@@ -19,12 +19,12 @@ public interface JobOfferService {
 
     Optional<JobOffer> findById(long id);
 
-    List<JobOffer> findByEnterpriseId(long enterpriseID);
-    List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID);
+    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
 
-    List<JobOffer> findActiveByEnterpriseId(long enterpriseID);
+    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID);
 
-    List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
 
     Integer getJobOffersCountForEnterprise(long enterpriseID);
 

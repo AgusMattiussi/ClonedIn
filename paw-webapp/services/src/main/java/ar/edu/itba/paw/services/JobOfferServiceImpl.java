@@ -53,23 +53,23 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
-        return jobOfferDao.findByEnterpriseId(enterpriseID);
+    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID) {
+        return jobOfferDao.getJobOffersListByEnterpriseId(enterpriseID);
     }
 
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        return jobOfferDao.findByEnterpriseId(enterpriseID, page, pageSize);
+    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return jobOfferDao.getJobOffersListByEnterpriseId(enterpriseID, page, pageSize);
     }
 
     @Override
-    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID) {
-        return jobOfferDao.findActiveByEnterpriseId(enterpriseID);
+    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {
+        return jobOfferDao.getActiveJobOffersListByEnterpriseId(enterpriseID);
     }
 
     @Override
-    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        return jobOfferDao.findActiveByEnterpriseId(enterpriseID, page, pageSize);
+    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
+        return jobOfferDao.getActiveJobOffersListByEnterpriseId(enterpriseID, page, pageSize);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize) {
-        List<JobOffer> jobOfferList = findByEnterpriseId(enterpriseID, page, pageSize);
+        List<JobOffer> jobOfferList = getJobOffersListByEnterpriseId(enterpriseID, page, pageSize);
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
         for (JobOffer jobOffer : jobOfferList) {
             jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));

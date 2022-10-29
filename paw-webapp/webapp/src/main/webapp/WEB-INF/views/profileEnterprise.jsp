@@ -53,12 +53,11 @@
                                 </c:when>
                                 <c:otherwise>
                                     <sec:authorize access="hasRole('USER')">
-                                        <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
-<%--                                    <a href="<c:url value="/home?category=${enterprise.category.id}"/>">--%>
-<%--                                        <span class="badge badge-pill badge-success p-2">--%>
-<%--                                            <spring:message code="${categoryName}"/>--%>
-<%--                                        </span>--%>
-<%--                                    </a>--%>
+                                    <a href="<c:url value="/home?category=${enterprise.category.id}"/>">
+                                        <span class="badge badge-pill badge-success p-2">
+                                            <spring:message code="${categoryName}"/>
+                                        </span>
+                                    </a>
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('ENTERPRISE')">
                                         <span class="badge badge-pill badge-success p-2">
@@ -138,99 +137,176 @@
                             </a>
                         </div>
                     </sec:authorize>
-                    <c:choose>
-                        <c:when test="${jobOffers.size() > 0}">
-                            <c:forEach items="${jobOffers}" var="joboffer">
-                                <div class="card mt-2">
-                                    <div class="card-body pb-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
-                                            <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
-                                            <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
-                                                <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
-                                                <sec:authorize access="hasRole('USER')">
-<%--                                                <a href="<c:url value="/home?category=${joboffer.category.id}"/>">--%>
-<%--                                                    <span class="badge badge-pill badge-success p-2 mb-2">--%>
-<%--                                                        <spring:message code="${jobOfferCategoryName}"/>--%>
-<%--                                                    </span>--%>
-<%--                                                </a>--%>
-                                                </sec:authorize>
-                                                <sec:authorize access="hasRole('ENTERPRISE')">
+                    <sec:authorize access="hasRole('ENTERPRISE')">
+                        <c:choose>
+                            <c:when test="${jobOffers.size() > 0}">
+                                <c:forEach items="${jobOffers}" var="joboffer">
+                                    <div class="card mt-2">
+                                        <div class="card-body pb-0">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
+                                                <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
+                                                <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                                                 <span class="badge badge-pill badge-success p-2 mb-2">
                                                         <spring:message code="${jobOfferCategoryName}"/>
                                                     </span>
-                                                </sec:authorize>
-                                            </c:if>
+                                                </c:if>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="card-footer bg-white text-left">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="row">
-                                                    <h6><spring:message code="jobOfferFormSalary"/></h6>
-                                                    <c:set var="salary" value="${joboffer.salary}"/>
-                                                    <c:choose>
-                                                        <c:when test="${salary == null}">
-                                                            <spring:message code="profileInfoNotSpecified"/>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <p class="card-text">$<c:out value="${salary}"/></p>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                        <div class="card-footer bg-white text-left">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6><spring:message code="jobOfferFormSalary"/></h6>
+                                                        <c:set var="salary" value="${joboffer.salary}"/>
+                                                        <c:choose>
+                                                            <c:when test="${salary == null}">
+                                                                <spring:message code="profileInfoNotSpecified"/>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <p class="card-text">$<c:out value="${salary}"/></p>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6> <spring:message code="jobOfferFormMode"/></h6>
+                                                        <p> <c:out value="${joboffer.modality}"/> </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6> <spring:message code="jobOfferFormSkills"/></h6>
+                                                        <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
+                                                            <p><spring:message code="profileInfoNotSpecified"/></p>
+                                                        </c:if>
+                                                        <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
+                                                            <p><c:out value="${skill.description}"/></p>
+                                                        </c:forEach>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <div class="row">
-                                                    <h6> <spring:message code="jobOfferFormMode"/></h6>
-                                                    <p> <c:out value="${joboffer.modality}"/> </p>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="row">
-                                                    <h6> <spring:message code="jobOfferFormSkills"/></h6>
-                                                    <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
-                                                        <p><spring:message code="profileInfoNotSpecified"/></p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <p><c:out value="${joboffer.description}"/></p>
+                                                    <c:if test="${joboffer.available == 'Activa'}">
+                                                        <div class="d-flex flex-column">
+                                                            <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
+                                                                <spring:message code="profileEnterpriseCloseJobOfferButton"/>
+                                                                <c:set var="jobOffer" value="${joboffer.id}"/>
+                                                            </button>
+                                                        </div>
                                                     </c:if>
-                                                    <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
-                                                        <p><c:out value="${skill.description}"/></p>
-                                                    </c:forEach>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <p><c:out value="${joboffer.description}"/></p>
-                                            <sec:authorize access="hasRole('ENTERPRISE')">
-                                            <c:if test="${joboffer.available == 'Activa'}">
-                                            <div class="d-flex flex-column">
-                                                    <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
-                                                        <spring:message code="profileEnterpriseCloseJobOfferButton"/>
-                                                        <c:set var="jobOffer" value="${joboffer.id}"/>
-                                                    </button>
-                                            </div>
-                                            </c:if>
-                                            </sec:authorize>
-                                            <c:if test="${joboffer.available == 'Cerrada'}">
+                                                <c:if test="${joboffer.available == 'Cerrada'}">
                                                 <span class="badge badge-danger p-2 mb-2">
                                                     <spring:message code="profileEnterpriseCloseJobOffer"/>
                                                 </span>
-                                            </c:if>
+                                                </c:if>
+                                            </div>
                                         </div>
                                     </div>
+                                </c:forEach>
+                                <!-- Pagination -->
+                                <jsp:include page="../components/pagination.jsp">
+                                    <jsp:param name="path" value="/profileEnterprise/${enterpriseId}/?"/>
+                                    <jsp:param name="currentPage" value="${currentPage}" />
+                                    <jsp:param name="pages" value="${enterprisePages}" />
+                                </jsp:include>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="d-flex justify-content-center">
+                                    <p class="card-text"><b><spring:message code="profileEnterprise.noJobOffersMsg"/></b></p>
                                 </div>
-                            </c:forEach>
-                            <!-- Pagination -->
-                            <jsp:include page="../components/pagination.jsp">
-                                <jsp:param name="path" value="/profileEnterprise/${enterpriseId}/?"/>
-                                <jsp:param name="currentPage" value="${currentPage}" />
-                                <jsp:param name="pages" value="${pages}" />
-                            </jsp:include>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="d-flex justify-content-center">
-                                <p class="card-text"><b><spring:message code="profileEnterprise.noJobOffersMsg"/></b></p>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('USER')">
+                        <c:choose>
+                            <c:when test="${activeJobOffers.size() > 0}">
+                                <c:forEach items="${activeJobOffers}" var="joboffer">
+                                    <div class="card mt-2">
+                                        <div class="card-body pb-0">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
+                                                <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
+                                                <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
+                                                    <a href="<c:url value="/home?category=${joboffer.category.id}"/>">
+                                                        <span class="badge badge-pill badge-success p-2 mb-2">
+                                                            <spring:message code="${jobOfferCategoryName}"/>
+                                                        </span>
+                                                    </a>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white text-left">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6><spring:message code="jobOfferFormSalary"/></h6>
+                                                        <c:set var="salary" value="${joboffer.salary}"/>
+                                                        <c:choose>
+                                                            <c:when test="${salary == null}">
+                                                                <spring:message code="profileInfoNotSpecified"/>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <p class="card-text">$<c:out value="${salary}"/></p>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6> <spring:message code="jobOfferFormMode"/></h6>
+                                                        <p> <c:out value="${joboffer.modality}"/> </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6> <spring:message code="jobOfferFormSkills"/></h6>
+                                                        <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
+                                                            <p><spring:message code="profileInfoNotSpecified"/></p>
+                                                        </c:if>
+                                                        <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
+                                                            <p><c:out value="${skill.description}"/></p>
+                                                        </c:forEach>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <p><c:out value="${joboffer.description}"/></p>
+                                                <sec:authorize access="hasRole('ENTERPRISE')">
+                                                    <c:if test="${joboffer.available == 'Activa'}">
+                                                        <div class="d-flex flex-column">
+                                                            <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
+                                                                <spring:message code="profileEnterpriseCloseJobOfferButton"/>
+                                                                <c:set var="jobOffer" value="${joboffer.id}"/>
+                                                            </button>
+                                                        </div>
+                                                    </c:if>
+                                                </sec:authorize>
+                                                <c:if test="${joboffer.available == 'Cerrada'}">
+                                                <span class="badge badge-danger p-2 mb-2">
+                                                    <spring:message code="profileEnterpriseCloseJobOffer"/>
+                                                </span>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                                <!-- Pagination -->
+                                <jsp:include page="../components/pagination.jsp">
+                                    <jsp:param name="path" value="/profileEnterprise/${enterpriseId}/?"/>
+                                    <jsp:param name="currentPage" value="${currentPage}" />
+                                    <jsp:param name="pages" value="${userPages}" />
+                                </jsp:include>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="d-flex justify-content-center">
+                                    <p class="card-text"><b><spring:message code="profileEnterprise.noJobOffersMsg"/></b></p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </sec:authorize>
                 </div>
             </div>
         </div>

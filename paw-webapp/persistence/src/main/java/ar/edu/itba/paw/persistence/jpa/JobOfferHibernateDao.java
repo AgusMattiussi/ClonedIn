@@ -48,12 +48,12 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     //FIXME: Chequear que ande el count
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID) {
+    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID) {
         return em.createQuery("SELECT jo FROM JobOffer jo ", JobOffer.class).getResultList();
     }
 
     @Override
-    public List<JobOffer> findByEnterpriseId(long enterpriseID, int page, int pageSize) {
+    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
         Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID OFFSET :offset LIMIT :limit ", JobOffer.class);
         query.setParameter("offset", pageSize * page);
         query.setParameter("limit", pageSize);
@@ -62,7 +62,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID) {
+    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {
         TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.available = :active", JobOffer.class);
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         return query.getResultList();
@@ -89,7 +89,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public List<JobOffer> findActiveByEnterpriseId(long enterpriseID, int page, int pageSize) {
+    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
         Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID AND disponible = :active " +
                 "OFFSET :offset LIMIT :limit ", JobOffer.class);
         query.setParameter("offset", pageSize * page);

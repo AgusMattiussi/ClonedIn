@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -101,19 +100,21 @@ public class EnterpriseController {
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("profileEnterprise");
         final int itemsPerPage = 3;
-//        int jobOffersCount = jobOfferService.getJobOffersCountForEnterprise(enterpriseId);
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
             return new UserNotFoundException();
         });
-        List<JobOffer> jobOfferList = jobOfferService.findByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        List<JobOffer> activeJobOfferList = jobOfferService.getActiveJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
         Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterpriseId, page - 1, itemsPerPage);
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("jobOffers", jobOfferList);
+        mav.addObject("activeJobOffers", activeJobOfferList);
         mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
-        mav.addObject("pages", jobOfferList.size() / itemsPerPage + 1);
+        mav.addObject("enterprisePages", jobOfferList.size() / itemsPerPage + 1);
+        mav.addObject("userPages", activeJobOfferList.size() / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
@@ -331,7 +332,7 @@ public class EnterpriseController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         }));
-        mav.addObject("jobOffers", jobOfferService.findActiveByEnterpriseId(loggedUserID, 0, 100));
+        mav.addObject("jobOffers", jobOfferService.getActiveJobOffersListByEnterpriseId(loggedUserID, 0, 100));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }
