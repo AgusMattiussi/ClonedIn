@@ -95,8 +95,7 @@ public class EnterpriseController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
-    //@PreAuthorize("hasRole('ROLE_USER') AND isEnterpriseVisible(#enterpriseId) AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("(hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)) OR hasRole('ROLE_USER')")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
