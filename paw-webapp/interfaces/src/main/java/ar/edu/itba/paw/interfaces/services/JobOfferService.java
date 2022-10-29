@@ -13,7 +13,7 @@ public interface JobOfferService {
 
     List<JobOffer> getAllJobOffers();
 
-    Integer getJobOffersCount();
+    long getJobOffersCount();
 
     List<JobOffer> getJobOffersList(int page, int pageSize);
 

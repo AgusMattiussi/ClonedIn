@@ -38,7 +38,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public Integer getJobOffersCount() {
+    public long getJobOffersCount() {
         return jobOfferDao.getJobOffersCount();
     }
 

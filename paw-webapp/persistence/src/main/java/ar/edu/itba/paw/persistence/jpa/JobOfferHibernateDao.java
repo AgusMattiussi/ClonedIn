@@ -89,10 +89,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public Integer getJobOffersCount() {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM ofertaLaboral");
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
+    public long getJobOffersCount() {
+        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j");
+        return ((BigInteger) query.getSingleResult()).longValue();
     }
 
     @Override

@@ -24,7 +24,7 @@ public interface JobOfferDao {
 
     List<JobOffer> getAllJobOffers();
 
-    Integer getJobOffersCount();
+    long getJobOffersCount();
 
     List<JobOffer> getJobOffersList(int page, int pageSize);
 
