@@ -11,7 +11,7 @@ public interface ExperienceService {
 
     Optional<Experience> findById(long experienceId);
 
-    List<Experience> findByUserId(long userID);
+    List<Experience> findByUser(User user);
 
     void deleteExperience(long experienceId);
 }

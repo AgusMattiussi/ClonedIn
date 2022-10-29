@@ -110,10 +110,11 @@ public class UserController {
             LOGGER.error("User {} not found", loggedUser.getName());
             return new UserNotFoundException();
         });
+
         mav.addObject("user", user);
-        mav.addObject("experiences", experienceService.findByUserId(userId));
+        mav.addObject("experiences", experienceService.findByUser(user));
         mav.addObject("educations", educationService.findByUser(user));
-        mav.addObject("skills", userSkillService.getSkillsForUser(user));
+        mav.addObject("skills", user.getSkills());
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }

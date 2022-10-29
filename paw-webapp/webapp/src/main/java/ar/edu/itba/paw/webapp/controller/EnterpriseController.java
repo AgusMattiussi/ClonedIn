@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,7 +28,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
-//@Transactional
+@Transactional
 @Controller
 public class EnterpriseController {
 
@@ -187,26 +189,34 @@ public class EnterpriseController {
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
-                                           @RequestParam(value = "status",defaultValue = "") final String status,
+                                           @RequestParam(value = "status", defaultValue = "") final String status,
+                                           @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseContacts");
         final int itemsPerPage = 12;
         List<Contact> contactList;
-
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+        StringBuilder path = new StringBuilder().append("/contactsEnterprise/").append(enterpriseId);
 
-        if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForEnterprise(enterprise,FilledBy.ENTERPRISE,page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE,status,page - 1, itemsPerPage);
+        if(request.getParameter("status") == null) {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, itemsPerPage);
+            path.append("?").append(status);
+        }
+        else {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
+
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
-
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("path", path);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
@@ -216,25 +226,35 @@ public class EnterpriseController {
     @RequestMapping("/interestedEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView interestedEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                            @RequestParam(value = "status",defaultValue = "") final String status,
+                                           @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseInterested");
         final int itemsPerPage = 12;
-        List<Contact> contactList = new ArrayList<>();
+        List<Contact> contactList;
+        StringBuilder path = new StringBuilder().append("/interestedEnterprise/").append(enterpriseId);
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
-        if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForEnterprise(enterprise,FilledBy.ENTERPRISE,page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE,status,page - 1, itemsPerPage);
+        //TODO: mostrar las postulaciones generadas por los usuarios
+
+        if(request.getParameter("status") == null) {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortBy.ANY, page - 1, itemsPerPage);
+            path.append("?").append(status);
+        }
+        else {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
 
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("path", path);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
@@ -405,7 +425,6 @@ public class EnterpriseController {
     }
 
     private long getLoggerUserId(Authentication loggedUser){
-
         if(isUser(loggedUser)) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
                 LOGGER.error("User {} not found in getLoggerUserId()", loggedUser.getName());
@@ -418,6 +437,14 @@ public class EnterpriseController {
                 return new UserNotFoundException();
             });
             return enterprise.getId();
+        }
+    }
+
+    private SortBy getSortBy(int index){
+        try{
+            return SortBy.values()[index];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return SortBy.ANY;
         }
     }
 }

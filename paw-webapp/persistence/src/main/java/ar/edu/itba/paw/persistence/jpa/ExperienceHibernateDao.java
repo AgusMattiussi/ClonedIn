@@ -53,11 +53,10 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
-    public List<Experience> findByUserId(long userID) {
-        User user = userDao.findById(userID).orElseThrow(UserNotFoundException::new);
-        final TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience AS e WHERE e.user = :user " +
-                "ORDER BY e.yearFrom DESC, e.monthTo DESC", Experience.class);
+    public List<Experience> findByUser(User user) {
+        TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user", Experience.class);
         query.setParameter("user", user);
+
         return query.getResultList();
     }
 

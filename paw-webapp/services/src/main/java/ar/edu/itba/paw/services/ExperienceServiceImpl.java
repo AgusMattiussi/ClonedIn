@@ -31,9 +31,10 @@ public class ExperienceServiceImpl implements ExperienceService {
         return experienceDao.findById(experienceId);
     }
 
+
     @Override
-    public List<Experience> findByUserId(long userID) {
-        return experienceDao.findByUserId(userID);
+    public List<Experience> findByUser(User user) {
+        return experienceDao.findByUser(user);
     }
 
     @Override
