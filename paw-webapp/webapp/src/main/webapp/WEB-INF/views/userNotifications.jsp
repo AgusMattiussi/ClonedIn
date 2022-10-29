@@ -15,7 +15,7 @@
 <div class="row h-100 w-100">
     <div class="col-sm-2 sidebar">
         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-            <h5 class="row ml-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
+            <h5 class="row ml-2 mr-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
             <div class="row d-flex ml-2 mr-2 ">
                 <c:choose>
                     <c:when test = "${status == 'aceptada'}">
@@ -159,16 +159,12 @@
                                         </h5>
                                         <c:if test="${contact.status == 'pendiente'}">
                                             <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-<%--                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/1"/>" >--%>
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
-<%--                                            </a>--%>
-<%--                                            <a href="<c:url value="/answerJobOffer/${user.id}/${job.id}/0"/>" >--%>
                                                 <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#rejectJobOfferModal">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
-<%--                                            </a>--%>
                                         </c:if>
                                     </div>
                                 </div>

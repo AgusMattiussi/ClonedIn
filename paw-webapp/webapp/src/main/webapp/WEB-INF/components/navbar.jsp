@@ -43,6 +43,12 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/interestedEnterprise/${param.id}"/>">
+                            <spring:message code="navbarCandidates"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
                 </div>
             </sec:authorize>
             <sec:authorize access="hasRole('USER')">
@@ -56,19 +62,21 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
-                </div>
-                <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/profileUser/${param.id}"/>">
                             <spring:message code="navbarMyProfile"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>
-                </div>
-                <div class="d-flex">
                     <div class="nav-item" style="color: #F2F2F2">
                         <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/notificationsUser/${param.id}"/>">
                             <spring:message code="navbarNotifications"/>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item" style="color: #F2F2F2">
+                        <a class="nav-link" style="padding-top: 0.8rem; padding-left: 0.8rem" href="<c:url value="/applicationsUser/${param.id}"/>">
+                            <spring:message code="navbarApplication"/>
                             <span class="sr-only">(current)</span>
                         </a>
                     </div>

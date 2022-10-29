@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
+import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
@@ -196,6 +197,35 @@ public class EnterpriseController {
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
         if(request.getParameter("status") == null)
+            contactList = contactService.getContactsForEnterprise(enterprise,FilledBy.ENTERPRISE,page - 1, itemsPerPage);
+        else
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE,status,page - 1, itemsPerPage);
+
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
+
+
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("contactList", contactList);
+        mav.addObject("status", status);
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
+        return mav;
+    }
+
+    //FIXME: PASARLE LOS PAREMTROS CORRECTOS
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping("/interestedEnterprise/{enterpriseId:[0-9]+}")
+    public ModelAndView interestedEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
+                                           @RequestParam(value = "status",defaultValue = "") final String status,
+                                           @RequestParam(value = "page", defaultValue = "1") final int page,
+                                           HttpServletRequest request) {
+        final ModelAndView mav = new ModelAndView("interested");
+        final int itemsPerPage = 12;
+        List<Contact> contactList = new ArrayList<>();
+
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
+
+        if(request.getParameter("status") == null)
             contactList = contactService.getContactsForEnterprise(enterprise,page - 1, itemsPerPage);
         else
             contactList = contactService.getContactsForEnterprise(enterprise, status,page - 1, itemsPerPage);
@@ -366,7 +396,7 @@ public class EnterpriseController {
         });
 
         emailService.sendContactEmail(user, enterprise, jobOffer, form.getMessage(), LocaleContextHolder.getLocale());
-        contactService.addContact(enterprise, user, jobOffer);
+        contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 
         return new ModelAndView("redirect:/");
     }

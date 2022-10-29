@@ -2,7 +2,8 @@ package ar.edu.itba.paw.models.enums;
 
 public enum FilledBy {
     ENTERPRISE(0),
-    USER(1);
+    USER(1),
+    ANY(2);
 
     private final int filledBy;
 
@@ -13,4 +14,5 @@ public enum FilledBy {
     public int getFilledBy() {
         return filledBy;
     }
+
 }
