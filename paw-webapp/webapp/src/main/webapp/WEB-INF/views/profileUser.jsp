@@ -265,6 +265,7 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
+                                            <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
                                             <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
                                                 <sec:authorize access="hasRole('USER')">
                                                     <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">

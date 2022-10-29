@@ -52,11 +52,19 @@
                                     <spring:message code="profileInfoNotSpecified"/>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="<c:url value="/?category=${enterprise.category.id}&location=&educationLevel="/>">
+                                    <sec:authorize access="hasRole('USER')">
+                                        <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
+<%--                                    <a href="<c:url value="/home?category=${enterprise.category.id}"/>">--%>
+<%--                                        <span class="badge badge-pill badge-success p-2">--%>
+<%--                                            <spring:message code="${categoryName}"/>--%>
+<%--                                        </span>--%>
+<%--                                    </a>--%>
+                                    </sec:authorize>
+                                    <sec:authorize access="hasRole('ENTERPRISE')">
                                         <span class="badge badge-pill badge-success p-2">
                                             <spring:message code="${categoryName}"/>
                                         </span>
-                                    </a>
+                                    </sec:authorize>
                                 </c:otherwise>
                             </c:choose>
                         </p>
@@ -139,11 +147,19 @@
                                             <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
                                             <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
                                             <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
-                                                <a href="<c:url value="/?category=${joboffer.category.id}&location=&educationLevel="/>">
-                                                    <span class="badge badge-pill badge-success p-2 mb-2">
+                                                <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
+                                                <sec:authorize access="hasRole('USER')">
+<%--                                                <a href="<c:url value="/home?category=${joboffer.category.id}"/>">--%>
+<%--                                                    <span class="badge badge-pill badge-success p-2 mb-2">--%>
+<%--                                                        <spring:message code="${jobOfferCategoryName}"/>--%>
+<%--                                                    </span>--%>
+<%--                                                </a>--%>
+                                                </sec:authorize>
+                                                <sec:authorize access="hasRole('ENTERPRISE')">
+                                                <span class="badge badge-pill badge-success p-2 mb-2">
                                                         <spring:message code="${jobOfferCategoryName}"/>
                                                     </span>
-                                                </a>
+                                                </sec:authorize>
                                             </c:if>
                                         </div>
                                     </div>
@@ -183,24 +199,16 @@
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p><c:out value="${joboffer.description}"/></p>
+                                            <sec:authorize access="hasRole('ENTERPRISE')">
                                             <c:if test="${joboffer.available == 'Activa'}">
                                             <div class="d-flex flex-column">
                                                     <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
                                                         <spring:message code="profileEnterpriseCloseJobOfferButton"/>
                                                         <c:set var="jobOffer" value="${joboffer.id}"/>
                                                     </button>
-<%--                                                <a href="<c:url value="/cancelJobOffer/${joboffer.id}"/>" >--%>
-<%--                                                    <button class="btn btn-danger" style="margin-bottom: 0.75rem; width: 200px">--%>
-<%--                                                        <spring:message code="profileEnterpriseCancelJobOfferButton"/>--%>
-<%--                                                    </button>--%>
-<%--                                                </a>--%>
                                             </div>
                                             </c:if>
-                                            <c:if test="${joboffer.available == 'Cancelada'}">
-                                                <span class="badge badge-danger p-2 mb-2">
-                                                        <spring:message code="profileEnterpriseCancelJobOffer"/>
-                                                </span>
-                                            </c:if>
+                                            </sec:authorize>
                                             <c:if test="${joboffer.available == 'Cerrada'}">
                                                 <span class="badge badge-danger p-2 mb-2">
                                                     <spring:message code="profileEnterpriseCloseJobOffer"/>

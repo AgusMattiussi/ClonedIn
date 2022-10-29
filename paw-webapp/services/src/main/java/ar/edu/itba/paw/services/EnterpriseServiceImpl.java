@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,26 +86,38 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateCategory(long enterpriseID, String newCategoryName) {
-        enterpriseDao.updateCategory(enterpriseID, newCategoryName);
+    public void updateCategory(long enterpriseID, Category category) {
+        enterpriseDao.updateCategory(enterpriseID, category);
     }
 
     @Override
-    public void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName, String newLink, Integer newYear, String newWorkers) {
-        long enterpriseID = enterprise.getId();
-        updateName(enterpriseID, newName.isEmpty()? enterprise.getName() : newName);
-        updateDescription(enterpriseID, newDescription.isEmpty()? enterprise.getDescription() : newDescription);
-        updateLocation(enterpriseID, newLocation.isEmpty()? enterprise.getLocation() : newLocation);
-        updateCategory(enterpriseID, newCategoryName.isEmpty()? enterprise.getCategory().getName() : newCategoryName);
-        updateLink(enterpriseID, newLink.isEmpty()? enterprise.getLink() : newLink);
-        updateYear(enterpriseID, newYear==null? enterprise.getYear() : newYear);
-        updateWorkers(enterpriseID, newWorkers.isEmpty()? enterprise.getWorkers() : newWorkers);
+    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers) {
+        if(!newName.isEmpty())
+            updateName(enterpriseID, newName);
+
+        if(!newDescription.isEmpty())
+            updateDescription(enterpriseID, newDescription);
+
+        if(!newLocation.isEmpty())
+            updateLocation(enterpriseID, newLocation);
+
+        if(newCategory != null)
+            updateCategory(enterpriseID, newCategory);
+
+        if(!newLink.isEmpty())
+            updateLink(enterpriseID, newLink);
+
+        if(newYear != null)
+            updateYear(enterpriseID, newYear);
+
+        if(!newWorkers.isEmpty())
+            updateWorkers(enterpriseID, newWorkers);
+
     }
 
     @Override
-    public void updateProfileImage(long enterpriseID, byte[] imageBytes) {
-        Image newImage = imageService.uploadImage(imageBytes);
-        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, newImage.getId());
+    public void updateProfileImage(long enterpriseID, Image image) {
+        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, image);
     }
 
     @Override

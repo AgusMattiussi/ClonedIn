@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
-@Transactional
+//@Transactional
 @Controller
 public class EnterpriseController {
 
@@ -38,6 +38,7 @@ public class EnterpriseController {
     private final JobOfferService jobOfferService;
     private final ContactService contactService;
     private final JobOfferSkillService jobOfferSkillService;
+    private final ImageService imageService;
     @Autowired
     protected AuthenticationManager authenticationManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
@@ -45,7 +46,7 @@ public class EnterpriseController {
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
                                 final SkillService skillService, final EmailService emailService, final JobOfferService jobOfferService,
-                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService){
+                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService, final ImageService imageService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
@@ -54,6 +55,7 @@ public class EnterpriseController {
         this.jobOfferService = jobOfferService;
         this.contactService = contactService;
         this.jobOfferSkillService = jobOfferSkillService;
+        this.imageService = imageService;
     }
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
@@ -93,8 +95,7 @@ public class EnterpriseController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
-    //@PreAuthorize("hasRole('ROLE_USER') AND isEnterpriseVisible(#enterpriseId) AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("(hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)) OR hasRole('ROLE_USER')")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -277,10 +278,13 @@ public class EnterpriseController {
         if (errors.hasErrors()) {
             return formEditEnterprise(loggedUser, editEnterpriseForm, enterpriseId);
         }
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
-        enterpriseService.updateEnterpriseInformation(enterprise, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
-                editEnterpriseForm.getLocation(), editEnterpriseForm.getCategory(), editEnterpriseForm.getLink(),
+
+        Category category = categoryService.findByName(editEnterpriseForm.getCategory()).orElseThrow(CategoryNotFoundException::new);
+
+        enterpriseService.updateEnterpriseInformation(enterpriseId, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
+                editEnterpriseForm.getLocation(), category, editEnterpriseForm.getLink(),
                 Integer.valueOf(editEnterpriseForm.getYear()), editEnterpriseForm.getWorkers());
+
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }
 
@@ -300,7 +304,8 @@ public class EnterpriseController {
         if (errors.hasErrors()) {
             return formImage(loggedUser, imageForm, enterpriseId);
         }
-        enterpriseService.updateProfileImage(enterpriseId, imageForm.getImage().getBytes());
+        Image newImage = imageService.uploadImage(imageForm.getImage().getBytes());
+        enterpriseService.updateProfileImage(enterpriseId, newImage);
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }
 
