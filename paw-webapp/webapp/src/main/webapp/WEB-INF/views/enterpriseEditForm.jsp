@@ -25,6 +25,8 @@
                             <spring:message code="registerPassword" var="passPlaceholder"/>
                             <spring:message code="registerRepeatPassword" var="repeatpassPlaceholder"/>
                             <spring:message code="registerLocation" var="locationPlaceholder"/>
+                            <spring:message code="registerYearEnterprise" var="yearPlaceholder"/>
+                            <spring:message code="registerLinkEnterprise" var="linkPlaceholder"/>
                             <spring:message code="registerDescriptionEnterprise" var="descriptionPlaceholder"/>
                             <div class="row">
                                 <div class="col-md-12 mx-0">
@@ -51,6 +53,30 @@
                                                             </form:select>
                                                         </div>
                                                     </div>
+                                                    <div class="d-flex">
+                                                        <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="registerWorkersRequired"/></label>
+                                                        <div style="margin-left: 15px; margin-top: 1.2rem;">
+                                                            <form:select path="workers" cssClass="list-dt ml-auto">
+                                                                <form:option value="${enterprise.workers}"><spring:message code="${enterprise.workers}"/></form:option>
+                                                                <form:option value="No-especificado"><spring:message code="No-especificado"/></form:option>
+                                                                <form:option value="1-10"><spring:message code="1-10"/></form:option>
+                                                                <form:option value="11-50"><spring:message code="11-50"/></form:option>
+                                                                <form:option value="51-100"><spring:message code="51-100"/></form:option>
+                                                                <form:option value="101-200"><spring:message code="101-200"/></form:option>
+                                                                <form:option value="201-500"><spring:message code="201-500"/></form:option>
+                                                                <form:option value="501-1000"><spring:message code="501-1000"/></form:option>
+                                                                <form:option value="1001-5000"><spring:message code="1001-5000"/></form:option>
+                                                                <form:option value="5001-10000"><spring:message code="5001-10000"/></form:option>
+                                                                <form:option value="10000+"><spring:message code="10001+"/></form:option>
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
+                                                    <form:label path="year">${yearPlaceholder}</form:label>
+                                                    <form:input path="year"  placeholder="${enterprise.year}"/>
+                                                    <form:errors path="year" cssClass="formError" element="p"/>
+                                                    <form:label path="link">${linkPlaceholder}</form:label>
+                                                    <form:input path="link"  placeholder="${enterprise.link}"/>
+                                                    <form:errors path="link" cssClass="formError" element="p"/>
                                                     <form:label cssStyle="margin-left:10px; margin-top:10px;" path="aboutUs">${descriptionPlaceholder}</form:label>
                                                     <form:textarea path="aboutUs" rows="3" cssStyle="resize: none" placeholder="${enterprise.description}"/>
                                                     <form:errors path="aboutUs" cssClass="formError" element="p"/>

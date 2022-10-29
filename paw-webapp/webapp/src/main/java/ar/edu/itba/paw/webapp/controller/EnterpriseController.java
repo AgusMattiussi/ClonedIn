@@ -96,6 +96,7 @@ public class EnterpriseController {
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    //@PreAuthorize("hasRole('ROLE_USER') AND isEnterpriseVisible(#enterpriseId) AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
@@ -282,7 +283,9 @@ public class EnterpriseController {
         Category category = categoryService.findByName(editEnterpriseForm.getCategory()).orElseThrow(CategoryNotFoundException::new);
 
         enterpriseService.updateEnterpriseInformation(enterpriseId, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
-                editEnterpriseForm.getLocation(), category);
+                editEnterpriseForm.getLocation(), category, editEnterpriseForm.getLink(),
+                Integer.valueOf(editEnterpriseForm.getYear()), editEnterpriseForm.getWorkers());
+
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }
 

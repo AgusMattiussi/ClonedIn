@@ -7,7 +7,7 @@
     <%@include file="../components/imports.jsp"%>
     <!-- CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
-    <title><spring:message code="navbarNotifications"/> | ClonedIn</title>
+    <title><spring:message code="navbarMyContacts"/> | ClonedIn</title>
 </head>
 <body>
     <jsp:include page="../components/navbar.jsp">
@@ -16,7 +16,7 @@
     <div class="row h-100 w-100">
         <div class="col-sm-2 sidebar">
             <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                <h5 class="row ml-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
+                <h5 class="row ml-2 mr-2 mt-2" style="color:white"><spring:message code="notificationsFilter"/></h5>
                 <div class="row d-flex ml-2 mr-2">
                     <c:choose>
                         <c:when test = "${status == 'aceptada'}">

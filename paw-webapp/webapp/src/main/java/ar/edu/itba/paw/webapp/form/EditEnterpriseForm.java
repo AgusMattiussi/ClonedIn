@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class EditEnterpriseForm {
@@ -10,6 +11,15 @@ public class EditEnterpriseForm {
 
     @Size(max=50)
     private String location;
+
+    @NotEmpty
+    private String workers;
+
+    @Pattern(regexp = "(1([0-9]{3}))?")
+    private String year;
+
+    @Size(max=600)
+    private String link;
 
     @Size(max=600)
     private String aboutUs;
@@ -31,6 +41,30 @@ public class EditEnterpriseForm {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(String workers) {
+        this.workers = workers;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getAboutUs() {

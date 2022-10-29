@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 @Service
 public class EmailServiceImpl implements EmailService {
     @Autowired
@@ -35,6 +36,8 @@ public class EmailServiceImpl implements EmailService {
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
+
+    private static final String APPLICATION_TEMPLATE = "applicationEmail.html";
     private static final String CLOSE = "close";
     private static final String CANCEL = "cancel";
     private static final String ACCEPT = "acceptMsg";
@@ -154,6 +157,22 @@ public class EmailServiceImpl implements EmailService {
         String subject = messageSource.getMessage(action + "Mail.subject", null, locale);
 
         sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
+    }
+
+    @Async
+    @Override
+    public void sendApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale) {
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", user.getName());
+        mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("profileUrl", baseUrl + "/profileUser/" + user.getId());
+        mailMap.put("bodyMsg", messageSource.getMessage("applicationMail.bodyMsg", null, locale));
+        mailMap.put("buttonMsg", messageSource.getMessage("applicationMail.button", null, locale));
+
+        String subject = messageSource.getMessage("applicationMail.subject", null, locale);
+
+        sendEmail(enterprise.getEmail(), subject, APPLICATION_TEMPLATE, mailMap);
     }
 
 }

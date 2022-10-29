@@ -31,8 +31,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
-        return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, categoryName, description);
+    public Enterprise create(String email, String name, String password, String location, String categoryName, String workers, Integer year, String link, String description) {
+        return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, categoryName, workers, year, link, description);
     }
 
     @Override
@@ -66,6 +66,21 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    public void updateWorkers(long enterpriseID, String newWorkers) {
+        enterpriseDao.updateWorkers(enterpriseID, newWorkers);
+    }
+
+    @Override
+    public void updateYear(long enterpriseID, Integer newYear) {
+        enterpriseDao.updateYear(enterpriseID, newYear);
+    }
+
+    @Override
+    public void updateLink(long enterpriseID, String newLink) {
+        enterpriseDao.updateLink(enterpriseID, newLink);
+    }
+
+    @Override
     public void updateLocation(long enterpriseID, String newLocation) {
         enterpriseDao.updateLocation(enterpriseID, newLocation);
     }
@@ -76,7 +91,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory) {
+    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers) {
         if(!newName.isEmpty())
             updateName(enterpriseID, newName);
 
@@ -88,6 +103,16 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
         if(newCategory != null)
             updateCategory(enterpriseID, newCategory);
+
+        if(!newLink.isEmpty())
+            updateLink(enterpriseID, newLink);
+
+        if(newYear != null)
+            updateYear(enterpriseID, newYear);
+
+        if(!newWorkers.isEmpty())
+            updateWorkers(enterpriseID, newWorkers);
+
     }
 
     @Override

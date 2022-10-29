@@ -39,10 +39,10 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, String categoryName, String description) {
+    public Enterprise create(String email, String name, String password, String location, String categoryName, String workers, Integer year, String link, String description) {
         Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
 
-        final Enterprise enterprise = new Enterprise(name, email, password, location, category, description, DEFAULT_IMAGE);
+        final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers, year, link, description, DEFAULT_IMAGE);
         em.persist(enterprise);
         return enterprise;
     }
@@ -78,6 +78,30 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     public void updateName(long enterpriseID, String newName) {
         Query query = em.createQuery("UPDATE Enterprise SET name = :newName WHERE id = :enterpriseID");
         query.setParameter("newName", newName);
+        query.setParameter("enterpriseID", enterpriseID);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void updateWorkers(long enterpriseID, String newWorkers) {
+        Query query = em.createQuery("UPDATE Enterprise SET workers = :newWorkers WHERE id = :enterpriseID");
+        query.setParameter("newWorkers", newWorkers);
+        query.setParameter("enterpriseID", enterpriseID);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void updateYear(long enterpriseID, Integer newYear) {
+        Query query = em.createQuery("UPDATE Enterprise SET year = :newYear WHERE id = :enterpriseID");
+        query.setParameter("newYear", newYear);
+        query.setParameter("enterpriseID", enterpriseID);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void updateLink(long enterpriseID, String newLink) {
+        Query query = em.createQuery("UPDATE Enterprise SET link = :newLink WHERE id = :enterpriseID");
+        query.setParameter("newLink", newLink);
         query.setParameter("enterpriseID", enterpriseID);
         query.executeUpdate();
     }
