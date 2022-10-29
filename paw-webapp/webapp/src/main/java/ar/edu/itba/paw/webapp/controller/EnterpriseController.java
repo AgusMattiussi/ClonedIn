@@ -189,7 +189,7 @@ public class EnterpriseController {
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView contactsEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
-                                           @RequestParam(value = "status",defaultValue = "") final String status,
+                                           @RequestParam(value = "status", defaultValue = "") final String status,
                                            @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
@@ -200,7 +200,7 @@ public class EnterpriseController {
         StringBuilder path = new StringBuilder().append("/contactsEnterprise/").append(enterpriseId);
 
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortBy.values()[Integer.parseInt(contactOrderForm.getSortBy())],
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, getSortBy(contactOrderForm.getSortBy()),
                     page - 1, itemsPerPage);
             path.append("?").append(status);
         }
@@ -415,7 +415,6 @@ public class EnterpriseController {
     }
 
     private long getLoggerUserId(Authentication loggedUser){
-
         if(isUser(loggedUser)) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
                 LOGGER.error("User not found");
@@ -428,6 +427,14 @@ public class EnterpriseController {
                 return new UserNotFoundException();
             });
             return enterprise.getId();
+        }
+    }
+
+    private SortBy getSortBy(int index){
+        try{
+            return SortBy.values()[index];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return SortBy.ANY;
         }
     }
 }
