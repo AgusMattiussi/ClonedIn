@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,23 +71,28 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateCategory(long enterpriseID, String newCategoryName) {
-        enterpriseDao.updateCategory(enterpriseID, newCategoryName);
+    public void updateCategory(long enterpriseID, Category category) {
+        enterpriseDao.updateCategory(enterpriseID, category);
     }
 
     @Override
-    public void updateEnterpriseInformation(Enterprise enterprise, String newName, String newDescription, String newLocation, String newCategoryName) {
-        long enterpriseID = enterprise.getId();
-        updateName(enterpriseID, newName.isEmpty()? enterprise.getName() : newName);
-        updateDescription(enterpriseID, newDescription.isEmpty()? enterprise.getDescription() : newDescription);
-        updateLocation(enterpriseID, newLocation.isEmpty()? enterprise.getLocation() : newLocation);
-        updateCategory(enterpriseID, newCategoryName.isEmpty()? enterprise.getCategory().getName() : newCategoryName);
+    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory) {
+        if(!newName.isEmpty())
+            updateName(enterpriseID, newName);
+
+        if(!newDescription.isEmpty())
+            updateDescription(enterpriseID, newDescription);
+
+        if(!newLocation.isEmpty())
+            updateLocation(enterpriseID, newLocation);
+
+        if(newCategory != null)
+            updateCategory(enterpriseID, newCategory);
     }
 
     @Override
-    public void updateProfileImage(long enterpriseID, byte[] imageBytes) {
-        Image newImage = imageService.uploadImage(imageBytes);
-        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, newImage.getId());
+    public void updateProfileImage(long enterpriseID, Image image) {
+        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, image);
     }
 
     @Override

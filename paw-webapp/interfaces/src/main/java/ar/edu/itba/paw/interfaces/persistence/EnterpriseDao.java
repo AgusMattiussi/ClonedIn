@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.Image;
 
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ public interface EnterpriseDao {
 
     void updateLocation(long enterpriseID, String newLocation);
 
-    void updateCategory(long enterpriseID, String newCategoryName);
+    void updateCategory(long enterpriseID, Category newCategory);
 
-    void updateEnterpriseProfileImage(long enterpriseID, long imageId);
+    void updateEnterpriseProfileImage(long enterpriseID, Image image);
 }

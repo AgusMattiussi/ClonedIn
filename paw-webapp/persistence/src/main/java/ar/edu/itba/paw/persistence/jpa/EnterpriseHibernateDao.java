@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.util.Optional;
 
 @Primary
@@ -68,10 +69,9 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
 
     @Override
     public boolean enterpriseExists(String email) {
-//        Query query = em.createNativeQuery("SELECT COUNT(*) FROM empresa WHERE email = :email", Boolean.class);
-//        query.setParameter("email", email);
-//        return (boolean) query.getSingleResult();
-        return findByEmail(email).isPresent();
+        Query query = em.createQuery("SELECT COUNT(e) FROM Enterprise e WHERE e.email = :email");
+        query.setParameter("email", email);
+        return ((BigInteger) query.getSingleResult()).longValue() > 0;
     }
 
     @Override
@@ -98,22 +98,16 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
         query.executeUpdate();
     }
 
-    //FIXME: Cambiar a Category newCategory?
     @Override
-    public void updateCategory(long enterpriseID, String newCategoryName) {
-        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-
+    public void updateCategory(long enterpriseID, Category newCategory) {
         Query query = em.createQuery("UPDATE Enterprise SET category = :newCategory WHERE id = :enterpriseID");
-        query.setParameter("newCategory", category);
+        query.setParameter("newCategory", newCategory);
         query.setParameter("enterpriseID", enterpriseID);
         query.executeUpdate();
     }
 
-    // FIXME: Image o imageID?
     @Override
-    public void updateEnterpriseProfileImage(long enterpriseID, long imageId) {
-        Image image = imageDao.getImage(imageId).orElseThrow(ImageNotFoundException::new);
-
+    public void updateEnterpriseProfileImage(long enterpriseID, Image image) {
         Query query = em.createQuery("UPDATE Enterprise SET image = :image WHERE id = :enterpriseID");
         query.setParameter("image", image);
         query.setParameter("enterpriseID", enterpriseID);
