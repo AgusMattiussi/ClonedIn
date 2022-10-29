@@ -451,8 +451,7 @@ public class UserController {
         if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);
         }
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        userService.updateUserInformation(user, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+        userService.updateUserInformation(userId, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
                 editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }

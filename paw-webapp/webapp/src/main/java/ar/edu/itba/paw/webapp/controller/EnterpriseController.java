@@ -192,7 +192,7 @@ public class EnterpriseController {
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseContacts");
         final int itemsPerPage = 12;
-        List<Contact> contactList = new ArrayList<>();
+        List<Contact> contactList;
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
@@ -212,7 +212,6 @@ public class EnterpriseController {
         return mav;
     }
 
-    //FIXME: PASARLE LOS PAREMTROS CORRECTOS
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/interestedEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView interestedEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,

@@ -46,7 +46,7 @@ public interface UserService {
 
     void updateEducationLevel(long userID, String newEducationLevel);
 
-    void updateUserInformation(User user, String newName, String newDescription, String newLocation, String newPosition,
+    void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
                                String newCategoryName, String newEducationLevel);
 
     void hideUserProfile(long userID);
