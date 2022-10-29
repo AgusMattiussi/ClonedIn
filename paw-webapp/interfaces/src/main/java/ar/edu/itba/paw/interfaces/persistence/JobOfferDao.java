@@ -14,10 +14,13 @@ public interface JobOfferDao {
 
     Optional<JobOffer> findById(long id);
 
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID);
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> findByEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID);
+    List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize);
+
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise);
+
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize);
 
     List<JobOffer> getAllJobOffers();
 
@@ -25,9 +28,8 @@ public interface JobOfferDao {
 
     List<JobOffer> getJobOffersList(int page, int pageSize);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
 
-    Integer getJobOffersCountForEnterprise(long enterpriseID);
+    long getJobOffersCountForEnterprise(Enterprise enterprise);
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String name);
 

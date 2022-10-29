@@ -19,14 +19,15 @@ public interface JobOfferService {
 
     Optional<JobOffer> findById(long id);
 
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID);
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> findByEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID);
+    List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise);
 
-    Integer getJobOffersCountForEnterprise(long enterpriseID);
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize);
+
+    long getJobOffersCountForEnterprise(Enterprise enterprise);
 
     List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
 
@@ -34,7 +35,7 @@ public interface JobOfferService {
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term);
 
-    Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize);
+    Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize);
 
     void closeJobOffer(JobOffer jobOffer);
 

@@ -32,7 +32,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     @Autowired
     private ContactDao contactDao;
 
-    private static final int UNEXISTING_CATEGORY_ID = 99;
+    private static final int UNEXISTING_CATEGORY_ID = 0;
 
     @Override
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
@@ -46,27 +46,42 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return Optional.ofNullable(em.find(JobOffer.class, id));
     }
 
-    //FIXME: Chequear que ande el count
     @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID) {
-        return em.createQuery("SELECT jo FROM JobOffer jo ", JobOffer.class).getResultList();
-    }
+    public List<JobOffer> findByEnterprise(Enterprise enterprise) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
 
-    @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID OFFSET :offset LIMIT :limit ", JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("enterpriseID", enterpriseID);
-        return (List<JobOffer>) query.getResultList();
-    }
-
-    @Override
-    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.available = :active", JobOffer.class);
-        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         return query.getResultList();
     }
+
+    @Override
+    public List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
 
     @Override
     public List<JobOffer> getAllJobOffers() {
@@ -88,22 +103,13 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (List<JobOffer>) query.getResultList();
     }
 
-    @Override
-    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID AND disponible = :active " +
-                "OFFSET :offset LIMIT :limit ", JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("enterpriseID", enterpriseID);
-        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
-        return (List<JobOffer>) query.getResultList();
-    }
 
     @Override
-    public Integer getJobOffersCountForEnterprise(long enterpriseID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM ofertaLaboral");
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
+    public long getJobOffersCountForEnterprise(Enterprise enterprise) {
+        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j WHERE j.enterprise = :enterprise");
+        query.setParameter("enterprise", enterprise);
+
+        return ((BigDecimal) query.getSingleResult()).longValue();
     }
 
     //FIXME: COMO PREGUNTO POR LE NOMBRE DE LA EMPRESA
