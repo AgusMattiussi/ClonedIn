@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.exceptions.SkillNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -12,7 +11,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -79,10 +77,10 @@ public class UserController {
 
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
-    public ModelAndView Home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                                    @Valid @ModelAttribute("filtersForm") final FiltersForm filtersForm,
-                                    @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
-                                    HttpServletRequest request) {
+    public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
+                             @Valid @ModelAttribute("filtersForm") final FiltersForm filtersForm,
+                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                             HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("home");
 
         final List<JobOffer> jobOfferList;
