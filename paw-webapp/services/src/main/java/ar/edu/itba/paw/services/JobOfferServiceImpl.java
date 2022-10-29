@@ -53,14 +53,15 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID) {
-        return jobOfferDao.getJobOffersListByEnterpriseId(enterpriseID);
+    public List<JobOffer> findByEnterprise(Enterprise enterprise) {
+        return jobOfferDao.findByEnterprise(enterprise);
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        return jobOfferDao.getJobOffersListByEnterpriseId(enterpriseID, page, pageSize);
+    public List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize) {
+        return jobOfferDao.findByEnterprise(enterprise, page, pageSize);
     }
+
 
     @Override
     public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {
@@ -92,9 +93,11 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferDao.getJobOffersListByEnterprise(page, pageSize, term);
     }
 
+
+    //TODO: Eliminar este metodo horrible
     @Override
-    public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize) {
-        List<JobOffer> jobOfferList = getJobOffersListByEnterpriseId(enterpriseID, page, pageSize);
+    public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize) {
+        List<JobOffer> jobOfferList = findByEnterprise(enterprise, page, pageSize);
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
         for (JobOffer jobOffer : jobOfferList) {
             jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));

@@ -19,8 +19,9 @@ public interface JobOfferService {
 
     Optional<JobOffer> findById(long id);
 
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID);
-    List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
+    List<JobOffer> findByEnterprise(Enterprise enterprise);
+
+    List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize);
 
     List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID);
 
@@ -34,7 +35,7 @@ public interface JobOfferService {
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term);
 
-    Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(long enterpriseID, int page, int pageSize);
+    Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize);
 
     void closeJobOffer(JobOffer jobOffer);
 

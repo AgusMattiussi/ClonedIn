@@ -32,7 +32,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     @Autowired
     private ContactDao contactDao;
 
-    private static final int UNEXISTING_CATEGORY_ID = 99;
+    private static final int UNEXISTING_CATEGORY_ID = 0;
 
     @Override
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
@@ -46,20 +46,23 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return Optional.ofNullable(em.find(JobOffer.class, id));
     }
 
-    //FIXME: Chequear que ande el count
     @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID) {
-        return em.createQuery("SELECT jo FROM JobOffer jo ", JobOffer.class).getResultList();
+    public List<JobOffer> findByEnterprise(Enterprise enterprise) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+
+        return query.getResultList();
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID OFFSET :offset LIMIT :limit ", JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("enterpriseID", enterpriseID);
-        return (List<JobOffer>) query.getResultList();
+    public List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
     }
+
 
     @Override
     public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {

@@ -107,9 +107,9 @@ public class EnterpriseController {
             LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
             return new UserNotFoundException();
         });
-        List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        List<JobOffer> jobOfferList = jobOfferService.findByEnterprise(enterprise, page - 1, itemsPerPage);
         List<JobOffer> activeJobOfferList = jobOfferService.getActiveJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
-        Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterpriseId, page - 1, itemsPerPage);
+        Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterprise, page - 1, itemsPerPage);
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
