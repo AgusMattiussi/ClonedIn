@@ -105,10 +105,11 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
 
     @Override
-    public Integer getJobOffersCountForEnterprise(long enterpriseID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM ofertaLaboral");
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
+    public long getJobOffersCountForEnterprise(Enterprise enterprise) {
+        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j WHERE j.enterprise = :enterprise");
+        query.setParameter("enterprise", enterprise);
+
+        return ((BigDecimal) query.getSingleResult()).longValue();
     }
 
     //FIXME: COMO PREGUNTO POR LE NOMBRE DE LA EMPRESA

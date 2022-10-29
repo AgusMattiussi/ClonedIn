@@ -29,7 +29,7 @@ public interface JobOfferDao {
     List<JobOffer> getJobOffersList(int page, int pageSize);
 
 
-    Integer getJobOffersCountForEnterprise(long enterpriseID);
+    long getJobOffersCountForEnterprise(Enterprise enterprise);
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String name);
 

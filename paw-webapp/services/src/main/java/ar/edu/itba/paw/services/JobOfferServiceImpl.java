@@ -74,8 +74,8 @@ public class JobOfferServiceImpl implements JobOfferService {
 
 
     @Override
-    public Integer getJobOffersCountForEnterprise(long enterpriseID) {
-        return jobOfferDao.getJobOffersCountForEnterprise(enterpriseID);
+    public long getJobOffersCountForEnterprise(Enterprise enterprise) {
+        return jobOfferDao.getJobOffersCountForEnterprise(enterprise);
     }
 
     @Override
