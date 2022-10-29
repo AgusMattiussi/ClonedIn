@@ -8,13 +8,10 @@ import javax.validation.constraints.Size;
 
 public class LoginForm {
 
-    @NotEmpty
     @Email
     @ExistingEmail
-    @Size(max=100)
     private String email;
 
-    @Size(min = 6, max = 20)
     private String password;
 
     private Boolean rememberMe;
