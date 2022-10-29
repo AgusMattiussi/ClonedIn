@@ -193,6 +193,47 @@ public class UserController {
         return mav;
     }
 
+    //FIXME: PASARLE LOS PAREMTROS CORRECTOS
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping("/applicationsUser/{userId:[0-9]+}")
+    public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "status",defaultValue = "") final String status,
+                                          @RequestParam(value = "page", defaultValue = "1") final int page,
+                                          HttpServletRequest request) {
+        final ModelAndView mav = new ModelAndView("userApplications");
+        final int itemsPerPage = 4;
+
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        List<Contact> contactList;
+
+        if(request.getParameter("status") == null)
+            contactList = contactService.getContactsForUser(user,page - 1, itemsPerPage);
+        else
+            contactList = contactService.getContactsForUser(user, status, page - 1, itemsPerPage);
+
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
+
+        for (Contact contact : contactList) {
+            JobOffer contactJobOffer = contact.getJobOffer();
+            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+        }
+
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
+
+        mav.addObject("user", user);
+        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("contactList", contactList);
+        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
+        mav.addObject("status", status);
+        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("currentPage", page);
+        return mav;
+    }
+
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {

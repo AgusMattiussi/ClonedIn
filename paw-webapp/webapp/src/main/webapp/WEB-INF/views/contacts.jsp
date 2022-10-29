@@ -111,16 +111,34 @@
                         <thead>
                         <tr>
                             <th scope="col"><spring:message code="contactsEnterpriseJobOffer"/></th>
-                            <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
+                            <th scope="col"><spring:message code="contactsEnterpriseCategory2"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseName"/></th>
+                            <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
                             <th scope="col"><spring:message code="contactsEnterpriseStatus"/></th>
+                            <th/>
                         </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="contact" items="${contactList}">
                                 <tr>
                                     <td><c:out value="${contact.jobOffer.position}"/></td>
-                                    <c:set var="categoryName" value="${contact.jobOffer.category.name}"/>
+                                    <c:set var="categoryName2" value="${contact.jobOffer.category.name}"/>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${categoryName2.compareTo('No-Especificado') == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="${categoryName2}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <a href="<c:url value="/profileUser/${contact.user.id}"/>" class="text-decoration-none">
+                                            <c:out value="${contact.user.name}"/>
+                                        </a>
+                                    </td>
+                                    <c:set var="categoryName" value="${contact.user.category.name}"/>
                                     <td>
                                         <c:choose>
                                             <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
@@ -130,12 +148,6 @@
                                                 <spring:message code="${categoryName}"/>
                                             </c:otherwise>
                                         </c:choose>
-
-                                    </td>
-                                    <td>
-                                        <a href="<c:url value="/profileUser/${contact.user.id}"/>" class="text-decoration-none">
-                                            <c:out value="${contact.user.name}"/>
-                                        </a>
                                     </td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
