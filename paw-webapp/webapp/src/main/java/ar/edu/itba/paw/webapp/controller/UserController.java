@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.io.IOException;
 
-//@Transactional
+@Transactional
 @Controller
 public class UserController {
     private final UserService userService;
