@@ -22,6 +22,9 @@ public class Skill {
     @OneToMany(mappedBy = "skill")
     private Set<JobOfferSkill> jobOfferSkillSet;
 
+    @OneToMany(mappedBy = "skill")
+    private Set<UserSkill> userSkillSet;
+
 
     public Skill(Long id, String description) {
         this.id = id;
@@ -54,6 +57,10 @@ public class Skill {
 
     public Set<JobOfferSkill> getJobOfferSkillSet() {
         return jobOfferSkillSet;
+    }
+
+    public Set<UserSkill> getUserSkillSet() {
+        return userSkillSet;
     }
 
     @Override

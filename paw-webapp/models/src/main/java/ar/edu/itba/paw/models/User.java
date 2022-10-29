@@ -2,8 +2,10 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Type;
 
@@ -55,6 +57,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Experience> experiences;
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserSkill> userSkills;
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
         this.id = id;
@@ -125,6 +130,14 @@ public class User {
 
     public Set<Experience> getExperiences() {
         return experiences;
+    }
+
+    public Set<UserSkill> getUserSkillSet() {
+        return userSkills;
+    }
+
+    public List<Skill> getSkills(){
+        return userSkills.stream().map(UserSkill::getSkill).collect(Collectors.toList());
     }
 
     public int getYearsOfExperience() {
