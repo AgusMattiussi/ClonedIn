@@ -107,6 +107,8 @@
                         <form:option value="1"><spring:message code="contactOrderFormSortByJobOfferPosition"/></form:option>
                         <form:option value="2"><spring:message code="contactOrderFormSortByUserName"/></form:option>
                         <form:option value="3"><spring:message code="contactOrderFormSortByStatus"/></form:option>
+                        <form:option value="4"><spring:message code="contactOrderFormSortByDateAsc"/></form:option>
+                        <form:option value="5"><spring:message code="contactOrderFormSortByDateDesc"/></form:option>
                     </form:select>
                 </form:form>
             </div>

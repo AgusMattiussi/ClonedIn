@@ -4,7 +4,9 @@ public enum SortBy {
     ANY(0),
     JOB_OFFER_POSITION(1),
     USERNAME(2),
-    STATUS(3);
+    STATUS(3),
+    DATE_ASC(4),
+    DATE_DESC(5);
 
     private final int sortBy;
 
