@@ -88,12 +88,6 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferDao.getActiveJobOffersCount(categoryId, modality);
     }
 
-    @Override
-    public List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term) {
-        return jobOfferDao.getJobOffersListByEnterprise(page, pageSize, term);
-    }
-
-
     //TODO: Eliminar este metodo horrible
     @Override
     public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize) {

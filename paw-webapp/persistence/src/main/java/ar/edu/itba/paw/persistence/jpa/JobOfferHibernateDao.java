@@ -110,17 +110,6 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return ((BigDecimal) query.getSingleResult()).longValue();
     }
 
-    //FIXME: COMO PREGUNTO POR LE NOMBRE DE LA EMPRESA
-    @Override
-    public List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String name) {
-        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE disponible = :active AND nombre " +
-                "ILIKE CONCAT('%', :name, '%') OFFSET :offset LIMIT :limit ", JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("name", name);
-        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
-        return (List<JobOffer>) query.getResultList();
-    }
 
     @Override
     public List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {

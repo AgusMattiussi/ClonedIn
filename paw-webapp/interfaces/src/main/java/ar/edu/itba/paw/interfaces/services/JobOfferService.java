@@ -33,8 +33,6 @@ public interface JobOfferService {
 
     Integer getActiveJobOffersCount(String categoryId, String modality);
 
-    List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term);
-
     Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize);
 
     void closeJobOffer(JobOffer jobOffer);
