@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
 import java.security.InvalidParameterException;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
