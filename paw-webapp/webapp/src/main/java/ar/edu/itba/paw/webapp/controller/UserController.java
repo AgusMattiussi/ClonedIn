@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -170,9 +172,9 @@ public class UserController {
         List<Contact> contactList;
 
         if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForUser(user,page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, itemsPerPage);
         else
-            contactList = contactService.getContactsForUser(user, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
 
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
 

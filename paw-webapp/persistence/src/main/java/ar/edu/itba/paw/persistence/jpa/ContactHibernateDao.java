@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -25,70 +26,134 @@ public class ContactHibernateDao implements ContactDao {
     private EntityManager em;
 
     @Override
-    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer) {
-        Contact contact = new Contact(user, enterprise, jobOffer);
+    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
+        Contact contact = new Contact(user, enterprise, jobOffer, filledBy);
         em.persist(contact);
     }
 
     @Override
-    public List<Enterprise> getEnterprisesForUser(User user) {
-        TypedQuery<Enterprise> query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user", Enterprise.class);
+    public List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy) {
+        TypedQuery<Enterprise> query;
+
+        if (filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user", Enterprise.class);
+        else {
+            query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Enterprise.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("user", user);
         return query.getResultList();
     }
 
     @Override
-    public List<User> getUsersForEnterprise(Enterprise enterprise) {
-        TypedQuery<User> query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise", User.class);
+    public List<User> getUsersForEnterprise(Enterprise enterprise, FilledBy filledBy) {
+        TypedQuery<User> query;
+
+        if (filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise", User.class);
+        else {
+            query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", User.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
+
         query.setParameter("enterprise", enterprise);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
+
         query.setParameter("user", user);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("user", user);
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
+        query.setParameter("user", user);
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
+        query.setParameter("user", user);
+        query.setParameter("status", status);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
 
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, String status) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
-        query.setParameter("user", user);
-        query.setParameter("status", status);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy) {
+        TypedQuery<Contact> query;
 
-        return query.getResultList();
-    }
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
 
-    @Override
-    public List<Contact> getContactsForUser(User user, String status, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
-        query.setParameter("user", user);
-        query.setParameter("status", status);
-        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
         query.setParameter("enterprise", enterprise);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("enterprise", enterprise);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
 
@@ -96,16 +161,32 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("enterprise", enterprise);
         query.setParameter("status", status);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, String status, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("enterprise", enterprise);
         query.setParameter("status", status);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
@@ -114,32 +195,62 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForJobOffer(JobOffer jobOffer) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("jobOffer", jobOffer);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
+    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("jobOffer", jobOffer);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
         query.setParameter("user", user);
         query.setParameter("enterprise", enterprise);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("user", user);
         query.setParameter("enterprise", enterprise);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
@@ -148,16 +259,32 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("jobOffer", jobOffer);
         query.setParameter("enterprise", enterprise);
         return query.getResultList();
     }
 
     @Override
-    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, int page, int pageSize) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy, int page, int pageSize) {
+        TypedQuery<Contact> query;
+
+        if(filledBy.equals(FilledBy.ANY))
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
+        else {
+            query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+
         query.setParameter("jobOffer", jobOffer);
         query.setParameter("enterprise", enterprise);
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
@@ -165,7 +292,6 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    // FIXME: Puede no funcionar
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID");

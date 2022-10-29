@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
+import java.security.InvalidParameterException;
 
 @Entity
 @Table(name = "contactado")
@@ -29,18 +31,29 @@ public class Contact {
     @Column(name = "estado", length = 20, nullable = false)
     private String status;
 
-    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status) {
+    @Column(name = "creadoPor")
+    private int filledBy;
+
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status, FilledBy filledBy) {
+        if(filledBy.equals(FilledBy.ANY))
+            throw new InvalidParameterException();
+
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = status;
+        this.filledBy = filledBy.getFilledBy();
     }
 
-    public Contact(User user, Enterprise enterprise, JobOffer jobOffer) {
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy) {
+        if(filledBy.equals(FilledBy.ANY))
+            throw new InvalidParameterException();
+
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = JobOfferStatus.PENDING.getStatus();
+        this.filledBy = filledBy.getFilledBy();
     }
 
     /* package */ Contact() {
@@ -63,13 +76,18 @@ public class Contact {
         return status;
     }
 
+    public int getFilledBy() {
+        return filledBy;
+    }
+
     @Override
     public String toString() {
-        return "Contacts{" +
+        return "Contact{" +
                 "user=" + user +
                 ", enterprise=" + enterprise +
                 ", jobOffer=" + jobOffer +
                 ", status='" + status + '\'' +
+                ", filledBy=" + filledBy +
                 '}';
     }
 }
