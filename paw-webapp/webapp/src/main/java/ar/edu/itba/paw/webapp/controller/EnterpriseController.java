@@ -108,7 +108,8 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
         List<JobOffer> jobOfferList = jobOfferService.findByEnterprise(enterprise, page - 1, itemsPerPage);
-        List<JobOffer> activeJobOfferList = jobOfferService.getActiveJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
+        List<JobOffer> activeJobOfferList = jobOfferService.findActiveByEnterprise(enterprise, page - 1, itemsPerPage);
+        //TODO: BORRARRRR
         Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterprise, page - 1, itemsPerPage);
 
         mav.addObject("enterprise", enterprise);
@@ -377,11 +378,19 @@ public class EnterpriseController {
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("enterpriseSimpleContactForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+
+        Enterprise enterprise = enterpriseService.findById(loggedUserID).orElseThrow(() -> {
+            LOGGER.error("Enterprise {} not found in contactForm()", loggedUserID);
+            return new UserNotFoundException();
+        });
+
+        User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User {} not found in contactForm()", userId);
             return new UserNotFoundException();
-        }));
-        mav.addObject("jobOffers", jobOfferService.getActiveJobOffersListByEnterpriseId(loggedUserID, 0, 100));
+        });
+
+        mav.addObject("user", user);
+        mav.addObject("jobOffers", jobOfferService.findActiveByEnterprise(enterprise /*, 0, 100*/));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }

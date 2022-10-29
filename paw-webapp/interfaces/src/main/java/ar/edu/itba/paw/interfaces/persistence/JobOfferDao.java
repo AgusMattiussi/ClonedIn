@@ -18,7 +18,9 @@ public interface JobOfferDao {
 
     List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID);
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise);
+
+    List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize);
 
     List<JobOffer> getAllJobOffers();
 
@@ -26,7 +28,6 @@ public interface JobOfferDao {
 
     List<JobOffer> getJobOffersList(int page, int pageSize);
 
-    List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize);
 
     Integer getJobOffersCountForEnterprise(long enterpriseID);
 

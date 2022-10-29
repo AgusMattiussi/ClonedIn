@@ -63,13 +63,25 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return query.getResultList();
     }
 
-
     @Override
-    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.available = :active", JobOffer.class);
-        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
+    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
+
         return query.getResultList();
     }
+
+    @Override
+    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize) {
+        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status", JobOffer.class);
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
 
     @Override
     public List<JobOffer> getAllJobOffers() {
@@ -91,16 +103,6 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (List<JobOffer>) query.getResultList();
     }
 
-    @Override
-    public List<JobOffer> getActiveJobOffersListByEnterpriseId(long enterpriseID, int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM ofertaLaboral WHERE idEmpresa = :enterpriseID AND disponible = :active " +
-                "OFFSET :offset LIMIT :limit ", JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("enterpriseID", enterpriseID);
-        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
-        return (List<JobOffer>) query.getResultList();
-    }
 
     @Override
     public Integer getJobOffersCountForEnterprise(long enterpriseID) {
