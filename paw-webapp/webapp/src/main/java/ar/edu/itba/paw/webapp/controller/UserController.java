@@ -88,11 +88,9 @@ public class UserController {
         final int itemsPerPage = 4;
         final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
         StringBuilder path = new StringBuilder();
-
         jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, itemsPerPage, filterForm.getCategory(),
                 filterForm.getModality());
         path.append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
-
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
@@ -193,7 +191,6 @@ public class UserController {
         return mav;
     }
 
-    //FIXME: PASARLE LOS PAREMTROS CORRECTOS
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/applicationsUser/{userId:[0-9]+}")
     public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -211,9 +208,9 @@ public class UserController {
         List<Contact> contactList;
 
         if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForUser(user,page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.USER,page - 1, itemsPerPage);
         else
-            contactList = contactService.getContactsForUser(user, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
 
         Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
 

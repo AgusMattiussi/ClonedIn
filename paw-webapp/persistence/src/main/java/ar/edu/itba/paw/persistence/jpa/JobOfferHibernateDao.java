@@ -148,14 +148,12 @@ public class JobOfferHibernateDao implements JobOfferDao {
             catId = UNEXISTING_CATEGORY_ID;
         }
         Object[] sanitizedInputs = new Object[]{catId, modality};
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM ofertaLaboral WHERE disponible = 'Activa'");
 
         if(!categoryId.isEmpty())
-            filterQuery.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
+            query.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
 
         if(!modality.isEmpty())
-            filterQuery.append(" AND modalidad ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
+            query.append(" AND modalidad ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
 
         return query;
     }

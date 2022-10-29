@@ -114,9 +114,13 @@
                                     <c:out value="${contact.enterprise.name}"/>
                                 </a>
                             <c:out value=" | ${contact.jobOffer.position}"/></h5>
-                            <c:set var="jobCategoryName" value="${contact.jobOffer.category.name}"/>
-                            <c:if test="${jobCategoryName.compareTo('No-Especificado') != 0}">
-                            <span class="badge badge-pill badge-success p-2"><spring:message code="${jobCategoryName}"/></span>
+                            <c:set var="jobOfferCategoryName" value="${contact.jobOffer.category.name}"/>
+                            <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
+                                <a href="<c:url value="/home?category=${contact.jobOffer.category.id}"/>">
+                                   <span class="badge badge-pill badge-success p-2 mb-2">
+                                      <spring:message code="${jobOfferCategoryName}"/>
+                                   </span>
+                                </a>
                             </c:if>
                         </div>
                         <div class="card-body">
