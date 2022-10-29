@@ -15,7 +15,7 @@ public interface JobOfferService {
 
     long getJobOffersCount();
 
-    List<JobOffer> getJobOffersList(int page, int pageSize);
+    List<JobOffer> getAllJobOffers(int page, int pageSize);
 
     Optional<JobOffer> findById(long id);
 

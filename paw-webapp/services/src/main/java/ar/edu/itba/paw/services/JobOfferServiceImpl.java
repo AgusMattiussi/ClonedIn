@@ -43,8 +43,8 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersList(int page, int pageSize) {
-        return jobOfferDao.getJobOffersList(page, pageSize);
+    public List<JobOffer> getAllJobOffers(int page, int pageSize) {
+        return jobOfferDao.getAllJobOffers(page, pageSize);
     }
 
     @Override
