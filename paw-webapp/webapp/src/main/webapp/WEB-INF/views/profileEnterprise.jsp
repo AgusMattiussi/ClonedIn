@@ -46,14 +46,14 @@
                     </div>
                     <div class="card-footer bg-white">
                         <c:set var="categoryName" value="${enterprise.category.name}"/>
-                        <p class="card-text"><spring:message code="profileCategory"/>
+                        <p class="card-text"><i class="bi bi-list-ul" style="margin-right: 5px"></i><spring:message code="profileCategory"/>
                             <c:choose>
                                 <c:when test="${categoryName.compareTo('No-Especificado') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
                                 </c:when>
                                 <c:otherwise>
                                     <a href="<c:url value="/?category=${enterprise.category.id}&location=&educationLevel="/>">
-                                        <span class="badge badge-pill badge-success">
+                                        <span class="badge badge-pill badge-success p-2">
                                             <spring:message code="${categoryName}"/>
                                         </span>
                                     </a>
@@ -61,7 +61,7 @@
                             </c:choose>
                         </p>
                         <c:set var="location" value="${enterprise.location}"/>
-                        <p class="card-text"><spring:message code="profileLocation"/>
+                        <p class="card-text"><i class="bi bi-geo-alt-fill" style="margin-right: 5px"></i><spring:message code="profileLocation"/>
                             <c:choose>
                                 <c:when test="${location.compareTo('') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
@@ -72,7 +72,7 @@
                             </c:choose>
                         </p>
                         <c:set var="workers" value="${enterprise.workers}"/>
-                        <p class="card-text"><spring:message code="profileWorkers"/>
+                        <p class="card-text"><i class="bi bi-people-fill" style="margin-right: 5px"></i><spring:message code="profileWorkers"/>
                             <c:choose>
                                 <c:when test="${workers.compareTo('') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
@@ -83,9 +83,9 @@
                             </c:choose>
                         </p>
                         <c:set var="year" value="${enterprise.year}"/>
-                        <p class="card-text"><spring:message code="profileYear"/>
+                        <p class="card-text"><i class="bi bi-calendar-event" style="margin-right: 5px"></i><spring:message code="profileYear"/>
                             <c:choose>
-                                <c:when test="${year != null}">
+                                <c:when test="${year == null}">
                                     <spring:message code="profileInfoNotSpecified"/>
                                 </c:when>
                                 <c:otherwise>
@@ -94,7 +94,7 @@
                             </c:choose>
                         </p>
                         <c:set var="link" value="${enterprise.link}"/>
-                        <p class="card-text"><spring:message code="profileLink"/>
+                        <p class="card-text"><i class="bi bi-globe" style="margin-right: 5px"></i><spring:message code="profileLink"/>
                             <c:choose>
                                 <c:when test="${link.compareTo('') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>

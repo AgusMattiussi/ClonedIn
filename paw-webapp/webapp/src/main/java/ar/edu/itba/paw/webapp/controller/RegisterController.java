@@ -88,7 +88,8 @@ public class RegisterController {
             LOGGER.warn("Enterprise register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formRegisterEnterprise(enterpriseForm);
         }
-        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getWorkers(), Integer.valueOf(enterpriseForm.getYear()), enterpriseForm.getLink(),enterpriseForm.getAboutUs());
+        final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(),
+                enterpriseForm.getCategory(), enterpriseForm.getWorkers(), enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear()), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
         emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
         authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
         LOGGER.debug("A new enterprise was registered under id: {}", e.getId());
