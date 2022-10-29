@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.SortBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -147,13 +148,20 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
         else {
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
+            if(sortBy.equals(SortBy.USERNAME))
+                query = em.createQuery("SELECT c FROM Contact c JOIN c.user u WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY u.name", Contact.class);
+            else if(sortBy.equals(SortBy.STATUS))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY c.status", Contact.class);
+            else if(sortBy.equals(SortBy.JOB_OFFER_POSITION))
+                query = em.createQuery("SELECT c FROM Contact c JOIN c.jobOffer j WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY j.position", Contact.class);
+            else
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
             query.setParameter("filledBy", filledBy.getFilledBy());
         }
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.SortBy;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, int page, int pageSize);
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 

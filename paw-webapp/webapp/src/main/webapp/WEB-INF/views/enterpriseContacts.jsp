@@ -99,6 +99,17 @@
         <div class="col mr-2">
         <div class="d-flex justify-content-between mt-2 ml-4">
             <h3><spring:message code="navbarMyContacts"/></h3>
+            <div style="width: 200px">
+                <c:url value="${path}" var="getPath"/>
+                <form:form modelAttribute="contactOrderForm" action="${getPath}" method="get">
+                    <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">
+                        <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
+                        <form:option value="1"><spring:message code="contactOrderFormSortByJobOfferPosition"/></form:option>
+                        <form:option value="2"><spring:message code="contactOrderFormSortByUserName"/></form:option>
+                        <form:option value="3"><spring:message code="contactOrderFormSortByStatus"/></form:option>
+                    </form:select>
+                </form:form>
+            </div>
         </div>
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
             <div class="container">
@@ -166,7 +177,7 @@
                     </table>
                         <!-- Pagination -->
                         <jsp:include page="../components/pagination.jsp">
-                            <jsp:param name="path" value="/contactsEnterprise/${enterpriseId}/?"/>
+                            <jsp:param name="path" value="${path}&"/>
                             <jsp:param name="currentPage" value="${currentPage}" />
                             <jsp:param name="pages" value="${pages}" />
                         </jsp:include>
