@@ -14,6 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +30,7 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public void addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
-        Contact contact = new Contact(user, enterprise, jobOffer, filledBy);
+        Contact contact = new Contact(user, enterprise, jobOffer, filledBy, Date.from(Instant.now()));
         em.persist(contact);
     }
 
