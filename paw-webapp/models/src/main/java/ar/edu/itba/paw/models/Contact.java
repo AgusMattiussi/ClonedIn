@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "contactado")
@@ -34,7 +36,11 @@ public class Contact {
     @Column(name = "creadoPor")
     private int filledBy;
 
-    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status, FilledBy filledBy) {
+    @Column(name = "fecha")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status, FilledBy filledBy, Date date) {
         if(filledBy.equals(FilledBy.ANY))
             throw new InvalidParameterException();
 
@@ -43,9 +49,10 @@ public class Contact {
         this.jobOffer = jobOffer;
         this.status = status;
         this.filledBy = filledBy.getFilledBy();
+        this.date = date;
     }
 
-    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy) {
+    public Contact(User user, Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy, Date date) {
         if(filledBy.equals(FilledBy.ANY))
             throw new InvalidParameterException();
 
@@ -54,6 +61,7 @@ public class Contact {
         this.jobOffer = jobOffer;
         this.status = JobOfferStatus.PENDING.getStatus();
         this.filledBy = filledBy.getFilledBy();
+        this.date = date;
     }
 
     /* package */ Contact() {
@@ -78,6 +86,10 @@ public class Contact {
 
     public int getFilledBy() {
         return filledBy;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     @Override

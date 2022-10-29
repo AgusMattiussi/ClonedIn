@@ -16,24 +16,30 @@ public class Experience {
     @SequenceGenerator(sequenceName = "experiencia_id_seq", name = "experiencia_id_seq", allocationSize = 1)
     private Long id;
 
-    //FIXme: o @OneToMany
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idUsuario", referencedColumnName="id")
     private User user;
+
     //FIXme: check
     @Column(name = "mesDesde")
     private int monthFrom;
+
     @Column(name = "anioDesde")
     private int yearFrom;
+
     @Column(name = "mesHasta")
     private Integer monthTo;
+
     @Column(name = "anioHasta")
     private Integer yearTo;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "posicion", nullable = false)
     private String position;
+
     @Column(name = "empresa", length = 100, nullable = false)
     private String enterpriseName;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "descripcion")
     private String description;
