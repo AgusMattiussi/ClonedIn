@@ -102,7 +102,7 @@ public class EnterpriseController {
         final ModelAndView mav = new ModelAndView("enterpriseProfile");
         final int itemsPerPage = 3;
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
-            LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
+            LOGGER.error("/profile : Enterprise {} not found in profileEnterprise()", loggedUser.getName());
             return new UserNotFoundException();
         });
         List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByEnterpriseId(enterpriseId, page - 1, itemsPerPage);
@@ -127,12 +127,12 @@ public class EnterpriseController {
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in closeJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Job offer {} not found in closeJobOffer()", jobOfferId);
             return new JobOfferNotFoundException();
         });
 
@@ -146,12 +146,12 @@ public class EnterpriseController {
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Job offer {} not found in cancelJobOffer()", jobOfferId);
             return new JobOfferNotFoundException();
         });
 
@@ -166,15 +166,15 @@ public class EnterpriseController {
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-            LOGGER.error("Job Offer not found");
+            LOGGER.error("Job Offer {} not found in cancelJobOffer()", jobOfferId);
             return new JobOfferNotFoundException();
         });
         User user = userService.findById(userId).orElseThrow(() -> {
-            LOGGER.error("User not found");
+            LOGGER.error("User {} not found in cancelJobOffer()", userId);
             return new UserNotFoundException();
         });
 
@@ -245,7 +245,7 @@ public class EnterpriseController {
     public ModelAndView formJobOffer(Authentication loggedUser, @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
         final ModelAndView mav = new ModelAndView("enterpriseJobOfferForm");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in formJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         }));
         mav.addObject("categories", categoryService.getAllCategories());
@@ -260,12 +260,12 @@ public class EnterpriseController {
             return formJobOffer(loggedUser, jobOfferForm, enterpriseId);
         }
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in createJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
 
         Category category = categoryService.findByName(jobOfferForm.getCategory()).orElseThrow(() -> {
-            LOGGER.error("Category not found");
+            LOGGER.error("Category {} not found in createJobOffer()", jobOfferForm.getCategory());
             return new CategoryNotFoundException();
         });
 
@@ -293,7 +293,7 @@ public class EnterpriseController {
                                      @PathVariable("enterpriseId") final long enterpriseId) {
         ModelAndView mav = new ModelAndView("enterpriseEditForm");
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in formEditEnterprise()", loggedUser.getName());
             return new UserNotFoundException();
         });
         mav.addObject("enterprise", enterprise);
@@ -346,7 +346,7 @@ public class EnterpriseController {
         try {
             profileImage = enterpriseService.getProfileImage(imageId).orElseThrow(UserNotFoundException::new).getBytes();
         } catch (UserNotFoundException e) {
-            LOGGER.error("Error loading image {}", imageId);
+            LOGGER.error("Error loading image {} in getProfileImage()", imageId);
         }
         LOGGER.info("Profile image accessed.");
         return profileImage;
@@ -358,7 +358,7 @@ public class EnterpriseController {
         long loggedUserID = getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("enterpriseSimpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
-            LOGGER.error("User not found");
+            LOGGER.error("User {} not found in contactForm()", userId);
             return new UserNotFoundException();
         }));
         mav.addObject("jobOffers", jobOfferService.getActiveJobOffersListByEnterpriseId(loggedUserID, 0, 100));
@@ -382,15 +382,15 @@ public class EnterpriseController {
         }
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-            LOGGER.error("Job Offer not found");
+            LOGGER.error("Job Offer {} not found in contact()", jobOfferId);
             return new JobOfferNotFoundException();
         });
         Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-            LOGGER.error("Enterprise not found");
+            LOGGER.error("Enterprise {} not found in contact()", loggedUser.getName());
             return new UserNotFoundException();
         });
         User user = userService.findById(userId).orElseThrow(() -> {
-            LOGGER.error("User not found");
+            LOGGER.error("User {} not found in contact()", userId);
             return new UserNotFoundException();
         });
 
@@ -408,13 +408,13 @@ public class EnterpriseController {
 
         if(isUser(loggedUser)) {
             User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("User not found");
+                LOGGER.error("User {} not found in getLoggerUserId()", loggedUser.getName());
                 return new UserNotFoundException();
             });
             return user.getId();
         } else {
             Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("Enterprise not found");
+                LOGGER.error("Enterprise not found in getLoggerUserId()", loggedUser.getName());
                 return new UserNotFoundException();
             });
             return enterprise.getId();
