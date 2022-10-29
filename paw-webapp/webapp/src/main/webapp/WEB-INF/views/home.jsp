@@ -121,6 +121,12 @@
                                         </div>
                                     </div>
                                 </c:forEach>
+                                <!-- Pagination -->
+                                <jsp:include page="../components/pagination.jsp">
+                                    <jsp:param name="path" value="${path}&"/>
+                                    <jsp:param name="currentPage" value="${currentPage}" />
+                                    <jsp:param name="pages" value="${pages}" />
+                                </jsp:include>
                             </c:otherwise>
                         </c:choose>
                     </div>

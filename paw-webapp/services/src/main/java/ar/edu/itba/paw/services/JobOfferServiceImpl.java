@@ -78,8 +78,13 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
-        return jobOfferDao.getjobOffersListByFilters(page, pageSize, categoryId, modality);
+    public List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
+        return jobOfferDao.getJobOffersListByFilters(page, pageSize, categoryId, modality);
+    }
+
+    @Override
+    public Integer getActiveJobOffersCount(String categoryId, String modality) {
+        return jobOfferDao.getActiveJobOffersCount(categoryId, modality);
     }
 
     @Override

@@ -80,27 +80,25 @@ public class UserController {
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @Valid @ModelAttribute("filtersForm") final FiltersForm filtersForm,
+                             @Valid @ModelAttribute("filtersForm") final FiltersForm filterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("home");
-
         final List<JobOffer> jobOfferList;
+        final int itemsPerPage = 4;
+        final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
+        StringBuilder path = new StringBuilder();
 
-        final int itemsPerPage = 8;
+        jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, itemsPerPage, filterForm.getCategory(),
+                filterForm.getModality());
+        path.append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
 
-        final int jobOffersCount = jobOfferService.getJobOffersCount();
-
-        //if(request.getParameter("term") == null)
-            jobOfferList = jobOfferService.getjobOffersListByFilters(page - 1, itemsPerPage,
-                    filtersForm.getCategory(), filtersForm.getModality());
-//        else
-//            jobOfferList = jobOfferService.getJobOffersListByEnterprise(page - 1, itemsPerPage, searchForm.getTerm());
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
+        mav.addObject("path", path.toString());
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
