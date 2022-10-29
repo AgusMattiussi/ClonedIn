@@ -31,8 +31,9 @@ public interface JobOfferDao {
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String name);
 
-    //TODO: Una vez que funcione todo, resolver los filtros
-    List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
+    List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
+
+    Integer getActiveJobOffersCount(String categoryId, String modality);
 
     void closeJobOffer(JobOffer jobOffer);
 

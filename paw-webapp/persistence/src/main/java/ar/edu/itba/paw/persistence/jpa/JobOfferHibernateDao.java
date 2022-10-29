@@ -118,9 +118,29 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (List<JobOffer>) query.getResultList();
     }
 
-    //TODO: Una vez que funcione todo, resolver los filtros
     @Override
-    public List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
+    public List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT * FROM ofertaLaboral WHERE disponible = 'Activa'");
+        filterQuery = buildFilterQuery(filterQuery, categoryId, modality);
+        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
+        Query query = em.createNativeQuery(filterQuery.toString(), JobOffer.class);
+        query.setParameter("offset", pageSize * page);
+        query.setParameter("limit", pageSize);
+        return (List<JobOffer>) query.getResultList();
+    }
+
+    @Override
+    public Integer getActiveJobOffersCount(String categoryId, String modality) {
+        StringBuilder filterQuery = new StringBuilder();
+        filterQuery.append("SELECT COUNT(*) FROM ofertaLaboral WHERE disponible = 'Activa'");
+        filterQuery = buildFilterQuery(filterQuery, categoryId, modality);
+        Query query = em.createNativeQuery(filterQuery.toString());
+        BigInteger bi = (BigInteger) query.getSingleResult();
+        return bi.intValue();
+    }
+
+    private StringBuilder buildFilterQuery(StringBuilder query, String categoryId, String modality){
         int catId;
         try {
             catId = Integer.parseInt(categoryId);
@@ -137,13 +157,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         if(!modality.isEmpty())
             filterQuery.append(" AND modalidad ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
 
-        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
-
-        Query query = em.createNativeQuery(filterQuery.toString(), JobOffer.class);
-
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        return (List<JobOffer>) query.getResultList();
+        return query;
     }
 
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){

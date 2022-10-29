@@ -28,7 +28,9 @@ public interface JobOfferService {
 
     Integer getJobOffersCountForEnterprise(long enterpriseID);
 
-    List<JobOffer> getjobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
+    List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality);
+
+    Integer getActiveJobOffersCount(String categoryId, String modality);
 
     List<JobOffer> getJobOffersListByEnterprise(int page, int pageSize, String term);
 

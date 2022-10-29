@@ -75,7 +75,7 @@
                             </div>
                             <div class="card-footer bg-white">
                                 <c:set var="position" value="${user.currentPosition}"/>
-                                <p class="card-text"><i class="bi bi-person-workspace" style="margin-right: 5px"></i><spring:message code="profilePosition"/>
+                                <p class="card-text"><i class="bi bi-briefcase" style="margin-right: 5px"></i><spring:message code="profilePosition"/>
                                     <c:choose>
                                         <c:when test="${position.compareTo('') == 0}">
                                             <spring:message code="profileInfoNotSpecified"/>
@@ -106,7 +106,7 @@
                                         </c:choose>
                                     </p>
                                     <c:set var="educationLevel" value="${user.education}"/>
-                                    <p class="card-text"><i class="bi bi-postcard" style="margin-right: 5px"></i><spring:message code="profileEducationLevel"/>
+                                    <p class="card-text"><i class="bi bi-book" style="margin-right: 5px"></i><spring:message code="profileEducationLevel"/>
                                         <c:choose>
                                             <c:when test="${educationLevel.compareTo('No-especificado') == 0}">
                                                 <spring:message code="profileInfoNotSpecified"/>
