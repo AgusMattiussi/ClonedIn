@@ -63,7 +63,7 @@ public class EnterpriseController {
                              @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
-        final ModelAndView mav = new ModelAndView("index");
+        final ModelAndView mav = new ModelAndView("enterpriseHome");
         final List<User> usersList;
         final int itemsPerPage = 8;
         final int usersCount;
@@ -99,7 +99,7 @@ public class EnterpriseController {
     @RequestMapping("/profileEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
-        final ModelAndView mav = new ModelAndView("profileEnterprise");
+        final ModelAndView mav = new ModelAndView("enterpriseProfile");
         final int itemsPerPage = 3;
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("/profile : Enterprise {} not found", loggedUser.getName());
@@ -190,7 +190,7 @@ public class EnterpriseController {
                                            @RequestParam(value = "status",defaultValue = "") final String status,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
-        final ModelAndView mav = new ModelAndView("contacts");
+        final ModelAndView mav = new ModelAndView("enterpriseContacts");
         final int itemsPerPage = 12;
         List<Contact> contactList = new ArrayList<>();
 
@@ -219,7 +219,7 @@ public class EnterpriseController {
                                            @RequestParam(value = "status",defaultValue = "") final String status,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
-        final ModelAndView mav = new ModelAndView("interested");
+        final ModelAndView mav = new ModelAndView("enterpriseInterested");
         final int itemsPerPage = 12;
         List<Contact> contactList = new ArrayList<>();
 
@@ -244,7 +244,7 @@ public class EnterpriseController {
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formJobOffer(Authentication loggedUser, @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, @PathVariable("enterpriseId") final long enterpriseId) {
-        final ModelAndView mav = new ModelAndView("jobOfferForm");
+        final ModelAndView mav = new ModelAndView("enterpriseJobOfferForm");
         mav.addObject("enterprise", enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("Enterprise not found");
             return new UserNotFoundException();
@@ -357,7 +357,7 @@ public class EnterpriseController {
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = getLoggerUserId(loggedUser);
-        final ModelAndView mav = new ModelAndView("simpleContactForm");
+        final ModelAndView mav = new ModelAndView("enterpriseSimpleContactForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();

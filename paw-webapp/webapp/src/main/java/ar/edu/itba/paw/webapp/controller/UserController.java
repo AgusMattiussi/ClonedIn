@@ -83,7 +83,7 @@ public class UserController {
                              @Valid @ModelAttribute("filtersForm") final FiltersForm filterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
-        final ModelAndView mav = new ModelAndView("home");
+        final ModelAndView mav = new ModelAndView("userHome");
         final List<JobOffer> jobOfferList;
         final int itemsPerPage = 4;
         final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
@@ -105,7 +105,7 @@ public class UserController {
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
 
-        final ModelAndView mav = new ModelAndView("profileUser");
+        final ModelAndView mav = new ModelAndView("userProfile");
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User {} not found", loggedUser.getName());
             return new UserNotFoundException();
@@ -234,7 +234,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
-        final ModelAndView mav = new ModelAndView("experienceForm");
+        final ModelAndView mav = new ModelAndView("userExperienceForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
@@ -311,7 +311,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
-        final ModelAndView mav = new ModelAndView("educationForm");
+        final ModelAndView mav = new ModelAndView("userEducationForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
@@ -358,7 +358,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
-        final ModelAndView mav = new ModelAndView("skillsForm");
+        final ModelAndView mav = new ModelAndView("userSkillsForm");
         mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
