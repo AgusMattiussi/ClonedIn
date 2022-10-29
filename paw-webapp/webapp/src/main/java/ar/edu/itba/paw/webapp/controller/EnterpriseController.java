@@ -226,25 +226,35 @@ public class EnterpriseController {
     @RequestMapping("/interestedEnterprise/{enterpriseId:[0-9]+}")
     public ModelAndView interestedEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                            @RequestParam(value = "status",defaultValue = "") final String status,
+                                           @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseInterested");
         final int itemsPerPage = 12;
-        List<Contact> contactList = new ArrayList<>();
+        List<Contact> contactList;
+        StringBuilder path = new StringBuilder().append("/interestedEnterprise/").append(enterpriseId);
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
-        if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForEnterprise(enterprise,FilledBy.ENTERPRISE, SortBy.ANY, page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE,status,page - 1, itemsPerPage);
+        //TODO: mostrar las postulaciones generadas por los usuarios
+
+        if(request.getParameter("status") == null) {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortBy.ANY, page - 1, itemsPerPage);
+            path.append("?").append(status);
+        }
+        else {
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
 
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("path", path);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
