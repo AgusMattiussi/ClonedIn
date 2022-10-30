@@ -165,16 +165,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfileImage(long userId, byte[] imageBytes) {
-        Image newImage = imageService.uploadImage(imageBytes);
+    public void updateProfileImage(long userId, Image newImage) {
         userDao.updateUserProfileImage(userId, newImage);
     }
 
-    @Override
-    public Optional<Image> getProfileImage(int imageId) {
-        if(imageId == 1) {
-            return imageService.getImage(1);
-        }
-        return imageService.getImage(imageId);
-    }
 }

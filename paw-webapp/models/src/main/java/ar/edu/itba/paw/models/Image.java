@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -12,6 +14,7 @@ public class Image {
     @SequenceGenerator(sequenceName = "imagen_id_seq", name = "imagen_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "bytes")
     private byte[] bytes;
 

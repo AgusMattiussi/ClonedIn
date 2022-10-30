@@ -53,10 +53,6 @@ public interface UserService {
 
     void showUserProfile(long userID);
     
-    void updateProfileImage(long userId, byte[] imageBytes);
-    
-    Optional<Image> getProfileImage(int imageId);
-
-
+    void updateProfileImage(long userId, Image image);
 
 }

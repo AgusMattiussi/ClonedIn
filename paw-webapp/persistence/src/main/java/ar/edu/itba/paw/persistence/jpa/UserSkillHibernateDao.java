@@ -35,7 +35,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
         query.setParameter("skill", skill);
         query.setParameter("user",user);
 
-        return ((BigDecimal) query.getSingleResult()).longValue() > 0;
+        return ((Long) query.getSingleResult()) > 0;
     }
 
 

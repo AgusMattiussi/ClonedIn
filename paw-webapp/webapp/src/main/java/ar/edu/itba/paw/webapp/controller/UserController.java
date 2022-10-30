@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -25,7 +26,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.io.IOException;
 
-@Transactional
+//@Transactional
 @Controller
 public class UserController {
     private final UserService userService;
@@ -398,6 +399,7 @@ public class UserController {
         return mav;
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createSkill(Authentication loggedUser, @Valid @ModelAttribute("skillForm") final SkillForm skillForm,
@@ -445,21 +447,25 @@ public class UserController {
         if (errors.hasErrors()) {
             return formImage(loggedUser, imageForm, userId);
         }
-        userService.updateProfileImage(userId, imageForm.getImage().getBytes());
+
+        System.out.println("\n\n\n\n\n\n\n SUBIENDO IMAGEN \n\n");
+        Image image = imageService.uploadImage(imageForm.getImage().getBytes());
+        userService.updateProfileImage(userId, image);
+        System.out.println("\n\n\n\n\n\n\n\n");
+
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
     @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
         LOGGER.debug("Trying to access profile image");
-        byte[] profileImage = new byte[0];
-        try {
-            profileImage = userService.getProfileImage(imageId).orElseThrow(UserNotFoundException::new).getBytes();
-        } catch (UserNotFoundException e) {
+        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
             LOGGER.error("Error loading image {}", imageId);
-        }
+            return new ImageNotFoundException();
+        });
+
         LOGGER.info("Profile image accessed.");
-        return profileImage;
+        return profileImage.getBytes();
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")

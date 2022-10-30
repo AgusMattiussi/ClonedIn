@@ -374,9 +374,9 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public long getContactsCountForEnterprise(Enterprise enterprise) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.enterprise = :enterprise", Long.class);
+        Query query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.enterprise = :enterprise");
         query.setParameter("enterprise", enterprise);
-        return query.getSingleResult();
+        return (Long) query.getSingleResult();
     }
 
     @Override
@@ -388,9 +388,9 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public long getContactsCountForUser(User user) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.user = :user", Long.class);
+        Query query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.user = :user");
         query.setParameter("user", user);
-        return query.getSingleResult();
+        return (Long) query.getSingleResult();
     }
 
     @Override
