@@ -69,7 +69,7 @@ public class UserHibernateDao implements UserDao {
         Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.email = :email");
         query.setParameter("email", email);
 
-        return ((BigDecimal) query.getSingleResult()).longValue() > 0;
+        return (Long) query.getSingleResult() > 0;
     }
 
     @Override

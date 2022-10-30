@@ -172,7 +172,7 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <h6> <spring:message code="jobOfferFormMode"/></h6>
-                                                        <p> <c:out value="${joboffer.modality}"/> </p>
+                                                        <p><spring:message code="${joboffer.modality}"/> </p>
                                                     </div>
                                                 </div>
                                                 <div class="col">
