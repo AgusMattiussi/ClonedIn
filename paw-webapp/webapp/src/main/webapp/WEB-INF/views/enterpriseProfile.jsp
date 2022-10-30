@@ -178,10 +178,10 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <h6> <spring:message code="jobOfferFormSkills"/></h6>
-                                                        <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
+                                                        <c:if test="${joboffer.skills.size() == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
+                                                        <c:forEach items="${joboffer.skills}" var="skill">
                                                             <p><c:out value="${skill.description}"/></p>
                                                         </c:forEach>
                                                     </div>
@@ -263,10 +263,10 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <h6> <spring:message code="jobOfferFormSkills"/></h6>
-                                                        <c:if test="${jobOffersSkillMap[joboffer.id].size() == 0}">
+                                                        <c:if test="${joboffer.skills.size() == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <c:forEach items="${jobOffersSkillMap[joboffer.id]}" var="skill">
+                                                        <c:forEach items="${joboffer.skills}" var="skill">
                                                             <p><c:out value="${skill.description}"/></p>
                                                         </c:forEach>
                                                     </div>
