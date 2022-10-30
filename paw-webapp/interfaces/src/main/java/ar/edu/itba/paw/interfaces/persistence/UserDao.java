@@ -23,7 +23,7 @@ public interface UserDao {
 
     Integer getUsersCountByFilters(String categoryId, String location, String educationLevel);
 
-    List<User> getUsersList(int page, int pageSize);
+    List<User> getVisibleUsers(int page, int pageSize);
 
     List<User> getUsersListByCategory(int page, int pageSize, int categoryId);
 

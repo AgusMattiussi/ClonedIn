@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        final TypedQuery<User> query = em.createQuery("FROM User AS u WHERE u.email = :email", User.class);
+        final TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u WHERE u.email = :email", User.class);
         query.setParameter("email", email);
         return query.getResultList().stream().findFirst();
     }
@@ -91,11 +92,12 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersList(int page, int pageSize) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario WHERE visibilidad=1 OFFSET :offset LIMIT :limit", User.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        return (List<User>) query.getResultList();
+    public List<User> getVisibleUsers(int page, int pageSize) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible", User.class);
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     @Override
