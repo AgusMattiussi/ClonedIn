@@ -31,7 +31,6 @@ public class User {
     @Column(name = "ubicacion")
     private String location;
 
-    // FIXME: O OneToMany?
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
     private Category category;

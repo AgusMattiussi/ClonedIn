@@ -23,7 +23,7 @@ public class ImageHibernateDao implements ImageDao {
 
     @Override
     public Image uploadImage(byte[] bytes) {
-        final Image image = new Image(bytes);
+        Image image = new Image(bytes);
         em.persist(image);
         return image;
     }
