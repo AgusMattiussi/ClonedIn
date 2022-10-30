@@ -19,12 +19,10 @@ import java.util.Optional;
 public class JobOfferServiceImpl implements JobOfferService {
 
     private final JobOfferDao jobOfferDao;
-    private final JobOfferSkillDao jobOfferSkillDao;
 
     @Autowired
-    public JobOfferServiceImpl(JobOfferDao jobOfferDao, JobOfferSkillDao jobOfferSkillDao){
+    public JobOfferServiceImpl(JobOfferDao jobOfferDao){
         this.jobOfferDao = jobOfferDao;
-        this.jobOfferSkillDao= jobOfferSkillDao;
     }
 
     @Override
@@ -86,17 +84,6 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public Integer getActiveJobOffersCount(String categoryId, String modality) {
         return jobOfferDao.getActiveJobOffersCount(categoryId, modality);
-    }
-
-    //TODO: Eliminar este metodo horrible
-    @Override
-    public Map<Long, List<Skill>> getJobOfferSkillsMapForEnterprise(Enterprise enterprise, int page, int pageSize) {
-        List<JobOffer> jobOfferList = findByEnterprise(enterprise, page, pageSize);
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
-        for (JobOffer jobOffer : jobOfferList) {
-            jobOfferSkillMap.put(jobOffer.getId(), jobOfferSkillDao.getSkillsForJobOffer(jobOffer.getId()));
-        }
-        return jobOfferSkillMap;
     }
 
     @Override

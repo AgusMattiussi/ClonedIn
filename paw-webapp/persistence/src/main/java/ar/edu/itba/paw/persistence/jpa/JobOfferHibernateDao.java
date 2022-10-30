@@ -123,6 +123,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (List<JobOffer>) query.getResultList();
     }
 
+    // TODO: Tratar de mejorar estos metodos
     @Override
     public Integer getActiveJobOffersCount(String categoryId, String modality) {
         StringBuilder filterQuery = new StringBuilder();

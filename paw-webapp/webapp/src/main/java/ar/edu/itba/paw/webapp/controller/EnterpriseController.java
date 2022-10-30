@@ -109,8 +109,11 @@ public class EnterpriseController {
         });
         List<JobOffer> jobOfferList = jobOfferService.findByEnterprise(enterprise, page - 1, itemsPerPage);
         List<JobOffer> activeJobOfferList = jobOfferService.findActiveByEnterprise(enterprise, page - 1, itemsPerPage);
-        //TODO: BORRARRRR
-        Map<Long, List<Skill>> jobOfferSkillMap = jobOfferService.getJobOfferSkillsMapForEnterprise(enterprise, page - 1, itemsPerPage);
+
+        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
+
+        for(JobOffer jobOffer : jobOfferList)
+            jobOfferSkillMap.put(jobOffer.getId(), jobOffer.getSkills());
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
