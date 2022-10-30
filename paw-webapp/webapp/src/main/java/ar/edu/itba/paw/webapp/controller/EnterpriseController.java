@@ -28,7 +28,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
-@Transactional
 @Controller
 public class EnterpriseController {
 
@@ -271,6 +270,7 @@ public class EnterpriseController {
         return mav;
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping(value = "/createJobOffer/{enterpriseId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createJobOffer(Authentication loggedUser, @Valid @ModelAttribute("jobOfferForm") final JobOfferForm jobOfferForm, final BindingResult errors, @PathVariable("enterpriseId") final long enterpriseId) {
