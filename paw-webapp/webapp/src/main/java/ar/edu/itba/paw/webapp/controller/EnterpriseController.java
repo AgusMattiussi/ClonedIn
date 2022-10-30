@@ -62,7 +62,7 @@ public class EnterpriseController {
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @Valid @ModelAttribute("filterForm") final FilterForm filterForm,
+                             @Valid @ModelAttribute("enterpriseFilterForm") final EnterpriseFilterForm enterpriseFilterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseHome");
@@ -73,12 +73,13 @@ public class EnterpriseController {
 
         if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
-                    filterForm.getCategory(), filterForm.getLocation(), filterForm.getEducationLevel());
-            usersCount = userService.getUsersCountByFilters(filterForm.getCategory(), filterForm.getLocation(),
-                    filterForm.getEducationLevel());
-            path.append("?category=").append(filterForm.getCategory())
-                    .append("&location=").append(filterForm.getLocation())
-                    .append("&educationLevel=").append(filterForm.getEducationLevel());
+                    enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(), enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
+            usersCount = userService.getUsersCountByFilters(enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(),
+                    enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
+            path.append("?category=").append(enterpriseFilterForm.getCategory())
+                    .append("&location=").append(enterpriseFilterForm.getLocation())
+                    .append("&educationLevel=").append(enterpriseFilterForm.getEducationLevel())
+                    .append("&skill=").append(enterpriseFilterForm.getSkill());
         }
         else {
             //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());

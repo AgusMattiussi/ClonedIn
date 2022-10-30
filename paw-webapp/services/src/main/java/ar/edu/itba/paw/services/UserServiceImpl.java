@@ -68,8 +68,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel) {
-        return userDao.getUsersCountByFilters(categoryId, location, educationLevel);
+    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel, String skill) {
+        return userDao.getUsersCountByFilters(categoryId, location, educationLevel, skill);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel) {
-        return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel);
+    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel, String skill) {
+        return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel, skill);
     }
 
     @Override

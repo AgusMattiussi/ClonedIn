@@ -58,7 +58,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Experience> experiences;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
