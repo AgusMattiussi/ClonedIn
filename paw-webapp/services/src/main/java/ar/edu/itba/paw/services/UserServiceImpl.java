@@ -118,8 +118,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateCategory(long userID, String newCategoryName) {
-        userDao.updateCategory(userID, newCategoryName);
+    public void updateCategory(long userID, Category newCategory) {
+        userDao.updateCategory(userID, newCategory);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                                      String newCategoryName, String newEducationLevel) {
+                                      Category newCategory, String newEducationLevel) {
         if(!newName.isEmpty())
             updateName(userID, newName);
 
@@ -142,8 +142,8 @@ public class UserServiceImpl implements UserService {
         if(!newPosition.isEmpty())
             updateCurrentPosition(userID, newPosition);
 
-        if(!newCategoryName.isEmpty())
-            updateCategory(userID, newCategoryName);
+        if(newCategory != null)
+            updateCategory(userID, newCategory);
 
         if(!newEducationLevel.isEmpty())
             updateEducationLevel(userID, newEducationLevel);

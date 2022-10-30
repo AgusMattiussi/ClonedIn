@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -452,8 +453,20 @@ public class UserController {
         if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);
         }
+
+        Category category;
+        String categoryName =  editUserForm.getCategory();
+        if(categoryName.isEmpty()) {
+            category = null;
+        } else {
+            category = categoryService.findByName(categoryName).orElseThrow(() -> {
+            LOGGER.error("Category not found");
+            return new CategoryNotFoundException();
+        });
+        }
+
         userService.updateUserInformation(userId, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel());
+                editUserForm.getPosition(), category, editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 

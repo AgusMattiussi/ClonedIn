@@ -41,7 +41,7 @@ public interface UserDao {
 
     void updateCurrentPosition(long userID, String newPosition);
 
-    void updateCategory(long userID, String newCategoryName);
+    void updateCategory(long userID, Category newCategory);
 
     void updateEducationLevel(long userID, String newEducationLevel);
 

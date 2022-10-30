@@ -210,13 +210,10 @@ public class UserHibernateDao implements UserDao {
         query.executeUpdate();
     }
 
-    //FIXME: Cambiar a Category newCategory?
     @Override
-    public void updateCategory(long userID, String newCategoryName) {
-        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-
+    public void updateCategory(long userID, Category newCategory) {
         Query query = em.createQuery("UPDATE User SET category = :newCategory WHERE id = :userID");
-        query.setParameter("newCategory", category);
+        query.setParameter("newCategory", newCategory);
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
