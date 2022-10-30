@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -43,7 +44,6 @@ public class UserController {
     private final SkillService skillService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
-    private static final Map<String, Integer> monthToNumber = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -64,21 +64,6 @@ public class UserController {
         this.categoryService = categoryService;
         this.imageService = imageService;
         this.skillService = skillService;
-
-        monthToNumber.put("No-especificado", 0);
-        monthToNumber.put("Enero", 1);
-        monthToNumber.put("Febrero", 2);
-        monthToNumber.put("Marzo", 3);
-        monthToNumber.put("Abril", 4);
-        monthToNumber.put("Mayo", 5);
-        monthToNumber.put("Junio", 6);
-        monthToNumber.put("Julio", 7);
-        monthToNumber.put("Agosto", 8);
-        monthToNumber.put("Septiembre", 9);
-        monthToNumber.put("Octubre", 10);
-        monthToNumber.put("Noviembre", 11);
-        monthToNumber.put("Diciembre", 12);
-
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
@@ -301,8 +286,8 @@ public class UserController {
             yearFrom = null;
         };
 
-        Integer monthTo = monthToIsEmpty ? null : monthToNumber.get(formMonthTo);
-        Integer monthFrom = monthToNumber.get(experienceForm.getMonthFrom());
+        Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
+        Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
 
         boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat &&
                 (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
@@ -323,7 +308,7 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        Experience experience = experienceService.create(user, monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+        Experience experience = experienceService.create(user, DateHelper.monthToNumber(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthTo, yearTo,experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
 
@@ -356,7 +341,7 @@ public class UserController {
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         int yearFlag = educationForm.getYearTo().compareTo(educationForm.getYearFrom());
-        int monthFlag = monthToNumber.get(educationForm.getMonthTo()).compareTo(monthToNumber.get(educationForm.getMonthFrom()));
+        int monthFlag = DateHelper.monthToNumber(educationForm.getMonthTo()).compareTo(DateHelper.monthToNumber(educationForm.getMonthFrom()));
 
         if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
             if(yearFlag < 0)
@@ -371,8 +356,8 @@ public class UserController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
-        Education education = educationService.add(user, monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
-                monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        Education education = educationService.add(user, DateHelper.monthToNumber(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
 
         LOGGER.debug("A new experience was registered under id: {}", education.getId());
         LOGGER.info("A new experience was registered");
