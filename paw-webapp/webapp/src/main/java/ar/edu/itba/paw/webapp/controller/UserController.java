@@ -232,6 +232,7 @@ public class UserController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("path", path);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
@@ -271,6 +272,7 @@ public class UserController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("path", path);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         return mav;
@@ -459,12 +461,8 @@ public class UserController {
         if (errors.hasErrors()) {
             return formImage(loggedUser, imageForm, userId);
         }
-
-        System.out.println("\n\n\n\n\n\n\n SUBIENDO IMAGEN \n\n");
         Image image = imageService.uploadImage(imageForm.getImage().getBytes());
         userService.updateProfileImage(userId, image);
-        System.out.println("\n\n\n\n\n\n\n\n");
-
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
@@ -551,6 +549,4 @@ public class UserController {
             return enterprise.getId();
         }
     }
-
-
 }
