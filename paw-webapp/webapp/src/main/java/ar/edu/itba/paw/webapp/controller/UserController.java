@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -43,8 +44,8 @@ public class UserController {
     private final SkillService skillService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
-    private static final Map<String, Integer> monthToNumber = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final int JOB_OFFERS_PER_PAGE = 4;
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -64,21 +65,6 @@ public class UserController {
         this.categoryService = categoryService;
         this.imageService = imageService;
         this.skillService = skillService;
-
-        monthToNumber.put("No-especificado", 0);
-        monthToNumber.put("Enero", 1);
-        monthToNumber.put("Febrero", 2);
-        monthToNumber.put("Marzo", 3);
-        monthToNumber.put("Abril", 4);
-        monthToNumber.put("Mayo", 5);
-        monthToNumber.put("Junio", 6);
-        monthToNumber.put("Julio", 7);
-        monthToNumber.put("Agosto", 8);
-        monthToNumber.put("Septiembre", 9);
-        monthToNumber.put("Octubre", 10);
-        monthToNumber.put("Noviembre", 11);
-        monthToNumber.put("Diciembre", 12);
-
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
@@ -86,23 +72,24 @@ public class UserController {
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
-        final List<JobOffer> jobOfferList;
-        final int itemsPerPage = 4;
+
         final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
-        StringBuilder path = new StringBuilder();
-        jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, itemsPerPage, filterForm.getCategory(),
+
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, JOB_OFFERS_PER_PAGE, filterForm.getCategory(),
                 filterForm.getModality());
-        path.append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
+
+        StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
-        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("pages", jobOffersCount / JOB_OFFERS_PER_PAGE + 1);
         mav.addObject("currentPage", page);
         mav.addObject("path", path.toString());
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}/{currentPage:[0-9]+}")
     public ModelAndView applyToJobOffer(Authentication loggedUser,
@@ -215,36 +202,35 @@ public class UserController {
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "status",defaultValue = "") final String status,
+                                          @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                           @RequestParam(value = "page", defaultValue = "1") final int page,
                                           HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         final int itemsPerPage = 4;
-
+        List<Contact> contactList;
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+        StringBuilder path = new StringBuilder().append("/notificationsUser/").append(userId);
 
-        List<Contact> contactList;
 
-        if(request.getParameter("status") == null)
+        if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
-
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
-
-        for (Contact contact : contactList) {
-            JobOffer contactJobOffer = contact.getJobOffer();
-            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+            path.append("?").append(status);
         }
+        else {
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
+
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
-        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
@@ -254,37 +240,36 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/applicationsUser/{userId:[0-9]+}")
     public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
-                                          @RequestParam(value = "status",defaultValue = "") final String status,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page,
-                                          HttpServletRequest request) {
+                                         @RequestParam(value = "status",defaultValue = "") final String status,
+                                         @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
+                                         @RequestParam(value = "page", defaultValue = "1") final int page,
+                                         HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userApplications");
         final int itemsPerPage = 4;
-
+        List<Contact> contactList;
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+        StringBuilder path = new StringBuilder().append("/applicationsUser/").append(userId);
 
-        List<Contact> contactList;
 
-        if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForUser(user, FilledBy.USER,page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
-
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
-
-        for (Contact contact : contactList) {
-            JobOffer contactJobOffer = contact.getJobOffer();
-            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+        if(request.getParameter("status") == null) {
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, page - 1, itemsPerPage);
+            path.append("?").append(status);
         }
+        else {
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
+
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
-        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
@@ -328,8 +313,8 @@ public class UserController {
             yearFrom = null;
         };
 
-        Integer monthTo = monthToIsEmpty ? null : monthToNumber.get(formMonthTo);
-        Integer monthFrom = monthToNumber.get(experienceForm.getMonthFrom());
+        Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
+        Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
 
         boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat &&
                 (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
@@ -350,7 +335,7 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        Experience experience = experienceService.create(user, monthToNumber.get(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
+        Experience experience = experienceService.create(user, DateHelper.monthToNumber(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
                 monthTo, yearTo,experienceForm.getCompany(),
                 experienceForm.getJob(), experienceForm.getJobDesc());
 
@@ -383,7 +368,7 @@ public class UserController {
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
         int yearFlag = educationForm.getYearTo().compareTo(educationForm.getYearFrom());
-        int monthFlag = monthToNumber.get(educationForm.getMonthTo()).compareTo(monthToNumber.get(educationForm.getMonthFrom()));
+        int monthFlag = DateHelper.monthToNumber(educationForm.getMonthTo()).compareTo(DateHelper.monthToNumber(educationForm.getMonthFrom()));
 
         if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
             if(yearFlag < 0)
@@ -398,8 +383,8 @@ public class UserController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
-        Education education = educationService.add(user, monthToNumber.get(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
-                monthToNumber.get(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+        Education education = educationService.add(user, DateHelper.monthToNumber(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
 
         LOGGER.debug("A new experience was registered under id: {}", education.getId());
         LOGGER.info("A new experience was registered");

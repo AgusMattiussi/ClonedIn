@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -98,6 +99,16 @@
     <div class="col mr-2">
         <div class="d-flex justify-content-between mt-2 ml-4">
             <h3><spring:message code="navbarNotifications"/></h3>
+            <div style="width: 200px">
+                <c:url value="${path}" var="getPath"/>
+                <form:form modelAttribute="contactOrderForm" action="${getPath}" method="get">
+                    <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">
+                        <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
+                        <form:option value="4"><spring:message code="contactOrderFormSortByDateAsc"/></form:option>
+                        <form:option value="5"><spring:message code="contactOrderFormSortByDateDesc"/></form:option>
+                    </form:select>
+                </form:form>
+            </div>
         </div>
         <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
     <div class="container">
@@ -148,12 +159,28 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-                                            <c:if test="${jobOffersSkillMap[contact.jobOffer.id].size() == 0}">
-                                                <p><spring:message code="profileInfoNotSpecified"/></p>
-                                            </c:if>
-                                            <c:forEach items="${jobOffersSkillMap[contact.jobOffer.id]}" var="skill">
-                                                <p><c:out value="${skill.description}"/></p>
-                                            </c:forEach>
+                                        <c:if test="${job.skills.size() == 0}">
+                                            <p><spring:message code="profileInfoNotSpecified"/></p>
+                                        </c:if>
+                                        <c:forEach items="${job.skills}" var="skill">
+                                            <p><c:out value="${skill.description}"/></p>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <h5 class="card-title">
+                                            <spring:message code="notificationsDate"/>
+                                        </h5>
+                                        <c:set var="date" value="${contact.date}"/>
+                                        <c:choose>
+                                            <c:when test="${date == null}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <p class="card-text"><c:out value="${date}"/></p>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                                 <div class="col">
