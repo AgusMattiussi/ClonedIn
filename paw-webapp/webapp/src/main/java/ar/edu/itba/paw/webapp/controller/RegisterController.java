@@ -68,8 +68,11 @@ public class RegisterController {
 
         final User u = userService.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
                 category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+
         emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
+
         authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
+
         LOGGER.debug("A new user was registered under id: {}", u.getId());
         LOGGER.info("A new user was registered");
         return new ModelAndView("redirect:/home");
@@ -90,11 +93,15 @@ public class RegisterController {
         }
 
         Category category = categoryService.findByName(enterpriseForm.getCategory()).orElseThrow(CategoryNotFoundException::new);
+        Integer year = enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear());
 
         final Enterprise e = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(), enterpriseForm.getCity(),
-                category, enterpriseForm.getWorkers(), enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear()), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
+                category, enterpriseForm.getWorkers(), year, enterpriseForm.getLink(), enterpriseForm.getAboutUs());
+
         emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
+
         authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
+
         LOGGER.debug("A new enterprise was registered under id: {}", e.getId());
         LOGGER.info("A new enterprise was registered");
         return new ModelAndView("redirect:/");
