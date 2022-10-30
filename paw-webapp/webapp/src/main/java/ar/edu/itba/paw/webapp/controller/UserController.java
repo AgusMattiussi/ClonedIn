@@ -89,6 +89,7 @@ public class UserController {
         return mav;
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}/{currentPage:[0-9]+}")
     public ModelAndView applyToJobOffer(Authentication loggedUser,
