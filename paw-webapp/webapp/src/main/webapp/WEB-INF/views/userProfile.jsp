@@ -74,17 +74,6 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-white">
-                                <c:set var="position" value="${user.currentPosition}"/>
-                                <p class="card-text"><i class="bi bi-briefcase" style="margin-right: 5px"></i><spring:message code="profilePosition"/>
-                                    <c:choose>
-                                        <c:when test="${position.compareTo('') == 0}">
-                                            <spring:message code="profileInfoNotSpecified"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:out value="${position}"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </p>
                                 <c:set var="categoryName" value="${user.category.name}"/>
                                 <p class="card-text"><i class="bi bi-list-ul" style="margin-right: 5px"></i><spring:message code="profileCategory"/>
                                         <c:choose>
@@ -105,6 +94,17 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </p>
+                                <c:set var="position" value="${user.currentPosition}"/>
+                                <p class="card-text"><i class="bi bi-briefcase" style="margin-right: 5px"></i><spring:message code="profilePosition"/>
+                                    <c:choose>
+                                        <c:when test="${position.compareTo('') == 0}">
+                                            <spring:message code="profileInfoNotSpecified"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${position}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
                                     <c:set var="educationLevel" value="${user.education}"/>
                                     <p class="card-text"><i class="bi bi-book" style="margin-right: 5px"></i><spring:message code="profileEducationLevel"/>
                                         <c:choose>

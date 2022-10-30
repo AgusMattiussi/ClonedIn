@@ -19,7 +19,7 @@
             <div class="col-sm-2 sidebar">
                 <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
                 <c:url value="/home" var="getPath"/>
-                <form:form modelAttribute="filtersForm" action="${getPath}" method="get">
+                <form:form modelAttribute="userFilterForm" action="${getPath}" method="get">
                     <div class="d-flex flex-wrap justify-content-center ml-2">
                         <form:select path="category" cssClass="form-select">
                             <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>

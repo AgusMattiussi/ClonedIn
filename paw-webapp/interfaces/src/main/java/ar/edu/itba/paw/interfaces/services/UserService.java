@@ -22,7 +22,7 @@ public interface UserService {
 
     long getUsersCount();
 
-    Integer getUsersCountByFilters(String categoryId, String location, String educationLevel);
+    Integer getUsersCountByFilters(String categoryId, String location, String educationLevel, String skill);
 
     List<User> getVisibleUsers(int page, int pageSize);
 
@@ -32,7 +32,7 @@ public interface UserService {
 
     List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize);
 
-    List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel);
+    List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel, String skill);
 
     void updateName(long userID, String newName);
 

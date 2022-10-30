@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-public class FiltersForm {
+public class UserFilterForm {
     private String category="";
 
     private String modality="";

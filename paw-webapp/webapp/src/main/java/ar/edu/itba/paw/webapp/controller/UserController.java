@@ -81,7 +81,7 @@ public class UserController {
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
-                             @Valid @ModelAttribute("filtersForm") final FiltersForm filterForm,
+                             @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");

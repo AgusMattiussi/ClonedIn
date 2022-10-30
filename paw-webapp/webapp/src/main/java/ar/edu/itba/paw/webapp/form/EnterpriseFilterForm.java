@@ -2,11 +2,13 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.Size;
 
-public class FilterForm {
+public class EnterpriseFilterForm {
     private String category="";
     @Size(max = 50)
     private String location="";
     private String educationLevel="";
+    @Size(max = 50)
+    private String skill="";
 
     public String getCategory() {
         return category;
@@ -30,5 +32,13 @@ public class FilterForm {
 
     public void setEducationLevel(String educationLevel) {
         this.educationLevel = educationLevel;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
     }
 }
