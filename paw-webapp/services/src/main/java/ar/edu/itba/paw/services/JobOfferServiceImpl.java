@@ -77,6 +77,11 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
+    public long getActiveJobOffersCountForEnterprise(Enterprise enterprise) {
+        return jobOfferDao.getActiveJobOffersCountForEnterprise(enterprise);
+    }
+
+    @Override
     public List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
         return jobOfferDao.getJobOffersListByFilters(page, pageSize, categoryId, modality);
     }

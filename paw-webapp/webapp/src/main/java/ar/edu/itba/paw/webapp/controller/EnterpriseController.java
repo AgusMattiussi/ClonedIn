@@ -115,8 +115,8 @@ public class EnterpriseController {
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("activeJobOffers", activeJobOfferList);
-        mav.addObject("enterprisePages", jobOfferList.size() / itemsPerPage + 1);
-        mav.addObject("userPages", activeJobOfferList.size() / itemsPerPage + 1);
+        mav.addObject("enterprisePages", jobOfferService.getJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
+        mav.addObject("userPages", jobOfferService.getActiveJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         return mav;

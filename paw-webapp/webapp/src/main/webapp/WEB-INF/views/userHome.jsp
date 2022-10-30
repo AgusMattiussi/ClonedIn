@@ -125,8 +125,9 @@
                                                         </c:if>
                                                         <p class="card-text">${desc}</p>
                                                     </div>
-                                                    <a href="<c:url value="${path}"/>" style="margin-top: auto">
-                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem">
+                                                    <c:set var="jobOfferId" value="${job.id}"/>
+                                                    <a href="<c:url value="/applyToJobOffer/${job.id}/${currentPage}"/>">
+                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;"> <!-- data-bs-toggle="modal" data-bs-target="#applicationModal" -->
                                                             <spring:message code="userHomeApplicationButton"/>
                                                         </button>
                                                     </a>
@@ -147,5 +148,10 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <jsp:include page="../components/applicationModal.jsp">
+            <jsp:param name="currentPage" value="${currentPage}"/>
+            <jsp:param name="jobOfferId" value="${jobOfferId}"/>
+        </jsp:include>
     </body>
 </html>

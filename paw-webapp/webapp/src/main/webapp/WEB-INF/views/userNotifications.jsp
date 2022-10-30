@@ -163,12 +163,16 @@
                                         </h5>
                                         <c:if test="${contact.status == 'pendiente'}">
                                             <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
+                                            <a href="<c:url value="/answerJobOffer/${contact.user.id}/${contact.jobOffer.id}/1"/>">
+                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
-                                                <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#rejectJobOfferModal">
+                                            </a>
+                                            <a href="<c:url value="/answerJobOffer/${contact.user.id}/${contact.jobOffer.id}/0"/>">
+                                                <button class="btn btn-danger" style="min-width: 90px"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
+                                            </a>
                                         </c:if>
                                     </div>
                                 </div>

@@ -102,6 +102,36 @@ public class UserController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}/{currentPage:[0-9]+}")
+    public ModelAndView applyToJobOffer(Authentication loggedUser,
+                                       @PathVariable("jobOfferId") final long jobOfferId,
+                                        @PathVariable("currentPage") final long currentPage) {
+
+        User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("User {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job offer {} not found in cancelJobOffer()", jobOfferId);
+            return new JobOfferNotFoundException();
+        });
+
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
+            LOGGER.error("Enterprise {} not found in applyToJobOffer()", jobOffer.getEnterpriseID());
+            return new UserNotFoundException();
+        });
+
+        if(contactService.alreadyContacted(user.getId(), jobOfferId))
+            return new ModelAndView("redirect:/home?page=" + currentPage);
+
+        contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
+        emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+
+        return new ModelAndView("redirect:/home?page=" + currentPage);
+    }
+
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {

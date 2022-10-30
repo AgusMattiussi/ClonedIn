@@ -168,9 +168,11 @@
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
                                         <td>
-                                            <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal">
-                                                <spring:message code="contactsCancelBtn"/>
-                                            </button>
+                                            <a href="<c:url value="/cancelJobOffer/${contact.user.id}/${contact.jobOffer.id}"/>">
+                                                <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal" -->
+                                                    <spring:message code="contactsCancelBtn"/>
+                                                </button>
+                                            </a>
                                         </td>
                                     </c:if>
                                 </tr>

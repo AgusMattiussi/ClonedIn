@@ -277,10 +277,12 @@
                                                 <sec:authorize access="hasRole('ENTERPRISE')">
                                                     <c:if test="${joboffer.available == 'Activa'}">
                                                         <div class="d-flex flex-column">
-                                                            <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
-                                                                <spring:message code="profileEnterpriseCloseJobOfferButton"/>
-                                                                <c:set var="jobOffer" value="${joboffer.id}"/>
-                                                            </button>
+                                                            <a href="<c:url value="/closeJobOffer/${joboffer.id}"/>" >
+                                                                <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px"> <!-- data-bs-toggle="modal" data-bs-target="#closeJobOfferModal" -->
+                                                                    <spring:message code="profileEnterpriseCloseJobOfferButton"/>
+                                                                    <c:set var="jobOffer" value="${joboffer.id}"/>
+                                                                </button>
+                                                            </a>
                                                         </div>
                                                     </c:if>
                                                 </sec:authorize>
