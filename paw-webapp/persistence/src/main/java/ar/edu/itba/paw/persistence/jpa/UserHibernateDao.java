@@ -101,12 +101,13 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersListByCategory(int page, int pageSize, int categoryId) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario WHERE idRubro = :categoryId OFFSET :offset LIMIT :limit", User.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("categoryId", categoryId);
-        return (List<User>) query.getResultList();
+    public List<User> getVisibleUsersByCategory(Category category, int page, int pageSize) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND u.category = :category", User.class);
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
+        query.setParameter("category", category);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
     }
 
 
