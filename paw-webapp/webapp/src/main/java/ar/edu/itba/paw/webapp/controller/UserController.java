@@ -45,6 +45,7 @@ public class UserController {
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final int JOB_OFFERS_PER_PAGE = 4;
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -71,17 +72,17 @@ public class UserController {
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
-        final List<JobOffer> jobOfferList;
-        final int itemsPerPage = 4;
+
         final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
-        StringBuilder path = new StringBuilder();
-        jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, itemsPerPage, filterForm.getCategory(),
+
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, JOB_OFFERS_PER_PAGE, filterForm.getCategory(),
                 filterForm.getModality());
-        path.append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
+
+        StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
-        mav.addObject("pages", jobOffersCount / itemsPerPage + 1);
+        mav.addObject("pages", jobOffersCount / JOB_OFFERS_PER_PAGE + 1);
         mav.addObject("currentPage", page);
         mav.addObject("path", path.toString());
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
