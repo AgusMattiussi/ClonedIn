@@ -28,7 +28,7 @@ public interface UserService {
 
     List<User> getVisibleUsersByCategory(Category category, int page, int pageSize);
 
-    List<User> getUsersListByName(int page, int pageSize, String term);
+    List<User> getUsersByNameLike(String term, int page, int pageSize);
 
     List<User> getUsersListByLocation(int page, int pageSize, String location);
 

@@ -82,7 +82,7 @@ public class EnterpriseController {
         }
         else {
             //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
-            usersList = userService.getUsersListByName(page - 1, itemsPerPage, searchForm.getTerm());
+            usersList = userService.getUsersByNameLike(searchForm.getTerm(),page - 1, itemsPerPage);
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());
         }

@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByName(int page, int pageSize, String term) {
-        return userDao.getUsersListByName(page, pageSize, term);
+    public List<User> getUsersByNameLike(String term, int page, int pageSize) {
+        return userDao.getUsersByNameLike(term, page, pageSize);
     }
 
     @Override

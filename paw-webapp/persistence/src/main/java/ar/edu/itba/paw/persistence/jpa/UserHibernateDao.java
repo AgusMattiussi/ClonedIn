@@ -112,13 +112,12 @@ public class UserHibernateDao implements UserDao {
 
 
     @Override
-    public List<User> getUsersListByName(int page, int pageSize, String name) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario WHERE visibilidad=1 AND nombre " +
-                "ILIKE CONCAT('%', :name, '%') OFFSET :offset LIMIT :limit ", User.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        query.setParameter("name", name);
-        return (List<User>) query.getResultList();
+    public List<User> getUsersByNameLike(String term, int page, int pageSize) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))", User.class);
+        query.setParameter("term", term);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     @Override
