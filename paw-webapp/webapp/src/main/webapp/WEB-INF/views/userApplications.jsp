@@ -159,10 +159,11 @@
                                                 </h5>
                                                 <c:if test="${contact.status == 'pendiente'}">
                                                     <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-                                                    <!--FIXME: BOTON DE CANCELAR -->
-                                                    <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
-                                                        <spring:message code="notificationsAccept"/>
-                                                    </button>
+                                                    <a href="<c:url value="/cancelApplication/${contact.user.id}/${contact.jobOffer.id}"/>">
+                                                        <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;">
+                                                            <spring:message code="contactsCancelBtn"/>
+                                                        </button>
+                                                    </a>
                                                 </c:if>
                                             </div>
                                         </div>

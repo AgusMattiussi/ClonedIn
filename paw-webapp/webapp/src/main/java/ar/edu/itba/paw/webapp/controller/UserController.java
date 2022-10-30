@@ -151,6 +151,33 @@ public class UserController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping("/cancelApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView cancelApplication(Authentication loggedUser,
+                                       @PathVariable("userId") final long userId,
+                                       @PathVariable("jobOfferId") final long jobOfferId) {
+
+        User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("User {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job offer {} not found in cancelJobOffer()", jobOfferId);
+            return new JobOfferNotFoundException();
+        });
+
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
+            LOGGER.error("Enterprise {} not found in applyToJobOffer()", jobOffer.getEnterpriseID());
+            return new UserNotFoundException();
+        });
+
+        contactService.cancelJobOffer(user, jobOffer);
+        emailService.sendCancelApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+
+        return new ModelAndView("redirect:/applicationsUser/" + user.getId());
+    }
+
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/answerJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")

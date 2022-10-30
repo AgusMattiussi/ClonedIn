@@ -41,6 +41,9 @@ public class EmailServiceImpl implements EmailService {
     private static final String CLOSE = "close";
     private static final String CANCEL = "cancel";
     private static final String ACCEPT = "acceptMsg";
+    private static final String APPLY = "application";
+    private static final String CANCEL_APPLICATION = "cancelApplication";
+
 
     @Async
     void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
@@ -162,17 +165,28 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale) {
+        sendApplicationEmailHandler(enterprise, user, jobOfferPosition, APPLY, locale);
+    }
+
+    @Async
+    @Override
+    public void sendCancelApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale) {
+        sendApplicationEmailHandler(enterprise, user, jobOfferPosition, CANCEL_APPLICATION, locale);
+    }
+
+    void sendApplicationEmailHandler(Enterprise enterprise, User user, String jobOfferPosition, String action, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", user.getName());
         mailMap.put("jobOffer", jobOfferPosition);
         mailMap.put("profileUrl", baseUrl + "/profileUser/" + user.getId());
-        mailMap.put("bodyMsg", messageSource.getMessage("applicationMail.bodyMsg", null, locale));
-        mailMap.put("buttonMsg", messageSource.getMessage("applicationMail.button", null, locale));
+        mailMap.put("bodyMsg", messageSource.getMessage(action + "Mail.bodyMsg", null, locale));
+        mailMap.put("buttonMsg", messageSource.getMessage(action + "Mail.button", null, locale));
 
         String subject = messageSource.getMessage("applicationMail.subject", null, locale);
 
         sendEmail(enterprise.getEmail(), subject, APPLICATION_TEMPLATE, mailMap);
     }
+
 
 }

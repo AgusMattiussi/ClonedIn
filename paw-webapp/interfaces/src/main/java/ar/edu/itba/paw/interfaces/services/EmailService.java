@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Locale;
-import java.util.Map;
 
 public interface EmailService {
     void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message, Locale locale);
@@ -15,4 +14,5 @@ public interface EmailService {
     void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale);
     void sendCancelJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale);
     void sendApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale);
+    void sendCancelApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale);
 }
