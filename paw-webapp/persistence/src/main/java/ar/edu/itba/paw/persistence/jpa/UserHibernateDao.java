@@ -230,14 +230,13 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateVisibility(long userID, int visibility) {
+    public void updateVisibility(long userID, Visibility visibility) {
         Query query = em.createQuery("UPDATE User SET visibility = :visibility WHERE id = :userID");
-        query.setParameter("visibility", visibility);
+        query.setParameter("visibility", visibility.getValue());
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
-
-    // FIXME: Image o imageID?
+    
     @Override
     public void updateUserProfileImage(long userID, long imageId) {
         Image image = imageDao.getImage(imageId).orElseThrow(ImageNotFoundException::new);

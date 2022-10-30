@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public interface UserDao {
 
     void updateEducationLevel(long userID, String newEducationLevel);
 
-    void updateVisibility(long userID, int visibility);
+    void updateVisibility(long userID, Visibility visibility);
     
     void updateUserProfileImage(long userId, long imageId);
 

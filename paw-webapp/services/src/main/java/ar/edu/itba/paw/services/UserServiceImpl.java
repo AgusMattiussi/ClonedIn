@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -151,15 +152,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void hideUserProfile(long userID) {
-        updateVisibility(userID, HIDE_VALUE);
+        updateVisibility(userID, Visibility.INVISIBLE);
     }
 
     @Override
     public void showUserProfile(long userID) {
-        updateVisibility(userID, SHOW_VALUE);
+        updateVisibility(userID, Visibility.VISIBLE);
     }
 
-    private void updateVisibility(long userID, int visibility) {
+    private void updateVisibility(long userID, Visibility visibility) {
         userDao.updateVisibility(userID, visibility);
     }
 
