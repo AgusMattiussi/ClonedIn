@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Primary
@@ -28,52 +29,15 @@ public class UserSkillHibernateDao implements UserSkillDao {
         em.persist(userSkill);
     }
 
-
-    //FIXME: Chequear si funciona
-    @Override
-    public boolean alreadyExists(String skillDescription, long userID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM aptitudUsuario au JOIN aptitud a ON au.idAptitud = a.id " +
-                "WHERE a.descripcion = :skillDescription AND au.idUsuario = :userID", Long.class);
-        query.setParameter("skillDescription", skillDescription);
-        query.setParameter("userID",userID);
-
-        return ((Long) query.getSingleResult()) > 0;
-    }
-
-    @Override
-    public boolean alreadyExists(long skillID, long userID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM aptitudUsuario WHERE idAptitud = :skillID AND idUsuario = :userID", Long.class);
-        query.setParameter("skillID", skillID);
-        query.setParameter("userID",userID);
-
-        return ((Long) query.getSingleResult()) > 0;
-    }
-
     @Override
     public boolean alreadyExists(Skill skill, User user) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user", Long.class);
+        Query query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.skill = :skill AND us.user = :user");
         query.setParameter("skill", skill);
         query.setParameter("user",user);
 
-        return query.getSingleResult() > 0;
+        return ((BigDecimal) query.getSingleResult()).longValue() > 0;
     }
 
-    @Override
-    public List<User> getUsersWithSkill(String skillDescription) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario JOIN aptitud a ON a.id = au.idAptitud " +
-                "WHERE a.descripcion = :skillDescription", User.class);
-        query.setParameter("skillDescription", skillDescription);
-
-        return (List<User>) query.getResultList();
-    }
-
-    @Override
-    public List<User> getUsersWithSkill(long skillID) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario WHERE au.idAptitud = :skillID", User.class);
-        query.setParameter("skillID", skillID);
-
-        return (List<User>) query.getResultList();
-    }
 
     @Override
     public List<User> getUsersWithSkill(Skill skill) {
@@ -83,13 +47,6 @@ public class UserSkillHibernateDao implements UserSkillDao {
         return query.getResultList();
     }
 
-    @Override
-    public List<Skill> getSkillsForUser(long userID) {
-        Query query = em.createNativeQuery("SELECT a.id, a.descripcion FROM usuario u JOIN aptitudUsuario au ON u.id = au.idUsuario " +
-                        "JOIN aptitud a ON a.id = au.idAptitud WHERE au.idUsuario = ?", Skill.class);
-
-        return (List<Skill>) query.getResultList();
-    }
 
     @Override
     public List<Skill> getSkillsForUser(User user) {
