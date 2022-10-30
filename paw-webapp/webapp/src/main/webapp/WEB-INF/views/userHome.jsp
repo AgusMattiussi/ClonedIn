@@ -86,7 +86,7 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <h5 class="card-title"><spring:message code="notificationsMode"/></h5>
-                                                        <p class="card-text"><c:out value="${job.modality}"/></p>
+                                                        <p class="card-text"><spring:message code="${job.modality}"/></p>
                                                     </div>
                                                 </div>
                                                 <div class="col">
@@ -106,21 +106,31 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-<%--                                                        <c:if test="${jobOffersSkillMap[job.id].size() == 0}">--%>
-<%--                                                            <p><spring:message code="profileInfoNotSpecified"/></p>--%>
-<%--                                                        </c:if>--%>
-<%--                                                        <c:forEach items="${jobOffersSkillMap[job.id]}" var="skill">--%>
-<%--                                                            <p><c:out value="${skill.description}"/></p>--%>
-<%--                                                        </c:forEach>--%>
+                                                        <c:if test="${job.skills.size() == 0}">
+                                                            <p><spring:message code="profileInfoNotSpecified"/></p>
+                                                        </c:if>
+                                                        <c:forEach items="${job.skills}" var="skill">
+                                                            <p><c:out value="${skill.description}"/></p>
+                                                        </c:forEach>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
-                                                <c:set var="desc" value="${job.description}"/>
-                                                <c:if test="${desc.compareTo('') != 0}">
-                                                    <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
-                                                    <p class="card-text">${desc}</p>
-                                                </c:if>
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
+                                                        <c:set var="desc" value="${job.description}"/>
+                                                        <c:if test="${desc.compareTo('') == 0}">
+                                                            <p><spring:message code="profileInfoNotSpecified"/></p>
+                                                        </c:if>
+                                                        <p class="card-text">${desc}</p>
+                                                    </div>
+                                                    <a href="<c:url value="${path}"/>" style="margin-top: auto">
+                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem">
+                                                            <spring:message code="userHomeApplicationButton"/>
+                                                        </button>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

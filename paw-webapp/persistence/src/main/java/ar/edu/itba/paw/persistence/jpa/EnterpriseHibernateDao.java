@@ -26,7 +26,6 @@ import java.util.Optional;
 public class EnterpriseHibernateDao implements EnterpriseDao {
 
     public static final Image DEFAULT_IMAGE = null;
-
     private CategoryDao categoryDao;
     private final ImageDao imageDao;
     @PersistenceContext
@@ -71,7 +70,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     public boolean enterpriseExists(String email) {
         Query query = em.createQuery("SELECT COUNT(e) FROM Enterprise e WHERE e.email = :email");
         query.setParameter("email", email);
-        return ((BigInteger) query.getSingleResult()).longValue() > 0;
+        return (Long) query.getSingleResult() > 0;
     }
 
     @Override
