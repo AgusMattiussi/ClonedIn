@@ -112,8 +112,9 @@ public class UserHibernateDao implements UserDao {
 
 
     @Override
-    public List<User> getUsersByNameLike(String term, int page, int pageSize) {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))", User.class);
+    public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))", User.class);
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
         query.setParameter("term", term);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
@@ -121,13 +122,13 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersListByLocation(int page, int pageSize, String location) {
-        Query query = em.createNativeQuery("SELECT * FROM usuario WHERE visibilidad=1 AND ubicacion " +
-                "ILIKE CONCAT('%', :location, '%') OFFSET :offset LIMIT :limit ", User.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
+    public List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))", User.class);
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
         query.setParameter("location", location);
-        return (List<User>) query.getResultList();
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     @Override

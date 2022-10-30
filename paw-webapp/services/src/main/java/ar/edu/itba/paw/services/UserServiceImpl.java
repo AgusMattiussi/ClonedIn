@@ -83,13 +83,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByNameLike(String term, int page, int pageSize) {
-        return userDao.getUsersByNameLike(term, page, pageSize);
+    public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
+        return userDao.getVisibleUsersByNameLike(term, page, pageSize);
     }
 
     @Override
-    public List<User> getUsersListByLocation(int page, int pageSize, String location) {
-        return userDao.getUsersListByLocation(page, pageSize, location);
+    public List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize) {
+        return userDao.getVisibleUsersByLocationLike(location, page, pageSize);
     }
 
     @Override
