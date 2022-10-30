@@ -107,7 +107,6 @@
                         <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
                         <form:option value="1"><spring:message code="contactOrderFormSortByJobOfferPosition"/></form:option>
                         <form:option value="2"><spring:message code="contactOrderFormSortByUserName"/></form:option>
-                        <form:option value="3"><spring:message code="contactOrderFormSortByStatus"/></form:option>
                         <form:option value="4"><spring:message code="contactOrderFormSortByDateAsc"/></form:option>
                         <form:option value="5"><spring:message code="contactOrderFormSortByDateDesc"/></form:option>
                     </form:select>
@@ -129,6 +128,7 @@
                                 <th scope="col"><spring:message code="contactsEnterpriseCategory"/></th>
                                 <th scope="col"><spring:message code="profileSkills"/></th>
                                 <th scope="col"><spring:message code="profileYearEx"/></th>
+                                <th scope="col"><spring:message code="notificationsDate"/></th>
                                 <th scope="col"><spring:message code="contactsEnterpriseStatus"/></th>
                                 <th/>
                             </tr>
@@ -154,15 +154,15 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <!-- AGREGAR LA IFO QUE FALTA Y CAMBIAR LOS BOTONES POR ACEPTAR Y RECHAZAR -->
-                                    <td/>
-                                    <td/>
+                                    <td><c:out value="${contact.user.skills}"/></td>
+                                    <td><c:out value="${contact.user.yearsOfExperience}"/></td>
+                                    <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
+                                    <td>
                                     <c:if test="${statusName == 'pendiente'}">
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
-                                        <td>
                                             <div class="row">
                                             <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal">
                                                 <spring:message code="contactsCancelBtn"/>
@@ -173,8 +173,8 @@
                                                 <spring:message code="contactsCancelBtn"/>
                                             </button>
                                             </div>
-                                        </td>
                                     </c:if>
+                                    </td>
                                 </tr>
                             </c:forEach>
                             </tbody>
