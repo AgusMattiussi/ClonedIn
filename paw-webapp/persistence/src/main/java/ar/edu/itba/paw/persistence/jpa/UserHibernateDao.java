@@ -236,11 +236,9 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
-    
-    @Override
-    public void updateUserProfileImage(long userID, long imageId) {
-        Image image = imageDao.getImage(imageId).orElseThrow(ImageNotFoundException::new);
 
+    @Override
+    public void updateUserProfileImage(long userID, Image image) {
         Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
         query.setParameter("image", image);
         query.setParameter("userID", userID);

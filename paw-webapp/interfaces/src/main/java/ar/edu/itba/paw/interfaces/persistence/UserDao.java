@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 
@@ -48,6 +49,6 @@ public interface UserDao {
 
     void updateVisibility(long userID, Visibility visibility);
     
-    void updateUserProfileImage(long userId, long imageId);
+    void updateUserProfileImage(long userId, Image image);
 
 }
