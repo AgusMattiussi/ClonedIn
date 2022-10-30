@@ -213,13 +213,10 @@ public class UserHibernateDao implements UserDao {
         query.executeUpdate();
     }
 
-    //FIXME: Cambiar a Category newCategory?
     @Override
-    public void updateCategory(long userID, String newCategoryName) {
-        Category category = categoryDao.findByName(newCategoryName).orElseThrow(CategoryNotFoundException::new);
-
+    public void updateCategory(long userID, Category newCategory) {
         Query query = em.createQuery("UPDATE User SET category = :newCategory WHERE id = :userID");
-        query.setParameter("newCategory", category);
+        query.setParameter("newCategory", newCategory);
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
@@ -233,18 +230,15 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateVisibility(long userID, int visibility) {
+    public void updateVisibility(long userID, Visibility visibility) {
         Query query = em.createQuery("UPDATE User SET visibility = :visibility WHERE id = :userID");
-        query.setParameter("visibility", visibility);
+        query.setParameter("visibility", visibility.getValue());
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
 
-    // FIXME: Image o imageID?
     @Override
-    public void updateUserProfileImage(long userID, long imageId) {
-        Image image = imageDao.getImage(imageId).orElseThrow(ImageNotFoundException::new);
-
+    public void updateUserProfileImage(long userID, Image image) {
         Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
         query.setParameter("image", image);
         query.setParameter("userID", userID);

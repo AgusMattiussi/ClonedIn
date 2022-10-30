@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -118,8 +119,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateCategory(long userID, String newCategoryName) {
-        userDao.updateCategory(userID, newCategoryName);
+    public void updateCategory(long userID, Category newCategory) {
+        userDao.updateCategory(userID, newCategory);
     }
 
     @Override
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                                      String newCategoryName, String newEducationLevel) {
+                                      Category newCategory, String newEducationLevel) {
         if(!newName.isEmpty())
             updateName(userID, newName);
 
@@ -142,8 +143,8 @@ public class UserServiceImpl implements UserService {
         if(!newPosition.isEmpty())
             updateCurrentPosition(userID, newPosition);
 
-        if(!newCategoryName.isEmpty())
-            updateCategory(userID, newCategoryName);
+        if(newCategory != null)
+            updateCategory(userID, newCategory);
 
         if(!newEducationLevel.isEmpty())
             updateEducationLevel(userID, newEducationLevel);
@@ -151,22 +152,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void hideUserProfile(long userID) {
-        updateVisibility(userID, HIDE_VALUE);
+        updateVisibility(userID, Visibility.INVISIBLE);
     }
 
     @Override
     public void showUserProfile(long userID) {
-        updateVisibility(userID, SHOW_VALUE);
+        updateVisibility(userID, Visibility.VISIBLE);
     }
 
-    private void updateVisibility(long userID, int visibility) {
+    private void updateVisibility(long userID, Visibility visibility) {
         userDao.updateVisibility(userID, visibility);
     }
 
     @Override
     public void updateProfileImage(long userId, byte[] imageBytes) {
         Image newImage = imageService.uploadImage(imageBytes);
-        userDao.updateUserProfileImage(userId, newImage.getId());
+        userDao.updateUserProfileImage(userId, newImage);
     }
 
     @Override

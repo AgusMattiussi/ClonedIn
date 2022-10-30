@@ -42,12 +42,12 @@ public interface UserService {
 
     void updateCurrentPosition(long userID, String newPosition);
 
-    void updateCategory(long userID, String newCategoryName);
+    void updateCategory(long userID, Category newCategory);
 
     void updateEducationLevel(long userID, String newEducationLevel);
 
     void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                               String newCategoryName, String newEducationLevel);
+                               Category newCategory, String newEducationLevel);
 
     void hideUserProfile(long userID);
 
