@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -62,20 +63,17 @@ public class UserHibernateDao implements UserDao {
     }
 
 
-    /*TypedQuery<Long> query = em.createQuery("SELECT COUNT(u) FROM User AS u WHERE u.id = :id", Long.class);
-        return query.getSingleResult() > 0;*/
-
     @Override
     public boolean userExists(String email) {
-//        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario WHERE email = :email", Integer.class);
-//        query.setParameter("email", email);
-//        return ((Integer) query.getSingleResult()) > 0;
-        return findByEmail(email).isPresent();
+        Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.email = :email");
+        query.setParameter("email", email);
+
+        return ((BigDecimal) query.getSingleResult()).longValue() > 0;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return em.createQuery("FROM User u", User.class).getResultList();
+        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     @Override
@@ -87,10 +85,9 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public Integer getUsersCount() {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM usuario");
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
+    public long getUsersCount() {
+        Query query = em.createQuery("SELECT COUNT(u) FROM User u");
+        return ((BigDecimal) query.getSingleResult()).longValue();
     }
 
     @Override

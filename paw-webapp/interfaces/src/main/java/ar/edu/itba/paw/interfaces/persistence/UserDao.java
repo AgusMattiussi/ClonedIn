@@ -19,7 +19,7 @@ public interface UserDao {
 
     void changePassword(String email, String password);
 
-    Integer getUsersCount();
+    long getUsersCount();
 
     Integer getUsersCountByFilters(String categoryId, String location, String educationLevel);
 
