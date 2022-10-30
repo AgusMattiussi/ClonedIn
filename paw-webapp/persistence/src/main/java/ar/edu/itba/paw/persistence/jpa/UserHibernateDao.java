@@ -28,24 +28,15 @@ import java.util.Optional;
 @Transactional
 public class UserHibernateDao implements UserDao {
 
-    private static final int DEFAULT_VISIBILITY = 1;
-    private static final int UNEXISTING_CATEGORY_ID = 99;
+    private static final int UNEXISTING_CATEGORY_ID = 0;
     private static final Image DEFAULT_IMAGE = null;
 
     @PersistenceContext
     private EntityManager em;
-    private final CategoryDao categoryDao;
-    private final ImageDao imageDao;
-
-    @Autowired
-    public UserHibernateDao(CategoryDao categoryDao, ImageDao imageDao) {
-        this.categoryDao = categoryDao;
-        this.imageDao = imageDao;
-    }
 
     @Override
     public User create(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
-        final User user = new User(email, password, name, location, category, currentPosition, description, education, DEFAULT_VISIBILITY, DEFAULT_IMAGE);
+        final User user = new User(email, password, name, location, category, currentPosition, description, education, Visibility.VISIBLE.getValue(), DEFAULT_IMAGE);
         em.persist(user);
         return user;
     }
@@ -88,7 +79,7 @@ public class UserHibernateDao implements UserDao {
     @Override
     public long getUsersCount() {
         Query query = em.createQuery("SELECT COUNT(u) FROM User u");
-        return ((BigDecimal) query.getSingleResult()).longValue();
+        return (Long) query.getSingleResult();
     }
 
     @Override

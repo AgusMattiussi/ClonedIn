@@ -28,9 +28,6 @@ public class ExperienceHibernateDao implements ExperienceDao {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    private UserDao userDao;
-
     @Override
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)

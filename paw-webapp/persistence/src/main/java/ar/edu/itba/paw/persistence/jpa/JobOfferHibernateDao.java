@@ -99,7 +99,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     @Override
     public long getJobOffersCount() {
         Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j");
-        return ((BigInteger) query.getSingleResult()).longValue();
+        return (Long) query.getSingleResult();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j WHERE j.enterprise = :enterprise");
         query.setParameter("enterprise", enterprise);
 
-        return ((BigDecimal) query.getSingleResult()).longValue();
+        return (Long) query.getSingleResult();
     }
 
 
