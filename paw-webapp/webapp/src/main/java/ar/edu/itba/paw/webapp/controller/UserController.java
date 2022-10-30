@@ -175,36 +175,35 @@ public class UserController {
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
                                           @RequestParam(value = "status",defaultValue = "") final String status,
+                                          @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                                           @RequestParam(value = "page", defaultValue = "1") final int page,
                                           HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userNotifications");
         final int itemsPerPage = 4;
-
+        List<Contact> contactList;
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+        StringBuilder path = new StringBuilder().append("/notificationsUser/").append(userId);
 
-        List<Contact> contactList;
 
-        if(request.getParameter("status") == null)
+        if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
-
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
-
-        for (Contact contact : contactList) {
-            JobOffer contactJobOffer = contact.getJobOffer();
-            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+            path.append("?").append(status);
         }
+        else {
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
+
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
-        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
@@ -214,37 +213,36 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/applicationsUser/{userId:[0-9]+}")
     public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
-                                          @RequestParam(value = "status",defaultValue = "") final String status,
-                                          @RequestParam(value = "page", defaultValue = "1") final int page,
-                                          HttpServletRequest request) {
+                                         @RequestParam(value = "status",defaultValue = "") final String status,
+                                         @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
+                                         @RequestParam(value = "page", defaultValue = "1") final int page,
+                                         HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userApplications");
         final int itemsPerPage = 4;
-
+        List<Contact> contactList;
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+        StringBuilder path = new StringBuilder().append("/applicationsUser/").append(userId);
 
-        List<Contact> contactList;
 
-        if(request.getParameter("status") == null)
-            contactList = contactService.getContactsForUser(user, FilledBy.USER,page - 1, itemsPerPage);
-        else
-            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
-
-        Map<Long, List<Skill>> jobOfferSkillMap = new HashMap<>();
-
-        for (Contact contact : contactList) {
-            JobOffer contactJobOffer = contact.getJobOffer();
-            jobOfferSkillMap.put(contactJobOffer.getId(), contactJobOffer.getSkills());
+        if(request.getParameter("status") == null) {
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, page - 1, itemsPerPage);
+            path.append("?").append(status);
         }
+        else {
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
+            path.append("?status=").append(status);
+        }
+
+        path.append("sortBy=").append(contactOrderForm.getSortBy());
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
-        mav.addObject("jobOffersSkillMap", jobOfferSkillMap);
         mav.addObject("status", status);
         mav.addObject("pages", contactsCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);

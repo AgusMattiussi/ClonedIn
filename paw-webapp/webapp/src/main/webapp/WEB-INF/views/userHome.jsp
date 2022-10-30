@@ -116,15 +116,13 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
+                                                <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                                 <div class="d-flex justify-content-between">
-                                                    <div>
-                                                        <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                                         <c:set var="desc" value="${job.description}"/>
                                                         <c:if test="${desc.compareTo('') == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
                                                         <p class="card-text">${desc}</p>
-                                                    </div>
                                                     <c:set var="jobOfferId" value="${job.id}"/>
                                                     <a href="<c:url value="/applyToJobOffer/${job.id}/${currentPage}"/>">
                                                         <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;"> <!-- data-bs-toggle="modal" data-bs-target="#applicationModal" -->
