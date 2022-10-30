@@ -22,12 +22,9 @@ import java.util.Optional;
 @Repository
 @Transactional
 public class EducationHibernateDao implements EducationDao {
+
     @PersistenceContext
     private EntityManager em;
-
-    @Autowired
-    private UserDao userDao;
-
 
     @Override
     public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {

@@ -8,7 +8,7 @@ import ar.edu.itba.paw.models.Image;
 import java.util.Optional;
 
 public interface EnterpriseDao {
-    Enterprise create(String email, String name, String password,  String location, String categoryName, String workers, Integer year, String link, String description);
+    Enterprise create(String email, String name, String password,  String location, Category category, String workers, Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);
 

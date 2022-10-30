@@ -26,21 +26,12 @@ import java.util.Optional;
 public class EnterpriseHibernateDao implements EnterpriseDao {
 
     public static final Image DEFAULT_IMAGE = null;
-    private CategoryDao categoryDao;
-    private final ImageDao imageDao;
+
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    public EnterpriseHibernateDao(CategoryDao categoryDao, ImageDao imageDao) {
-        this.categoryDao = categoryDao;
-        this.imageDao = imageDao;
-    }
-
     @Override
-    public Enterprise create(String email, String name, String password, String location, String categoryName, String workers, Integer year, String link, String description) {
-        Category category = categoryDao.findByName(categoryName).orElseThrow(CategoryNotFoundException::new);
-
+    public Enterprise create(String email, String name, String password, String location, Category category, String workers, Integer year, String link, String description) {
         final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers, year, link, description, DEFAULT_IMAGE);
         em.persist(enterprise);
         return enterprise;
