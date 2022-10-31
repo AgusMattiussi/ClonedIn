@@ -104,7 +104,9 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))", User.class);
+        term = term.replace("_", "\\_");
+        term = term.replace("%", "\\%");
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'", User.class);
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         query.setParameter("term", term);
 

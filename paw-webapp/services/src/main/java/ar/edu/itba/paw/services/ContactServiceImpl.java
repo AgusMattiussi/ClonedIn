@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Primary
@@ -117,6 +115,11 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public boolean alreadyContacted(long userID, long jobOfferID) {
         return contactDao.alreadyContacted(userID, jobOfferID);
+    }
+
+    @Override
+    public boolean alreadyContactedByEnterprise(long userID, long enterpriseID) {
+        return contactDao.alreadyContactedByEnterprise(userID, enterpriseID);
     }
 
     @Override

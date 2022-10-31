@@ -166,7 +166,17 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td><%--<c:out value="${contact.user.yearsOfExperience}"/>--%></td>
+                                    <td>
+<%--                                        <c:set var="years" value="${contact.user.yearsOfExperience}"/>--%>
+<%--                                        <c:choose>--%>
+<%--                                            <c:when test="${years == 0}">--%>
+<%--                                                <spring:message code="profileInfoNotSpecified"/>--%>
+<%--                                            </c:when>--%>
+<%--                                            <c:otherwise>--%>
+<%--                                                <c:out value="${years}"/>--%>
+<%--                                            </c:otherwise>--%>
+<%--                                        </c:choose>--%>
+                                    </td>
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>
@@ -175,12 +185,12 @@
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
                                         <td>
-                                            <div class="d-flex">
                                                 <button class="btn btn-success" style="margin-bottom: 5px; width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
+                                            <div>
                                                 <button class="btn btn-danger" style="margin-bottom: 5px; margin-left: 5px; width: 90px;">
-                                                    <spring:message code="contactsCancelBtn"/>
+                                                    <spring:message code="notificationsReject"/>
                                                 </button>
                                             </div>
                                         </td>

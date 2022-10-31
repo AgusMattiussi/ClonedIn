@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -312,6 +310,15 @@ public class ContactHibernateDao implements ContactDao {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID");
         query.setParameter("userID", userID);
         query.setParameter("jobOfferID", jobOfferID);
+
+        return ((BigInteger) query.getSingleResult()).longValue() > 0;
+    }
+
+    @Override
+    public boolean alreadyContactedByEnterprise(long userID, long enterpriseID) {
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idEmpresa = :enterpriseID AND creadoPor = 0");
+        query.setParameter("userID", userID);
+        query.setParameter("enterpriseID", enterpriseID);
 
         return ((BigInteger) query.getSingleResult()).longValue() > 0;
     }

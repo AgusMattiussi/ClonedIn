@@ -46,6 +46,8 @@ public interface ContactService {
 
     boolean alreadyContacted(long userID, long jobOfferID);
 
+    boolean alreadyContactedByEnterprise(long userID, long enterpriseID);
+
     Optional<String> getStatus(User user, JobOffer jobOffer);
 
     void acceptJobOffer(User user, JobOffer jobOffer);
