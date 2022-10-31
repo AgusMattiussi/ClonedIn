@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

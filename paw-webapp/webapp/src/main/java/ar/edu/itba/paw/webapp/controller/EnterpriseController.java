@@ -234,8 +234,6 @@ public class EnterpriseController {
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
-        //TODO: mostrar las postulaciones generadas por los usuarios
-
         if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortBy.ANY, page - 1, itemsPerPage);
             path.append("?").append(status);

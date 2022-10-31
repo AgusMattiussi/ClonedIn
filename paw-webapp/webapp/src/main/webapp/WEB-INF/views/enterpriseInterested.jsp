@@ -163,16 +163,16 @@
                                     <c:if test="${statusName == 'pendiente'}">
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
-                                            <div class="row">
-                                            <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal">
-                                                <spring:message code="contactsCancelBtn"/>
-                                            </button>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="btn btn-success" style="margin-bottom: 5px; width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
+                                                    <spring:message code="notificationsAccept"/>
+                                                </button>
+                                                <button class="btn btn-danger" style="margin-bottom: 5px; margin-left: 5px; width: 90px;">
+                                                    <spring:message code="contactsCancelBtn"/>
+                                                </button>
                                             </div>
-                                            <div class="row">
-                                            <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal">
-                                                <spring:message code="contactsCancelBtn"/>
-                                            </button>
-                                            </div>
+                                        </td>
                                     </c:if>
                                     </td>
                                 </tr>

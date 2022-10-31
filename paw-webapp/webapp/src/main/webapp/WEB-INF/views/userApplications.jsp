@@ -155,10 +155,10 @@
                                         <div class="col">
                                             <div class="row">
                                                 <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-                                                <c:if test="${job.skills.size() == 0}">
+                                                <c:if test="${contact.jobOffer.skills.size() == 0}">
                                                     <p><spring:message code="profileInfoNotSpecified"/></p>
                                                 </c:if>
-                                                <c:forEach items="${job.skills}" var="skill">
+                                                <c:forEach items="${contact.jobOffer.skills}" var="skill">
                                                     <p><c:out value="${skill.description}"/></p>
                                                 </c:forEach>
                                             </div>
@@ -186,10 +186,11 @@
                                                 </h5>
                                                 <c:if test="${contact.status == 'pendiente'}">
                                                     <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-                                                    <!--FIXME: BOTON DE CANCELAR -->
-                                                    <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal">
-                                                        <spring:message code="notificationsAccept"/>
-                                                    </button>
+                                                    <a href="<c:url value="/cancelApplication/${contact.user.id}/${contact.jobOffer.id}"/>">
+                                                        <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;">
+                                                            <spring:message code="contactsCancelBtn"/>
+                                                        </button>
+                                                    </a>
                                                 </c:if>
                                             </div>
                                         </div>
