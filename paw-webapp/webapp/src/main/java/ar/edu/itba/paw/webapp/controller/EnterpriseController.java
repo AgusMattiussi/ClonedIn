@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -73,12 +74,11 @@ public class EnterpriseController {
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseHome");
         final List<User> usersList;
-        final int itemsPerPage = HOME_JOB_OFFERS_PER_PAGE;
         final int usersCount;
         StringBuilder path = new StringBuilder();
 
         if(request.getParameter("term") == null) {
-            usersList = userService.getUsersListByFilters(page - 1, itemsPerPage,
+            usersList = userService.getUsersListByFilters(page - 1, HOME_JOB_OFFERS_PER_PAGE,
                     enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(), enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
             usersCount = userService.getUsersCountByFilters(enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(),
                     enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
@@ -89,7 +89,7 @@ public class EnterpriseController {
         }
         else {
             //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
-            usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, itemsPerPage);
+            usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());
         }
@@ -98,7 +98,7 @@ public class EnterpriseController {
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("path", path.toString());
-        mav.addObject("pages", usersCount / itemsPerPage + 1);
+        mav.addObject("pages", PaginationHelper.getMaxPages(usersCount, HOME_JOB_OFFERS_PER_PAGE));
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
@@ -109,20 +109,21 @@ public class EnterpriseController {
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("enterpriseProfile");
-        final int itemsPerPage = ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE;
+
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("/profile : Enterprise {} not found in profileEnterprise()", loggedUser.getName());
             return new UserNotFoundException();
         });
-        List<JobOffer> jobOfferList = jobOfferService.findByEnterprise(enterprise, page - 1, itemsPerPage);
-        List<JobOffer> activeJobOfferList = jobOfferService.findActiveByEnterprise(enterprise, page - 1, itemsPerPage);
+
+        List<JobOffer> jobOfferList = jobOfferService.findByEnterprise(enterprise, page - 1, ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE);
+        List<JobOffer> activeJobOfferList = jobOfferService.findActiveByEnterprise(enterprise, page - 1, ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE);
 
         mav.addObject("enterprise", enterprise);
         mav.addObject("category", categoryService.findById(enterprise.getCategory().getId()));
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("activeJobOffers", activeJobOfferList);
-        mav.addObject("enterprisePages", jobOfferService.getJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
-        mav.addObject("userPages", jobOfferService.getActiveJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
+        mav.addObject("enterprisePages", PaginationHelper.getMaxPages(jobOfferService.getJobOffersCountForEnterprise(enterprise), ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE));
+        mav.addObject("userPages", PaginationHelper.getMaxPages(jobOfferService.getActiveJobOffersCountForEnterprise(enterprise), ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE));
         mav.addObject("currentPage", page);
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
@@ -203,18 +204,18 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseContacts");
-        final int itemsPerPage = CONTACTS_PER_PAGE;
+
         List<Contact> contactList;
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         StringBuilder path = new StringBuilder().append("/contactsEnterprise/").append(enterpriseId);
 
         if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortHelper.getSortBy(contactOrderForm.getSortBy()),
-                    page - 1, itemsPerPage);
+                    page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, CONTACTS_PER_PAGE);
             path.append("?status=").append(status);
         }
 
@@ -226,7 +227,7 @@ public class EnterpriseController {
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
-        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -239,18 +240,17 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseInterested");
-        final int itemsPerPage = CONTACTS_PER_PAGE;
         List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/interestedEnterprise/").append(enterpriseId);
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortBy.ANY, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortBy.ANY, page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, status, page - 1, CONTACTS_PER_PAGE);
             path.append("?status=").append(status);
         }
 
@@ -262,7 +262,7 @@ public class EnterpriseController {
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
-        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -397,7 +397,7 @@ public class EnterpriseController {
         });
 
         mav.addObject("user", user);
-        mav.addObject("jobOffers", jobOfferService.findActiveByEnterprise(enterprise /*, 0, 100*/));
+        mav.addObject("jobOffers", jobOfferService.findActiveByEnterprise(enterprise));
         mav.addObject("loggedUserID", loggedUserID);
         return mav;
     }

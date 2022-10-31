@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
+import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -86,7 +87,7 @@ public class UserController {
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
-        mav.addObject("pages", jobOffersCount / JOB_OFFERS_PER_PAGE + 1);
+        mav.addObject("pages",  PaginationHelper.getMaxPages(jobOffersCount, JOB_OFFERS_PER_PAGE));
         mav.addObject("currentPage", page);
         mav.addObject("path", path.toString());
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
@@ -236,7 +237,7 @@ public class UserController {
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
-        mav.addObject("pages", contactsCount / CONTACTS_PER_PAGE + 1);
+        mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -275,7 +276,7 @@ public class UserController {
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
-        mav.addObject("pages", contactsCount / CONTACTS_PER_PAGE + 1);
+        mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
         return mav;
     }
