@@ -118,13 +118,18 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
         else {
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            if(sortBy.equals(SortBy.DATE_ASC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status ORDER BY c.date ASC", Contact.class);
+            else if(sortBy.equals(SortBy.DATE_DESC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status ORDER BY c.date DESC", Contact.class);
+            else
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status", Contact.class);
             query.setParameter("filledBy", filledBy.getFilledBy());
         }
 
@@ -195,13 +200,24 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
         else {
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
+            if(sortBy.equals(SortBy.USERNAME))
+                query = em.createQuery("SELECT c FROM Contact c JOIN c.user u WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY u.name", Contact.class);
+            else if(sortBy.equals(SortBy.STATUS))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.status", Contact.class);
+            else if(sortBy.equals(SortBy.JOB_OFFER_POSITION))
+                query = em.createQuery("SELECT c FROM Contact c JOIN c.jobOffer j WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY j.position", Contact.class);
+            else if(sortBy.equals(SortBy.DATE_ASC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.date ASC", Contact.class);
+            else if(sortBy.equals(SortBy.DATE_DESC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
+            else
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
             query.setParameter("filledBy", filledBy.getFilledBy());
         }
 

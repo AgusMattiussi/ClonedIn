@@ -22,7 +22,7 @@ public interface ContactService {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
@@ -30,7 +30,7 @@ public interface ContactService {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, int page, int pageSize);
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
 

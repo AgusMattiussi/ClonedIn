@@ -26,7 +26,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="?status=aceptada"/>">
+                        <a href="<c:url value="?status=aceptada&sortBy=${sortById}"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                                 <spring:message code="aceptada"/>
                             </button>
@@ -40,7 +40,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="?status=rechazada"/>">
+                        <a href="<c:url value="?status=rechazada&sortBy=${sortById}"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                                 <spring:message code="rechazada"/>
                             </button>
@@ -54,7 +54,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="?status=pendiente"/>">
+                        <a href="<c:url value="?status=pendiente&sortBy=${sortById}"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                                 <spring:message code="pendiente"/>
                             </button>
@@ -68,7 +68,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="?status=cerrada"/>">
+                        <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                                 <spring:message code="cerrada"/>
                             </button>
@@ -82,7 +82,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="?status=cancelada"/>">
+                        <a href="<c:url value="?status=cancelada&sortBy=${sortById}"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
                                 <spring:message code="cancelada"/>
                             </button>

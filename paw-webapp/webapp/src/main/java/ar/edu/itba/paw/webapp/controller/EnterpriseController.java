@@ -244,11 +244,12 @@ public class EnterpriseController {
         if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortHelper.getSortBy(contactOrderForm.getSortBy()),
                     page - 1, CONTACTS_PER_PAGE);
-            path.append("?").append(status);
+            path.append("?").append("&");
         }
         else {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, page - 1, CONTACTS_PER_PAGE);
-            path.append("?status=").append(status);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, status, SortHelper.getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, CONTACTS_PER_PAGE);
+            path.append("?status=").append(status).append("&");
         }
 
         path.append("sortBy=").append(contactOrderForm.getSortBy());
@@ -258,6 +259,7 @@ public class EnterpriseController {
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("sortById", contactOrderForm.getSortBy());
         mav.addObject("path", path);
         mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
@@ -280,11 +282,12 @@ public class EnterpriseController {
         if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortHelper.getSortBy(contactOrderForm.getSortBy()),
                     page - 1, CONTACTS_PER_PAGE);
-            path.append("?").append(status);
+            path.append("?").append("&");
         }
         else {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, status, page - 1, CONTACTS_PER_PAGE);
-            path.append("?status=").append(status);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, status, SortHelper.getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, CONTACTS_PER_PAGE);
+            path.append("?status=").append(status).append("&");
         }
 
         long contactsCount = status.isEmpty()? contactService.getContactsForEnterprise(enterprise, FilledBy.USER).size() : contactList.size();
@@ -294,6 +297,7 @@ public class EnterpriseController {
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
+        mav.addObject("sortById", contactOrderForm.getSortBy());
         mav.addObject("path", path);
         mav.addObject("pages", PaginationHelper.getMaxPages(contactsCount, CONTACTS_PER_PAGE));
         mav.addObject("currentPage", page);
