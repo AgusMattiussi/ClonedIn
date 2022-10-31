@@ -17,7 +17,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 

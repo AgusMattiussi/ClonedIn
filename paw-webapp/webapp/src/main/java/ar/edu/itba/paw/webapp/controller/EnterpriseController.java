@@ -278,7 +278,8 @@ public class EnterpriseController {
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
 
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortBy.ANY, page - 1, CONTACTS_PER_PAGE);
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.USER, SortHelper.getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {

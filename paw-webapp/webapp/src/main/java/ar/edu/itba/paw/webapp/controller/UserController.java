@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.models.helpers.PaginationHelper;
+import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -222,7 +223,8 @@ public class UserController {
         StringBuilder path = new StringBuilder().append("/notificationsUser/").append(userId);
 
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, CONTACTS_PER_PAGE);
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, SortHelper.getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, CONTACTS_PER_PAGE);
             path.append("?");
         }
         else {
@@ -260,7 +262,8 @@ public class UserController {
         List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/applicationsUser/").append(userId);
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForUser(user, FilledBy.USER, page - 1, CONTACTS_PER_PAGE);
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, SortHelper.getSortBy(contactOrderForm.getSortBy()),
+                    page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {

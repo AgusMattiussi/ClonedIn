@@ -81,13 +81,18 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
         else {
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
+            if(sortBy.equals(SortBy.DATE_ASC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy ORDER BY c.date ASC", Contact.class);
+            else if(sortBy.equals(SortBy.DATE_DESC))
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
+            else
+                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
             query.setParameter("filledBy", filledBy.getFilledBy());
         }
 

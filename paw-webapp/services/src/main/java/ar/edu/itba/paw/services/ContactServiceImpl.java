@@ -48,8 +48,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, int page, int pageSize) {
-        return contactDao.getContactsForUser(user, filledBy, page, pageSize);
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
+        return contactDao.getContactsForUser(user, filledBy, sortBy, page, pageSize);
     }
 
     @Override
