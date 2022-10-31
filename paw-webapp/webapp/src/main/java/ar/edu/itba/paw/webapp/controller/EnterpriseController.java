@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -44,6 +45,9 @@ public class EnterpriseController {
     @Autowired
     protected AuthenticationManager authenticationManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
+    private static final int HOME_JOB_OFFERS_PER_PAGE = 8;
+    private static final int ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE = 4;
+    private static final int CONTACTS_PER_PAGE = 12;
 
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
@@ -69,7 +73,7 @@ public class EnterpriseController {
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseHome");
         final List<User> usersList;
-        final int itemsPerPage = 8;
+        final int itemsPerPage = HOME_JOB_OFFERS_PER_PAGE;
         final int usersCount;
         StringBuilder path = new StringBuilder();
 
@@ -105,7 +109,7 @@ public class EnterpriseController {
     public ModelAndView profileEnterprise(Authentication loggedUser, @PathVariable("enterpriseId") final long enterpriseId,
                                           @RequestParam(value = "page", defaultValue = "1") final int page) {
         final ModelAndView mav = new ModelAndView("enterpriseProfile");
-        final int itemsPerPage = 3;
+        final int itemsPerPage = ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE;
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
             LOGGER.error("/profile : Enterprise {} not found in profileEnterprise()", loggedUser.getName());
             return new UserNotFoundException();
@@ -199,13 +203,13 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseContacts");
-        final int itemsPerPage = 12;
+        final int itemsPerPage = CONTACTS_PER_PAGE;
         List<Contact> contactList;
         Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(UserNotFoundException::new);
         StringBuilder path = new StringBuilder().append("/contactsEnterprise/").append(enterpriseId);
 
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, getSortBy(contactOrderForm.getSortBy()),
+            contactList = contactService.getContactsForEnterprise(enterprise, FilledBy.ENTERPRISE, SortHelper.getSortBy(contactOrderForm.getSortBy()),
                     page - 1, itemsPerPage);
             path.append("?").append(status);
         }
@@ -235,7 +239,7 @@ public class EnterpriseController {
                                            @RequestParam(value = "page", defaultValue = "1") final int page,
                                            HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseInterested");
-        final int itemsPerPage = 12;
+        final int itemsPerPage = CONTACTS_PER_PAGE;
         List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/interestedEnterprise/").append(enterpriseId);
 
@@ -431,13 +435,5 @@ public class EnterpriseController {
         contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 
         return new ModelAndView("redirect:/");
-    }
-
-    private SortBy getSortBy(int index){
-        try{
-            return SortBy.values()[index];
-        }catch (ArrayIndexOutOfBoundsException e){
-            return SortBy.ANY;
-        }
     }
 }

@@ -31,6 +31,9 @@ public class DateHelper {
         monthToNumber.put("Diciembre", 12);
     }
 
+    private DateHelper() {
+    }
+
     public static Integer monthToNumber(String monthName){
         if(!monthToNumber.containsKey(monthName))
             throw new InvalidParameterException();
