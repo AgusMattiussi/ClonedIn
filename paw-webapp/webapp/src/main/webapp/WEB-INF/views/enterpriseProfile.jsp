@@ -136,8 +136,6 @@
                                 </button>
                             </a>
                         </div>
-                    </sec:authorize>
-                    <sec:authorize access="hasRole('ENTERPRISE')">
                         <c:choose>
                             <c:when test="${jobOffers.size() > 0}">
                                 <c:forEach items="${jobOffers}" var="joboffer">
@@ -191,9 +189,8 @@
                                                 <p><c:out value="${joboffer.description}"/></p>
                                                     <c:if test="${joboffer.available == 'Activa'}">
                                                         <div class="d-flex flex-column">
-                                                            <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal">
+                                                            <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal${joboffer.id}">
                                                                 <spring:message code="profileEnterpriseCloseJobOfferButton"/>
-                                                                <c:set var="jobOffer" value="${joboffer.id}"/>
                                                             </button>
                                                         </div>
                                                     </c:if>
@@ -205,6 +202,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Modal -->
+                                    <jsp:include page="../components/closeJobOfferModal.jsp">
+                                        <jsp:param name="jobOfferId" value="${joboffer.id}"/>
+                                    </jsp:include>
                                 </c:forEach>
                                 <!-- Pagination -->
                                 <jsp:include page="../components/pagination.jsp">
@@ -274,23 +275,6 @@
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <p><c:out value="${joboffer.description}"/></p>
-                                                <sec:authorize access="hasRole('ENTERPRISE')">
-                                                    <c:if test="${joboffer.available == 'Activa'}">
-                                                        <div class="d-flex flex-column">
-                                                            <a href="<c:url value="/closeJobOffer/${joboffer.id}"/>" >
-                                                                <button class="btn btn-secondary" style="white-space:normal; margin-bottom: 0.75rem; width: 200px"> <!-- data-bs-toggle="modal" data-bs-target="#closeJobOfferModal" -->
-                                                                    <spring:message code="profileEnterpriseCloseJobOfferButton"/>
-                                                                    <c:set var="jobOffer" value="${joboffer.id}"/>
-                                                                </button>
-                                                            </a>
-                                                        </div>
-                                                    </c:if>
-                                                </sec:authorize>
-                                                <c:if test="${joboffer.available == 'Cerrada'}">
-                                                <span class="badge badge-danger p-2 mb-2">
-                                                    <spring:message code="profileEnterpriseCloseJobOffer"/>
-                                                </span>
-                                                </c:if>
                                             </div>
                                         </div>
                                     </div>
@@ -314,9 +298,5 @@
         </div>
     </div>
     </div>
-    <!-- Modal -->
-    <jsp:include page="../components/closeJobOfferModal.jsp">
-        <jsp:param name="jobOfferId" value="${jobOffer}"/>
-    </jsp:include>
     </body>
 </html>
