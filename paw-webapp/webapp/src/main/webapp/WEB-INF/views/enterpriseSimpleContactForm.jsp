@@ -55,7 +55,7 @@
                             </div>
                           </div>
                           <p><spring:message code="contactFormRequiredMsg"/></p>
-                          <button type="submit" class="btn action-button" <%--data-bs-toggle="modal" data-bs-target="#mailConfirmationModal"--%>>
+                          <button class="btn action-button" data-bs-toggle="modal" data-bs-target="#mailConfirmationModal">
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
                           <div class="row">
@@ -65,6 +65,8 @@
                           </div>
                         </fieldset>
                       </form:form>
+                      <!-- Modal -->
+                      <jsp:include page="../components/mailConfirmationModal.jsp"/>
                     </c:otherwise>
                   </c:choose>
                 </div>
@@ -75,7 +77,5 @@
       </div>
     </div>
   </div>
-  <!-- Modal -->
-  <jsp:include page="../components/mailConfirmationModal.jsp"/>
 </body>
 </html>

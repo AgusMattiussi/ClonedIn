@@ -11,11 +11,6 @@
       <div class="modal-body">
         <spring:message code="mailModalMsg"/>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <spring:message code="mailModalClose"/>
-        </button>
-      </div>
     </div>
   </div>
 </div>
