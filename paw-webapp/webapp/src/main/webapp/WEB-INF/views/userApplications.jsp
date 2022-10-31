@@ -185,9 +185,8 @@
                                                     <spring:message code="notificationsStatus"/><spring:message code="${contact.status}"/>
                                                 </h5>
                                                 <c:if test="${contact.status == 'pendiente'}">
-                                                    <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-                                                    <a href="<c:url value="/cancelApplication/${contact.user.id}/${contact.jobOffer.id}"/>">
-                                                        <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;">
+                                                    <a>
+                                                        <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelApplicationModal${contact.user.id}${contact.jobOffer.id}">
                                                             <spring:message code="contactsCancelBtn"/>
                                                         </button>
                                                     </a>
@@ -204,6 +203,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Modal -->
+                            <jsp:include page="../components/cancelApplicationModal.jsp">
+                                <jsp:param name="contactId" value="${contact.jobOffer.id}"/>
+                                <jsp:param name="contactUserId" value="${contact.user.id}"/>
+                            </jsp:include>
                         </c:forEach>
                         <!-- Pagination -->
                         <jsp:include page="../components/pagination.jsp">

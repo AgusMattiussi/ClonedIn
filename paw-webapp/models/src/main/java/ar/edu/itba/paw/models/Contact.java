@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -87,8 +88,8 @@ public class Contact {
         return filledBy;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
     @Override
