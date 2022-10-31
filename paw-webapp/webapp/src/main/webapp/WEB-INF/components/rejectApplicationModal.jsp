@@ -2,11 +2,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
-<div class="modal fade" id="rejectJobOfferModal${param.jobOfferId}" tabindex="-1" aria-labelledby="rejectJobOfferModalLabel" aria-hidden="true">
+<div class="modal fade" id="rejectApplicationModal${param.userId}${param.jobOfferId}" tabindex="-1" aria-labelledby="rejectApplicationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="rejectJobOfferModalLabel"><spring:message code="answerJobOfferModalTitle"/></h5>
+                <h5 class="modal-title" id="rejectApplicationModalLabel"><spring:message code="answerJobOfferModalTitle"/></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

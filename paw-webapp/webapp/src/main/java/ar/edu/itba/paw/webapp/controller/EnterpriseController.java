@@ -196,37 +196,39 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }
 
-//    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-//    @RequestMapping("/answerApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
-//    public ModelAndView answerJobOffer(Authentication loggedUser,
-//                                       @PathVariable("userId") final long userId,
-//                                       @PathVariable("jobOfferId") final long jobOfferId,
-//                                       @PathVariable("answer") final long answer) {
-//
-//        User user = userService.findById(userId).orElseThrow(() -> {
-//            LOGGER.error("User not found");
-//            return new UserNotFoundException();
-//        });
-//        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
-//            LOGGER.error("Job Offer not found");
-//            return new JobOfferNotFoundException();
-//        });
-//        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
-//            LOGGER.error("Enterprise not found");
-//            return new UserNotFoundException();
-//        });
-//
-//        if(answer==0) {
-//            contactService.rejectJobOffer(user, jobOffer);
-//            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
-//        }
-//        else {
-//            contactService.acceptJobOffer(user, jobOffer);
-//            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
-//        }
-//
-//        return new ModelAndView("redirect:/notificationsUser/" + userId);
-//    }
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @RequestMapping("/answerApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
+    public ModelAndView answerJobOffer(Authentication loggedUser,
+                                       @PathVariable("jobOfferId") final long jobOfferId,
+                                       @PathVariable("userId") final long userId,
+                                       @PathVariable("answer") final long answer) {
+
+        long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
+        Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
+            LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        if(answer==0) {
+            contactService.rejectJobOffer(user, jobOffer);
+            emailService.sendRejectApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        }
+        else {
+            contactService.acceptJobOffer(user, jobOffer);
+            emailService.sendAcceptApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        }
+
+        return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
+    }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/contactsEnterprise/{enterpriseId:[0-9]+}")

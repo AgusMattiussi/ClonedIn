@@ -185,18 +185,26 @@
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
                                         <td>
-                                                <button class="btn btn-success" style="margin-bottom: 5px; width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
-                                                    <spring:message code="notificationsAccept"/>
-                                                </button>
-                                            <div>
-                                                <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;">
-                                                    <spring:message code="notificationsReject"/>
-                                                </button>
-                                            </div>
+                                            <button class="btn btn-success" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptApplicationModal${contact.user.id}${contact.jobOffer.id}">
+                                                <spring:message code="notificationsAccept"/>
+                                            </button>
+                                            <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#rejectApplicationModal${contact.user.id}${contact.jobOffer.id}">
+                                                <spring:message code="notificationsReject"/>
+                                            </button>
                                         </td>
                                     </c:if>
                                     </td>
                                 </tr>
+                                <!-- Modal -->
+                                <jsp:include page="../components/acceptApplicationModal.jsp">
+                                    <jsp:param name="userId" value="${contact.user.id}"/>
+                                    <jsp:param name="jobOfferId" value="${contact.jobOffer.id}"/>
+                                </jsp:include>
+                                <!-- Modal -->
+                                <jsp:include page="../components/rejectApplicationModal.jsp">
+                                    <jsp:param name="userId" value="${contact.user.id}"/>
+                                    <jsp:param name="jobOfferId" value="${contact.jobOffer.id}"/>
+                                </jsp:include>
                             </c:forEach>
                             </tbody>
                         </table>
@@ -212,11 +220,6 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<jsp:include page="../components/cancelJobOfferModal.jsp">
-    <jsp:param name="contactId" value="${contactId}"/>
-    <jsp:param name="contactUserId" value="${contactUserId}"/>
-</jsp:include>
 </body>
 </html>
 
