@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
-<div class="modal fade" id="cancelJobOfferModal" tabindex="-1" aria-labelledby="cancelJobOfferLabel" aria-hidden="true">
+<div class="modal fade" id="cancelJobOfferModal${param.contactUserId}${param.contactId}" tabindex="-1" aria-labelledby="cancelJobOfferLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

@@ -167,16 +167,19 @@
                                     <td><spring:message code="${statusName}"/></td>
                                     <td>
                                     <c:if test="${statusName == 'pendiente'}">
-                                        <c:set var="contactId" value="${contact.jobOffer.id}"/>
-                                        <c:set var="contactUserId" value="${contact.user.id}"/>
-                                            <a href="<c:url value="/cancelJobOffer/${contact.user.id}/${contact.jobOffer.id}"/>">
-                                                <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal" -->
+                                            <a>
+                                                <button class="btn btn-danger" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#cancelJobOfferModal${contact.user.id}${contact.jobOffer.id}">
                                                     <spring:message code="contactsCancelBtn"/>
                                                 </button>
                                             </a>
                                     </c:if>
                                     </td>
                                 </tr>
+                                <!-- Modal -->
+                                <jsp:include page="../components/cancelJobOfferModal.jsp">
+                                    <jsp:param name="contactId" value="${contact.jobOffer.id}"/>
+                                    <jsp:param name="contactUserId" value="${contact.user.id}"/>
+                                </jsp:include>
                             </c:forEach>
                         </tbody>
                     </table>
@@ -192,10 +195,5 @@
         </div>
         </div>
     </div>
-    <!-- Modal -->
-    <jsp:include page="../components/cancelJobOfferModal.jsp">
-        <jsp:param name="contactId" value="${contactId}"/>
-        <jsp:param name="contactUserId" value="${contactUserId}"/>
-    </jsp:include>
 </body>
 </html>
