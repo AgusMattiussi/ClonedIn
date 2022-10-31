@@ -154,8 +154,19 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td><c:out value="${contact.user.skills}"/></td>
-                                    <td><c:out value="${contact.user.yearsOfExperience}"/></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${contact.user.skills.size() == 0}">
+                                                <spring:message code="profileInfoNotSpecified"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:forEach var="skill" items="${contact.user.skills}" begin="0" end="2">
+                                                    <c:out value="${skill.description}"/>
+                                                </c:forEach>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td><%--<c:out value="${contact.user.yearsOfExperience}"/>--%></td>
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td><spring:message code="${statusName}"/></td>

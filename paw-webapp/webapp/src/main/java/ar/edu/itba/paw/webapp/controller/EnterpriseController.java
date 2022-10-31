@@ -250,7 +250,7 @@ public class EnterpriseController {
             path.append("?status=").append(status);
         }
 
-        long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
+        long contactsCount = status.isEmpty()? contactService.getContactsForEnterprise(enterprise, FilledBy.USER).size() : contactList.size();
 
         path.append("sortBy=").append(contactOrderForm.getSortBy());
 

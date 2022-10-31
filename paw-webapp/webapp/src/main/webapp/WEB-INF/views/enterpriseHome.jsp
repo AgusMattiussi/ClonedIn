@@ -162,7 +162,7 @@
                                                                         <spring:message code="profileNoSkillsMsg"/>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <c:forEach var="skill" items="${us.skills}">
+                                                                        <c:forEach var="skill" items="${us.skills}" begin="0" end="3">
                                                                             <span class="badge badge-pill badge-success">
                                                                                 <c:out value="${skill.description}"/>
                                                                             </span>
