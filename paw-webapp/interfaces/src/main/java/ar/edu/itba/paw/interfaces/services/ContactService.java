@@ -65,7 +65,7 @@ public interface ContactService {
     long getContactsCountForEnterprise(long enterpriseID);
     long getContactsCountForEnterprise(Enterprise enterprise);
 
-    long getContactsCountForUser(long userID);
+    long getContactsCountForUser(long userID, FilledBy filledBy);
 
     long getContactsCountForUser(User user);
 

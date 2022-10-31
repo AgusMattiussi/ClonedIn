@@ -89,7 +89,7 @@ public class Contact {
     }
 
     public String getDate() {
-        return new SimpleDateFormat("dd/MM/yyyy").format(date);
+        return date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : null;
     }
 
     @Override

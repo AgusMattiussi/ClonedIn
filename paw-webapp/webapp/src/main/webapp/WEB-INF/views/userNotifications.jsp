@@ -159,10 +159,10 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsSkills"/></h5>
-                                        <c:if test="${job.skills.size() == 0}">
+                                        <c:if test="${contact.jobOffer.skills.size() == 0}">
                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                         </c:if>
-                                        <c:forEach items="${job.skills}" var="skill">
+                                        <c:forEach items="${contact.jobOffer.skills}" var="skill">
                                             <p><c:out value="${skill.description}"/></p>
                                         </c:forEach>
                                     </div>
@@ -172,13 +172,12 @@
                                         <h5 class="card-title">
                                             <spring:message code="notificationsDate"/>
                                         </h5>
-                                        <c:set var="date" value="${contact.date}"/>
                                         <c:choose>
-                                            <c:when test="${date == null}">
+                                            <c:when test="${contact.date == null}">
                                                 <spring:message code="profileInfoNotSpecified"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <p class="card-text"><c:out value="${date}"/></p>
+                                                <p class="card-text"><c:out value="${contact.date}"/></p>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -225,7 +224,7 @@
                 </c:forEach>
                 <!-- Pagination -->
                 <jsp:include page="../components/pagination.jsp">
-                    <jsp:param name="path" value="/notificationsUser/${user.id}/?"/>
+                    <jsp:param name="path" value="${path}&"/>
                     <jsp:param name="currentPage" value="${currentPage}" />
                     <jsp:param name="pages" value="${pages}" />
                 </jsp:include>

@@ -316,9 +316,10 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public boolean alreadyContactedByEnterprise(long userID, long enterpriseID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idEmpresa = :enterpriseID AND creadoPor = 0");
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("userID", userID);
         query.setParameter("enterpriseID", enterpriseID);
+        query.setParameter("filledBy", FilledBy.ENTERPRISE.getFilledBy());
 
         return ((BigInteger) query.getSingleResult()).longValue() > 0;
     }
@@ -388,8 +389,9 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public long getContactsCountForEnterprise(long enterpriseID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID");
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("enterpriseID", enterpriseID);
+        query.setParameter("filledBy", FilledBy.ENTERPRISE.getFilledBy());
         return ((BigInteger) query.getSingleResult()).longValue();
     }
 
@@ -401,9 +403,11 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForUser(long userID) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID");
+    public long getContactsCountForUser(long userID, FilledBy filledBy) {
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND creadoPor = :filledBy");
         query.setParameter("userID", userID);
+        query.setParameter("filledBy", filledBy.getFilledBy());
+
         return ((BigInteger) query.getSingleResult()).longValue();
     }
 }

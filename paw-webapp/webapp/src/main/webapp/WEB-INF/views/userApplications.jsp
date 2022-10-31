@@ -211,7 +211,7 @@
                         </c:forEach>
                         <!-- Pagination -->
                         <jsp:include page="../components/pagination.jsp">
-                            <jsp:param name="path" value="/notificationsUser/${user.id}/?"/>
+                            <jsp:param name="path" value="${path}&"/>
                             <jsp:param name="currentPage" value="${currentPage}" />
                             <jsp:param name="pages" value="${pages}" />
                         </jsp:include>
@@ -221,15 +221,5 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<jsp:include page="../components/acceptJobOfferModal.jsp">
-    <jsp:param name="userId" value="${user.id}"/>
-    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
-</jsp:include>
-<!-- Modal -->
-<jsp:include page="../components/rejectJobOfferModal.jsp">
-    <jsp:param name="userId" value="${user.id}"/>
-    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
-</jsp:include>
 </body>
 </html>

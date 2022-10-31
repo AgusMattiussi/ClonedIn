@@ -167,8 +167,8 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.getContactsCountForEnterprise(enterprise);
     }
     @Override
-    public long getContactsCountForUser(long userID) {
-        return contactDao.getContactsCountForUser(userID);
+    public long getContactsCountForUser(long userID, FilledBy filledBy) {
+        return contactDao.getContactsCountForUser(userID, filledBy);
     }
 
     @Override

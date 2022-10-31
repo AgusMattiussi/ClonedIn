@@ -189,7 +189,7 @@
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
                                             <div>
-                                                <button class="btn btn-danger" style="margin-bottom: 5px; margin-left: 5px; width: 90px;">
+                                                <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
                                             </div>

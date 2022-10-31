@@ -220,17 +220,18 @@ public class UserController {
 
         List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/notificationsUser/").append(userId);
+
         if(request.getParameter("status") == null) {
             contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, CONTACTS_PER_PAGE);
-            path.append("?").append(status);
+            path.append("?");
         }
         else {
             contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, CONTACTS_PER_PAGE);
             path.append("?status=").append(status);
         }
 
-        path.append("sortBy=").append(contactOrderForm.getSortBy());
-        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
+        path.append("&sortBy=").append(contactOrderForm.getSortBy());
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId, FilledBy.ENTERPRISE) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
@@ -269,7 +270,7 @@ public class UserController {
 
         path.append("sortBy=").append(contactOrderForm.getSortBy());
 
-        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
+        long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId, FilledBy.USER) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
