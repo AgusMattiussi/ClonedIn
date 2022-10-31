@@ -335,7 +335,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     private void updateJobOfferStatusForEveryone(JobOffer jobOffer, JobOfferStatus jobOfferStatus){
-        Query query = em.createQuery("UPDATE Contact SET status = :status WHERE user = :user AND jobOffer = :jobOffer");
+        Query query = em.createQuery("UPDATE Contact SET status = :status WHERE jobOffer = :jobOffer");
         query.setParameter("status", jobOfferStatus.getStatus());
         query.setParameter("jobOffer", jobOffer);
 
