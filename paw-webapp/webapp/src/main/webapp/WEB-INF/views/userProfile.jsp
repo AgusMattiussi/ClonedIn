@@ -82,7 +82,9 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <sec:authorize access="hasRole('USER')">
-                                                    <span class="badge badge-pill badge-success p-2"><spring:message code="${categoryName}"/></span>
+                                                    <a href="<c:url value="/home?category=${user.category.id}"/>">
+                                                        <span class="badge badge-pill badge-success p-2"><spring:message code="${categoryName}"/></span>
+                                                    </a>
                                                 </sec:authorize>
                                                 <sec:authorize access="hasRole('ENTERPRISE')">
                                                     <a href="<c:url value="/?category=${user.category.id}&location=&educationLevel="/>">
@@ -265,7 +267,7 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
-                                            <!-- FIXME: AGREGAR CLICK CON URL CORRECTA -->
+                                            <!-- FIXME: AGREGAR CLICK CON URL CORRECTA: Filtrar job offers/users con que requieran esa skill -->
                                             <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
                                                 <sec:authorize access="hasRole('USER')">
                                                     <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">
@@ -288,7 +290,5 @@
                 </div>
             </div>
     </div>
-    <!-- Modal -->
-<%--    <jsp:include page="../components/profileVisibilityModal.jsp"/>--%>
     </body>
 </html>
