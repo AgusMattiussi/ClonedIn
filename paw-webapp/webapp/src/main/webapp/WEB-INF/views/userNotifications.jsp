@@ -189,14 +189,13 @@
                                             <spring:message code="notificationsStatus"/><spring:message code="${contact.status}"/>
                                         </h5>
                                         <c:if test="${contact.status == 'pendiente'}">
-                                            <c:set var="jobOfferId" value="${contact.jobOffer.id}"/>
-                                            <a href="<c:url value="/answerJobOffer/${contact.user.id}/${contact.jobOffer.id}/1"/>">
-                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
+                                            <a>
+                                                <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal${contact.jobOffer.id}">
                                                     <spring:message code="notificationsAccept"/>
                                                 </button>
                                             </a>
-                                            <a href="<c:url value="/answerJobOffer/${contact.user.id}/${contact.jobOffer.id}/0"/>">
-                                                <button class="btn btn-danger" style="min-width: 90px"> <!-- data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal" -->
+                                            <a>
+                                                <button class="btn btn-danger" style="min-width: 90px" data-bs-toggle="modal" data-bs-target="#rejectJobOfferModal${contact.jobOffer.id}">
                                                     <spring:message code="notificationsReject"/>
                                                 </button>
                                             </a>
@@ -213,6 +212,16 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Modal -->
+                    <jsp:include page="../components/acceptJobOfferModal.jsp">
+                        <jsp:param name="userId" value="${user.id}"/>
+                        <jsp:param name="jobOfferId" value="${contact.jobOffer.id}"/>
+                    </jsp:include>
+                    <!-- Modal -->
+                    <jsp:include page="../components/rejectJobOfferModal.jsp">
+                        <jsp:param name="userId" value="${user.id}"/>
+                        <jsp:param name="jobOfferId" value="${contact.jobOffer.id}"/>
+                    </jsp:include>
                 </c:forEach>
                 <!-- Pagination -->
                 <jsp:include page="../components/pagination.jsp">
@@ -226,15 +235,5 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<jsp:include page="../components/acceptJobOfferModal.jsp">
-    <jsp:param name="userId" value="${user.id}"/>
-    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
-</jsp:include>
-<!-- Modal -->
-<jsp:include page="../components/rejectJobOfferModal.jsp">
-    <jsp:param name="userId" value="${user.id}"/>
-    <jsp:param name="jobOfferId" value="${jobOfferId}"/>
-</jsp:include>
 </body>
 </html>
