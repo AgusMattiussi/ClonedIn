@@ -42,6 +42,7 @@ public class UserController {
     private final ImageService imageService;
     private final CategoryService categoryService;
     private final SkillService skillService;
+    private final AuthUserDetailsService authUserDetailsService;
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -53,7 +54,8 @@ public class UserController {
                           final EducationService educationService, final UserSkillService userSkillService,
                           final EmailService emailService, final JobOfferService jobOfferService,
                           final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
-                          final ImageService imageService, final CategoryService categoryService, final SkillService skillService){
+                          final ImageService imageService, final CategoryService categoryService, final SkillService skillService,
+                          final AuthUserDetailsService authUserDetailsService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.experienceService = experienceService;
@@ -66,6 +68,7 @@ public class UserController {
         this.categoryService = categoryService;
         this.imageService = imageService;
         this.skillService = skillService;
+        this.authUserDetailsService = authUserDetailsService;
     }
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
@@ -86,7 +89,7 @@ public class UserController {
         mav.addObject("pages", jobOffersCount / JOB_OFFERS_PER_PAGE + 1);
         mav.addObject("currentPage", page);
         mav.addObject("path", path.toString());
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -136,7 +139,7 @@ public class UserController {
         mav.addObject("experiences", experienceService.findByUser(user));
         mav.addObject("educations", educationService.findByUser(user));
         mav.addObject("skills", user.getSkills());
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -175,7 +178,7 @@ public class UserController {
                                        @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("answer") final long answer) {
 
-        User user = userService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+        User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
@@ -229,7 +232,7 @@ public class UserController {
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
@@ -268,7 +271,7 @@ public class UserController {
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
@@ -545,23 +548,5 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
-    private boolean isUser(Authentication loggedUser){
-        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
-    }
 
-    private long getLoggerUserId(Authentication loggedUser){
-        if(isUser(loggedUser)) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("User not found");
-                return new UserNotFoundException();
-            });
-            return user.getId();
-        } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("Enterprise not found");
-                return new UserNotFoundException();
-            });
-            return enterprise.getId();
-        }
-    }
 }

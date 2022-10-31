@@ -4,7 +4,9 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,16 +24,8 @@ public class AuthUserDetailsService implements UserDetailsService {
     public static final String USER_ROLE = "ROLE_USER";
     public static final String ENTERPRISE_ROLE = "ROLE_ENTERPRISE";
 
-    private static final GrantedAuthority userSimpleGrantedAuthority  = new SimpleGrantedAuthority(USER_ROLE);
-    private static final GrantedAuthority enterpriseSimpleGrantedAuthority  = new SimpleGrantedAuthority(ENTERPRISE_ROLE);
-
-    public static GrantedAuthority getUserSimpleGrantedAuthority() {
-        return userSimpleGrantedAuthority;
-    }
-
-    public static GrantedAuthority getEnterpriseSimpleGrantedAuthority() {
-        return enterpriseSimpleGrantedAuthority;
-    }
+    private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(USER_ROLE);
+    private static final GrantedAuthority ENTERPRISE_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(ENTERPRISE_ROLE);
 
     @Autowired
     private UserService us;
@@ -64,7 +58,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(userSimpleGrantedAuthority);
+        authorities.add(USER_SIMPLE_GRANTED_AUTHORITY);
         return new AuthUser(user.getEmail(), user.getPassword(), authorities);
     }
     
@@ -75,7 +69,25 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(enterpriseSimpleGrantedAuthority);
+        authorities.add(ENTERPRISE_SIMPLE_GRANTED_AUTHORITY);
         return new AuthUser(enterprise.getEmail(), enterprise.getPassword(), authorities);
+    }
+
+    public boolean isUser(Authentication loggedUser){
+        return loggedUser.getAuthorities().contains(USER_SIMPLE_GRANTED_AUTHORITY);
+    }
+
+    public boolean isEnterprise(Authentication loggedUser){
+        return loggedUser.getAuthorities().contains(ENTERPRISE_SIMPLE_GRANTED_AUTHORITY);
+    }
+
+    public long getLoggerUserId(Authentication loggedUser){
+        if(isUser(loggedUser)) {
+            User user = us.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            return user.getId();
+        } else {
+            Enterprise enterprise = es.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            return enterprise.getId();
+        }
     }
 }

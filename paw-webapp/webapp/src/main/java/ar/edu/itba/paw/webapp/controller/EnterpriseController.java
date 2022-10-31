@@ -40,6 +40,7 @@ public class EnterpriseController {
     private final ContactService contactService;
     private final JobOfferSkillService jobOfferSkillService;
     private final ImageService imageService;
+    private final AuthUserDetailsService authUserDetailsService;
     @Autowired
     protected AuthenticationManager authenticationManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
@@ -47,7 +48,8 @@ public class EnterpriseController {
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
                                 final SkillService skillService, final EmailService emailService, final JobOfferService jobOfferService,
-                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService, final ImageService imageService){
+                                final ContactService contactService, final JobOfferSkillService jobOfferSkillService, final ImageService imageService,
+                                final AuthUserDetailsService authUserDetailsService){
         this.userService = userService;
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
@@ -57,6 +59,7 @@ public class EnterpriseController {
         this.contactService = contactService;
         this.jobOfferSkillService = jobOfferSkillService;
         this.imageService = imageService;
+        this.authUserDetailsService = authUserDetailsService;
     }
 
     @RequestMapping(value = "/", method = { RequestMethod.GET })
@@ -93,7 +96,7 @@ public class EnterpriseController {
         mav.addObject("path", path.toString());
         mav.addObject("pages", usersCount / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
 
@@ -117,16 +120,18 @@ public class EnterpriseController {
         mav.addObject("enterprisePages", jobOfferService.getJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
         mav.addObject("userPages", jobOfferService.getActiveJobOffersCountForEnterprise(enterprise) / itemsPerPage + 1);
         mav.addObject("currentPage", page);
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
 
+    //FIXME: Puede ser que cualquier empresa pueda cerrar una oferta por otra?
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping("/closeJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView closeJobOffer(Authentication loggedUser,
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
-        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+        long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
+        Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
             LOGGER.error("Enterprise {} not found in closeJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
@@ -145,7 +150,8 @@ public class EnterpriseController {
     public ModelAndView cancelJobOffer(Authentication loggedUser,
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
-        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+        long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
+        Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
             LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
@@ -165,7 +171,8 @@ public class EnterpriseController {
                                       @PathVariable("userId") final long userId,
                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
-        Enterprise enterprise = enterpriseService.findById(getLoggerUserId(loggedUser)).orElseThrow(() -> {
+        long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
+        Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
             LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
             return new UserNotFoundException();
         });
@@ -211,7 +218,7 @@ public class EnterpriseController {
 
         long contactsCount = status.isEmpty()? contactService.getContactsCountForEnterprise(enterpriseId) : contactList.size();
 
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
@@ -247,7 +254,7 @@ public class EnterpriseController {
 
         path.append("sortBy=").append(contactOrderForm.getSortBy());
 
-        mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
         mav.addObject("path", path);
@@ -372,7 +379,7 @@ public class EnterpriseController {
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
-        long loggedUserID = getLoggerUserId(loggedUser);
+        long loggedUserID = authUserDetailsService.getLoggerUserId(loggedUser);
         final ModelAndView mav = new ModelAndView("enterpriseSimpleContactForm");
 
         Enterprise enterprise = enterpriseService.findById(loggedUserID).orElseThrow(() -> {
@@ -391,6 +398,7 @@ public class EnterpriseController {
         return mav;
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
@@ -423,26 +431,6 @@ public class EnterpriseController {
         contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 
         return new ModelAndView("redirect:/");
-    }
-
-    private boolean isUser(Authentication loggedUser){
-        return loggedUser.getAuthorities().contains(AuthUserDetailsService.getUserSimpleGrantedAuthority());
-    }
-
-    private long getLoggerUserId(Authentication loggedUser){
-        if(isUser(loggedUser)) {
-            User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("User {} not found in getLoggerUserId()", loggedUser.getName());
-                return new UserNotFoundException();
-            });
-            return user.getId();
-        } else {
-            Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
-                LOGGER.error("Enterprise not found in getLoggerUserId()", loggedUser.getName());
-                return new UserNotFoundException();
-            });
-            return enterprise.getId();
-        }
     }
 
     private SortBy getSortBy(int index){
