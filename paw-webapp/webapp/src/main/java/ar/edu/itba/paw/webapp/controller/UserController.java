@@ -46,6 +46,7 @@ public class UserController {
     private static final String REJECT = "rejectMsg";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final int JOB_OFFERS_PER_PAGE = 4;
+    private static final int CONTACTS_PER_PAGE = 4;
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -125,6 +126,7 @@ public class UserController {
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
 
         final ModelAndView mav = new ModelAndView("userProfile");
+
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User {} not found", loggedUser.getName());
             return new UserNotFoundException();
@@ -179,33 +181,31 @@ public class UserController {
                                           @RequestParam(value = "page", defaultValue = "1") final int page,
                                           HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userNotifications");
-        final int itemsPerPage = 4;
-        List<Contact> contactList;
+
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
+        List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/notificationsUser/").append(userId);
-
-
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {
-            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, page - 1, CONTACTS_PER_PAGE);
             path.append("?status=").append(status);
         }
 
         path.append("sortBy=").append(contactOrderForm.getSortBy());
-
         long contactsCount = status.isEmpty()? contactService.getContactsCountForUser(userId) : contactList.size();
 
         mav.addObject("user", user);
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
-        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("pages", contactsCount / CONTACTS_PER_PAGE + 1);
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -218,21 +218,20 @@ public class UserController {
                                          @RequestParam(value = "page", defaultValue = "1") final int page,
                                          HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userApplications");
-        final int itemsPerPage = 4;
-        List<Contact> contactList;
+
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
+        List<Contact> contactList;
         StringBuilder path = new StringBuilder().append("/applicationsUser/").append(userId);
-
-
         if(request.getParameter("status") == null) {
-            contactList = contactService.getContactsForUser(user, FilledBy.USER, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, page - 1, CONTACTS_PER_PAGE);
             path.append("?").append(status);
         }
         else {
-            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, itemsPerPage);
+            contactList = contactService.getContactsForUser(user, FilledBy.USER, status, page - 1, CONTACTS_PER_PAGE);
             path.append("?status=").append(status);
         }
 
@@ -244,7 +243,7 @@ public class UserController {
         mav.addObject("loggedUserID", getLoggerUserId(loggedUser));
         mav.addObject("contactList", contactList);
         mav.addObject("status", status);
-        mav.addObject("pages", contactsCount / itemsPerPage + 1);
+        mav.addObject("pages", contactsCount / CONTACTS_PER_PAGE + 1);
         mav.addObject("currentPage", page);
         return mav;
     }
@@ -253,10 +252,13 @@ public class UserController {
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("userExperienceForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+
+        User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
-        }));
+        });
+
+        mav.addObject("user", user);
         return mav;
     }
 
@@ -276,7 +278,6 @@ public class UserController {
 
         Integer yearTo;
         Integer yearFrom;
-
         try {
             yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
             yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
@@ -289,8 +290,8 @@ public class UserController {
         Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
         Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
 
-        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat &&
-                (yearTo.compareTo(yearFrom) < 0 || yearTo.equals(yearFrom) && monthTo.compareTo(monthFrom) < 0);
+        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat && yearFrom != null &&
+                !DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo);
 
 
         if (errors.hasErrors() || yearFromIsEmpty || yearWrongFormat || monthOrYearEmpty || invalidDate) {
@@ -309,8 +310,7 @@ public class UserController {
         });
 
         Experience experience = experienceService.create(user, DateHelper.monthToNumber(experienceForm.getMonthFrom()), Integer.parseInt(experienceForm.getYearFrom()),
-                monthTo, yearTo,experienceForm.getCompany(),
-                experienceForm.getJob(), experienceForm.getJobDesc());
+                monthTo, yearTo,experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
 
         LOGGER.debug("A new experience was registered under id: {}", experience.getId());
         LOGGER.info("A new experience was registered");
@@ -330,23 +330,26 @@ public class UserController {
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("userEducationForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(() -> {
+
+        User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
-        }));
+        });
+
+        mav.addObject("user", user);
         return mav;
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
-        int yearFlag = educationForm.getYearTo().compareTo(educationForm.getYearFrom());
-        int monthFlag = DateHelper.monthToNumber(educationForm.getMonthTo()).compareTo(DateHelper.monthToNumber(educationForm.getMonthFrom()));
+        boolean isYearValid = DateHelper.isIntervalValid(educationForm.getYearFrom(), educationForm.getYearTo());
+        boolean isMonthValid = DateHelper.isIntervalValid(DateHelper.monthToNumber(educationForm.getMonthFrom()), DateHelper.monthToNumber(educationForm.getMonthTo()));
 
-        if (errors.hasErrors() || yearFlag < 0 || monthFlag < 0) {
-            if(yearFlag < 0)
+        if (errors.hasErrors() || !isYearValid || !isMonthValid) {
+            if(!isYearValid)
                 errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
-            else if (yearFlag == 0 && monthFlag < 0)
+            else if (!isMonthValid)
                 errors.rejectValue("monthTo", "InvalidDate", "End date cannot be before initial date");
             LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return formEducation(loggedUser, educationForm, userId);
@@ -356,14 +359,15 @@ public class UserController {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
         Education education = educationService.add(user, DateHelper.monthToNumber(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
-                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(), educationForm.getCollege(), educationForm.getComment());
+                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(),
+                educationForm.getCollege(), educationForm.getComment());
 
         LOGGER.debug("A new experience was registered under id: {}", education.getId());
         LOGGER.info("A new experience was registered");
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
-
     }
 
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
@@ -421,7 +425,13 @@ public class UserController {
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("imageForm");
-        mav.addObject("user", userService.findById(userId).orElseThrow(UserNotFoundException::new));
+
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        mav.addObject("user", user);
         return mav;
     }
 
@@ -433,10 +443,8 @@ public class UserController {
             return formImage(loggedUser, imageForm, userId);
         }
 
-        System.out.println("\n\n\n\n\n\n\n SUBIENDO IMAGEN \n\n");
         Image image = imageService.uploadImage(imageForm.getImage().getBytes());
         userService.updateProfileImage(userId, image);
-        System.out.println("\n\n\n\n\n\n\n\n");
 
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
@@ -444,6 +452,7 @@ public class UserController {
     @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
         LOGGER.debug("Trying to access profile image");
+
         Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
             LOGGER.error("Error loading image {}", imageId);
             return new ImageNotFoundException();
@@ -458,10 +467,12 @@ public class UserController {
     public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
                                      @PathVariable("userId") final long userId) {
         ModelAndView mav = new ModelAndView("userEditForm");
+
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
             return new UserNotFoundException();
         });
+
         mav.addObject("user", user);
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
@@ -481,9 +492,9 @@ public class UserController {
             category = null;
         } else {
             category = categoryService.findByName(categoryName).orElseThrow(() -> {
-            LOGGER.error("Category not found");
-            return new CategoryNotFoundException();
-        });
+                LOGGER.error("Category not found");
+                return new CategoryNotFoundException();
+            });
         }
 
         userService.updateUserInformation(userId, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),

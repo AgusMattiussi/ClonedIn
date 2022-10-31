@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.helpers.DateHelper;
 import org.postgresql.core.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -34,7 +35,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
             throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
 
         if(monthTo != null && yearTo != null) {
-            if (!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
+            if (!DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo))
                 throw new InvalidParameterException("La fecha" + monthFrom + "/" + yearFrom +
                         " - " + monthTo + "/" + yearTo + " es incorrecta");
         }
@@ -64,17 +65,4 @@ public class ExperienceHibernateDao implements ExperienceDao {
         query.executeUpdate();
     }
 
-    private boolean isMonthValid(int month){
-        return month >= 1 && month <= 12;
-    }
-
-    private boolean isYearValid(int year){
-        return year >= 1900 && year <= 2100;
-    }
-
-    private boolean isDateValid(int monthFrom, int yearFrom, int monthTo, int yearTo){
-        if(!isMonthValid(monthTo) || !isMonthValid(monthFrom) || !isYearValid(yearTo) || !isYearValid(yearFrom))
-            return false;
-        return yearTo > yearFrom || (yearTo == yearFrom && monthTo >= monthFrom);
-    }
 }
