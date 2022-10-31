@@ -123,9 +123,8 @@
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
                                                         <p class="card-text">${desc}</p>
-                                                    <c:set var="jobOfferId" value="${job.id}"/>
-                                                    <a href="<c:url value="/applyToJobOffer/${job.id}/${currentPage}"/>">
-                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;"> <!-- data-bs-toggle="modal" data-bs-target="#applicationModal" -->
+                                                    <a>
+                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
                                                             <spring:message code="userHomeApplicationButton"/>
                                                         </button>
                                                     </a>
@@ -133,6 +132,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Modal -->
+                                    <jsp:include page="../components/applicationModal.jsp">
+                                        <jsp:param name="currentPage" value="${currentPage}"/>
+                                        <jsp:param name="jobOfferId" value="${job.id}"/>
+                                    </jsp:include>
                                 </c:forEach>
                                 <!-- Pagination -->
                                 <jsp:include page="../components/pagination.jsp">
@@ -146,10 +150,5 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
-        <jsp:include page="../components/applicationModal.jsp">
-            <jsp:param name="currentPage" value="${currentPage}"/>
-            <jsp:param name="jobOfferId" value="${jobOfferId}"/>
-        </jsp:include>
     </body>
 </html>
