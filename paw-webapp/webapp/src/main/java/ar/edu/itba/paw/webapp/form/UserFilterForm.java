@@ -13,6 +13,8 @@ public class UserFilterForm {
     private String minSalary="";
     @Size(max = 50)
     private String maxSalary="";
+    @Size(max = 50)
+    private String term="";
     private int sortBy=0;
 
     public String getModality() {
@@ -61,6 +63,14 @@ public class UserFilterForm {
 
     public void setMaxSalary(String maxSalary) {
         this.maxSalary = maxSalary;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 
     public int getSortBy() {
