@@ -36,11 +36,12 @@ public class EmailServiceImpl implements EmailService {
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
-
     private static final String APPLICATION_TEMPLATE = "applicationEmail.html";
     private static final String CLOSE = "close";
     private static final String CANCEL = "cancel";
     private static final String ACCEPT = "acceptMsg";
+    private static final String ACCEPT_APPLICATION = "accept";
+    private static final String REJECT_APPLICATION = "reject";
     private static final String APPLY = "application";
     private static final String CANCEL_APPLICATION = "cancelApplication";
 
@@ -106,7 +107,7 @@ public class EmailServiceImpl implements EmailService {
         sendRegisterConfirmationEmail(email, enterpriseName, locale, "");
     }
 
-    void sendRegisterConfirmationEmail(String email, String username, Locale locale, String callToActionMsg) {
+    private void sendRegisterConfirmationEmail(String email, String username, Locale locale, String callToActionMsg) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", username);
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, locale));
@@ -148,7 +149,7 @@ public class EmailServiceImpl implements EmailService {
         sendFinishJobOfferCycleEmail(user, enterpriseName, jobOfferPosition, CANCEL, locale);
     }
 
-    void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action, Locale locale) {
+    private void sendFinishJobOfferCycleEmail(User user, String enterpriseName, String jobOfferPosition, String action, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", enterpriseName);
@@ -174,7 +175,7 @@ public class EmailServiceImpl implements EmailService {
         sendApplicationEmailHandler(enterprise, user, jobOfferPosition, CANCEL_APPLICATION, locale);
     }
 
-    void sendApplicationEmailHandler(Enterprise enterprise, User user, String jobOfferPosition, String action, Locale locale) {
+    private void sendApplicationEmailHandler(Enterprise enterprise, User user, String jobOfferPosition, String action, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", user.getName());
@@ -188,5 +189,29 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(enterprise.getEmail(), subject, APPLICATION_TEMPLATE, mailMap);
     }
 
+    @Async
+    @Override
+    public void sendAcceptApplicationEmail(User user, String enterpriseName, String email, String jobOfferPosition, Locale locale) {
+        sendReplyApplicationEmail(user, enterpriseName, email, jobOfferPosition, ACCEPT_APPLICATION, locale);
+    }
 
+    @Async
+    @Override
+    public void sendRejectApplicationEmail(User user, String enterpriseName, String email, String jobOfferPosition, Locale locale) {
+        sendReplyApplicationEmail(user, enterpriseName, email, jobOfferPosition, REJECT_APPLICATION, locale);
+    }
+
+    private void sendReplyApplicationEmail(User user, String enterpriseName, String email, String jobOfferPosition, String action, Locale locale) {
+        final Map<String, Object> mailMap = new HashMap<>();
+
+        mailMap.put("username", enterpriseName);
+        mailMap.put("answerMsg", messageSource.getMessage(action + "ApplicationMail.bodyMsg", null, locale));
+        mailMap.put("jobOffer", jobOfferPosition);
+        mailMap.put("contactsUrl", baseUrl + "/applicationsUser/" + user.getId());
+        mailMap.put("buttonMsg", messageSource.getMessage("replyApplicationMail.button", null, locale));
+
+        String subject = messageSource.getMessage(action + "ApplicationMail.subject", null, locale);
+
+        sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
+    }
 }
