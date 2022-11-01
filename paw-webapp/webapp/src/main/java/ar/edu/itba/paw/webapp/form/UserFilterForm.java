@@ -4,14 +4,15 @@ import javax.validation.constraints.Size;
 
 public class UserFilterForm {
     private String category="";
-
     private String modality="";
-
-    private String salary="";
     @Size(max = 50)
-    private String skills="";
+    private String skill="";
     @Size(max = 50)
     private String position="";
+    @Size(max = 50)
+    private String minSalary="";
+    @Size(max = 50)
+    private String maxSalary="";
     private int sortBy=0;
 
     public String getModality() {
@@ -30,20 +31,12 @@ public class UserFilterForm {
         this.category = category;
     }
 
-    public String getSalary() {
-        return salary;
+    public String getSkill() {
+        return skill;
     }
 
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
+    public void setSkill(String skill) {
+        this.skill = skill;
     }
 
     public String getPosition() {
@@ -52,6 +45,22 @@ public class UserFilterForm {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getMinSalary() {
+        return minSalary;
+    }
+
+    public void setMinSalary(String minSalary) {
+        this.minSalary = minSalary;
+    }
+
+    public String getMaxSalary() {
+        return maxSalary;
+    }
+
+    public void setMaxSalary(String maxSalary) {
+        this.maxSalary = maxSalary;
     }
 
     public int getSortBy() {

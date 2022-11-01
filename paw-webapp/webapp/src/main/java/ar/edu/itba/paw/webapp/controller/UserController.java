@@ -90,15 +90,25 @@ public class UserController {
 
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
-        String salary = filterForm.getSalary();
-        String skills = filterForm.getSkills();
+        String skill = filterForm.getSkill();
         String position = filterForm.getPosition();
+        String minSalary = filterForm.getMinSalary();
+        String maxSalary = filterForm.getMaxSalary();
+        String enterpriseName = searchForm.getTerm();
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality);
 
         final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, page - 1, JOB_OFFERS_PER_PAGE);
 
-        StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
+        StringBuilder path = new StringBuilder()
+                .append("?category=").append(filterForm.getCategory())
+                .append("&modality=").append(modality)
+                .append("&skill=").append(skill)
+                .append("&position=").append(position)
+                .append("&minSalary=").append(minSalary)
+                .append("&maxSalary=").append(maxSalary)
+                .append("&sortBy=").append(filterForm.getSortBy());
+
 
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("categories", categoryService.getAllCategories());
