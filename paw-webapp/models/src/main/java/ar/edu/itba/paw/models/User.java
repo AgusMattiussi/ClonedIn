@@ -56,7 +56,7 @@ public class User {
     private Image image;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Experience> experiences ;
+    private Set<Experience> experiences;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
@@ -143,7 +143,7 @@ public class User {
     public int getYearsOfExperience() {
         int result = 0;
 
-        for(Experience experience : experiences)
+        for (Experience experience : experiences)
             result += experience.getYearTo() - experience.getYearFrom();
 
         return result;

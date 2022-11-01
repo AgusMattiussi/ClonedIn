@@ -166,16 +166,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>
-<%--                                        <c:set var="years" value="${contact.user.yearsOfExperience}"/>--%>
-<%--                                        <c:choose>--%>
-<%--                                            <c:when test="${years == 0}">--%>
-<%--                                                <spring:message code="profileInfoNotSpecified"/>--%>
-<%--                                            </c:when>--%>
-<%--                                            <c:otherwise>--%>
-<%--                                                <c:out value="${years}"/>--%>
-<%--                                            </c:otherwise>--%>
-<%--                                        </c:choose>--%>
+                                    <td><c:out value="${contact.user.yearsOfExperience}"/>
                                     </td>
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
