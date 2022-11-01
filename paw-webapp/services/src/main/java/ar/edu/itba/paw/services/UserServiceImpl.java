@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,8 +70,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel, String skill) {
-        return userDao.getUsersCountByFilters(categoryId, location, educationLevel, skill);
+    public long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription) {
+        return userDao.getUsersCountByFilters(category, location, educationLevel, skillDescription);
     }
 
     @Override
@@ -94,8 +95,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel, String skill) {
-        return userDao.getUsersListByFilters(page, pageSize, categoryId, location, educationLevel, skill);
+    public List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize) {
+        return userDao.getUsersListByFilters(category, location, educationLevel, skillDescription, page, pageSize);
     }
 
     @Override

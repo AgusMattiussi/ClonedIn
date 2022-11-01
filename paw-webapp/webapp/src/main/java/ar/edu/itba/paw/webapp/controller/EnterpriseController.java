@@ -74,14 +74,28 @@ public class EnterpriseController {
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseHome");
         final List<User> usersList;
-        final int usersCount;
+        final long usersCount;
         StringBuilder path = new StringBuilder();
 
+        //TODO: Revisar esto
+        long categoryID;
+        try {
+            categoryID = Long.parseLong(enterpriseFilterForm.getCategory());
+        } catch (NumberFormatException e) {
+            LOGGER.error("Invalid CategoryID {} in 'home'", enterpriseFilterForm.getCategory());
+            categoryID = 0;
+        }
+
+        Category category = categoryService.findById(categoryID).orElse(null);
+        System.out.println("\n\n\n\n CATEGORY \n\n" + enterpriseFilterForm.getCategory() + "\n\n");
+
+        String location = enterpriseFilterForm.getLocation();
+        String educationLevel = enterpriseFilterForm.getEducationLevel();
+        String skillDescription = enterpriseFilterForm.getSkill();
+
         if(request.getParameter("term") == null) {
-            usersList = userService.getUsersListByFilters(page - 1, HOME_JOB_OFFERS_PER_PAGE,
-                    enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(), enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
-            usersCount = userService.getUsersCountByFilters(enterpriseFilterForm.getCategory(), enterpriseFilterForm.getLocation(),
-                    enterpriseFilterForm.getEducationLevel(), enterpriseFilterForm.getSkill());
+            usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
+            usersCount = userService.getUsersCountByFilters(category, location, educationLevel, skillDescription);
             path.append("?category=").append(enterpriseFilterForm.getCategory())
                     .append("&location=").append(enterpriseFilterForm.getLocation())
                     .append("&educationLevel=").append(enterpriseFilterForm.getEducationLevel())

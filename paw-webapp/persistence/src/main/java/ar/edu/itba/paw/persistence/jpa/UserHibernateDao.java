@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -82,6 +83,7 @@ public class UserHibernateDao implements UserDao {
         return (Long) query.getSingleResult();
     }
 
+
     @Override
     public List<User> getVisibleUsers(int page, int pageSize) {
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible", User.class);
@@ -124,7 +126,9 @@ public class UserHibernateDao implements UserDao {
         return query.getResultList();
     }
 
-    @Override
+
+
+    /*@Override
     public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel, String skill) {
         StringBuilder filterQuery = new StringBuilder();
         filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
@@ -172,7 +176,54 @@ public class UserHibernateDao implements UserDao {
 //            query.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[3]).append("', '%')");
 
         return query;
+    }*/
+
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder,Category category, String location, String educationLevel, String skillDescription){
+        if(category != null)
+            queryStringBuilder.append(" AND u.category = :category");
+        if(!location.isEmpty())
+            queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
+        if(!educationLevel.isEmpty())
+            queryStringBuilder.append(" AND u.education = :education");
+        if(!skillDescription.isEmpty())
+            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
     }
+
+    private void filterQuerySetParameters(Query query,Category category, String location, String educationLevel, String skillDescription){
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
+        if(category != null)
+            query.setParameter("category", category);
+        if(!location.isEmpty())
+            query.setParameter("location", location);
+        if(!educationLevel.isEmpty())
+            query.setParameter("education", educationLevel);
+        if(!skillDescription.isEmpty())
+            query.setParameter("skillDescription", skillDescription);
+    }
+
+    @Override
+    public List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, location, educationLevel, skillDescription);
+
+        TypedQuery<User> query = em.createQuery(queryStringBuilder.toString(), User.class);
+        filterQuerySetParameters(query, category, location, educationLevel, skillDescription);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(u) FROM User u WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, location, educationLevel, skillDescription);
+
+        Query query = em.createQuery(queryStringBuilder.toString());
+        filterQuerySetParameters(query, category, location, educationLevel, skillDescription);
+
+        return (Long) query.getSingleResult();
+    }
+
 
     @Override
     public void updateName(long userID, String newName) {
