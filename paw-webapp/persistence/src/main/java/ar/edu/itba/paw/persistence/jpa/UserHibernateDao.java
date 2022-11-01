@@ -9,7 +9,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -126,57 +125,6 @@ public class UserHibernateDao implements UserDao {
         return query.getResultList();
     }
 
-
-
-    /*@Override
-    public List<User> getUsersListByFilters(int page, int pageSize, String categoryId, String location, String educationLevel, String skill) {
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM usuario WHERE visibilidad=1");
-
-        filterQuery = buildFilterQuery(filterQuery, categoryId, location, educationLevel, skill);
-        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
-
-        Query query = em.createNativeQuery(filterQuery.toString(), User.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        return (List<User>) query.getResultList();
-    }
-
-    @Override
-    public Integer getUsersCountByFilters(String categoryId, String location, String educationLevel, String skill) {
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT COUNT(*) FROM usuario WHERE visibilidad=1");
-
-        filterQuery = buildFilterQuery(filterQuery, categoryId, location, educationLevel, skill);
-
-        Query query = em.createNativeQuery(filterQuery.toString());
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
-    }
-
-    private StringBuilder buildFilterQuery(StringBuilder query, String categoryId, String location, String educationLevel, String skill){
-        int catId;
-        try {
-            catId = Integer.parseInt(categoryId);
-        } catch (NumberFormatException exception){
-            catId = UNEXISTING_CATEGORY_ID;
-        }
-        Object[] sanitizedInputs = new Object[]{catId, location, educationLevel, skill};
-
-        if(!categoryId.isEmpty())
-            query.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
-
-        if(!location.isEmpty())
-            query.append(" AND ubicacion ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
-
-        if(!educationLevel.isEmpty())
-            query.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[2]).append("', '%')");
-
-//        if(!skill.isEmpty())
-//            query.append(" AND educacion ILIKE CONCAT('%', '").append(sanitizedInputs[3]).append("', '%')");
-
-        return query;
-    }*/
 
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder,Category category, String location, String educationLevel, String skillDescription){
         if(category != null)

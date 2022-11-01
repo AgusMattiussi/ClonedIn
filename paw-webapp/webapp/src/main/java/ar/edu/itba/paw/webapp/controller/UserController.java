@@ -79,10 +79,20 @@ public class UserController {
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
 
-        final int jobOffersCount = jobOfferService.getActiveJobOffersCount(filterForm.getCategory(), filterForm.getModality());
+        long categoryID;
+        try {
+            categoryID = Long.parseLong(filterForm.getCategory());
+        } catch (NumberFormatException e) {
+            LOGGER.error("Invalid CategoryID {} in 'home'", filterForm.getCategory());
+            categoryID = 0;
+        }
 
-        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(page - 1, JOB_OFFERS_PER_PAGE, filterForm.getCategory(),
-                filterForm.getModality());
+        Category category = categoryService.findById(categoryID).orElse(null);
+        String modality = filterForm.getModality();
+
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality);
+
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
 
