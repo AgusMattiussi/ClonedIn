@@ -75,7 +75,6 @@ public class UserController {
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
-                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
@@ -94,7 +93,7 @@ public class UserController {
         String position = filterForm.getPosition();
         String minSalary = filterForm.getMinSalary();
         String maxSalary = filterForm.getMaxSalary();
-        String enterpriseName = searchForm.getTerm();
+        String enterpriseName = filterForm.getTerm();
 
         long minSalaryLong;
         try {
@@ -125,6 +124,7 @@ public class UserController {
                 .append("&position=").append(position)
                 .append("&minSalary=").append(minSalary)
                 .append("&maxSalary=").append(maxSalary)
+                .append("&term=").append(enterpriseName)
                 .append("&sortBy=").append(filterForm.getSortBy());
 
 
