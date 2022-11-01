@@ -92,8 +92,8 @@ public class UserController {
         String modality = filterForm.getModality();
         String skill = filterForm.getSkill();
         String position = filterForm.getPosition();
-        String minSalary = filterForm.getMinSalary();
-        String maxSalary = filterForm.getMaxSalary();
+        String minSalary = String.valueOf(filterForm.getMinSalary());
+        String maxSalary = String.valueOf(filterForm.getMaxSalary());
         String enterpriseName = filterForm.getTerm();
 
         BigDecimal minSalaryBigDec = null;
@@ -127,8 +127,8 @@ public class UserController {
                 .append("&position=").append(position)
                 .append("&minSalary=").append(minSalary)
                 .append("&maxSalary=").append(maxSalary)
-                .append("&term=").append(enterpriseName)
-                .append("&sortBy=").append(filterForm.getSortBy());
+                .append("&term=").append(enterpriseName);
+//                .append("&sortBy=").append(filterForm.getSortBy());
 
 
         mav.addObject("jobOffers", jobOfferList);

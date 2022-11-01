@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class UserFilterForm {
     private String category="";
@@ -9,10 +12,12 @@ public class UserFilterForm {
     private String skill="";
     @Size(max = 50)
     private String position="";
-    @Size(max = 50)
-    private String minSalary="";
-    @Size(max = 50)
-    private String maxSalary="";
+    @Min(0)
+    @Max(1000000000)
+    private BigDecimal minSalary;
+    @Min(0)
+    @Max(1000000000)
+    private BigDecimal maxSalary;
     @Size(max = 50)
     private String term="";
     private int sortBy=0;
@@ -49,19 +54,19 @@ public class UserFilterForm {
         this.position = position;
     }
 
-    public String getMinSalary() {
+    public BigDecimal getMinSalary() {
         return minSalary;
     }
 
-    public void setMinSalary(String minSalary) {
+    public void setMinSalary(BigDecimal minSalary) {
         this.minSalary = minSalary;
     }
 
-    public String getMaxSalary() {
+    public BigDecimal getMaxSalary() {
         return maxSalary;
     }
 
-    public void setMaxSalary(String maxSalary) {
+    public void setMaxSalary(BigDecimal maxSalary) {
         this.maxSalary = maxSalary;
     }
 
