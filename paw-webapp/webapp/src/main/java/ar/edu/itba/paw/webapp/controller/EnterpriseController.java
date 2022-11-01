@@ -90,8 +90,8 @@ public class EnterpriseController {
         String location = enterpriseFilterForm.getLocation();
         String educationLevel = enterpriseFilterForm.getEducationLevel();
         String skillDescription = enterpriseFilterForm.getSkill();
-        String minExperience = enterpriseFilterForm.getMinExperience();
-        String maxExperience = enterpriseFilterForm.getMaxExperience();
+//        String minExperience = enterpriseFilterForm.getMinExperience();
+//        String maxExperience = enterpriseFilterForm.getMaxExperience();
 
         if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
@@ -99,10 +99,10 @@ public class EnterpriseController {
             path.append("?category=").append(enterpriseFilterForm.getCategory())
                     .append("&location=").append(location)
                     .append("&educationLevel=").append(educationLevel)
-                    .append("&skill=").append(skillDescription)
-                    .append("&minExperience=").append(minExperience)
-                    .append("&maxExperience=").append(maxExperience)
-                    .append("&sortBy=").append(enterpriseFilterForm.getSortBy());
+                    .append("&skill=").append(skillDescription);
+//                    .append("&minExperience=").append(minExperience)
+//                    .append("&maxExperience=").append(maxExperience)
+//                    .append("&sortBy=").append(enterpriseFilterForm.getSortBy());
         }
         else {
             usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
