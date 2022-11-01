@@ -76,6 +76,7 @@ public class UserController {
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
                              @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+                             @ModelAttribute("contactOrderForm") final ContactOrderForm contactOrderForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
 
