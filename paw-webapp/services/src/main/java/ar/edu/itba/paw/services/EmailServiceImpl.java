@@ -42,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String ACCEPT = "acceptMsg";
     private static final String ACCEPT_APPLICATION = "accept";
     private static final String REJECT_APPLICATION = "reject";
-    private static final String APPLY = "application";
+    private static final String SEND_APPLICATION = "sendApplication";
     private static final String CANCEL_APPLICATION = "cancelApplication";
 
 
@@ -166,7 +166,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale) {
-        sendApplicationEmailHandler(enterprise, user, jobOfferPosition, APPLY, locale);
+        sendApplicationEmailHandler(enterprise, user, jobOfferPosition, SEND_APPLICATION, locale);
     }
 
     @Async
@@ -184,7 +184,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("bodyMsg", messageSource.getMessage(action + "Mail.bodyMsg", null, locale));
         mailMap.put("buttonMsg", messageSource.getMessage(action + "Mail.button", null, locale));
 
-        String subject = messageSource.getMessage("applicationMail.subject", null, locale);
+        String subject = messageSource.getMessage(action + "Mail.subject", null, locale);
 
         sendEmail(enterprise.getEmail(), subject, APPLICATION_TEMPLATE, mailMap);
     }
