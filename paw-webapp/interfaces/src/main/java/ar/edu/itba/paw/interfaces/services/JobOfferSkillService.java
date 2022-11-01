@@ -9,13 +9,7 @@ public interface JobOfferSkillService {
 
     void addSkillToJobOffer(Skill skill, JobOffer jobOffer);
 
-    List<JobOffer> getJobOffersWithSkill(String skillDescription);
-
-    List<JobOffer> getJobOffersWithSkill(long skillID);
-
     List<JobOffer> getJobOffersWithSkill(Skill skill);
-
-    List<Skill> getSkillsForJobOffer(long jobOfferID);
 
     List<Skill> getSkillsForJobOffer(JobOffer jobOffer);
 }

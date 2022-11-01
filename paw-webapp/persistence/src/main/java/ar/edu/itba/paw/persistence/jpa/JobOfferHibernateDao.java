@@ -117,45 +117,43 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (Long) query.getSingleResult();
     }
 
-    @Override
-    public List<JobOffer> getJobOffersListByFilters(int page, int pageSize, String categoryId, String modality) {
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT * FROM ofertaLaboral WHERE disponible = 'Activa'");
-        filterQuery = buildFilterQuery(filterQuery, categoryId, modality);
-        filterQuery.append(" ORDER BY id OFFSET :offset LIMIT :limit ");
-        Query query = em.createNativeQuery(filterQuery.toString(), JobOffer.class);
-        query.setParameter("offset", pageSize * page);
-        query.setParameter("limit", pageSize);
-        return (List<JobOffer>) query.getResultList();
-    }
-
-    // TODO: Tratar de mejorar estos metodos
-    @Override
-    public Integer getActiveJobOffersCount(String categoryId, String modality) {
-        StringBuilder filterQuery = new StringBuilder();
-        filterQuery.append("SELECT COUNT(*) FROM ofertaLaboral WHERE disponible = 'Activa'");
-        filterQuery = buildFilterQuery(filterQuery, categoryId, modality);
-        Query query = em.createNativeQuery(filterQuery.toString());
-        BigInteger bi = (BigInteger) query.getSingleResult();
-        return bi.intValue();
-    }
-
-    private StringBuilder buildFilterQuery(StringBuilder query, String categoryId, String modality){
-        int catId;
-        try {
-            catId = Integer.parseInt(categoryId);
-        } catch (NumberFormatException exception){
-            catId = UNEXISTING_CATEGORY_ID;
-        }
-        Object[] sanitizedInputs = new Object[]{catId, modality};
-
-        if(!categoryId.isEmpty())
-            query.append(" AND idRubro = '").append(sanitizedInputs[0]).append("'");
-
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality){
+        if(category != null)
+            queryStringBuilder.append(" AND jo.category = :category");
         if(!modality.isEmpty())
-            query.append(" AND modalidad ILIKE CONCAT('%', '").append(sanitizedInputs[1]).append("', '%')");
+            queryStringBuilder.append(" AND jo.modality = :modality");
+    }
 
-        return query;
+    private void filterQuerySetParameters(Query query, Category category, String modality){
+        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
+        if(category != null)
+            query.setParameter("category", category);
+        if(!modality.isEmpty())
+            query.setParameter("modality", modality);
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersListByFilters(Category category, String modality, int page, int pageSize) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo WHERE jo.available = :active");
+        filterQueryAppendConditions(queryStringBuilder, category, modality);
+
+        TypedQuery<JobOffer> query = em.createQuery(queryStringBuilder.toString(), JobOffer.class);
+        filterQuerySetParameters(query, category, modality);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+
+    @Override
+    public long getActiveJobOffersCount(Category category, String modality) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.available = :active");
+        filterQueryAppendConditions(queryStringBuilder, category, modality);
+
+        Query query = em.createQuery(queryStringBuilder.toString());
+        filterQuerySetParameters(query, category, modality);
+
+        return (Long) query.getSingleResult();
     }
 
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){
