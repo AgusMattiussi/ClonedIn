@@ -129,9 +129,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
         if(maxSalary != null)
             queryStringBuilder.append(" AND jo.salary <= :maxSalary");
         if(!position.isEmpty())
-            queryStringBuilder.append(" AND LOWER(e.name) LIKE LOWER(CONCAT('%', :enterpriseName, '%'))");
+            queryStringBuilder.append(" AND LOWER(jo.position) LIKE LOWER(CONCAT('%', :position, '%'))");
         if(!enterpriseName.isEmpty())
-            queryStringBuilder.append(" AND LOWER(e.position) LIKE LOWER(CONCAT('%', :position, '%'))");
+            queryStringBuilder.append(" AND LOWER(e.name) LIKE LOWER(CONCAT('%', :enterpriseName, '%'))");
         if(!skillDescription.isEmpty())
             queryStringBuilder.append(" AND EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
                     .append(" AND LOWER(sk.description) LIKE LOWER(:skillDescription))");
@@ -145,9 +145,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
         if(!modality.isEmpty())
             query.setParameter("modality", modality);
         if(minSalary != null)
-            query.setParameter("minSalary", minSalary);
+            query.setParameter("minSalary", BigDecimal.valueOf(minSalary));
         if(maxSalary != null)
-            query.setParameter("maxSalary", maxSalary);
+            query.setParameter("maxSalary", BigDecimal.valueOf(maxSalary));
         if(!position.isEmpty())
             query.setParameter("position", position);
         if(!enterpriseName.isEmpty())

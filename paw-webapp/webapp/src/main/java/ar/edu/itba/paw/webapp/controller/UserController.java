@@ -95,20 +95,22 @@ public class UserController {
         String maxSalary = filterForm.getMaxSalary();
         String enterpriseName = filterForm.getTerm();
 
-        long minSalaryLong;
-        try {
-            minSalaryLong = Long.parseLong(minSalary);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
-            minSalaryLong = 0L;
+        Long minSalaryLong = null;
+        if(!minSalary.isEmpty()) {
+            try {
+                minSalaryLong = Long.parseLong(minSalary);
+            } catch (NumberFormatException e) {
+                LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
+            }
         }
 
-        long maxSalaryLong;
-        try {
-            maxSalaryLong = Long.parseLong(maxSalary);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
-            maxSalaryLong = 0L;
+        Long maxSalaryLong = null;
+        if(!maxSalary.isEmpty()) {
+            try {
+                maxSalaryLong = Long.parseLong(maxSalary);
+            } catch (NumberFormatException e) {
+                LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
+            }
         }
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
