@@ -61,12 +61,12 @@
                 <div class="d-flex justify-content-center ml-2">
                     <div>
                         <spring:message code="indexMinFilter" var="minFilterPlaceholder"/>
-                        <form:input type="text" path="minSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
+                        <form:input type="number" path="minSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
                     </div>
                     <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>
                     <div>
                         <spring:message code="indexMaxFilter" var="maxFilterPlaceholder"/>
-                        <form:input type="text" path="maxSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
+                        <form:input type="number" path="maxSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
                     </div>
                 </div>
                     <div class="dropdown ml-2 mt-2">
@@ -84,15 +84,16 @@
                 <br>
             </div>
             <div class="col mr-2">
-                <div class="d-flex justify-content-between mt-2">
-                    <h3><spring:message code="navbarMyNetwork"/></h3>
-                    <div style="width: 200px">
-                        <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">
-                            <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
-                            <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>
-                        </form:select>
-                    </div>
-                </div>
+                <h3 class="mt-2 mb-2"><spring:message code="navbarMyNetwork"/></h3>
+<%--                <div class="d-flex justify-content-between mt-2">--%>
+<%--                    <h3><spring:message code="navbarMyNetwork"/></h3>--%>
+<%--                    <div style="width: 200px">--%>
+<%--                        <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">--%>
+<%--                            <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>--%>
+<%--                            <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>--%>
+<%--                        </form:select>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
                 </form:form>
                 <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                     <div class="container">
