@@ -53,6 +53,14 @@ public class UserHibernateDao implements UserDao {
         return Optional.ofNullable(em.find(User.class, userId));
     }
 
+    @Override
+    public Optional<Long> getIdForEmail(String email) {
+        Query query = em.createQuery("SELECT u.id FROM User u WHERE u.email = :email");
+        query.setParameter("email", email);
+        Long id = (Long) query.getSingleResult();
+        return  Optional.ofNullable(id);
+    }
+
 
     @Override
     public boolean userExists(String email) {
