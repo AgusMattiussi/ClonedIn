@@ -5,6 +5,8 @@ public class UserFilterForm {
 
     private String modality="";
 
+    private int sortBy=0;
+
     public String getModality() {
         return modality;
     }
@@ -21,4 +23,11 @@ public class UserFilterForm {
         this.category = category;
     }
 
+    public int getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(int sortBy) {
+        this.sortBy = sortBy;
+    }
 }
