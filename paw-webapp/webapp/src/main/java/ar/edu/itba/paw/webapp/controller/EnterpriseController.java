@@ -87,7 +87,6 @@ public class EnterpriseController {
         }
 
         Category category = categoryService.findById(categoryID).orElse(null);
-        System.out.println("\n\n\n\n CATEGORY \n\n" + enterpriseFilterForm.getCategory() + "\n\n");
 
         String location = enterpriseFilterForm.getLocation();
         String educationLevel = enterpriseFilterForm.getEducationLevel();
@@ -97,9 +96,9 @@ public class EnterpriseController {
             usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = userService.getUsersCountByFilters(category, location, educationLevel, skillDescription);
             path.append("?category=").append(enterpriseFilterForm.getCategory())
-                    .append("&location=").append(enterpriseFilterForm.getLocation())
-                    .append("&educationLevel=").append(enterpriseFilterForm.getEducationLevel())
-                    .append("&skill=").append(enterpriseFilterForm.getSkill());
+                    .append("&location=").append(location)
+                    .append("&educationLevel=").append(educationLevel)
+                    .append("&skill=").append(skillDescription);
         }
         else {
             //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
@@ -107,6 +106,7 @@ public class EnterpriseController {
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());
         }
+
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());
