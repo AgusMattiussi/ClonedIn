@@ -96,11 +96,27 @@ public class UserController {
         String maxSalary = filterForm.getMaxSalary();
         String enterpriseName = searchForm.getTerm();
 
+        long minSalaryLong;
+        try {
+            minSalaryLong = Long.parseLong(minSalary);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
+            minSalaryLong = 0L;
+        }
 
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, "", skills, position, null, null);
+        long maxSalaryLong;
+        try {
+            maxSalaryLong = Long.parseLong(maxSalary);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
+            maxSalaryLong = 0L;
+        }
 
-        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, "", skills, position, null, null,
-                                                                                page - 1, JOB_OFFERS_PER_PAGE);
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
+                skill, position, minSalaryLong, maxSalaryLong);
+
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, enterpriseName,
+                skill, position, minSalaryLong, maxSalaryLong, page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder()
                 .append("?category=").append(filterForm.getCategory())
