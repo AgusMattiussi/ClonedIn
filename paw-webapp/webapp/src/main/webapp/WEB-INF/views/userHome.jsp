@@ -39,6 +39,18 @@
                             <form:option value="Mixto"><spring:message code="selectModeMixed"/></form:option>
                         </form:select>
                     </div>
+                    <br>
+                    <!-- FIXME: Agregar path=skill -->
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <spring:message code="skillsFormSubtitle" var="skillFilterPlaceholder"/>
+                        <form:input type="text" path="" cssStyle="border-radius: 5px" placeholder="${skillFilterPlaceholder}"/>
+                    </div>
+                <br>
+                    <!-- FIXME: Agregar path=location -->
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <spring:message code="locationFormSubtitle" var="locationFilterPlaceholder"/>
+                        <form:input type="text" path="" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
+                    </div>
                     <div class="dropdown ml-2 mt-2">
                         <a href="<c:url value="/home?page=1"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
@@ -51,7 +63,17 @@
                             <spring:message code="indexFilterBtn"/>
                         </button>
                     </div>
-
+                <br>
+                <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter"/></h5>
+                <div>
+                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">
+                        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
+                            <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form:form>
+                </div>
             </div>
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">
