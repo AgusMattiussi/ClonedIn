@@ -179,6 +179,7 @@
                                 <jsp:include page="../components/cancelJobOfferModal.jsp">
                                     <jsp:param name="contactId" value="${contact.jobOffer.id}"/>
                                     <jsp:param name="contactUserId" value="${contact.user.id}"/>
+                                    <jsp:param name="enterpriseId" value="${contact.jobOffer.enterprise.id}"/>
                                 </jsp:include>
                             </c:forEach>
                         </tbody>

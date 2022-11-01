@@ -143,11 +143,11 @@ public class EnterpriseController {
         return mav;
     }
 
-    //FIXME: Puede ser que cualquier empresa pueda cerrar una oferta por otra?
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/closeJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView closeJobOffer(Authentication loggedUser,
-                                      @PathVariable("jobOfferId") final long jobOfferId) {
+                                      @PathVariable("jobOfferId") final long jobOfferId,
+                                      @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
 
         long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
         Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
@@ -160,10 +160,13 @@ public class EnterpriseController {
             return new JobOfferNotFoundException();
         });
 
+
+
         jobOfferService.closeJobOffer(jobOffer);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
+    //TODO: Sirve este metodo?
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping("/cancelJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
@@ -184,11 +187,12 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/cancelJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
                                       @PathVariable("userId") final long userId,
-                                      @PathVariable("jobOfferId") final long jobOfferId) {
+                                      @PathVariable("jobOfferId") final long jobOfferId,
+                                      @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
 
         long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
         Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
@@ -210,12 +214,13 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
     @RequestMapping("/answerApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView answerJobOffer(Authentication loggedUser,
+    public ModelAndView answerApplication(Authentication loggedUser,
                                        @PathVariable("jobOfferId") final long jobOfferId,
                                        @PathVariable("userId") final long userId,
-                                       @PathVariable("answer") final long answer) {
+                                       @PathVariable("answer") final long answer,
+                                       @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
 
         long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
         Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {

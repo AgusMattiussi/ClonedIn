@@ -205,6 +205,7 @@
                                     <!-- Modal -->
                                     <jsp:include page="../components/closeJobOfferModal.jsp">
                                         <jsp:param name="jobOfferId" value="${joboffer.id}"/>
+                                        <jsp:param name="enterpriseId" value="${joboffer.enterprise.id}"/>
                                     </jsp:include>
                                 </c:forEach>
                                 <!-- Pagination -->

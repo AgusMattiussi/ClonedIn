@@ -16,7 +16,7 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
           <spring:message code="closeJobOfferModalCancelButton"/>
         </button>
-        <a href="<c:url value="/closeJobOffer/${param.jobOfferId}"/>" >
+        <a href="<c:url value="/closeJobOffer/${param.jobOfferId}?eid=${param.enterpriseId}"/>" >
           <button class="btn btn-danger" style="white-space:normal; margin-bottom: 0.75rem; width: 200px">
             <spring:message code="cancelJobOfferModalConfirmButton"/>
           </button>
