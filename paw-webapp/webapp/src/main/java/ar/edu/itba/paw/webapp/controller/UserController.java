@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.*;
 import java.io.IOException;
 
@@ -95,29 +96,29 @@ public class UserController {
         String maxSalary = filterForm.getMaxSalary();
         String enterpriseName = filterForm.getTerm();
 
-        Long minSalaryLong = null;
+        BigDecimal minSalaryBigDec = null;
         if(!minSalary.isEmpty()) {
             try {
-                minSalaryLong = Long.parseLong(minSalary);
+                minSalaryBigDec = BigDecimal.valueOf(Long.parseLong(minSalary));
             } catch (NumberFormatException e) {
                 LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
             }
         }
 
-        Long maxSalaryLong = null;
+        BigDecimal maxSalaryBigDec = null;
         if(!maxSalary.isEmpty()) {
             try {
-                maxSalaryLong = Long.parseLong(maxSalary);
+                maxSalaryBigDec = BigDecimal.valueOf(Long.parseLong(maxSalary));
             } catch (NumberFormatException e) {
                 LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
             }
         }
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
-                skill, position, minSalaryLong, maxSalaryLong);
+                skill, position, minSalaryBigDec, maxSalaryBigDec);
 
         final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, enterpriseName,
-                skill, position, minSalaryLong, maxSalaryLong, page - 1, JOB_OFFERS_PER_PAGE);
+                skill, position, minSalaryBigDec, maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder()
                 .append("?category=").append(filterForm.getCategory())
