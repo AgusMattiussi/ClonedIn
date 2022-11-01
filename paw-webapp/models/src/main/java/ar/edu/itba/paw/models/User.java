@@ -142,9 +142,10 @@ public class User {
 
     public int getYearsOfExperience() {
         int result = 0;
-
+        int currentYear=2022;
+        
         for (Experience experience : experiences)
-            result += experience.getYearTo() - experience.getYearFrom();
+            result += (experience.getYearTo() == null? currentYear:experience.getYearTo()) - experience.getYearFrom();
 
         return result;
     }

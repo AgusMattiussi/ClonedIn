@@ -17,7 +17,6 @@
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
-                    <!-- FIXME: NO SE COMO HACER PARA MANTENER LOS DOS BUSCADORES SIN QUE SE ROMPA -->
                     <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="searchForm" action="${getPath}" method="get">
@@ -27,8 +26,6 @@
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
                     </form:form>
-                    <!-- FIXME: AGREGAR FILTRO POR AÑOS DE EXPERIENCIA (PODRIAMOS HACER UN SELECTOR??) -->
-                    <!-- FIXME: UNA VEZ DEJADO LAS PROVINCIAS FIJAS - PASARLO A UN SELECTOR -->
                     <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="enterpriseFilterForm" action="${getPath}" method="get">
@@ -57,6 +54,21 @@
                                 <form:option value="Graduado"><spring:message code="Graduado"/></form:option>
                                 <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                             </form:select>
+                        </div>
+                        <br>
+                        <label class="d-flex flex-wrap justify-content-center ml-2" style="color:white"> <spring:message code="contactOrderFormSortByYearsOfExperience"/> </label>
+                        <div class="row ml-2">
+                            <div class="col">
+                            <spring:message code="minFormSubtitle" var="minFilterPlaceholder"/>
+                            <form:input type="text" path="min" cssStyle="border-radius: 5px" placeholder="${minFilterPlaceholder}"/>
+                            </div>
+                            <div class="col">
+                            -
+                            </div>
+                            <div class="col">
+                            <spring:message code="maxFormSubtitle" var="maxFilterPlaceholder"/>
+                            <form:input type="text" path="max" cssStyle="border-radius: 5px" placeholder="${maxFilterPlaceholder}"/>
+                            </div>
                         </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-center ml-2">

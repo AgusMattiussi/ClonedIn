@@ -47,8 +47,8 @@ public class EnterpriseController {
     protected AuthenticationManager authenticationManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
     private static final int HOME_JOB_OFFERS_PER_PAGE = 8;
-    private static final int ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE = 4;
-    private static final int CONTACTS_PER_PAGE = 12;
+    private static final int ENTERPRISE_PROFILE_JOB_OFFERS_PER_PAGE = 3;
+    private static final int CONTACTS_PER_PAGE = 10;
 
     @Autowired
     public EnterpriseController(final UserService userService, final EnterpriseService enterpriseService, final CategoryService categoryService,
@@ -91,6 +91,8 @@ public class EnterpriseController {
         String location = enterpriseFilterForm.getLocation();
         String educationLevel = enterpriseFilterForm.getEducationLevel();
         String skillDescription = enterpriseFilterForm.getSkill();
+        String min = enterpriseFilterForm.getMin();
+        String max = enterpriseFilterForm.getMax();
 
         if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);

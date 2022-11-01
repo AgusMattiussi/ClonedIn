@@ -48,8 +48,8 @@ public class UserController {
     private static final String ACCEPT = "acceptMsg";
     private static final String REJECT = "rejectMsg";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    private static final int JOB_OFFERS_PER_PAGE = 4;
-    private static final int CONTACTS_PER_PAGE = 4;
+    private static final int JOB_OFFERS_PER_PAGE = 3;
+    private static final int CONTACTS_PER_PAGE = 3;
 
     @Autowired
     public UserController(final UserService userService, final EnterpriseService enterpriseService, final ExperienceService experienceService,
@@ -90,6 +90,9 @@ public class UserController {
 
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
+        String salary = filterForm.getSalary();
+        String skills = filterForm.getSkills();
+        String position = filterForm.getPosition();
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality);
 
