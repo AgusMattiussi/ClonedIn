@@ -90,6 +90,9 @@ public class UserController {
 
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
+        String salary = filterForm.getSalary();
+        String skills = filterForm.getSkills();
+        String position = filterForm.getPosition();
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality);
 
