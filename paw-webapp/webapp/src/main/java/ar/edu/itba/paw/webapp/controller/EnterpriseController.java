@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.PaginationHelper;
@@ -91,8 +90,8 @@ public class EnterpriseController {
         String location = enterpriseFilterForm.getLocation();
         String educationLevel = enterpriseFilterForm.getEducationLevel();
         String skillDescription = enterpriseFilterForm.getSkill();
-        String min = enterpriseFilterForm.getMin();
-        String max = enterpriseFilterForm.getMax();
+        String minExperience = enterpriseFilterForm.getMinExperience();
+        String maxExperience = enterpriseFilterForm.getMaxExperience();
 
         if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
@@ -100,10 +99,12 @@ public class EnterpriseController {
             path.append("?category=").append(enterpriseFilterForm.getCategory())
                     .append("&location=").append(location)
                     .append("&educationLevel=").append(educationLevel)
-                    .append("&skill=").append(skillDescription);
+                    .append("&skill=").append(skillDescription)
+                    .append("&minExperience=").append(minExperience)
+                    .append("&maxExperience=").append(maxExperience)
+                    .append("&sortBy=").append(enterpriseFilterForm.getSortBy());
         }
         else {
-            //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
             usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());
@@ -161,9 +162,7 @@ public class EnterpriseController {
             LOGGER.error("Job offer {} not found in closeJobOffer()", jobOfferId);
             return new JobOfferNotFoundException();
         });
-
-
-
+        
         jobOfferService.closeJobOffer(jobOffer);
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }

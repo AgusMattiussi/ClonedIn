@@ -17,9 +17,19 @@
         </jsp:include>
         <div class="row h-100 w-100">
             <div class="col-sm-2 sidebar">
-                <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
                 <c:url value="/home" var="getPath"/>
-                <form:form modelAttribute="userFilterForm" action="${getPath}" method="get">
+                <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter"/></h5>
+                <div>
+                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">
+                        <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
+                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
+                            <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
+                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form:form>
+                </div>
+                <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
+            <form:form modelAttribute="userFilterForm" action="${getPath}" method="get">
                     <div class="d-flex flex-wrap justify-content-center ml-2">
                         <form:select path="category" cssClass="form-select">
                             <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>
@@ -39,6 +49,28 @@
                             <form:option value="Mixto"><spring:message code="selectModeMixed"/></form:option>
                         </form:select>
                     </div>
+                    <br>
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <spring:message code="skillsFormSubtitle" var="skillFilterPlaceholder"/>
+                        <form:input type="text" path="skill" cssStyle="border-radius: 5px" placeholder="${skillFilterPlaceholder}"/>
+                    </div>
+                    <br>
+                    <div class="d-flex flex-wrap justify-content-center ml-2">
+                        <spring:message code="indexPositionFilter" var="locationFilterPlaceholder"/>
+                        <form:input type="text" path="position" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
+                    </div>
+                <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="indexSalaryFilter"/> </label>
+                <div class="d-flex justify-content-center ml-2">
+                    <div>
+                        <spring:message code="indexMinFilter" var="minFilterPlaceholder"/>
+                        <form:input type="text" path="minSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
+                    </div>
+                    <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>
+                    <div>
+                        <spring:message code="indexMaxFilter" var="maxFilterPlaceholder"/>
+                        <form:input type="text" path="maxSalary" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
+                    </div>
+                </div>
                     <div class="dropdown ml-2 mt-2">
                         <a href="<c:url value="/home?page=1"/>">
                             <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
@@ -51,7 +83,7 @@
                             <spring:message code="indexFilterBtn"/>
                         </button>
                     </div>
-
+                <br>
             </div>
             <div class="col mr-2">
                 <div class="d-flex justify-content-between mt-2">

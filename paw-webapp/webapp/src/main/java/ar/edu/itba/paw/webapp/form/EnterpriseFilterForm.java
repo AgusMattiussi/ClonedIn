@@ -9,14 +9,10 @@ public class EnterpriseFilterForm {
     private String educationLevel="";
     @Size(max = 50)
     private String skill="";
-
-
-
     @Size(max = 50)
-    private String min="";
-
+    private String minExperience ="";
     @Size(max = 50)
-    private String max="";
+    private String maxExperience ="";
     private int sortBy=0;
 
     public String getCategory() {
@@ -50,20 +46,20 @@ public class EnterpriseFilterForm {
     public void setSkill(String skill) {
         this.skill = skill;
     }
-    public String getMin() {
-        return min;
+    public String getMinExperience() {
+        return minExperience;
     }
 
-    public void setMin(String min) {
-        this.min = min;
+    public void setMinExperience(String minExperience) {
+        this.minExperience = minExperience;
     }
 
-    public String getMax() {
-        return max;
+    public String getMaxExperience() {
+        return maxExperience;
     }
 
-    public void setMax(String max) {
-        this.max = max;
+    public void setMaxExperience(String maxExperience) {
+        this.maxExperience = maxExperience;
     }
     public int getSortBy() {
         return sortBy;
