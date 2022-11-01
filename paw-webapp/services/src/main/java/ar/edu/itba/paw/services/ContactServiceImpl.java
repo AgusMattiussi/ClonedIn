@@ -128,33 +128,33 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void acceptJobOffer(User user, JobOffer jobOffer) {
-        contactDao.acceptJobOffer(user, jobOffer);
+    public boolean acceptJobOffer(User user, JobOffer jobOffer) {
+        return contactDao.acceptJobOffer(user, jobOffer);
     }
 
     @Override
-    public void rejectJobOffer(User user, JobOffer jobOffer) {
-        contactDao.rejectJobOffer(user, jobOffer);
+    public boolean rejectJobOffer(User user, JobOffer jobOffer) {
+        return contactDao.rejectJobOffer(user, jobOffer);
     }
 
     @Override
-    public void cancelJobOffer(User user, JobOffer jobOffer) {
-        contactDao.cancelJobOffer(user, jobOffer);
+    public boolean cancelJobOffer(User user, JobOffer jobOffer) {
+        return contactDao.cancelJobOffer(user, jobOffer);
     }
 
     @Override
-    public void cancelJobOfferForEveryone(JobOffer jobOffer) {
-        contactDao.cancelJobOfferForEveryone(jobOffer);
+    public boolean cancelJobOfferForEveryone(JobOffer jobOffer) {
+        return contactDao.cancelJobOfferForEveryone(jobOffer);
     }
 
     @Override
-    public void closeJobOffer(User user, JobOffer jobOffer) {
-        contactDao.closeJobOffer(user, jobOffer);
+    public boolean closeJobOffer(User user, JobOffer jobOffer) {
+        return contactDao.closeJobOffer(user, jobOffer);
     }
 
     @Override
-    public void closeJobOfferForEveryone(JobOffer jobOffer) {
-        contactDao.closeJobOfferForEveryone(jobOffer);
+    public boolean closeJobOfferForEveryone(JobOffer jobOffer) {
+        return contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override

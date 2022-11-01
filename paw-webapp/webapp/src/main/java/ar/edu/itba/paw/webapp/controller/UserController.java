@@ -196,8 +196,9 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        contactService.cancelJobOffer(user, jobOffer);
-        emailService.sendCancelApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        boolean cancelled = contactService.cancelJobOffer(user, jobOffer);
+        if(cancelled)
+            emailService.sendCancelApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
@@ -224,12 +225,14 @@ public class UserController {
         });
 
         if(answer==0) {
-            contactService.rejectJobOffer(user, jobOffer);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
+            boolean rejected = contactService.rejectJobOffer(user, jobOffer);
+            if(rejected)
+                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
         }
         else {
-            contactService.acceptJobOffer(user, jobOffer);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
+            boolean accepted = contactService.acceptJobOffer(user, jobOffer);
+            if(accepted)
+                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);

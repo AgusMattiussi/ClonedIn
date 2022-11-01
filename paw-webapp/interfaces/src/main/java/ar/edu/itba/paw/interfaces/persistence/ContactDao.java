@@ -49,17 +49,17 @@ public interface ContactDao {
 
     Optional<String> getStatus(User user, JobOffer jobOffer);
 
-    void acceptJobOffer(User user, JobOffer jobOffer);
+    boolean acceptJobOffer(User user, JobOffer jobOffer);
 
-    void rejectJobOffer(User user, JobOffer jobOffer);
+    boolean rejectJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOffer(User user, JobOffer jobOffer);
+    boolean cancelJobOffer(User user, JobOffer jobOffer);
 
-    void cancelJobOfferForEveryone(JobOffer jobOffer);
+    boolean cancelJobOfferForEveryone(JobOffer jobOffer);
 
-    void closeJobOffer(User user, JobOffer jobOffer);
+    boolean closeJobOffer(User user, JobOffer jobOffer);
 
-    void closeJobOfferForEveryone(JobOffer jobOffer);
+    boolean closeJobOfferForEveryone(JobOffer jobOffer);
 
     long getContactsCountForEnterprise(Enterprise enterprise);
 
