@@ -59,12 +59,12 @@
                         <div class="d-flex justify-content-center ml-2">
                             <div>
                                 <spring:message code="indexMinFilter" var="minFilterPlaceholder"/>
-                                <form:input type="text" path="min" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
+                                <form:input type="text" path="minExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
                             </div>
                             <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>
                             <div>
                                 <spring:message code="indexMaxFilter" var="maxFilterPlaceholder"/>
-                                <form:input type="text" path="max" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
+                                <form:input type="text" path="maxExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
                             </div>
                         </div>
                         <br>
