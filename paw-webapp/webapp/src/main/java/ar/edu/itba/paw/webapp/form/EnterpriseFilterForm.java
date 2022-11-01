@@ -9,12 +9,8 @@ public class EnterpriseFilterForm {
     private String educationLevel="";
     @Size(max = 50)
     private String skill="";
-
-
-
     @Size(max = 50)
     private String min="";
-
     @Size(max = 50)
     private String max="";
     private int sortBy=0;

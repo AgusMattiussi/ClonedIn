@@ -100,10 +100,10 @@ public class EnterpriseController {
             path.append("?category=").append(enterpriseFilterForm.getCategory())
                     .append("&location=").append(location)
                     .append("&educationLevel=").append(educationLevel)
-                    .append("&skill=").append(skillDescription);
+                    .append("&skill=").append(skillDescription)
+                    .append("&sortBy=").append(enterpriseFilterForm.getSortBy());
         }
         else {
-            //usersList = userService.getUsersListBySkill(page - 1, itemsPerPage, searchForm.getTerm());
             usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());

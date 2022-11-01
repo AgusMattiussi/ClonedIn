@@ -8,14 +8,10 @@ public class UserFilterForm {
     private String modality="";
 
     private String salary="";
-
-
     @Size(max = 50)
     private String skills="";
-
     @Size(max = 50)
     private String position="";
-
     private int sortBy=0;
 
     public String getModality() {

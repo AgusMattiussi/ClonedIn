@@ -55,19 +55,16 @@
                                 <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                             </form:select>
                         </div>
-                        <br>
-                        <label class="d-flex flex-wrap justify-content-center ml-2" style="color:white"> <spring:message code="contactOrderFormSortByYearsOfExperience"/> </label>
-                        <div class="row ml-2">
-                            <div class="col">
-                            <spring:message code="minFormSubtitle" var="minFilterPlaceholder"/>
-                            <form:input type="text" path="min" cssStyle="border-radius: 5px" placeholder="${minFilterPlaceholder}"/>
+                        <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="contactOrderFormSortByYearsOfExperience"/> </label>
+                        <div class="d-flex justify-content-center ml-2">
+                            <div>
+                                <spring:message code="minFormSubtitle" var="minFilterPlaceholder"/>
+                                <form:input type="text" path="min" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
                             </div>
-                            <div class="col">
-                            -
-                            </div>
-                            <div class="col">
-                            <spring:message code="maxFormSubtitle" var="maxFilterPlaceholder"/>
-                            <form:input type="text" path="max" cssStyle="border-radius: 5px" placeholder="${maxFilterPlaceholder}"/>
+                            <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>
+                            <div>
+                                <spring:message code="maxFormSubtitle" var="maxFilterPlaceholder"/>
+                                <form:input type="text" path="max" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
                             </div>
                         </div>
                         <br>
@@ -130,7 +127,7 @@
                                                                             <spring:message code="profileInfoNotSpecified"/>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <a href="<c:url value="?category=${us.category.id}&location=&educationLevel="/>">
+                                                                            <a href="<c:url value="?category=${us.category.id}"/>">
                                                                                 <span class="badge badge-pill badge-success">
                                                                                     <spring:message code="${categoryName}"/>
                                                                                 </span>
