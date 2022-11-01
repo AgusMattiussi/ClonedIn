@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -54,8 +55,8 @@ public class User {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Experience> experiences;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Experience> experiences ;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
