@@ -27,24 +27,10 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersWithSkill(String skillDescription) {
-        return jobOfferSkillDao.getJobOffersWithSkill(skillDescription);
-    }
-
-    @Override
-    public List<JobOffer> getJobOffersWithSkill(long skillID) {
-        return jobOfferSkillDao.getJobOffersWithSkill(skillID);
-    }
-
-    @Override
     public List<JobOffer> getJobOffersWithSkill(Skill skill) {
         return jobOfferSkillDao.getJobOffersWithSkill(skill);
     }
 
-    @Override
-    public List<Skill> getSkillsForJobOffer(long jobOfferID) {
-        return jobOfferSkillDao.getSkillsForJobOffer(jobOfferID);
-    }
 
     @Override
     public List<Skill> getSkillsForJobOffer(JobOffer jobOffer) {
