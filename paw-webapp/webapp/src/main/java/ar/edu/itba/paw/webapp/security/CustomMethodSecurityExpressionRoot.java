@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
 import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
@@ -28,18 +29,18 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     }
 
     public boolean canAccessUserProfile(Authentication loggedUser, long profileID) {
-        User user = userService.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
-        return canAccessProfile(user.getId(), profileID);
+        Long userID = userService.getIdForEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+        return canAccessProfile(userID, profileID);
     }
 
     public boolean canAccessEnterpriseProfile(Authentication loggedEnterprise, long profileID) {
-        Enterprise enterprise = enterpriseService.findByEmail(loggedEnterprise.getName()).orElseThrow(UserNotFoundException::new);
-        return canAccessProfile(enterprise.getId(), profileID);
+        Long enterpriseID = enterpriseService.getIdForEmail(loggedEnterprise.getName()).orElseThrow(UserNotFoundException::new);
+        return canAccessProfile(enterpriseID, profileID);
     }
 
     public boolean isUserVisible(long userID){
         User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
-        if(user.getVisibility() != 1)
+        if(user.getVisibility() != Visibility.VISIBLE.getValue())
             throw new HiddenProfileException();
         return true;
     }
