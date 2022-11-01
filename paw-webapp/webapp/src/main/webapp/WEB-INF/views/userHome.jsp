@@ -61,7 +61,7 @@
                         <form:form modelAttribute="contactOrderForm" action="${getPath}" method="get">
                             <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">
                                 <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
-                                <form:option value="3"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>
+                                <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>
                             </form:select>
                         </form:form>
                     </div>

@@ -75,12 +75,18 @@
                                 <spring:message code="indexFilterBtn"/>
                             </button>
                         </div>
-                    </form:form>
                 </div>
                 <div class="col mr-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h3><spring:message code="navbarProfiles"/></h3>
+                        <div style="width: 200px">
+                            <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">
+                                <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>
+                                <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>
+                            </form:select>
+                        </div>
                     </div>
+                    </form:form>
                     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                         <div class="container">
                             <div class="card-deck justify-content-center mt-2 pt-2" >

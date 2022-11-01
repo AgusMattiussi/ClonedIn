@@ -9,6 +9,7 @@ public class EnterpriseFilterForm {
     private String educationLevel="";
     @Size(max = 50)
     private String skill="";
+    private int sortBy=0;
 
     public String getCategory() {
         return category;
@@ -40,5 +41,13 @@ public class EnterpriseFilterForm {
 
     public void setSkill(String skill) {
         this.skill = skill;
+    }
+
+    public int getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(int sortBy) {
+        this.sortBy = sortBy;
     }
 }
