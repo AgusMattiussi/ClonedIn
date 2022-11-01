@@ -90,13 +90,16 @@ public class UserController {
 
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
-        String salary = filterForm.getSalary();
+        //TODO: String salary = filterForm.getSalary();
         String skills = filterForm.getSkills();
         String position = filterForm.getPosition();
+        // TODO: String enterpriseName = filterForm.getEnterpriseName();
 
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality);
 
-        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, page - 1, JOB_OFFERS_PER_PAGE);
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, "", skills, position, null, null);
+
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, "", skills, position, null, null,
+                                                                                page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder().append("?category=").append(filterForm.getCategory()).append("&modality=").append(filterForm.getModality());
 
