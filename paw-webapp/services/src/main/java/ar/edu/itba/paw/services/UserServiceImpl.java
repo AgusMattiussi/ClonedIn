@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<Long> getIdForEmail(String email) {
+        return userDao.getIdForEmail(email);
+    }
+
+    @Override
     public boolean userExists(String email) {
         return userDao.userExists(email);
     }

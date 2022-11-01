@@ -46,6 +46,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    public Optional<Long> getIdForEmail(String email) {
+        return enterpriseDao.getIdForEmail(email);
+    }
+
+    @Override
     public boolean enterpriseExists(String email) {
         return enterpriseDao.enterpriseExists(email);
     }

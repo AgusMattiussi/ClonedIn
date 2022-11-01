@@ -14,6 +14,8 @@ public interface EnterpriseDao {
 
     Optional<Enterprise> findById(long enterpriseId);
 
+    Optional<Long> getIdForEmail(String email);
+
     void changePassword(String email, String password);
 
     boolean enterpriseExists(String email);

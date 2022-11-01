@@ -50,6 +50,14 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
+    public Optional<Long> getIdForEmail(String email) {
+        Query query = em.createQuery("SELECT e.id FROM Enterprise e WHERE e.email = :email");
+        query.setParameter("email", email);
+        Long id = (Long) query.getSingleResult();
+        return  Optional.ofNullable(id);
+    }
+
+    @Override
     public void changePassword(String email, String password) {
         Query query = em.createQuery("UPDATE Enterprise SET password = :password WHERE email = :email");
         query.setParameter("password", password);
