@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.expression.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -88,31 +89,15 @@ public class UserController {
             categoryID = 0;
         }
 
+        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
+        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
         String skill = filterForm.getSkill();
         String position = filterForm.getPosition();
-        String minSalary = String.valueOf(filterForm.getMinSalary());
-        String maxSalary = String.valueOf(filterForm.getMaxSalary());
         String enterpriseName = filterForm.getTerm();
-
-        BigDecimal minSalaryBigDec = null;
-        if(!minSalary.isEmpty()) {
-            try {
-                minSalaryBigDec = BigDecimal.valueOf(Long.parseLong(minSalary));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
-            }
-        }
-
-        BigDecimal maxSalaryBigDec = null;
-        if(!maxSalary.isEmpty()) {
-            try {
-                maxSalaryBigDec = BigDecimal.valueOf(Long.parseLong(maxSalary));
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
-            }
-        }
+        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
+        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
                 skill, position, minSalaryBigDec, maxSalaryBigDec);
