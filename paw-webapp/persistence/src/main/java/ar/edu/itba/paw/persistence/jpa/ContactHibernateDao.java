@@ -354,51 +354,51 @@ public class ContactHibernateDao implements ContactDao {
         return Optional.ofNullable(query.getSingleResult());
     }
 
-    private void updateJobOfferStatus(User user, JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+    private boolean updateJobOfferStatus(User user, JobOffer jobOffer, JobOfferStatus jobOfferStatus){
         Query query = em.createQuery("UPDATE Contact SET status = :status WHERE user = :user AND jobOffer = :jobOffer");
         query.setParameter("status", jobOfferStatus.getStatus());
         query.setParameter("user", user);
         query.setParameter("jobOffer", jobOffer);
 
-        query.executeUpdate();
+        return query.executeUpdate() > 0;
     }
 
-    private void updateJobOfferStatusForEveryone(JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+    private boolean updateJobOfferStatusForEveryone(JobOffer jobOffer, JobOfferStatus jobOfferStatus){
         Query query = em.createQuery("UPDATE Contact SET status = :status WHERE jobOffer = :jobOffer");
         query.setParameter("status", jobOfferStatus.getStatus());
         query.setParameter("jobOffer", jobOffer);
 
-        query.executeUpdate();
+        return query.executeUpdate() > 0;
     }
 
     @Override
-    public void acceptJobOffer(User user, JobOffer jobOffer) {
-        updateJobOfferStatus(user, jobOffer, JobOfferStatus.ACCEPTED);
+    public boolean acceptJobOffer(User user, JobOffer jobOffer) {
+       return updateJobOfferStatus(user, jobOffer, JobOfferStatus.ACCEPTED);
     }
 
     @Override
-    public void rejectJobOffer(User user, JobOffer jobOffer) {
-        updateJobOfferStatus(user, jobOffer, JobOfferStatus.DECLINED);
+    public boolean rejectJobOffer(User user, JobOffer jobOffer) {
+        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.DECLINED);
     }
 
     @Override
-    public void cancelJobOffer(User user, JobOffer jobOffer) {
-        updateJobOfferStatus(user, jobOffer, JobOfferStatus.CANCELLED);
+    public boolean cancelJobOffer(User user, JobOffer jobOffer) {
+        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.CANCELLED);
     }
 
     @Override
-    public void cancelJobOfferForEveryone(JobOffer jobOffer) {
-        updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CANCELLED);
+    public boolean cancelJobOfferForEveryone(JobOffer jobOffer) {
+        return updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CANCELLED);
     }
 
     @Override
-    public void closeJobOffer(User user, JobOffer jobOffer) {
-        updateJobOfferStatus(user, jobOffer, JobOfferStatus.CLOSED);
+    public boolean closeJobOffer(User user, JobOffer jobOffer) {
+        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.CLOSED);
     }
 
     @Override
-    public void closeJobOfferForEveryone(JobOffer jobOffer) {
-        updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CLOSED);
+    public boolean closeJobOfferForEveryone(JobOffer jobOffer) {
+        return updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CLOSED);
     }
 
     @Override

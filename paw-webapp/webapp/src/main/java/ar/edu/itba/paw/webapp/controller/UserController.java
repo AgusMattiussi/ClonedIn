@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.expression.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.*;
 import java.io.IOException;
 
@@ -87,37 +89,21 @@ public class UserController {
             categoryID = 0;
         }
 
+        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
+        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
         String skill = filterForm.getSkill();
         String position = filterForm.getPosition();
-        String minSalary = String.valueOf(filterForm.getMinSalary());
-        String maxSalary = String.valueOf(filterForm.getMaxSalary());
         String enterpriseName = filterForm.getTerm();
-
-        Long minSalaryLong = null;
-        if(!minSalary.isEmpty()) {
-            try {
-                minSalaryLong = Long.parseLong(minSalary);
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid minimum salary {} in 'home'", minSalary);
-            }
-        }
-
-        Long maxSalaryLong = null;
-        if(!maxSalary.isEmpty()) {
-            try {
-                maxSalaryLong = Long.parseLong(maxSalary);
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid maximum salary {} in 'home'", maxSalary);
-            }
-        }
+        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
+        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
-                skill, position, minSalaryLong, maxSalaryLong);
+                skill, position, minSalaryBigDec, maxSalaryBigDec);
 
         final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, enterpriseName,
-                skill, position, minSalaryLong, maxSalaryLong, page - 1, JOB_OFFERS_PER_PAGE);
+                skill, position, minSalaryBigDec, maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder()
                 .append("?category=").append(filterForm.getCategory())
@@ -210,8 +196,9 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        contactService.cancelJobOffer(user, jobOffer);
-        emailService.sendCancelApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        boolean cancelled = contactService.cancelJobOffer(user, jobOffer);
+        if(cancelled)
+            emailService.sendCancelApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
@@ -238,12 +225,14 @@ public class UserController {
         });
 
         if(answer==0) {
-            contactService.rejectJobOffer(user, jobOffer);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
+            boolean rejected = contactService.rejectJobOffer(user, jobOffer);
+            if(rejected)
+                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
         }
         else {
-            contactService.acceptJobOffer(user, jobOffer);
-            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
+            boolean accepted = contactService.acceptJobOffer(user, jobOffer);
+            if(accepted)
+                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
         }
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);

@@ -44,6 +44,9 @@ public class JobOffer {
     @OneToMany(mappedBy = "jobOffer", fetch = FetchType.EAGER)
     private Set<JobOfferSkill> jobOfferSkillSet;
 
+    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.EAGER)
+    private Set<Contact> contactSet;
+
     public JobOffer(Long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.id = id;
         this.enterprise = enterprise;
@@ -112,6 +115,10 @@ public class JobOffer {
 
     public List<Skill> getSkills() {
         return jobOfferSkillSet.stream().map(JobOfferSkill::getSkill).collect(Collectors.toList());
+    }
+
+    public Set<Contact> getContactSet() {
+        return contactSet;
     }
 
     @Override

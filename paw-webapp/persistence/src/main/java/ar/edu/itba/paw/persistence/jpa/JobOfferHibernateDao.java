@@ -119,7 +119,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String enterpriseName, String skillDescription,
-                                             String position, Long minSalary, Long maxSalary){
+                                             String position, BigDecimal minSalary, BigDecimal maxSalary){
         if(category != null)
             queryStringBuilder.append(" AND jo.category = :category");
         if(!modality.isEmpty())
@@ -138,16 +138,16 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     private void filterQuerySetParameters(Query query, Category category, String modality, String enterpriseName, String skillDescription,
-                                          String position, Long minSalary, Long maxSalary){
+                                          String position, BigDecimal minSalary, BigDecimal maxSalary){
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         if(category != null)
             query.setParameter("category", category);
         if(!modality.isEmpty())
             query.setParameter("modality", modality);
         if(minSalary != null)
-            query.setParameter("minSalary", BigDecimal.valueOf(minSalary));
+            query.setParameter("minSalary", minSalary);
         if(maxSalary != null)
-            query.setParameter("maxSalary", BigDecimal.valueOf(maxSalary));
+            query.setParameter("maxSalary", maxSalary);
         if(!position.isEmpty())
             query.setParameter("position", position);
         if(!enterpriseName.isEmpty())
@@ -158,7 +158,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
-                                                    String position, Long minSalary, Long maxSalary, int page, int pageSize) {
+                                                    String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
         if(!enterpriseName.isEmpty())
@@ -178,7 +178,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getActiveJobOffersCount(Category category, String modality, String enterpriseName, String skillDescription,
-                                        String position, Long minSalary, Long maxSalary) {
+                                        String position, BigDecimal minSalary, BigDecimal maxSalary) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
 
         if(!enterpriseName.isEmpty())
