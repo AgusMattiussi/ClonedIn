@@ -175,7 +175,7 @@ public class UserController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/cancelApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView cancelApplication(Authentication loggedUser,
                                        @PathVariable("userId") final long userId,
