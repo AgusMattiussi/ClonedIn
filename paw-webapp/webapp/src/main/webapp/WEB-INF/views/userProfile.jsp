@@ -267,16 +267,17 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
-                                            <!-- FIXME: AGREGAR CLICK CON URL CORRECTA: Filtrar job offers/users con que requieran esa skill -->
-                                            <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
+                                            <a href="<c:url value="?skill=${skill.description}"/>">
+                                                <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
                                                 <sec:authorize access="hasRole('USER')">
                                                     <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">
-                                                    <button type="button" class="btn waves-effect btn-sm" style="color: white">
-                                                        <i class="bi bi-x"></i>
-                                                    </button>
+                                                        <button type="button" class="btn waves-effect btn-sm" style="color: white">
+                                                            <i class="bi bi-x"></i>
+                                                        </button>
                                                     </a>
                                                 </sec:authorize>
                                             </span>
+                                            </a>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
