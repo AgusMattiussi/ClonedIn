@@ -179,9 +179,11 @@
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <c:forEach var="skill" items="${us.skills}" begin="0" end="3">
-                                                                            <span class="badge badge-pill badge-success">
-                                                                                <c:out value="${skill.description}"/>
-                                                                            </span>
+                                                                            <a href="<c:url value="?skill=${skill.description}"/>">
+                                                                                <span class="badge badge-pill badge-success">
+                                                                                    <c:out value="${skill.description}"/>
+                                                                                </span>
+                                                                            </a>
                                                                         </c:forEach>
                                                                     </c:otherwise>
                                                                 </c:choose>

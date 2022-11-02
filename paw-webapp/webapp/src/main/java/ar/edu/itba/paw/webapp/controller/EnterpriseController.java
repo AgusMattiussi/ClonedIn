@@ -397,10 +397,11 @@ public class EnterpriseController {
         }
 
         Category category = categoryService.findByName(editEnterpriseForm.getCategory()).orElseThrow(CategoryNotFoundException::new);
+        Integer newYear = editEnterpriseForm.getYear().isEmpty() ? null : Integer.parseInt(editEnterpriseForm.getYear());
 
         enterpriseService.updateEnterpriseInformation(enterpriseId, editEnterpriseForm.getName(), editEnterpriseForm.getAboutUs(),
                 editEnterpriseForm.getLocation(), category, editEnterpriseForm.getLink(),
-                Integer.valueOf(editEnterpriseForm.getYear()), editEnterpriseForm.getWorkers());
+                newYear, editEnterpriseForm.getWorkers());
 
         return new ModelAndView("redirect:/profileEnterprise/" + enterpriseId);
     }

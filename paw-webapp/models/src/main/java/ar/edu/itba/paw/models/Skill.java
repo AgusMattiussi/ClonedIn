@@ -10,8 +10,8 @@ import java.util.Set;
 @Table(name = "aptitud")
 public class Skill {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidad_id_seq")
-    @SequenceGenerator(sequenceName = "habilidad_id_seq", name = "habilidad_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aptitud_id_seq")
+    @SequenceGenerator(sequenceName = "aptitud_id_seq", name = "aptitud_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
