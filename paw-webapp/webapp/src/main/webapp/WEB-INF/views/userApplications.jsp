@@ -182,7 +182,7 @@
                                         <div class="col">
                                             <div class="d-flex flex-column align-items-center">
                                                 <h5 class="card-title">
-                                                    <spring:message code="notificationsStatus"/><spring:message code="${contact.status}"/>
+                                                    <spring:message code="notificationsStatus"/> <spring:message code="${contact.status}"/>
                                                 </h5>
                                                 <c:if test="${contact.status == 'pendiente'}">
                                                     <a>

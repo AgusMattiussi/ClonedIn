@@ -15,7 +15,7 @@ public class JobOfferForm {
     @Size(max=50)
     private String jobPosition;
 
-    @Size(max=200)
+    @Size(max=600)
     private String jobDescription;
 
     @Min(0)
