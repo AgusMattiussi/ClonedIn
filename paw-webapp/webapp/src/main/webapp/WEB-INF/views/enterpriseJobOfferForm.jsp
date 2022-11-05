@@ -66,7 +66,7 @@
                                                         <div class="d-flex">
                                                             <div class="row">
                                                                 <div class="col-sm-4">
-                                                                    <label class="area" style="margin-top: 1.2rem; margin-left: 10px"/>
+                                                                    <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferFormSkills"/></label>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                     <form:input type="text" path="skill3"/>

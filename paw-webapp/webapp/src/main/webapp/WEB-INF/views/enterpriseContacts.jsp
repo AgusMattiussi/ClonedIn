@@ -135,7 +135,11 @@
                         <tbody>
                             <c:forEach var="contact" items="${contactList}">
                                 <tr>
-                                    <td><c:out value="${contact.jobOffer.position}"/></td>
+                                    <td>
+                                        <a href="<c:url value="/jobOffer/${contact.jobOffer.id}"/>" class="text-decoration-none">
+                                            <c:out value="${contact.jobOffer.position}"/>
+                                        </a>
+                                    </td>
                                     <c:set var="categoryName2" value="${contact.jobOffer.category.name}"/>
                                     <td>
                                         <c:choose>
