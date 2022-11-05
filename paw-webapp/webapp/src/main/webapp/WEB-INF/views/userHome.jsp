@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+
 <html>
     <head>
         <%@include file="../components/imports.jsp"%>
@@ -156,11 +159,11 @@
                                             <div class="row mt-2">
                                                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                                 <div class="d-flex justify-content-between">
-                                                        <c:set var="desc" value="${job.description}"/>
+                                                        <c:set var="desc" value="${fn:substring(job.description,0,200)}"/>
                                                         <c:if test="${desc.compareTo('') == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <p class="card-text">${desc}</p>
+                                                        <p class="card-text"><c:out value="${desc}"/>...</p>
                                                     <a>
                                                         <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
                                                             <spring:message code="userHomeApplicationButton"/>

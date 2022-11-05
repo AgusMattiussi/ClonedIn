@@ -496,4 +496,19 @@ public class EnterpriseController {
 
         return new ModelAndView("redirect:/");
     }
+
+    @RequestMapping("/jobOffer/{jobOfferId:[0-9]+}")
+    public ModelAndView closeJobOffer(Authentication loggedUser,
+                                      @PathVariable("jobOfferId") final long jobOfferId) {
+        final ModelAndView mav = new ModelAndView("JobOfferView");
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("/jobOffer : Job Offer {} not found in jobOffer()", jobOfferId);
+            return new JobOfferNotFoundException();
+        });
+
+        mav.addObject("job", jobOffer);
+        mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
+        return mav;
+    }
 }

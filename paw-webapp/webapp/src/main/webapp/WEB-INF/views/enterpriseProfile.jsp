@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <html>
     <head>
@@ -60,7 +61,7 @@
                                     </a>
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('ENTERPRISE')">
-                                        <span class="badge badge-pill badge-success p-2">
+                                        <span class="badge badge-pill badge-light p-2">
                                             <spring:message code="${categoryName}"/>
                                         </span>
                                     </sec:authorize>
@@ -68,7 +69,8 @@
                             </c:choose>
                         </p>
                         <c:set var="location" value="${enterprise.location}"/>
-                        <p class="card-text"><i class="bi bi-geo-alt-fill" style="margin-right: 5px"></i><spring:message code="profileLocation"/>
+                        <p class="card-text"><i class="bi bi-geo-alt-fill" style="margin-right: 5px"></i>
+                            <spring:message code="profileLocation"/>
                             <c:choose>
                                 <c:when test="${location.compareTo('') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
@@ -79,9 +81,10 @@
                             </c:choose>
                         </p>
                         <c:set var="workers" value="${enterprise.workers}"/>
-                        <p class="card-text"><i class="bi bi-people-fill" style="margin-right: 5px"></i><spring:message code="profileWorkers"/>
+                        <p class="card-text"><i class="bi bi-people-fill" style="margin-right: 5px"></i>
+                            <spring:message code="profileWorkers"/>
                             <c:choose>
-                                <c:when test="${workers.compareTo('') == 0}">
+                                <c:when test="${workers.compareTo('No-Especificado') == 0}">
                                     <spring:message code="profileInfoNotSpecified"/>
                                 </c:when>
                                 <c:otherwise>
@@ -114,13 +117,13 @@
                             </c:choose>
                         </p>
                         <p class="card-text"><b><spring:message code="registerDescriptionEnterprise"/></b></p>
-                        <c:set var="desc" value="${enterprise.description}"/>
+                        <c:set var="desc" value="${fn:substring(enterprise.description,0,200)}"/>
                         <c:choose>
                             <c:when test="${desc.compareTo('') == 0}">
                                 <spring:message code="profileInfoNotSpecified"/>
                             </c:when>
                             <c:otherwise>
-                                <p class="card-text"><c:out value="${desc}"/></p>
+                                <p class="card-text"><c:out value="${desc}"/>...</p>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -142,7 +145,11 @@
                                     <div class="card mt-2">
                                         <div class="card-body pb-0">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="card-title"><c:out value="${joboffer.position}"/></h5>
+                                                <h5 class="card-title">
+                                                    <a href="<c:url value="/jobOffer/${joboffer.id}"/>" class="text-decoration-none">
+                                                        <c:out value="${joboffer.position}"/>
+                                                    <a/>
+                                                </h5>
                                                 <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
                                                 <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                                                 <span class="badge badge-pill badge-success p-2 mb-2">

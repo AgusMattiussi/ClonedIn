@@ -35,7 +35,7 @@ public class EnterpriseForm {
     @Pattern(regexp = "((1([0-9]{3}))|(20(([0-1][0-9])|2[0-2])))?")
     private String year;
 
-    @Size(max=600)
+    @Size(max=200)
     private String link;
 
     @Size(max=600)

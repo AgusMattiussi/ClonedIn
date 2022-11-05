@@ -60,20 +60,21 @@
                             </a>
                         </c:otherwise>
                     </c:choose>
-                    <c:choose>
-                        <c:when test = "${status == 'cerrada'}">
-                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
-                                <spring:message code="cerrada"/>
-                            </button>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">
-                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                                    <spring:message code="cerrada"/>
-                                </button>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
+                    <!-- FIXME: UNIFICAR BOTON DE CERRADO CON CACELADO-->
+<%--                    <c:choose>--%>
+<%--                        <c:when test = "${status == 'cerrada'}">--%>
+<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>--%>
+<%--                                <spring:message code="cerrada"/>--%>
+<%--                            </button>--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">--%>
+<%--                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">--%>
+<%--                                    <spring:message code="cerrada"/>--%>
+<%--                                </button>--%>
+<%--                            </a>--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
                     <c:choose>
                         <c:when test = "${status == 'cancelada'}">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
@@ -88,12 +89,12 @@
                             </a>
                         </c:otherwise>
                     </c:choose>
-                    <a href="<c:url value="?"/>">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                            <spring:message code="notificationsNOFilter"/>
-                        </button>
-                    </a>
                 </div>
+                <a href="<c:url value="?"/>">
+                    <button class="btn btn-secondary filterbtn btn-outline-light mt-3">
+                        <spring:message code="notificationsNOFilter"/>
+                    </button>
+                </a>
             </div>
         </div>
         <div class="col mr-2">
