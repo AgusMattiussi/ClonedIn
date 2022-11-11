@@ -28,7 +28,7 @@ public class EducationForm {
     @NotEmpty
     private String monthTo;
 
-    @Size(max=100)
+    @Size(max=200)
     private String comment;
 
     public String getCollege() {

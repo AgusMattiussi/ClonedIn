@@ -43,7 +43,7 @@
                                                             </form:select>
                                                             </div>
                                                         </div>
-                                                        <form:input type="text" path="jobDescription" placeholder="${descriptionPlaceholder}"/>
+                                                        <form:textarea path="jobDescription" rows="5" cssStyle="resize: none" placeholder="${descriptionPlaceholder}"/>
                                                         <form:errors path="jobDescription" cssClass="formError" element="p"/>
                                                         <form:input type="number" path="salary" placeholder="${salaryPlaceholder}"/>
                                                         <form:errors path="salary" cssClass="formError" element="p"/>
@@ -60,6 +60,22 @@
                                                                     <form:input type="text" path="skill2"/>
                                                                     <form:errors path="skill2" cssClass="formError" element="p"/>
                                                                  </div>
+                                                                <form:errors cssClass="formError" element="p"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex">
+                                                            <div class="row">
+                                                                <div class="col-sm-4">
+                                                                    <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferFormSkills"/></label>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <form:input type="text" path="skill3"/>
+                                                                    <form:errors path="skill3" cssClass="formError" element="p"/>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <form:input type="text" path="skill4"/>
+                                                                    <form:errors path="skill4" cssClass="formError" element="p"/>
+                                                                </div>
                                                                 <form:errors cssClass="formError" element="p"/>
                                                             </div>
                                                         </div>

@@ -15,7 +15,7 @@ public class ExperienceForm {
     private String job;
 
     @NotEmpty
-    @Size(max=200)
+    @Size(max=600)
     private String jobDesc;
 
     @NotEmpty

@@ -2,6 +2,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+
 <html>
 <head>
     <%@include file="../components/imports.jsp"%>
@@ -60,20 +62,21 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
-                <c:choose>
-                    <c:when test = "${status == 'cerrada'}">
-                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
-                            <spring:message code="cerrada"/>
-                        </button>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">
-                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                                <spring:message code="cerrada"/>
-                            </button>
-                        </a>
-                    </c:otherwise>
-                </c:choose>
+                <!-- FIXME: UNIFICAR BOTON DE CERRADO CON CANCELADO-->
+<%--                <c:choose>--%>
+<%--                    <c:when test = "${status == 'cerrada'}">--%>
+<%--                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>--%>
+<%--                            <spring:message code="cerrada"/>--%>
+<%--                        </button>--%>
+<%--                    </c:when>--%>
+<%--                    <c:otherwise>--%>
+<%--                        <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">--%>
+<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2">--%>
+<%--                                <spring:message code="cerrada"/>--%>
+<%--                            </button>--%>
+<%--                        </a>--%>
+<%--                    </c:otherwise>--%>
+<%--                </c:choose>--%>
                 <c:choose>
                     <c:when test = "${status == 'cancelada'}">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
@@ -88,12 +91,12 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
-                <a href="<c:url value="?"/>">
-                    <button class="btn btn-secondary filterbtn btn-outline-light mt-2">
-                        <spring:message code="notificationsNOFilter"/>
-                    </button>
-                </a>
             </div>
+            <a href="<c:url value="?"/>">
+                <button class="btn btn-secondary filterbtn btn-outline-light mt-3">
+                    <spring:message code="notificationsNOFilter"/>
+                </button>
+            </a>
         </div>
     </div>
     <div class="col mr-2">
@@ -124,7 +127,11 @@
                                 <a href="<c:url value="/profileEnterprise/${contact.enterprise.id}"/>" class="text-decoration-none">
                                     <c:out value="${contact.enterprise.name}"/>
                                 </a>
-                            <c:out value=" | ${contact.jobOffer.position}"/></h5>
+                                |
+                                <a href="<c:url value="/jobOffer/${contact.jobOffer.id}"/>" class="text-decoration-none">
+                                    <c:out value="${contact.jobOffer.position}"/>
+                                </a>
+                            </h5>
                             <c:set var="jobOfferCategoryName" value="${contact.jobOffer.category.name}"/>
                             <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                                 <a href="<c:url value="/home?category=${contact.jobOffer.category.id}"/>">
@@ -163,7 +170,9 @@
                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                         </c:if>
                                         <c:forEach items="${contact.jobOffer.skills}" var="skill">
-                                            <p><c:out value="${skill.description}"/></p>
+                                            <a href="<c:url value="/home?skill=${skill.description}"/>">
+                                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                            </a>
                                         </c:forEach>
                                     </div>
                                 </div>
@@ -185,7 +194,7 @@
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
                                         <h5 class="card-title">
-                                            <spring:message code="notificationsStatus"/><spring:message code="${contact.status}"/>
+                                            <spring:message code="notificationsStatus"/> <spring:message code="${contact.status}"/>
                                         </h5>
                                         <c:if test="${contact.status == 'pendiente'}">
                                             <a>
@@ -203,10 +212,10 @@
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <c:set var="desc" value="${contact.jobOffer.description}"/>
+                                <c:set var="desc" value="${fn:substring(contact.jobOffer.description,0,200)}"/>
                                 <c:if test="${desc.compareTo('') != 0}">
                                     <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
-                                    <p class="card-text">${desc}</p>
+                                    <p class="card-text"><c:out value="${desc}"/>...</p>
                                 </c:if>
                             </div>
                         </div>

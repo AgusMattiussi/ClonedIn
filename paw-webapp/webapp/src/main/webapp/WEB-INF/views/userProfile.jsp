@@ -82,9 +82,7 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <sec:authorize access="hasRole('USER')">
-                                                    <a href="<c:url value="/home?category=${user.category.id}"/>">
-                                                        <span class="badge badge-pill badge-success p-2"><spring:message code="${categoryName}"/></span>
-                                                    </a>
+                                                    <span class="badge badge-pill badge-light p-2"><spring:message code="${categoryName}"/></span>
                                                 </sec:authorize>
                                                 <sec:authorize access="hasRole('ENTERPRISE')">
                                                     <a href="<c:url value="/?category=${user.category.id}&location=&educationLevel="/>">
@@ -267,17 +265,20 @@
                                 <c:choose>
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
-                                            <a href="<c:url value="?skill=${skill.description}"/>">
-                                                <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
+                                            <sec:authorize access="hasRole('ENTERPRISE')">
+                                                <a href="<c:url value="/?skill=${skill.description}"/>">
+                                                    <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/></span>
+                                                </a>
+                                            </sec:authorize>
                                                 <sec:authorize access="hasRole('USER')">
-                                                    <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">
-                                                        <button type="button" class="btn waves-effect btn-sm" style="color: white">
-                                                            <i class="bi bi-x"></i>
-                                                        </button>
-                                                    </a>
+                                                    <span class="badge badge-pill badge-light" style="margin-bottom: 1rem"><c:out value="${skill.description}"/>
+                                                        <a href="<c:url value="/deleteSkill/${user.id}/${skill.id}"/>">
+                                                            <button type="button" class="btn waves-effect btn-sm">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </a>
+                                                    </span>
                                                 </sec:authorize>
-                                            </span>
-                                            </a>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>

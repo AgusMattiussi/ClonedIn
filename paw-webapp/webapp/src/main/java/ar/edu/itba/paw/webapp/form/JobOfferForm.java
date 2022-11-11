@@ -15,7 +15,7 @@ public class JobOfferForm {
     @Size(max=50)
     private String jobPosition;
 
-    @Size(max=200)
+    @Size(max=5000)
     private String jobDescription;
 
     @Min(0)
@@ -28,11 +28,17 @@ public class JobOfferForm {
     @NotEmpty
     private String mode;
 
-    @Size(max=20)
+    @Size(max=50)
     private String skill1;
 
-    @Size(max=20)
+    @Size(max=50)
     private String skill2;
+
+    @Size(max=50)
+    private String skill3;
+
+    @Size(max=50)
+    private String skill4;
 
     public String getSkill1() {
         return skill1;
@@ -48,6 +54,22 @@ public class JobOfferForm {
 
     public void setSkill2(String skill2) {
         this.skill2 = skill2;
+    }
+
+    public String getSkill3() {
+        return skill3;
+    }
+
+    public void setSkill3(String skill3) {
+        this.skill3 = skill3;
+    }
+
+    public String getSkill4() {
+        return skill4;
+    }
+
+    public void setSkill4(String skill4) {
+        this.skill4 = skill4;
     }
 
 

@@ -52,7 +52,7 @@
                 </div>
             </sec:authorize>
             <sec:authorize access="hasRole('USER')">
-                <a class="navbar-brand" href="<c:url value="/profileUser/${param.id}"/>">
+                <a class="navbar-brand" href="<c:url value="/home"/>">
                     <img src="<c:url value="/assets/images/logo.png"/>" height="40" class="d-inline-block align-top" alt="">
                 </a>
                 <div class="d-flex">

@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+
 <html>
     <head>
         <%@include file="../components/imports.jsp"%>
@@ -148,26 +151,37 @@
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
                                                         <c:forEach items="${job.skills}" var="skill">
-                                                            <p><c:out value="${skill.description}"/></p>
+                                                            <a href="<c:url value="?skill=${skill.description}"/>">
+                                                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                                            </a>
                                                         </c:forEach>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="d-flex justify-content-between">
                                                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
-                                                <div class="d-flex justify-content-between">
-                                                        <c:set var="desc" value="${job.description}"/>
-                                                        <c:if test="${desc.compareTo('') == 0}">
-                                                            <p><spring:message code="profileInfoNotSpecified"/></p>
-                                                        </c:if>
-                                                        <p class="card-text">${desc}</p>
+                                                <div>
                                                     <a>
                                                         <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
                                                             <spring:message code="userHomeApplicationButton"/>
                                                         </button>
                                                     </a>
+                                                    <a href="<c:url value="/jobOffer/${job.id}"/>">
+                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;">
+                                                            <spring:message code="userHomeMoreButton"/>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </div>
+                                            <c:set var="desc" value="${job.description}"/>
+                                            <c:choose>
+                                                <c:when test="${desc.compareTo('') == 0}">
+                                                    <spring:message code="profileInfoNotSpecified"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p><c:out value="${fn:substring(desc,0,200)}"/>...</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                     <!-- Modal -->
