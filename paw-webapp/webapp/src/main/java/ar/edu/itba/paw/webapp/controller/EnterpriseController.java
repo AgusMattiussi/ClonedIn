@@ -497,10 +497,12 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/");
     }
 
+    @PreAuthorize("(hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)) OR hasRole('ROLE_USER')")
     @RequestMapping("/jobOffer/{jobOfferId:[0-9]+}")
-    public ModelAndView closeJobOffer(Authentication loggedUser,
-                                      @PathVariable("jobOfferId") final long jobOfferId) {
-        final ModelAndView mav = new ModelAndView("JobOfferView");
+    public ModelAndView jobOffer(Authentication loggedUser,
+                                 @PathVariable("jobOfferId") final long jobOfferId,
+                                 @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
+        final ModelAndView mav = new ModelAndView("jobOfferView");
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
             LOGGER.error("/jobOffer : Job Offer {} not found in jobOffer()", jobOfferId);

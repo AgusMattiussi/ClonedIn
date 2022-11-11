@@ -61,9 +61,11 @@
                                     </a>
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('ENTERPRISE')">
-                                        <span class="badge badge-pill badge-light p-2">
-                                            <spring:message code="${categoryName}"/>
-                                        </span>
+                                        <a href="<c:url value="/?category=${enterprise.category.id}"/>">
+                                            <span class="badge badge-pill badge-success p-2">
+                                                <spring:message code="${categoryName}"/>
+                                            </span>
+                                        </a>
                                     </sec:authorize>
                                 </c:otherwise>
                             </c:choose>
@@ -146,16 +148,18 @@
                                         <div class="card-body pb-0">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">
-                                                    <a href="<c:url value="/jobOffer/${joboffer.id}"/>" class="text-decoration-none">
+                                                    <a href="<c:url value="/jobOffer/${joboffer.id}?eid=${enterpriseId}"/>" class="text-decoration-none">
                                                         <c:out value="${joboffer.position}"/>
                                                     <a/>
                                                 </h5>
                                                 <c:set var="jobOfferCategoryName" value="${joboffer.category.name}"/>
                                                 <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                                                     <sec:authorize access="hasRole('ENTERPRISE')">
-                                                    <span class="badge badge-pill badge-light p-2 mb-2">
-                                                        <spring:message code="${jobOfferCategoryName}"/>
-                                                    </span>
+                                                        <a href="<c:url value="/?category=${joboffer.category.id}"/>">
+                                                            <span class="badge badge-pill badge-success p-2 mb-2">
+                                                            <spring:message code="${jobOfferCategoryName}"/>
+                                                            </span>
+                                                        </a>
                                                     </sec:authorize>
                                                     <sec:authorize access="hasRole('USER')">
                                                         <a href="<c:url value="/home?category=${joboffer.category.id}"/>">
@@ -175,7 +179,7 @@
                                                         <c:set var="salary" value="${joboffer.salary}"/>
                                                         <c:choose>
                                                             <c:when test="${salary == null}">
-                                                                <spring:message code="profileInfoNotSpecified"/>
+                                                                <p class="card-text"><spring:message code="profileInfoNotSpecified"/></p>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <p class="card-text">$<c:out value="${salary}"/></p>
@@ -196,13 +200,19 @@
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
                                                         <c:forEach items="${joboffer.skills}" var="skill">
-                                                            <h5><span class="badge badge-light"><c:out value="${skill.description}"/></span></h5>
+                                                            <a href="<c:url value="/?skill=${skill.description}"/>">
+                                                                <h5>
+                                                                    <span class="badge badge-success">
+                                                                        <c:out value="${skill.description}"/>
+                                                                    </span>
+                                                                </h5>
+                                                            </a>
                                                         </c:forEach>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
-                                                <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
+                                                <h6 class="card-title"><spring:message code="notificationsDescription"/></h6>
                                                 <c:if test="${joboffer.available == 'Activa'}">
                                                     <div class="d-flex flex-column">
                                                         <button class="btn btn-outline-dark" style="white-space:normal; margin-bottom: 0.75rem; width: 200px" data-bs-toggle="modal" data-bs-target="#closeJobOfferModal${joboffer.id}">
@@ -277,7 +287,7 @@
                                                         <c:set var="salary" value="${joboffer.salary}"/>
                                                         <c:choose>
                                                             <c:when test="${salary == null}">
-                                                                <spring:message code="profileInfoNotSpecified"/>
+                                                                <p class="card-text"><spring:message code="profileInfoNotSpecified"/></p>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <p class="card-text">$<c:out value="${salary}"/></p>
@@ -299,14 +309,18 @@
                                                         </c:if>
                                                         <c:forEach items="${joboffer.skills}" var="skill">
                                                             <a href="<c:url value="/home?skill=${skill.description}"/>">
-                                                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                                                <h5>
+                                                                    <span class="badge badge-success">
+                                                                        <c:out value="${skill.description}"/>
+                                                                    </span>
+                                                                </h5>
                                                             </a>
                                                         </c:forEach>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
-                                            <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
+                                            <h6 class="card-title"><spring:message code="notificationsDescription"/></h6>
                                                 <a>
                                                     <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${joboffer.id}">
                                                         <spring:message code="userHomeApplicationButton"/>

@@ -18,19 +18,25 @@
     <div class="card justify-content-center mt-2 pt-2" >
         <div class="card-header d-flex justify-content-between align-items-center">
             <sec:authorize access="hasRole('USER')">
-            <h5>
-               <a href="<c:url value="/profileEnterprise/${job.enterprise.id}"/>" class="text-decoration-none">
-                  <c:out value="${job.enterprise.name}"/>
-               </a> | <c:out value=" ${job.position}"/>
-            </h5>
+                <h5>
+                   <a href="<c:url value="/profileEnterprise/${job.enterprise.id}"/>" class="text-decoration-none">
+                      <c:out value="${job.enterprise.name}"/>
+                   </a> | <c:out value=" ${job.position}"/>
+                </h5>
+            </sec:authorize>
+            <sec:authorize access="hasRole('ENTERPRISE')">
+                <h5>
+                    <c:out value=" ${job.position}"/>
+                </h5>
             </sec:authorize>
             <c:set var="jobOfferCategoryName" value="${job.category.name}"/>
             <c:if test="${jobOfferCategoryName.compareTo('No-Especificado') != 0}">
                 <sec:authorize access="hasRole('ENTERPRISE')">
-                    <h5><c:out value=" ${job.position}"/></h5>
-                     <span class="badge badge-pill badge-light p-2 mb-2">
-                         <spring:message code="${jobOfferCategoryName}"/>
-                     </span>
+                    <a href="<c:url value="/?category=${job.category.id}"/>">
+                         <span class="badge badge-pill badge-success p-2 mb-2">
+                             <spring:message code="${jobOfferCategoryName}"/>
+                         </span>
+                    </a>
                 </sec:authorize>
                 <sec:authorize access="hasRole('USER')">
                     <a href="<c:url value="/home?category=${job.category.id}"/>">
@@ -71,7 +77,9 @@
                         </c:if>
                         <c:forEach items="${job.skills}" var="skill">
                             <sec:authorize access="hasRole('ENTERPRISE')">
-                            <h5><span class="badge badge-light"><c:out value="${skill.description}"/></span></h5>
+                            <a href="<c:url value="/?skill=${skill.description}"/>">
+                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                            </a>
                             </sec:authorize>
                             <sec:authorize access="hasRole('USER')">
                                 <a href="<c:url value="/home?skill=${skill.description}"/>">
