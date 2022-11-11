@@ -41,11 +41,6 @@
                         </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-center ml-2">
-                            <spring:message code="registerLocation" var="locationFilterPlaceholder"/>
-                            <form:input type="text" path="location" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
-                        </div>
-                        <br>
-                        <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="educationLevel" cssClass="form-select">
                                 <form:option value=""><spring:message code="indexEducationLevelFilter"/></form:option>
                                 <form:option value="Primario"><spring:message code="Primario"/></form:option>
@@ -68,10 +63,6 @@
 <%--                            </div>--%>
 <%--                        </div>--%>
                         <br>
-                        <div class="d-flex flex-wrap justify-content-center ml-2">
-                            <spring:message code="skillsFormSubtitle" var="skillFilterPlaceholder"/>
-                            <form:input type="text" path="skill" cssStyle="border-radius: 5px" placeholder="${skillFilterPlaceholder}"/>
-                        </div>
                         <div class="dropdown ml-2 mt-2">
                             <a href="<c:url value="/?page=1"/>">
                                 <button class="btn btn-secondary filterbtn btn-outline-light" type="button">

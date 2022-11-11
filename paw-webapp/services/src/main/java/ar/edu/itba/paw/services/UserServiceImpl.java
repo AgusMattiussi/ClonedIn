@@ -80,6 +80,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public long getUsersCountByFilters(Category category, String educationLevel, String term) {
+        return userDao.getUsersCountByFilters(category, educationLevel, term);
+    }
+
+    @Override
     public List<User> getVisibleUsers(int page, int pageSize) {
         return userDao.getVisibleUsers(page, pageSize);
     }
@@ -102,6 +107,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize) {
         return userDao.getUsersListByFilters(category, location, educationLevel, skillDescription, page, pageSize);
+    }
+
+    @Override
+    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, int page, int pageSize) {
+        return userDao.getUsersListByFilters(category, educationLevel, term, page, pageSize);
     }
 
     @Override

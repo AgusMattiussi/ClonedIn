@@ -86,14 +86,13 @@ public class EnterpriseController {
         }
 
         Category category = categoryService.findById(categoryID).orElse(null);
-
-        String location = enterpriseFilterForm.getLocation();
         String educationLevel = enterpriseFilterForm.getEducationLevel();
-        String skillDescription = enterpriseFilterForm.getSkill();
+        String term = searchForm.getTerm();
 //        String minExperience = enterpriseFilterForm.getMinExperience();
 //        String maxExperience = enterpriseFilterForm.getMaxExperience();
 
-        if(request.getParameter("term") == null) {
+        //TODO: Sacar parametros innecesarios del path
+        /*if(request.getParameter("term") == null) {
             usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = userService.getUsersCountByFilters(category, location, educationLevel, skillDescription);
             path.append("?category=").append(enterpriseFilterForm.getCategory())
@@ -108,8 +107,14 @@ public class EnterpriseController {
             usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
             usersCount = usersList.size();
             path.append("?term=").append(searchForm.getTerm());
-        }
+        }*/
 
+        usersList = userService.getUsersListByFilters(category, educationLevel, term, page-1, HOME_JOB_OFFERS_PER_PAGE);
+        usersCount = userService.getUsersCountByFilters(category, educationLevel, term);
+
+        path.append("?category=").append(enterpriseFilterForm.getCategory())
+                .append("&educationLevel=").append(educationLevel)
+                .append("?term=").append(searchForm.getTerm());
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());

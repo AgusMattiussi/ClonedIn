@@ -28,7 +28,6 @@ import java.util.Optional;
 @Transactional
 public class UserHibernateDao implements UserDao {
 
-    private static final int UNEXISTING_CATEGORY_ID = 0;
     private static final Image DEFAULT_IMAGE = null;
 
     @PersistenceContext
@@ -144,7 +143,20 @@ public class UserHibernateDao implements UserDao {
             queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
     }
 
-    private void filterQuerySetParameters(Query query,Category category, String location, String educationLevel, String skillDescription){
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String educationLevel, String term){
+        if(category != null)
+            queryStringBuilder.append(" AND u.category = :category");
+        if(!educationLevel.isEmpty())
+            queryStringBuilder.append(" AND u.education = :education");
+        if(!term.isEmpty()) {
+            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u ")
+                    .append("AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')))")
+                    .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%'))")
+                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))");
+        }
+    }
+
+    private void filterQuerySetParameters(Query query, Category category, String location, String educationLevel, String skillDescription){
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
@@ -154,6 +166,16 @@ public class UserHibernateDao implements UserDao {
             query.setParameter("education", educationLevel);
         if(!skillDescription.isEmpty())
             query.setParameter("skillDescription", skillDescription);
+    }
+
+    private void filterQuerySetParameters(Query query, Category category, String educationLevel, String term){
+        query.setParameter("visible", Visibility.VISIBLE.getValue());
+        if(category != null)
+            query.setParameter("category", category);
+        if(!educationLevel.isEmpty())
+            query.setParameter("education", educationLevel);
+        if(!term.isEmpty())
+            query.setParameter("term", term);
     }
 
     @Override
@@ -169,12 +191,35 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, int page, int pageSize) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term);
+
+        TypedQuery<User> query = em.createQuery(queryStringBuilder.toString(), User.class);
+        filterQuerySetParameters(query, category, educationLevel, term);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
     public long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(u) FROM User u WHERE visibilidad = :visible");
         filterQueryAppendConditions(queryStringBuilder, category, location, educationLevel, skillDescription);
 
         Query query = em.createQuery(queryStringBuilder.toString());
         filterQuerySetParameters(query, category, location, educationLevel, skillDescription);
+
+        return (Long) query.getSingleResult();
+    }
+
+    @Override
+    public long getUsersCountByFilters(Category category, String educationLevel, String term) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(u) FROM User u WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term);
+
+        Query query = em.createQuery(queryStringBuilder.toString());
+        filterQuerySetParameters(query, category, educationLevel, term);
 
         return (Long) query.getSingleResult();
     }
