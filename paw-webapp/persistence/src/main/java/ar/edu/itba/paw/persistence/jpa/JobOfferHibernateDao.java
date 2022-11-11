@@ -137,6 +137,23 @@ public class JobOfferHibernateDao implements JobOfferDao {
                     .append(" AND LOWER(sk.description) LIKE LOWER(:skillDescription))");
     }
 
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
+        if(category != null)
+            queryStringBuilder.append(" AND jo.category = :category");
+        if(!modality.isEmpty())
+            queryStringBuilder.append(" AND jo.modality = :modality");
+        if(minSalary != null)
+            queryStringBuilder.append(" AND jo.salary >= :minSalary");
+        if(maxSalary != null)
+            queryStringBuilder.append(" AND jo.salary <= :maxSalary");
+        if(!term.isEmpty()) {
+            queryStringBuilder.append(" AND (LOWER(jo.position) LIKE LOWER(CONCAT('%', :term, '%'))")
+                    .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%'))")
+                    .append(" OR EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
+                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%'))))");
+        }
+    }
+
     private void filterQuerySetParameters(Query query, Category category, String modality, String enterpriseName, String skillDescription,
                                           String position, BigDecimal minSalary, BigDecimal maxSalary){
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
@@ -156,6 +173,20 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("skillDescription", skillDescription);
     }
 
+    private void filterQuerySetParameters(Query query, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
+        query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
+        if(category != null)
+            query.setParameter("category", category);
+        if(!modality.isEmpty())
+            query.setParameter("modality", modality);
+        if(minSalary != null)
+            query.setParameter("minSalary", minSalary);
+        if(maxSalary != null)
+            query.setParameter("maxSalary", maxSalary);
+        if(!term.isEmpty())
+            query.setParameter("term", term);
+    }
+
     @Override
     public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
                                                     String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
@@ -170,6 +201,24 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         TypedQuery<JobOffer> query = em.createQuery(queryStringBuilder.toString(), JobOffer.class);
         filterQuerySetParameters(query, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
+
+        if(!term.isEmpty())
+            queryStringBuilder.append(" JOIN jo.enterprise e");
+
+        queryStringBuilder.append(" WHERE jo.available = :active");
+
+        filterQueryAppendConditions(queryStringBuilder, category, modality, term, minSalary, maxSalary);
+
+        TypedQuery<JobOffer> query = em.createQuery(queryStringBuilder.toString(), JobOffer.class);
+        filterQuerySetParameters(query, category, modality, term, minSalary, maxSalary);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -192,6 +241,11 @@ public class JobOfferHibernateDao implements JobOfferDao {
         filterQuerySetParameters(query, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
 
         return (Long) query.getSingleResult();
+    }
+
+    @Override
+    public long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
+        return 0;
     }
 
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){

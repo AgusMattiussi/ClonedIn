@@ -93,26 +93,21 @@ public class UserController {
         BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
         Category category = categoryService.findById(categoryID).orElse(null);
         String modality = filterForm.getModality();
-        String skill = filterForm.getSkill();
-        String position = filterForm.getPosition();
-        String enterpriseName = filterForm.getTerm();
+        String searchTerm = filterForm.getTerm();
         String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
         String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
 
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterpriseName,
-                skill, position, minSalaryBigDec, maxSalaryBigDec);
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalaryBigDec, maxSalaryBigDec);
 
-        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, enterpriseName,
-                skill, position, minSalaryBigDec, maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE);
+        final List<JobOffer> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalaryBigDec,
+                maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE);
 
         StringBuilder path = new StringBuilder()
                 .append("?category=").append(filterForm.getCategory())
                 .append("&modality=").append(modality)
-                .append("&skill=").append(skill)
-                .append("&position=").append(position)
                 .append("&minSalary=").append(minSalary)
                 .append("&maxSalary=").append(maxSalary)
-                .append("&term=").append(enterpriseName);
+                .append("&term=").append(searchTerm);
 //                .append("&sortBy=").append(filterForm.getSortBy());
 
 

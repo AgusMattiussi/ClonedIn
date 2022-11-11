@@ -35,8 +35,12 @@ public interface JobOfferDao {
     List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
                                              String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
 
+    List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
+
     long getActiveJobOffersCount(Category category, String modality, String enterpriseName, String skillDescription,
                                  String position, BigDecimal minSalary, BigDecimal maxSalary);
+
+    long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary);
 
     void closeJobOffer(JobOffer jobOffer);
 

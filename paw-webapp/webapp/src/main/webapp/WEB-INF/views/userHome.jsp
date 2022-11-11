@@ -51,15 +51,6 @@
                         </form:select>
                     </div>
                     <br>
-                    <div class="d-flex flex-wrap justify-content-center ml-2">
-                        <spring:message code="skillsFormSubtitle" var="skillFilterPlaceholder"/>
-                        <form:input type="text" path="skill" cssStyle="border-radius: 5px" placeholder="${skillFilterPlaceholder}"/>
-                    </div>
-                    <br>
-                    <div class="d-flex flex-wrap justify-content-center ml-2">
-                        <spring:message code="indexPositionFilter" var="locationFilterPlaceholder"/>
-                        <form:input type="text" path="position" cssStyle="border-radius: 5px" placeholder="${locationFilterPlaceholder}"/>
-                    </div>
                 <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="indexSalaryFilter"/> </label>
                 <div class="d-flex justify-content-center ml-2">
                     <div>

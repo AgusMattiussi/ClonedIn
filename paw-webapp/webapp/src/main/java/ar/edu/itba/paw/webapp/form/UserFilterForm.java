@@ -8,10 +8,6 @@ import java.math.BigDecimal;
 public class UserFilterForm {
     private String category="";
     private String modality="";
-    @Size(max = 50)
-    private String skill="";
-    @Size(max = 50)
-    private String position="";
     @Min(0)
     @Max(1000000000)
     private BigDecimal minSalary;
@@ -36,22 +32,6 @@ public class UserFilterForm {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getSkill() {
-        return skill;
-    }
-
-    public void setSkill(String skill) {
-        this.skill = skill;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public BigDecimal getMinSalary() {
