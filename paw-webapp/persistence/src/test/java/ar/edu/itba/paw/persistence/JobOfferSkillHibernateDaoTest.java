@@ -1,18 +1,15 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.JobOfferSkill;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -67,22 +64,22 @@ public class JobOfferSkillHibernateDaoTest {
         query.setParameter("jobOffer", testJobOffer);
         final List<Skill> skillList = query.getResultList();
 
-        Assert.assertEquals(2, skillList.size());
-        Assert.assertEquals(newSkill, skillList.get(1));
+        assertEquals(2, skillList.size());
+        assertEquals(newSkill, skillList.get(1));
     }
 
     @Test
     public void testGetJobOffersWithSkill() {
         final List<JobOffer> jobOfferList = jobOfferSkillDao.getJobOffersWithSkill(testSkill);
-        Assert.assertEquals(1, jobOfferList.size());
-        Assert.assertEquals(testJobOffer, jobOfferList.get(0));
+        assertEquals(1, jobOfferList.size());
+        assertEquals(testJobOffer, jobOfferList.get(0));
     }
 
     @Test
     public void testGetSkillsForJobOffer() {
         final List<Skill> skillList = jobOfferSkillDao.getSkillsForJobOffer(testJobOffer);
-        Assert.assertEquals(1, skillList.size());
-        Assert.assertEquals(testSkill, skillList.get(0));
+        assertEquals(1, skillList.size());
+        assertEquals(testSkill, skillList.get(0));
     }
 
 }

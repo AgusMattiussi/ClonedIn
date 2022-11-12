@@ -17,7 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -43,8 +43,8 @@ public class ImageHibernateDaoTest {
     @Test
     public void testUploadImage() {
         final Image newImage = dao.uploadImage(NEW_IMAGE_BYTE_ARRAY);
-        Assert.assertNotNull(newImage);
-        Assert.assertEquals(NEW_IMAGE_BYTE_ARRAY, newImage.getBytes());
+        assertNotNull(newImage);
+        assertEquals(NEW_IMAGE_BYTE_ARRAY, newImage.getBytes());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class ImageHibernateDaoTest {
         final Optional<Image> image = dao.getImage(ID);
 
         assertTrue(image.isPresent());
-        Assert.assertNotNull(image.get().getBytes());
-        Assert.assertArrayEquals(TEST_IMAGE_BYTE_ARRAY, image.get().getBytes());
+        assertNotNull(image.get().getBytes());
+        assertArrayEquals(TEST_IMAGE_BYTE_ARRAY, image.get().getBytes());
     }
 
 }

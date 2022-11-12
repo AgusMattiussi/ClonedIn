@@ -31,20 +31,20 @@ public class SkillHibernateDaoTest {
     private static final String TEST_SKILL_3 = "testSkill3";
     private static final String NEW_SKILL = "newSkill";
     private static final String NON_EXISTING_SKILL = "nonExistingSkill";
-    private static final long ID = 9;
     private static final long SKILLS_COUNT = 3;
 
     @PersistenceContext
     private EntityManager em;
     @Autowired
     private SkillDao dao;
+    private Skill testSkill;
 
     @Before
     public void setUp() {
-        Skill testSkill1 = new Skill(TEST_SKILL_1);
+        testSkill = new Skill(TEST_SKILL_1);
         Skill testSkill2 = new Skill(TEST_SKILL_2);
         Skill testSkill3 = new Skill(TEST_SKILL_3);
-        em.persist(testSkill1);
+        em.persist(testSkill);
         em.persist(testSkill2);
         em.persist(testSkill3);
     }
@@ -59,7 +59,7 @@ public class SkillHibernateDaoTest {
 
     @Test
     public void testFindById() {
-        final Optional<Skill> skill = dao.findById(ID);
+        final Optional<Skill> skill = dao.findById(testSkill.getId());
         assertTrue(skill.isPresent());
         Assert.assertEquals(TEST_SKILL_1, skill.get().getDescription());
     }
