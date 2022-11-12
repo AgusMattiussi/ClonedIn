@@ -22,10 +22,10 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Rollback
-@Transactional*/
+@Transactional
 public class UserJdbcDaoTest {
 
     /*private static final String USER_TABLE = "usuario";
