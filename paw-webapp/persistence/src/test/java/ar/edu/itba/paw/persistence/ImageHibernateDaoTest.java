@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.*;
 import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
@@ -24,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(classes = TestConfig.class)
 @Rollback
 @Transactional
-public class ImageJdbcDaoTest {
+public class ImageHibernateDaoTest {
 
     private static final long ID = 1;
     private final byte[] NEW_IMAGE_BYTE_ARRAY = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
