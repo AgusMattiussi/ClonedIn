@@ -56,6 +56,7 @@ public class ExperienceHibernateDaoTest {
     private ExperienceDao dao;
 
     private User testUser;
+    private Experience testExperience;
 
     @Before
     public void setUp() {
@@ -66,7 +67,7 @@ public class ExperienceHibernateDaoTest {
                 EMPTY_FIELD, EMPTY_FIELD, Visibility.VISIBLE.getValue(), null);
         em.persist(testUser);
 
-        Experience testExperience = new Experience(testUser, EXISTING_MONTH_FROM, EXISTING_YEAR_FROM, EXISTING_MONTH_TO, EXISTING_YEAR_TO, EXISTING_ENTERPRISE_NAME, EXISTING_POSITION, EXISTING_DESCRIPTION);
+        testExperience = new Experience(testUser, EXISTING_MONTH_FROM, EXISTING_YEAR_FROM, EXISTING_MONTH_TO, EXISTING_YEAR_TO, EXISTING_ENTERPRISE_NAME, EXISTING_POSITION, EXISTING_DESCRIPTION);
         em.persist(testExperience);
     }
 
@@ -87,11 +88,11 @@ public class ExperienceHibernateDaoTest {
 
     @Test
     public void testFindById() {
-        final Optional<Experience> newExperience = dao.findById(2);
+        final Optional<Experience> newExperience = dao.findById(testExperience.getId());
 
         assertTrue(newExperience.isPresent());
-        Assert.assertEquals(2, (long) newExperience.get().getId());
-        Assert.assertEquals(2, (long) newExperience.get().getUserId().getId());
+        Assert.assertEquals(testExperience, newExperience.get());
+        Assert.assertEquals(testExperience.getUser(), newExperience.get().getUser());
         Assert.assertEquals(EXISTING_MONTH_FROM, newExperience.get().getMonthFrom());
         Assert.assertEquals(EXISTING_YEAR_FROM, newExperience.get().getYearFrom());
         Assert.assertEquals(EXISTING_MONTH_TO, newExperience.get().getMonthTo());
@@ -107,7 +108,7 @@ public class ExperienceHibernateDaoTest {
 
         Assert.assertNotNull(experienceList);
         Assert.assertEquals(USER_EXPERIENCE_LIST_SIZE, experienceList.size());
-        Assert.assertEquals(EXISTING_USER_ID, (long) experienceList.get(0).getUserId().getId());
+        Assert.assertEquals(testUser, experienceList.get(0).getUser());
         Assert.assertEquals(EXISTING_MONTH_FROM, experienceList.get(0).getMonthFrom());
         Assert.assertEquals(EXISTING_YEAR_FROM, experienceList.get(0).getYearFrom());
         Assert.assertEquals(EXISTING_MONTH_TO, experienceList.get(0).getMonthTo());

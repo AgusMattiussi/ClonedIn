@@ -61,7 +61,7 @@ public class Education {
         return id;
     }
 
-    public User getUserId() {
+    public User getUser() {
         return user;
     }
 
@@ -113,7 +113,7 @@ public class Education {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Education education = (Education) o;
-        return id == education.id && user.getId() == education.user.getId();
+        return Objects.equals(id, education.id) && Objects.equals(user.getId(), education.user.getId());
     }
 
     @Override

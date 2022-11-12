@@ -52,9 +52,8 @@ public class EducationHibernateDao implements EducationDao {
 
     @Override
     public void deleteEducation(long educationId) {
-        final Query query = em.createQuery("DELETE FROM Education AS e WHERE e.id = :educationId");
-        query.setParameter("educationId", educationId);
-        query.executeUpdate();
+        Optional<Education> toDelete = findById(educationId);
+        toDelete.ifPresent(education -> em.remove(education));
     }
 
     private boolean isMonthValid(int month){
