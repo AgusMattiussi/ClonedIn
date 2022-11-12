@@ -60,23 +60,8 @@
                             </a>
                         </c:otherwise>
                     </c:choose>
-                    <!-- FIXME: UNIFICAR BOTON DE CERRADO CON CACELADO-->
-<%--                    <c:choose>--%>
-<%--                        <c:when test = "${status == 'cerrada'}">--%>
-<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>--%>
-<%--                                <spring:message code="cerrada"/>--%>
-<%--                            </button>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">--%>
-<%--                                <button class="btn btn-secondary filterbtn btn-outline-light mt-2">--%>
-<%--                                    <spring:message code="cerrada"/>--%>
-<%--                                </button>--%>
-<%--                            </a>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
                     <c:choose>
-                        <c:when test = "${status == 'cancelada'}">
+                        <c:when test = "${status == 'cancelada' || status == 'cerrada'}">
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
                                 <spring:message code="cancelada"/>
                             </button>
@@ -169,7 +154,14 @@
                                     </td>
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
-                                    <td><spring:message code="${statusName}"/></td>
+                                    <td>
+                                        <c:if test="${statusName} == 'cerrada'">
+                                            <spring:message code="cancelada"/>
+                                        </c:if>
+                                        <c:if test="${statusName} != 'cerrada'">
+                                            <spring:message code="${statusName}"/>
+                                        </c:if>
+                                    </td>
                                     <td>
                                     <c:if test="${statusName == 'pendiente'}">
                                             <a>

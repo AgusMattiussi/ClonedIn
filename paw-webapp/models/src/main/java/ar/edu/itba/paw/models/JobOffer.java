@@ -94,8 +94,7 @@ public class JobOffer {
     }
 
     public String getDescription() {
-        String desc = description.replace("\n", "<br />\n");
-        return desc;
+        return description;
     }
 
     public BigDecimal getSalary() {

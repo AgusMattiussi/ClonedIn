@@ -156,7 +156,7 @@
                                                     <spring:message code="profileInfoNotSpecified"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <p><c:out value="${fn:substring(desc,0,200)}"/>...</p>
+                                                    <p style="white-space:pre-line"><c:out value="${fn:substring(desc,0,200)}"/>...</p>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>

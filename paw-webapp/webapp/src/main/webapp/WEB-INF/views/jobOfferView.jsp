@@ -106,7 +106,7 @@
                     <spring:message code="profileInfoNotSpecified"/>
                 </c:when>
                 <c:otherwise>
-                    <p><c:out value="${desc}"/></p>
+                    <p style="white-space:pre-line"><c:out value="${desc}"/></p>
                 </c:otherwise>
             </c:choose>
         </div>

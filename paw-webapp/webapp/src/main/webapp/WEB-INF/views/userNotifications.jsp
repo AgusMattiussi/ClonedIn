@@ -62,23 +62,8 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
-                <!-- FIXME: UNIFICAR BOTON DE CERRADO CON CANCELADO-->
-<%--                <c:choose>--%>
-<%--                    <c:when test = "${status == 'cerrada'}">--%>
-<%--                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>--%>
-<%--                            <spring:message code="cerrada"/>--%>
-<%--                        </button>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">--%>
-<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2">--%>
-<%--                                <spring:message code="cerrada"/>--%>
-<%--                            </button>--%>
-<%--                        </a>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
                 <c:choose>
-                    <c:when test = "${status == 'cancelada'}">
+                    <c:when test = "${status == 'cancelada' || status == 'cerrada'}">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
                             <spring:message code="cancelada"/>
                         </button>
@@ -193,10 +178,17 @@
                                 </div>
                                 <div class="col">
                                     <div class="d-flex flex-column align-items-center">
+                                        <c:set var="statusName" value="${contact.status}"/>
                                         <h5 class="card-title">
-                                            <spring:message code="notificationsStatus"/> <spring:message code="${contact.status}"/>
+                                            <spring:message code="notificationsStatus"/>
+                                            <c:if test="${statusName} == 'cerrada'">
+                                                <spring:message code="cancelada"/>
+                                            </c:if>
+                                            <c:if test="${statusName} != 'cerrada'">
+                                                <spring:message code="${statusName}"/>
+                                            </c:if>
                                         </h5>
-                                        <c:if test="${contact.status == 'pendiente'}">
+                                        <c:if test="${statusName == 'pendiente'}">
                                             <a>
                                                 <button class="btn btn-success" style="margin-bottom: 5px; min-width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptJobOfferModal${contact.jobOffer.id}">
                                                     <spring:message code="notificationsAccept"/>

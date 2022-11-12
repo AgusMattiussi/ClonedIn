@@ -232,7 +232,7 @@
                                                     <spring:message code="profileInfoNotSpecified"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <p><c:out value="${fn:substring(desc,0,200)}"/>...</p>
+                                                    <p style="white-space:pre-line"><c:out value="${fn:substring(desc,0,200)}"/>...</p>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
@@ -263,7 +263,7 @@
                                 <c:forEach items="${activeJobOffers}" var="joboffer">
                                     <div class="card mt-2">
                                         <div class="card-body pb-0">
-                                            <div class="d-flex justify-content-between">
+                                            <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">
                                                     <a href="<c:url value="/jobOffer/${joboffer.id}"/>" class="text-decoration-none">
                                                             <c:out value="${joboffer.position}"/>
@@ -326,8 +326,7 @@
                                                     <spring:message code="profileInfoNotSpecified"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <!-- FIXME: NO TOMA LOS ENTERS: MUESTRA LOS <br /> -->
-                                                    <p style="white-space:pre-line"><c:out value="${fn:substring(desc,0,200)}" escapeXml="false"/>...</p>
+                                                    <p style="white-space:pre-line"><c:out value="${fn:substring(desc,0,200)}"/>...</p>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>

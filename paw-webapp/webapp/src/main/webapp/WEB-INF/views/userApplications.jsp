@@ -35,7 +35,7 @@
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
-                    <c:when test = "${status == 'rechazada'}">
+                    <c:when test = "${status == 'rechazada' || status == 'cerrada'}">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
                             <spring:message code="rechazada"/>
                         </button>
@@ -62,21 +62,6 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
-                <!-- FIXME: UNIFICAR BOTON DE CERRADO CON RECHAZADO-->
-<%--                <c:choose>--%>
-<%--                    <c:when test = "${status == 'cerrada'}">--%>
-<%--                        <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>--%>
-<%--                            <spring:message code="cerrada"/>--%>
-<%--                        </button>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <a href="<c:url value="?status=cerrada&sortBy=${sortById}"/>">--%>
-<%--                            <button class="btn btn-secondary filterbtn btn-outline-light mt-2">--%>
-<%--                                <spring:message code="cerrada"/>--%>
-<%--                            </button>--%>
-<%--                        </a>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
                 <c:choose>
                     <c:when test = "${status == 'cancelada'}">
                         <button class="btn btn-secondary filterbtn btn-outline-light mt-2" disabled>
@@ -191,7 +176,13 @@
                                         <div class="col">
                                             <div class="d-flex flex-column align-items-center">
                                                 <h5 class="card-title">
-                                                    <spring:message code="notificationsStatus"/> <spring:message code="${contact.status}"/>
+                                                    <spring:message code="notificationsStatus"/>
+                                                    <c:if test="${statusName} == 'cerrada'">
+                                                        <spring:message code="rechazada"/>
+                                                    </c:if>
+                                                    <c:if test="${statusName} != 'cerrada'">
+                                                        <spring:message code="${statusName}"/>
+                                                    </c:if>
                                                 </h5>
                                                 <c:if test="${contact.status == 'pendiente'}">
                                                     <a>
