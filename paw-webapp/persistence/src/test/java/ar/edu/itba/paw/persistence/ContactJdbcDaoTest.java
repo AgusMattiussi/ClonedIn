@@ -23,10 +23,10 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Rollback
-@Transactional*/
+@Transactional
 public class ContactJdbcDaoTest {
 
     /*private static final String CONTACT_TABLE = "contactado";

@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+
 @Primary
 @Repository
 @Transactional
@@ -29,7 +30,7 @@ public class CategoryHibernateDao implements CategoryDao {
 
     @Override
     public Optional<Category> findByName(String name) {
-        final TypedQuery<Category> query = em.createQuery("FROM Category AS c WHERE c.name = :name", Category.class);
+        final TypedQuery<Category> query = em.createQuery("SELECT c FROM Category AS c WHERE c.name = :name", Category.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
     }
