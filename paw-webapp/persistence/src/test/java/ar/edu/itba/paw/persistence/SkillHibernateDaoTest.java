@@ -31,7 +31,7 @@ public class SkillHibernateDaoTest {
     private static final String TEST_SKILL_3 = "testSkill3";
     private static final String NEW_SKILL = "newSkill";
     private static final String NON_EXISTING_SKILL = "nonExistingSkill";
-    private static final long ID = 5;
+    private static final long ID = 9;
     private static final long SKILLS_COUNT = 3;
 
     @PersistenceContext
