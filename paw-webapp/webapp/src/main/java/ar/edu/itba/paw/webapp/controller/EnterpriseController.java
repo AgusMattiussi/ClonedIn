@@ -76,7 +76,6 @@ public class EnterpriseController {
         final long usersCount;
         StringBuilder path = new StringBuilder();
 
-        //TODO: Revisar esto
         long categoryID;
         try {
             categoryID = Long.parseLong(enterpriseFilterForm.getCategory());
@@ -88,32 +87,16 @@ public class EnterpriseController {
         Category category = categoryService.findById(categoryID).orElse(null);
         String educationLevel = enterpriseFilterForm.getEducationLevel();
         String term = searchForm.getTerm();
-//        String minExperience = enterpriseFilterForm.getMinExperience();
-//        String maxExperience = enterpriseFilterForm.getMaxExperience();
-
-        //TODO: Sacar parametros innecesarios del path
-        /*if(request.getParameter("term") == null) {
-            usersList = userService.getUsersListByFilters(category, location, educationLevel, skillDescription, page - 1, HOME_JOB_OFFERS_PER_PAGE);
-            usersCount = userService.getUsersCountByFilters(category, location, educationLevel, skillDescription);
-            path.append("?category=").append(enterpriseFilterForm.getCategory())
-                    .append("&location=").append(location)
-                    .append("&educationLevel=").append(educationLevel)
-                    .append("&skill=").append(skillDescription);
-//                    .append("&minExperience=").append(minExperience)
-//                    .append("&maxExperience=").append(maxExperience)
-//                    .append("&sortBy=").append(enterpriseFilterForm.getSortBy());
-        }
-        else {
-            usersList = userService.getVisibleUsersByNameLike(searchForm.getTerm(),page - 1, HOME_JOB_OFFERS_PER_PAGE);
-            usersCount = usersList.size();
-            path.append("?term=").append(searchForm.getTerm());
-        }*/
+        String minExperience = enterpriseFilterForm.getMinExperience();
+        String maxExperience = enterpriseFilterForm.getMaxExperience();
 
         usersList = userService.getUsersListByFilters(category, educationLevel, term, page-1, HOME_JOB_OFFERS_PER_PAGE);
         usersCount = userService.getUsersCountByFilters(category, educationLevel, term);
 
         path.append("?category=").append(enterpriseFilterForm.getCategory())
                 .append("&educationLevel=").append(educationLevel)
+                .append("&minExperience=").append(minExperience)
+                .append("&maxExperience=").append(maxExperience)
                 .append("?term=").append(searchForm.getTerm());
 
         mav.addObject("users", usersList);
@@ -370,6 +353,14 @@ public class EnterpriseController {
         if(!jobOfferForm.getSkill2().isEmpty()) {
             Skill skill2 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill2());
             jobOfferSkillService.addSkillToJobOffer(skill2, jobOffer);
+        }
+        if(!jobOfferForm.getSkill3().isEmpty()) {
+            Skill skill3 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill3());
+            jobOfferSkillService.addSkillToJobOffer(skill3, jobOffer);
+        }
+        if(!jobOfferForm.getSkill4().isEmpty()) {
+            Skill skill4 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill4());
+            jobOfferSkillService.addSkillToJobOffer(skill4, jobOffer);
         }
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());

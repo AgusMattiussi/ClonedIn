@@ -25,7 +25,7 @@
                 <div>
                     <form:form modelAttribute="userFilterForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
+                            <spring:message code="navbarSearch2" var="searchBarPlaceholder"/>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
@@ -79,15 +79,6 @@
             </div>
             <div class="col mr-2">
                 <h3 class="mt-2 mb-2"><spring:message code="navbarMyNetwork"/></h3>
-<%--                <div class="d-flex justify-content-between mt-2">--%>
-<%--                    <h3><spring:message code="navbarMyNetwork"/></h3>--%>
-<%--                    <div style="width: 200px">--%>
-<%--                        <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">--%>
-<%--                            <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>--%>
-<%--                            <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>--%>
-<%--                        </form:select>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
                 </form:form>
                 <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                     <div class="container">
@@ -141,8 +132,8 @@
                                                         <c:if test="${job.skills.size() == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <c:forEach items="${job.skills}" var="skill">
-                                                            <a href="<c:url value="?skill=${skill.description}"/>">
+                                                        <c:forEach items="${job.skills}" var="skill" begin="0" end="1">
+                                                            <a href="<c:url value="?term=${skill.description}"/>">
                                                                 <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
                                                             </a>
                                                         </c:forEach>
@@ -152,11 +143,6 @@
                                             <div class="d-flex justify-content-between">
                                                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
                                                 <div>
-                                                    <a>
-                                                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
-                                                            <spring:message code="userHomeApplicationButton"/>
-                                                        </button>
-                                                    </a>
                                                     <a href="<c:url value="/jobOffer/${job.id}"/>">
                                                         <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;">
                                                             <spring:message code="userHomeMoreButton"/>

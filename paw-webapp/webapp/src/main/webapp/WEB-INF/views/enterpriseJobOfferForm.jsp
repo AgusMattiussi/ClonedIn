@@ -48,7 +48,7 @@
                                                         <div class="d-flex">
                                                             <div class="row">
                                                                 <div class="col-sm-4">
-                                                                <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferFormSkills"/></label>
+                                                                <label class="area" style="margin-top: 2.5rem; margin-left: 10px"><spring:message code="jobOfferFormSkills1"/></label>
                                                                 </div>
                                                                  <div class="col-sm-4">
                                                                     <form:input type="text" path="skill1"/>
@@ -61,22 +61,22 @@
                                                                 <form:errors cssClass="formError" element="p"/>
                                                             </div>
                                                         </div>
-<%--                                                        <div class="d-flex">--%>
-<%--                                                            <div class="row">--%>
-<%--                                                                <div class="col-sm-4">--%>
-<%--                                                                    <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="jobOfferFormSkills"/></label>--%>
-<%--                                                                </div>--%>
-<%--                                                                <div class="col-sm-4">--%>
-<%--                                                                    <form:input type="text" path="skill3"/>--%>
-<%--                                                                    <form:errors path="skill3" cssClass="formError" element="p"/>--%>
-<%--                                                                </div>--%>
-<%--                                                                <div class="col-sm-4">--%>
-<%--                                                                    <form:input type="text" path="skill4"/>--%>
-<%--                                                                    <form:errors path="skill4" cssClass="formError" element="p"/>--%>
-<%--                                                                </div>--%>
-<%--                                                                <form:errors cssClass="formError" element="p"/>--%>
-<%--                                                            </div>--%>
-<%--                                                        </div>--%>
+                                                        <div class="d-flex">
+                                                            <div class="row">
+                                                                <div class="col-sm-4">
+                                                                    <label class="area" style="margin-left: 10px"><spring:message code="jobOfferFormSkills2"/></label>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <form:input type="text" path="skill3"/>
+                                                                    <form:errors path="skill3" cssClass="formError" element="p"/>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <form:input type="text" path="skill4"/>
+                                                                    <form:errors path="skill4" cssClass="formError" element="p"/>
+                                                                </div>
+                                                                <form:errors cssClass="formError" element="p"/>
+                                                            </div>
+                                                        </div>
                                                         <div class="d-flex">
                                                             <label class="area" style="margin-top: 1.2rem; margin-left: 10px"><spring:message code="registerCategoryRequired"/></label>
                                                             <div style="margin-left: 15px; margin-top: 1.2rem;">

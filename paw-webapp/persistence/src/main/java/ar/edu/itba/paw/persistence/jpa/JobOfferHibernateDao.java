@@ -245,7 +245,19 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
-        return 0;
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
+
+        if(!term.isEmpty())
+            queryStringBuilder.append(" JOIN jo.enterprise e");
+
+        queryStringBuilder.append(" WHERE jo.available = :active");
+
+        filterQueryAppendConditions(queryStringBuilder, category, modality, term, minSalary, maxSalary);
+
+        Query query = em.createQuery(queryStringBuilder.toString());
+        filterQuerySetParameters(query, category, modality, term, minSalary, maxSalary);
+
+        return (Long) query.getSingleResult();
     }
 
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){

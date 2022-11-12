@@ -21,7 +21,7 @@
                     <c:url value="/" var="getPath"/>
                     <form:form modelAttribute="searchForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
-                            <spring:message code="navbarSearch" var="searchBarPlaceholder"/>
+                            <spring:message code="navbarSearch1" var="searchBarPlaceholder"/>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
@@ -50,18 +50,19 @@
                                 <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                             </form:select>
                         </div>
-<%--                        <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="contactOrderFormSortByYearsOfExperience"/> </label>--%>
-<%--                        <div class="d-flex justify-content-center ml-2">--%>
-<%--                            <div>--%>
-<%--                                <spring:message code="indexMinFilter" var="minFilterPlaceholder"/>--%>
-<%--                                <form:input type="text" path="minExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>--%>
-<%--                            </div>--%>
-<%--                            <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>--%>
-<%--                            <div>--%>
-<%--                                <spring:message code="indexMaxFilter" var="maxFilterPlaceholder"/>--%>
-<%--                                <form:input type="text" path="maxExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
+                        <br>
+                        <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="contactOrderFormSortByYearsOfExperience"/></label>
+                        <div class="d-flex justify-content-center ml-2">
+                            <div>
+                                <spring:message code="indexMinFilter" var="minFilterPlaceholder"/>
+                                <form:input type="number" path="minExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${minFilterPlaceholder}"/>
+                            </div>
+                            <div class="ml-2 mr-2 pt-2" style="color: #F2F2F2;">-</div>
+                            <div>
+                                <spring:message code="indexMaxFilter" var="maxFilterPlaceholder"/>
+                                <form:input type="number" path="maxExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
+                            </div>
+                        </div>
                         <br>
                         <div class="dropdown ml-2 mt-2">
                             <a href="<c:url value="/?page=1"/>">
@@ -78,15 +79,6 @@
                 </div>
                 <div class="col mr-2">
                     <h3 class="mt-2 mb-2"><spring:message code="navbarProfiles"/></h3>
-<%--                    <div class="d-flex justify-content-between mt-2">--%>
-<%--                        <h3><spring:message code="navbarProfiles"/></h3>--%>
-<%--                        <div style="width: 200px">--%>
-<%--                            <form:select path="sortBy" cssClass="form-select" onchange="this.form.submit()">--%>
-<%--                                <form:option value="0"><spring:message code="contactOrderFormSortByTitle"/></form:option>--%>
-<%--                                <form:option value="6"><spring:message code="contactOrderFormSortByYearsOfExperience"/></form:option>--%>
-<%--                            </form:select>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
                     </form:form>
                     <div class="card w-100 mt-2 mr-2 ml-2" style="background: #F2F2F2">
                         <div class="container">
@@ -170,7 +162,7 @@
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <c:forEach var="skill" items="${us.skills}" begin="0" end="3">
-                                                                            <a href="<c:url value="?skill=${skill.description}"/>">
+                                                                            <a href="<c:url value="?term=${skill.description}"/>">
                                                                                 <span class="badge badge-pill badge-success">
                                                                                     <c:out value="${skill.description}"/>
                                                                                 </span>

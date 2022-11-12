@@ -166,7 +166,7 @@
                                                     <p><spring:message code="profileInfoNotSpecified"/></p>
                                                 </c:if>
                                                 <c:forEach items="${contact.jobOffer.skills}" var="skill">
-                                                    <a href="<c:url value="/home?skill=${skill.description}"/>">
+                                                    <a href="<c:url value="/home?term=${skill.description}"/>">
                                                         <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
                                                     </a>
                                                 </c:forEach>

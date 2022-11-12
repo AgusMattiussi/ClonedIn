@@ -85,7 +85,7 @@
                                                     <span class="badge badge-pill badge-light p-2"><spring:message code="${categoryName}"/></span>
                                                 </sec:authorize>
                                                 <sec:authorize access="hasRole('ENTERPRISE')">
-                                                    <a href="<c:url value="/?category=${user.category.id}&location=&educationLevel="/>">
+                                                    <a href="<c:url value="/?category=${user.category.id}"/>">
                                                         <span class="badge badge-pill badge-success p-2">
                                                             <spring:message code="${categoryName}"/>
                                                         </span>
@@ -266,7 +266,7 @@
                                     <c:when test="${skills.size() > 0}">
                                         <c:forEach items="${skills}" var="skill">
                                             <sec:authorize access="hasRole('ENTERPRISE')">
-                                                <a href="<c:url value="/?skill=${skill.description}"/>">
+                                                <a href="<c:url value="/?term=${skill.description}"/>">
                                                     <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/></span>
                                                 </a>
                                             </sec:authorize>

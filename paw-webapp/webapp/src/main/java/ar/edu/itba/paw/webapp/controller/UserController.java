@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.io.IOException;
 
-//@Transactional
 @Controller
 public class UserController {
     private final UserService userService;
@@ -108,7 +107,6 @@ public class UserController {
                 .append("&minSalary=").append(minSalary)
                 .append("&maxSalary=").append(maxSalary)
                 .append("&term=").append(searchTerm);
-//                .append("&sortBy=").append(filterForm.getSortBy());
 
 
         mav.addObject("jobOffers", jobOfferList);

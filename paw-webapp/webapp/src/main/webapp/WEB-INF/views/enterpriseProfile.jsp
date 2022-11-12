@@ -199,8 +199,8 @@
                                                         <c:if test="${joboffer.skills.size() == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <c:forEach items="${joboffer.skills}" var="skill">
-                                                            <a href="<c:url value="/?skill=${skill.description}"/>">
+                                                        <c:forEach items="${joboffer.skills}" var="skill" begin="0" end="1">
+                                                            <a href="<c:url value="/?term=${skill.description}"/>">
                                                                 <h5>
                                                                     <span class="badge badge-success">
                                                                         <c:out value="${skill.description}"/>
@@ -263,7 +263,7 @@
                                 <c:forEach items="${activeJobOffers}" var="joboffer">
                                     <div class="card mt-2">
                                         <div class="card-body pb-0">
-                                            <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex justify-content-between">
                                                 <h5 class="card-title">
                                                     <a href="<c:url value="/jobOffer/${joboffer.id}"/>" class="text-decoration-none">
                                                             <c:out value="${joboffer.position}"/>
@@ -307,8 +307,8 @@
                                                         <c:if test="${joboffer.skills.size() == 0}">
                                                             <p><spring:message code="profileInfoNotSpecified"/></p>
                                                         </c:if>
-                                                        <c:forEach items="${joboffer.skills}" var="skill">
-                                                            <a href="<c:url value="/home?skill=${skill.description}"/>">
+                                                        <c:forEach items="${joboffer.skills}" var="skill" begin="0" end="1">
+                                                            <a href="<c:url value="/home?term=${skill.description}"/>">
                                                                 <h5>
                                                                     <span class="badge badge-success">
                                                                         <c:out value="${skill.description}"/>
@@ -319,21 +319,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between">
                                             <h6 class="card-title"><spring:message code="notificationsDescription"/></h6>
-                                                <a>
-                                                    <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${joboffer.id}">
-                                                        <spring:message code="userHomeApplicationButton"/>
-                                                    </button>
-                                                </a>
-                                            </div>
                                             <c:set var="desc" value="${joboffer.description}"/>
                                             <c:choose>
                                                 <c:when test="${desc.compareTo('') == 0}">
                                                     <spring:message code="profileInfoNotSpecified"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <p><c:out value="${fn:substring(desc,0,200)}"/>...</p>
+                                                    <!-- FIXME: NO TOMA LOS ENTERS: MUESTRA LOS <br /> -->
+                                                    <p style="white-space:pre-line"><c:out value="${fn:substring(desc,0,200)}" escapeXml="false"/>...</p>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
