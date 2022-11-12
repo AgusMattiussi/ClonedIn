@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.jpa.CategoryHibernateDao;
 import org.junit.Assert;
@@ -28,7 +29,8 @@ public class CategoryHibernateDaoTest {
     private static final String TEST_CATEGORY_2 = "testCategory2";
     private static final String TEST_CATEGORY_3 = "testCategory3";
     private static final String NEW_CATEGORY = "newCategory";
-    private static final long FIRST_ID = 1;
+    private static final long ID = 7;
+    private static final long CATEGORIES_COUNT = 3;
 
     @PersistenceContext
     private EntityManager em;
@@ -47,38 +49,30 @@ public class CategoryHibernateDaoTest {
     }
 
     @Test
-    public void dummyTest() {
-        assertTrue(true);
-    }
-
-    @Test
     public void testCreate() {
         final Category newCategory = dao.create(NEW_CATEGORY) ;
-
         Assert.assertNotNull(newCategory);
         Assert.assertEquals(NEW_CATEGORY, newCategory.getName());
         Assert.assertEquals(newCategory, em.find(Category.class, newCategory.getId()));
     }
 
-//    @Test
-//    public void testFindByName() {
-//        final Optional<Category> category = dao.findByName(TEST_CATEGORY_1);
-//
-//        assertTrue(category.isPresent());
-//        Assert.assertEquals(TEST_CATEGORY_1, category.get().getName());
-//    }
-//
-//    @Test
-//    public void testFindById() {
-//        final Optional<Category> category = dao.findById(FIRST_ID);
-//
-//        assertTrue(category.isPresent());
-//        Assert.assertEquals(TEST_CATEGORY_1, category.get().getName());
-//    }
-//
-//    @Test
-//    public void testGetAllCategories(){
-//        final List<Category> allCategories = dao.getAllCategories();
-//        Assert.assertEquals(3, allCategories.size());
-//    }
+    @Test
+    public void testFindByName() {
+        final Optional<Category> category = dao.findByName(TEST_CATEGORY_1);
+        assertTrue(category.isPresent());
+        Assert.assertEquals(TEST_CATEGORY_1, category.get().getName());
+    }
+
+    @Test
+    public void testFindById() {
+        final Optional<Category> category = dao.findById(ID);
+        assertTrue(category.isPresent());
+        Assert.assertEquals(TEST_CATEGORY_1, category.get().getName());
+    }
+
+    @Test
+    public void testGetAllCategories(){
+        final List<Category> allCategories = dao.getAllCategories();
+        Assert.assertEquals(CATEGORIES_COUNT, allCategories.size());
+    }
 }
