@@ -16,15 +16,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@ComponentScan({ "ar.edu.itba.paw.persistence" })
+@ComponentScan({ "ar.edu.itba.paw.persistence.jpa" })
 @Configuration
 @EnableTransactionManagement
 public class TestConfig {
     @Bean
     public DataSource dataSource(){
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
         ds.setDriverClass(JDBCDriver.class);
+
         ds.setUrl("jdbc:hsqldb:mem:paw");
         ds.setUsername("ha");
         ds.setPassword("");
@@ -43,7 +43,8 @@ public class TestConfig {
 
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+        //properties.setProperty("spring.jpa.database-platform", "org.hibernate.dialect.H2Dialect");
 
         factoryBean.setJpaProperties(properties);
         return factoryBean;

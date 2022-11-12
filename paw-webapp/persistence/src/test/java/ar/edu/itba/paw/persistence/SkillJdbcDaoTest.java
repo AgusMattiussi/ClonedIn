@@ -20,10 +20,10 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Rollback
-@Transactional*/
+@Transactional
 public class SkillJdbcDaoTest {
     /*private static final String SKILL_TABLE = "aptitud";
 

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.jpa.CategoryHibernateDao;
@@ -21,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Rollback
 @Transactional
 public class CategoryHibernateDaoTest {
     private static final String TEST_CATEGORY_1 = "testCategory1";
@@ -29,10 +29,12 @@ public class CategoryHibernateDaoTest {
     private static final String TEST_CATEGORY_3 = "testCategory3";
     private static final String NEW_CATEGORY = "newCategory";
     private static final long FIRST_ID = 1;
-    @Autowired
-    private CategoryHibernateDao dao;
+
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private CategoryDao dao;
 
     @Before
     public void setUp() {
