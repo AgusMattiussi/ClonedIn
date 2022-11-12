@@ -32,6 +32,8 @@ public class SkillHibernateDaoTest {
     private static final String NEW_SKILL = "newSkill";
     private static final String NON_EXISTING_SKILL = "nonExistingSkill";
     private static final long ID = 5;
+    private static final long SKILLS_COUNT = 3;
+
     @PersistenceContext
     private EntityManager em;
     @Autowired
@@ -79,7 +81,7 @@ public class SkillHibernateDaoTest {
     @Test
     public void testGetAllSkills(){
         final List<Skill> allSkills = dao.getAllSkills();
-        Assert.assertEquals(3, allSkills.size());
+        Assert.assertEquals(SKILLS_COUNT, allSkills.size());
     }
 
 }

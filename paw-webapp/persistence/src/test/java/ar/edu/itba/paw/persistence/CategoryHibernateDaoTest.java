@@ -2,9 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.jpa.CategoryHibernateDao;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
+@Rollback
 public class CategoryHibernateDaoTest {
     private static final String TEST_CATEGORY_1 = "testCategory1";
     private static final String TEST_CATEGORY_2 = "testCategory2";
