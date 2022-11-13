@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ContactDao {
 
-    void addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
+    Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
 
     List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy);
 

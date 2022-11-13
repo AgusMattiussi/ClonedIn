@@ -28,9 +28,10 @@ public class ContactHibernateDao implements ContactDao {
     private EntityManager em;
 
     @Override
-    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
+    public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
         Contact contact = new Contact(user, enterprise, jobOffer, filledBy, Date.from(Instant.now()));
         em.persist(contact);
+        return contact;
     }
 
     @Override

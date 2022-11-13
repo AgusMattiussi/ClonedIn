@@ -27,8 +27,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
-        contactDao.addContact(enterprise, user, jobOffer, filledBy);
+    public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
+        return contactDao.addContact(enterprise, user, jobOffer, filledBy);
     }
 
     @Override
