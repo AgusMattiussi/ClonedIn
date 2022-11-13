@@ -2,9 +2,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,19 +154,18 @@ public class JobOfferHibernateDaoTest {
                 EMPTY_FIELD, MIN_SALARY, MAX_SALARY));
     }
 
-    //TODO: arreglar tests de update
     @Test
     public void testCloseJobOffer(){
-//        dao.closeJobOffer(testJobOfferActive);
-//        assertEquals(UPDATED_STRING, testEnterprise.getLink());
-        assertTrue(true);
+        dao.closeJobOffer(testActiveJobOffer);
+        em.refresh(testActiveJobOffer);
+        assertEquals(JobOfferAvailability.CLOSED.getStatus(), testActiveJobOffer.getAvailable());
     }
 
     @Test
     public void testCancelJobOffer(){
-//        dao.cancelJobOffer(testJobOfferActive);
-//        assertEquals(UPDATED_STRING, testEnterprise.getLink());
-        assertTrue(true);
+        dao.cancelJobOffer(testActiveJobOffer);
+        em.refresh(testActiveJobOffer);
+        assertEquals(JobOfferAvailability.CANCELLED.getStatus(), testActiveJobOffer.getAvailable());
     }
 
 }
