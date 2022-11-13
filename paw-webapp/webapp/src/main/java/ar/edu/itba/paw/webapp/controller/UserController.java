@@ -80,6 +80,11 @@ public class UserController {
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("userHome");
 
+        User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("User {} not found", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+
         long categoryID;
         try {
             categoryID = Long.parseLong(filterForm.getCategory());
@@ -110,6 +115,7 @@ public class UserController {
 
 
         mav.addObject("jobOffers", jobOfferList);
+        mav.addObject("contactedJobOffers", userService.getUserContactMap(user.getContacts()));
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("pages",  PaginationHelper.getMaxPages(jobOffersCount, JOB_OFFERS_PER_PAGE));
         mav.addObject("currentPage", page);
