@@ -46,8 +46,6 @@ public class UserController {
     private final CategoryService categoryService;
     private final SkillService skillService;
     private final AuthUserDetailsService authUserDetailsService;
-    private static final String ACCEPT = "acceptMsg";
-    private static final String REJECT = "rejectMsg";
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final int CONTACTS_PER_PAGE = 3;
@@ -201,13 +199,11 @@ public class UserController {
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
 
-
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @RequestMapping("/answerJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView answerJobOffer(Authentication loggedUser,
+    @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView acceptJobOffer(Authentication loggedUser,
                                        @PathVariable("userId") final long userId,
-                                       @PathVariable("jobOfferId") final long jobOfferId,
-                                       @PathVariable("answer") final long answer) {
+                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User not found");
@@ -222,16 +218,37 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        if(answer==0) {
-            boolean rejected = contactService.rejectJobOffer(user, jobOffer);
-            if(rejected)
-                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), REJECT, LocaleContextHolder.getLocale());
-        }
-        else {
-            boolean accepted = contactService.acceptJobOffer(user, jobOffer);
-            if(accepted)
-                emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
-        }
+        boolean accepted = contactService.acceptJobOffer(user, jobOffer);
+        if(accepted)
+            emailService.sendAcceptJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+//            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
+
+        return new ModelAndView("redirect:/notificationsUser/" + userId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @RequestMapping("/rejectJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView rejectJobOffer(Authentication loggedUser,
+                                       @PathVariable("userId") final long userId,
+                                       @PathVariable("jobOfferId") final long jobOfferId) {
+
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+        Enterprise enterprise = enterpriseService.findById(jobOffer.getEnterpriseID()).orElseThrow(() -> {
+            LOGGER.error("Enterprise not found");
+            return new UserNotFoundException();
+        });
+
+        boolean rejected = contactService.acceptJobOffer(user, jobOffer);
+        if(rejected)
+            emailService.sendRejectJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+//        emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }

@@ -40,6 +40,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String CLOSE = "close";
     private static final String CANCEL = "cancel";
     private static final String ACCEPT = "acceptMsg";
+    private static final String REJECT = "rejectMsg";
     private static final String ACCEPT_APPLICATION = "accept";
     private static final String REJECT_APPLICATION = "reject";
     private static final String SEND_APPLICATION = "sendApplication";
@@ -120,7 +121,17 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, Locale locale) {
+    public void sendAcceptJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, Locale locale) {
+        sendReplyJobOfferEmail(enterprise, username, email, jobOfferPosition, ACCEPT, locale);
+    }
+
+    @Async
+    @Override
+    public void sendRejectJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, Locale locale) {
+        sendReplyJobOfferEmail(enterprise, username, email, jobOfferPosition, REJECT, locale);
+    }
+
+    private void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", username);
