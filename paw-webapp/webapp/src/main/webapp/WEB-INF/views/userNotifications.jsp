@@ -156,7 +156,8 @@
                                         </c:if>
                                         <c:forEach items="${contact.jobOffer.skills}" var="skill">
                                             <a href="<c:url value="/home?term=${skill.description}"/>">
-                                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                                <span class="badge badge-pill badge-success" style="margin-bottom: 0.5rem">
+                                                    <c:out value="${skill.description}"/></span>
                                             </a>
                                         </c:forEach>
                                     </div>
@@ -181,12 +182,14 @@
                                         <c:set var="statusName" value="${contact.status}"/>
                                         <h5 class="card-title">
                                             <spring:message code="notificationsStatus"/>
-                                            <c:if test="${statusName} == 'cerrada'">
-                                                <spring:message code="cancelada"/>
-                                            </c:if>
-                                            <c:if test="${statusName} != 'cerrada'">
-                                                <spring:message code="${statusName}"/>
-                                            </c:if>
+                                            <c:choose>
+                                                <c:when test="${statusName == 'cerrada'}">
+                                                    <spring:message code="cancelada"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <spring:message code="${statusName}"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </h5>
                                         <c:if test="${statusName == 'pendiente'}">
                                             <a>
