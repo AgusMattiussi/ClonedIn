@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 public class EnterpriseHibernateDaoTest {
     private static final String NEW_NAME = "newEnterpriseName";
     private static final String NEW_EMAIL = "newEnterprise@gmail.com";
-    private static final String EMPTY_FIELD = "";
+    private static final String EMPTY_FIELD = "-";
     private static final String TEST_NAME = "testEnterpriseName";
     private static final String TEST_EMAIL = "enterprise@gmail.com";
     private static final String TEST_CATEGORY_DESC = "testCategory";
@@ -107,27 +107,27 @@ public class EnterpriseHibernateDaoTest {
         assertTrue(true);
     }
     @Test
-    public void updateWorkers(){
+    public void testUpdateWorkers(){
 //        dao.updateWorkers(testEnterprise.getId(), UPDATED_STRING);
 //        assertEquals(UPDATED_STRING, testEnterprise.getLocation());
         assertTrue(true);
     }
 
     @Test
-    public void updateYear(){
+    public void testUpdateYear(){
 //        dao.updateYear(testEnterprise.getId(), 0);
 //        assertEquals(0, testEnterprise.getYear());
         assertTrue(true);
     }
     @Test
-    public void updateLink(){
+    public void testUtestUpdateLink(){
 //        dao.updateLink(testEnterprise.getId(), UPDATED_STRING);
 //        assertEquals(UPDATED_STRING, testEnterprise.getLink());
         assertTrue(true);
     }
 
     @Test
-    public void updateCategory(){
+    public void testUpdateCategory(){
 //        final Category newCategory = new Category(TEST_CATEGORY_DESC);
 //        dao.updateCategory(testEnterprise.getId(), newCategory);
 //        assertEquals(newCategory, testEnterprise.getCategory());
