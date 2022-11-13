@@ -131,7 +131,7 @@
                                                     </c:if>
                                                     <c:forEach items="${job.skills}" var="skill" begin="0" end="1">
                                                         <a href="<c:url value="?term=${skill.description}"/>">
-                                                            <h5><span class="badge badge-success" style="margin-bottom: 1rem;"><c:out value="${skill.description}"/></span></h5>
+                                                            <span class="badge badge-pill badge-success" style="margin-bottom: 1rem;"><c:out value="${skill.description}"/></span>
                                                         </a>
                                                     </c:forEach>
                                                 </div>

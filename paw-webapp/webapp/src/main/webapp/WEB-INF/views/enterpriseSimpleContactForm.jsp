@@ -55,7 +55,7 @@
                             </div>
                           </div>
                           <p><spring:message code="contactFormRequiredMsg"/></p>
-                          <button class="btn action-button" data-bs-toggle="modal" data-bs-target="#mailConfirmationModal">
+                          <button class="btn action-button">
                             <spring:message code="contactFormButtonMsg"/>
                           </button>
                           <div class="row">
