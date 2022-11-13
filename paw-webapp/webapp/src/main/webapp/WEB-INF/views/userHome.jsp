@@ -134,7 +134,7 @@
                                                         </c:if>
                                                         <c:forEach items="${job.skills}" var="skill" begin="0" end="1">
                                                             <a href="<c:url value="?term=${skill.description}"/>">
-                                                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                                                <span class="badge badge-pill badge-success" style="margin-bottom: 1rem"><c:out value="${skill.description}"/></span>
                                                             </a>
                                                         </c:forEach>
                                                     </div>
@@ -161,11 +161,6 @@
                                             </c:choose>
                                         </div>
                                     </div>
-                                    <!-- Modal -->
-                                    <jsp:include page="../components/applicationModal.jsp">
-                                        <jsp:param name="currentPage" value="${currentPage}"/>
-                                        <jsp:param name="jobOfferId" value="${job.id}"/>
-                                    </jsp:include>
                                 </c:forEach>
                                 <!-- Pagination -->
                                 <jsp:include page="../components/pagination.jsp">

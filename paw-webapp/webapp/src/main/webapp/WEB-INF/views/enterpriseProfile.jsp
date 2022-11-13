@@ -201,11 +201,9 @@
                                                         </c:if>
                                                         <c:forEach items="${joboffer.skills}" var="skill" begin="0" end="1">
                                                             <a href="<c:url value="/?term=${skill.description}"/>">
-                                                                <h5>
-                                                                    <span class="badge badge-success">
+                                                                    <span class="badge badge-pill badge-success" style="margin-bottom: 1rem">
                                                                         <c:out value="${skill.description}"/>
                                                                     </span>
-                                                                </h5>
                                                             </a>
                                                         </c:forEach>
                                                     </div>
@@ -221,9 +219,9 @@
                                                     </div>
                                                 </c:if>
                                                 <c:if test="${joboffer.available == 'Cerrada'}">
-                                                <span class="badge badge-danger p-2 mb-2">
+                                                <h5><span class="badge badge-danger p-2 mb-2">
                                                     <spring:message code="profileEnterpriseCloseJobOffer"/>
-                                                </span>
+                                                </span></h5>
                                                 </c:if>
                                             </div>
                                             <c:set var="desc" value="${joboffer.description}"/>
@@ -309,11 +307,9 @@
                                                         </c:if>
                                                         <c:forEach items="${joboffer.skills}" var="skill" begin="0" end="1">
                                                             <a href="<c:url value="/home?term=${skill.description}"/>">
-                                                                <h5>
-                                                                    <span class="badge badge-success">
+                                                                    <span class="badge badge-pill badge-success" style="margin-bottom: 1rem">
                                                                         <c:out value="${skill.description}"/>
                                                                     </span>
-                                                                </h5>
                                                             </a>
                                                         </c:forEach>
                                                     </div>

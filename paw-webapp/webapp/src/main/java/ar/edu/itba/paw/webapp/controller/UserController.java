@@ -120,10 +120,9 @@ public class UserController {
 
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}/{currentPage:[0-9]+}")
+    @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView applyToJobOffer(Authentication loggedUser,
-                                       @PathVariable("jobOfferId") final long jobOfferId,
-                                        @PathVariable("currentPage") final long currentPage) {
+                                       @PathVariable("jobOfferId") final long jobOfferId) {
 
         User user = userService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
             LOGGER.error("User {} not found", loggedUser.getName());
@@ -141,12 +140,12 @@ public class UserController {
         });
 
         if(contactService.alreadyContacted(user.getId(), jobOfferId))
-            return new ModelAndView("redirect:/home?page=" + currentPage);
+            return new ModelAndView("redirect:/jobOffer/" + jobOfferId);
 
         contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
         emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
-        return new ModelAndView("redirect:/home?page=" + currentPage);
+        return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")

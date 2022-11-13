@@ -151,7 +151,11 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <c:forEach var="skill" items="${contact.user.skills}" begin="0" end="2">
-                                                    <c:out value="${skill.description}"/>
+                                                    <a href="<c:url value="/?term=${skill.description}"/>">
+                                                        <span class="badge badge-pill badge-success" style="margin-bottom: 0.5rem">
+                                                            <c:out value="${skill.description}"/>
+                                                        </span>
+                                                    </a>
                                                 </c:forEach>
                                             </c:otherwise>
                                         </c:choose>
@@ -161,25 +165,29 @@
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td>
-                                        <c:if test="${statusName} == 'cerrada'">
-                                            <spring:message code="rechazada"/>
-                                        </c:if>
-                                        <c:if test="${statusName} != 'cerrada'">
-                                            <spring:message code="${statusName}"/>
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${statusName == 'cerrada'}">
+                                                <spring:message code="rechazada"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="${statusName}"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>
                                     <c:if test="${statusName == 'pendiente'}">
                                         <c:set var="contactId" value="${contact.jobOffer.id}"/>
                                         <c:set var="contactUserId" value="${contact.user.id}"/>
-                                        <td>
+                                        <div>
                                             <button class="btn btn-success" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#acceptApplicationModal${contact.user.id}${contact.jobOffer.id}">
                                                 <spring:message code="notificationsAccept"/>
                                             </button>
+                                        </div>
+                                        <div>
                                             <button class="btn btn-danger" style="margin-bottom: 5px; width: 90px;" data-bs-toggle="modal" data-bs-target="#rejectApplicationModal${contact.user.id}${contact.jobOffer.id}">
                                                 <spring:message code="notificationsReject"/>
                                             </button>
-                                        </td>
+                                        </div>
                                     </c:if>
                                     </td>
                                 </tr>
