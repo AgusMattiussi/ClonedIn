@@ -5,10 +5,6 @@ public enum JobOfferAvailability {
     CLOSED("Cerrada"),
     CANCELLED("Cancelada");
 
-    //FIXME: HACERLO ASI AHORA
-    /*ACTIVE("Activa"),
-    INACTIVE("Inactiva");*/
-
     private final String status;
 
     JobOfferAvailability(String status) {

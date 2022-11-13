@@ -14,8 +14,6 @@ import java.util.Date;
 @IdClass(ContactId.class)
 public class Contact {
 
-    //TODO: chequear mapeo de relaciones
-
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")

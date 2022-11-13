@@ -161,7 +161,7 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
-    //TODO: Sirve este metodo?
+
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping("/cancelJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
