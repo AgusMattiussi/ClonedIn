@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "empresa")
@@ -47,6 +48,9 @@ public class Enterprise {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idImagen")
     private Image image;
+
+    @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
+    private Set<Contact> contacts;
 
     @Override
     public String toString() {
@@ -130,6 +134,9 @@ public class Enterprise {
         return image;
     }
 
+    public Set<Contact> getContacts() {
+        return contacts;
+    }
 
     @Override
     public boolean equals(Object o) {

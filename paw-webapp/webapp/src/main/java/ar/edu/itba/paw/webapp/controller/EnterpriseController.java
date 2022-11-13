@@ -76,6 +76,11 @@ public class EnterpriseController {
         final long usersCount;
         StringBuilder path = new StringBuilder();
 
+        Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("/ : Enterprise {} not found in home()", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+
         long categoryID;
         try {
             categoryID = Long.parseLong(enterpriseFilterForm.getCategory());
@@ -100,6 +105,7 @@ public class EnterpriseController {
                 .append("?term=").append(searchForm.getTerm());
 
         mav.addObject("users", usersList);
+        mav.addObject("contactedUsers", enterpriseService.getUserContactMap(enterprise.getContacts()));
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("path", path.toString());

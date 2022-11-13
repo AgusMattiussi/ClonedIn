@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EnterpriseService {
 
@@ -39,4 +42,6 @@ public interface EnterpriseService {
     void updateProfileImage(long enterpriseID, Image image);
 
     Optional<Image> getProfileImage(int imageId);
+
+    Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 }

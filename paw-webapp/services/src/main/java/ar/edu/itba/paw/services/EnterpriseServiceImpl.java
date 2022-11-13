@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Primary
 @Service
@@ -131,5 +135,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             return imageService.getImage(1);
         }
         return imageService.getImage(imageId);
+    }
+
+    @Override
+    public Map<Long, Boolean> getUserContactMap(Set<Contact> contacts) {
+        Map<Long, Boolean> toReturn = new HashMap<>();
+        for (Contact contact : contacts) {
+            toReturn.putIfAbsent(contact.getUser().getId(), true);
+        }
+        return toReturn;
     }
 }
