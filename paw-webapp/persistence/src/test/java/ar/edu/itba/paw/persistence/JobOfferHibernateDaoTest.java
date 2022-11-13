@@ -1,37 +1,19 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
-import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
-import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Rollback
 @Transactional
-public class JobOfferJdbcDaoTest {
+public class JobOfferHibernateDaoTest {
 
     /*private static final String JOB_OFFER_TABLE = "ofertaLaboral";
     private static final String POSITION = "posicion";

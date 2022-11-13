@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +23,11 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Rollback
 @Transactional
 public class ExperienceHibernateDaoTest {
     private static final String TEST_USER_EMAIL = "user@email.com";
-    private static final String TEST_CATEGORY_DESC = "testCategoryDescription";
-    private static final String EMPTY_FIELD = "";
+    private static final String TEST_CATEGORY_DESC = "testCategory";
+    private static final String EMPTY_FIELD = "-";
     public static final int NEW_MONTH_FROM = 11;
     public static final int NEW_YEAR_FROM = 2000;
     public static final Integer NEW_MONTH_TO = 12;
@@ -121,4 +119,5 @@ public class ExperienceHibernateDaoTest {
         Experience deletedExperience = em.find(Experience.class, testExperience.getId());
         assertNull(deletedExperience);
     }
+
 }

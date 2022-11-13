@@ -6,7 +6,9 @@ import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,20 +27,20 @@ import static org.junit.Assert.*;
 @Transactional
 public class EducationHibernateDaoTest {
 
-    private static final String NEW_TITLE = "Bachiller especializado en PAW";
-    private static final String NEW_INSTITUTION = "Colegio Nuestra Seniora de PAW";
-    private static final String NEW_DESCRIPTION = "Siempre me gusto mucho este colegio";
-    private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
+    private static final String NEW_TITLE = "newTitle";
+    private static final String NEW_INSTITUTION = "newInstitution";
+    private static final String NEW_DESCRIPTION = "newDescription";
+    private static final String TEST_USER_EMAIL = "user@gmail.com";
     private static final String EMPTY_FIELD = "-";
     public static final String TEST_CATEGORY_DESC = "category";
-    private static final String TEST_TITLE = "Licenciado en Paw";
-    private static final String TEST_INSTITUTION = "PAW University";
-    private static final String TEST_DESCRIPTION = "Una linda facultad";
+    private static final String TEST_TITLE = "testTitle";
+    private static final String TEST_INSTITUTION = "testInstitution";
+    private static final String TEST_DESCRIPTION = "testDescription";
     public static final int NEW_MONTH_FROM = 11;
     public static final int NEW_YEAR_FROM = 2000;
     public static final int NEW_MONTH_TO = 12;
     public static final int NEW_YEAR_TO = 2004;
-public static final int TEST_MONTH_FROM = 11;
+    public static final int TEST_MONTH_FROM = 11;
     public static final int TEST_YEAR_FROM = 2011;
     public static final int TEST_MONTH_TO = 12;
     public static final int TEST_YEAR_TO = 2012;
@@ -137,6 +139,4 @@ public static final int TEST_MONTH_FROM = 11;
         Education deletedEducation = em.find(Education.class, testEducation.getId());
         assertNull(deletedEducation);
     }
-
-
 }

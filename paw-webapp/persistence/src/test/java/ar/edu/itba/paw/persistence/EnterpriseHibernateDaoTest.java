@@ -27,7 +27,7 @@ public class EnterpriseHibernateDaoTest {
     private static final String EMPTY_FIELD = "";
     private static final String TEST_NAME = "testEnterpriseName";
     private static final String TEST_EMAIL = "enterprise@gmail.com";
-    private static final String TEST_CATEGORY_DESC = "testCategoryDescription";
+    private static final String TEST_CATEGORY_DESC = "testCategory";
     private static final String UPDATED_STRING = "updatedString";
 
     @PersistenceContext

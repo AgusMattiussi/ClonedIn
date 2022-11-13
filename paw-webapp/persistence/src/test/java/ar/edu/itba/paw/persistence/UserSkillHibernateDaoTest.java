@@ -13,15 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -31,26 +28,10 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
 public class UserSkillHibernateDaoTest {
-
-    private static final String USER_SKILL_TABLE = "aptitudUsuario";
-    private static final String SKILL_ID = "idAptitud";
-    private static final String USER_ID = "idUsuario";
-
-    private static final String TEST_NAME = "John Doe";
-    private static final String TEST_EMAIL = "johndoe@gmail.com";
-    private static final String TEST_PASSWORD = "pass123";
-    private static final String TEST_LOCATION = "Calle Falsa 123";
-    //private static final long TEST_CATEGORY_ID_FK = 1;
-    private static final String TEST_CATEGORY_NAME = "AlgunaCategoria";
-    private static final String TEST_CURRENT_POSITION = "CEO de PAW";
-    private static final String TEST_DESCRIPTION = "Un tipo muy laburante";
-    private static final String TEST_EDUCATION = "Licenciado en la Universidad de la Calle";
-    private static final String TEST_SKILL = "unaskill";
     public static final String NEW_SKILL_DESC = "testskill";
     public static final String NEW_SKILL_DESC2 = "testskill2";
     public static final String NEW_SKILL_DESC3 = "testskill3";
-    public static final String NON_EXISTING_SKILL = "nonexistingskill";
-    public static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
+    public static final String TEST_USER_EMAIL = "user@gmail.com";
     public static final String EMPTY_FIELD = "-";
     public static final String TEST_CATEGORY_DESC = "testCategory";
 
@@ -60,18 +41,12 @@ public class UserSkillHibernateDaoTest {
     @Autowired
     private UserSkillDao userSkillDao;
 
-
     private Skill testSkill;
     private Skill testSkill2;
     private Skill testSkill3;
     private Category testCategory;
     private User testUser;
     private UserSkill testUserSkill;
-
-    @Test
-    public void dummyTest() {
-        assertTrue(true);
-    }
 
     @Before
     public void setUp() {
@@ -147,4 +122,5 @@ public class UserSkillHibernateDaoTest {
 
         assertNull(found);
     }
+
 }

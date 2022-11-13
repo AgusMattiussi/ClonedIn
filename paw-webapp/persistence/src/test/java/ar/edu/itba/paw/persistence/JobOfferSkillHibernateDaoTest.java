@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @Transactional
 public class JobOfferSkillHibernateDaoTest {
 
-    private static final String EMPTY_FIELD = "";
+    private static final String EMPTY_FIELD = "-";
     private static final String NEW_SKILL = "newSkill";
     private static final String TEST_SKILL = "testSkill";
     private static final String EXISTING_ENTERPRISE_NAME = "testEnterpriseName";

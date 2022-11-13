@@ -3,12 +3,10 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +17,10 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@Rollback
 @Transactional
 public class SkillHibernateDaoTest {
     private static final String TEST_SKILL_1 = "testSkill1";
@@ -52,36 +49,36 @@ public class SkillHibernateDaoTest {
     @Test
     public void testCreate() {
         final Skill newSkill = dao.create(NEW_SKILL);
-        Assert.assertNotNull(newSkill);
-        Assert.assertEquals(NEW_SKILL, newSkill.getDescription());
-        Assert.assertEquals(newSkill, em.find(Skill.class, newSkill.getId()));
+        assertNotNull(newSkill);
+        assertEquals(NEW_SKILL, newSkill.getDescription());
+        assertEquals(newSkill, em.find(Skill.class, newSkill.getId()));
     }
 
     @Test
     public void testFindById() {
         final Optional<Skill> skill = dao.findById(testSkill.getId());
         assertTrue(skill.isPresent());
-        Assert.assertEquals(TEST_SKILL_1, skill.get().getDescription());
+        assertEquals(TEST_SKILL_1, skill.get().getDescription());
     }
 
     @Test
     public void testFindByDescription() {
         final Optional<Skill> skill = dao.findByDescription(TEST_SKILL_1);
         assertTrue(skill.isPresent());
-        Assert.assertEquals(TEST_SKILL_1, skill.get().getDescription());
+        assertEquals(TEST_SKILL_1, skill.get().getDescription());
     }
 
     @Test
     public void testFindByDescriptionOrCreate(){
         final Skill skill = dao.findByDescriptionOrCreate(NON_EXISTING_SKILL);
-        Assert.assertNotNull(skill);
-        Assert.assertEquals(NON_EXISTING_SKILL, skill.getDescription());
+        assertNotNull(skill);
+        assertEquals(NON_EXISTING_SKILL, skill.getDescription());
     }
 
     @Test
     public void testGetAllSkills(){
         final List<Skill> allSkills = dao.getAllSkills();
-        Assert.assertEquals(SKILLS_COUNT, allSkills.size());
+        assertEquals(SKILLS_COUNT, allSkills.size());
     }
 
 }
