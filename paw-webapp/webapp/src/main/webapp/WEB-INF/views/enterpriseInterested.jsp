@@ -201,6 +201,7 @@
                                 <jsp:include page="../components/rejectApplicationModal.jsp">
                                     <jsp:param name="userId" value="${contact.user.id}"/>
                                     <jsp:param name="jobOfferId" value="${contact.jobOffer.id}"/>
+                                    <jsp:param name="enterpriseId" value="${contact.jobOffer.enterprise.id}"/>
                                 </jsp:include>
                             </c:forEach>
                             </tbody>

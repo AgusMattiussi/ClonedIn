@@ -111,7 +111,6 @@ public class UserController {
                 .append("&maxSalary=").append(maxSalary)
                 .append("&term=").append(searchTerm);
 
-
         mav.addObject("jobOffers", jobOfferList);
         mav.addObject("contactedJobOffers", userService.getUserContactMap(user.getContacts()));
         mav.addObject("categories", categoryService.getAllCategories());
@@ -221,7 +220,6 @@ public class UserController {
         boolean accepted = contactService.acceptJobOffer(user, jobOffer);
         if(accepted)
             emailService.sendAcceptJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
-//            emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
@@ -248,7 +246,6 @@ public class UserController {
         boolean rejected = contactService.acceptJobOffer(user, jobOffer);
         if(rejected)
             emailService.sendRejectJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
-//        emailService.sendReplyJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), ACCEPT, LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
