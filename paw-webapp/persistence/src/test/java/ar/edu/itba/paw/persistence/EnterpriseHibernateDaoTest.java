@@ -85,52 +85,43 @@ public class EnterpriseHibernateDaoTest {
         assertTrue(dao.enterpriseExists(TEST_EMAIL));
     }
 
-    //TODO: arreglar tests de update
     @Test
     public void testUpdateName(){
-//        dao.updateName(testEnterprise.getId(), UPDATED_STRING);
-//        assertEquals(UPDATED_STRING, testEnterprise.getName());
-        assertTrue(true);
+        dao.updateName(testEnterprise.getId(), UPDATED_STRING);
+        em.refresh(testEnterprise);
+        assertEquals(UPDATED_STRING, testEnterprise.getName());
     }
 
     @Test
     public void testUpdateDescription(){
-//        dao.updateDescription(testEnterprise.getId(), UPDATED_STRING);
-//        assertEquals(UPDATED_STRING, testEnterprise.getDescription());
-        assertTrue(true);
+        dao.updateDescription(testEnterprise.getId(), UPDATED_STRING);
+        em.refresh(testEnterprise);
+        assertEquals(UPDATED_STRING, testEnterprise.getDescription());
     }
 
     @Test
     public void testUpdateLocation(){
-//        dao.updateLocation(testEnterprise.getId(), UPDATED_STRING);
-//        assertEquals(UPDATED_STRING, testEnterprise.getLocation());
-        assertTrue(true);
+        dao.updateLocation(testEnterprise.getId(), UPDATED_STRING);
+        em.refresh(testEnterprise);
+        assertEquals(UPDATED_STRING, testEnterprise.getLocation());
     }
     @Test
     public void testUpdateWorkers(){
-//        dao.updateWorkers(testEnterprise.getId(), UPDATED_STRING);
-//        assertEquals(UPDATED_STRING, testEnterprise.getLocation());
-        assertTrue(true);
+        dao.updateWorkers(testEnterprise.getId(), UPDATED_STRING);
+        em.refresh(testEnterprise);
+        assertEquals(UPDATED_STRING, testEnterprise.getWorkers());
     }
 
     @Test
     public void testUpdateYear(){
-//        dao.updateYear(testEnterprise.getId(), 0);
-//        assertEquals(0, testEnterprise.getYear());
-        assertTrue(true);
+        dao.updateYear(testEnterprise.getId(), 0);
+        em.refresh(testEnterprise);
+        assertEquals(0, (long) testEnterprise.getYear());
     }
     @Test
-    public void testUtestUpdateLink(){
-//        dao.updateLink(testEnterprise.getId(), UPDATED_STRING);
-//        assertEquals(UPDATED_STRING, testEnterprise.getLink());
-        assertTrue(true);
-    }
-
-    @Test
-    public void testUpdateCategory(){
-//        final Category newCategory = new Category(TEST_CATEGORY_DESC);
-//        dao.updateCategory(testEnterprise.getId(), newCategory);
-//        assertEquals(newCategory, testEnterprise.getCategory());
-        assertTrue(true);
+    public void testUpdateLink(){
+        dao.updateLink(testEnterprise.getId(), UPDATED_STRING);
+        em.refresh(testEnterprise);
+        assertEquals(UPDATED_STRING, testEnterprise.getLink());
     }
 }
