@@ -39,8 +39,9 @@ public class Contact {
     private Date date;
 
     public Contact(User user, Enterprise enterprise, JobOffer jobOffer, String status, FilledBy filledBy, Date date) {
-        if(filledBy.equals(FilledBy.ANY))
+        if(filledBy.equals(FilledBy.ANY)) {
             throw new InvalidParameterException();
+        }
 
         this.user = user;
         this.enterprise = enterprise;
@@ -51,8 +52,9 @@ public class Contact {
     }
 
     public Contact(User user, Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy, Date date) {
-        if(filledBy.equals(FilledBy.ANY))
+        if(filledBy.equals(FilledBy.ANY)) {
             throw new InvalidParameterException();
+        }
 
         this.user = user;
         this.enterprise = enterprise;

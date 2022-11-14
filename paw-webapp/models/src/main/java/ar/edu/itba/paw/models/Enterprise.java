@@ -140,8 +140,12 @@ public class Enterprise {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Enterprise that = (Enterprise) o;
         return id == that.id && email.equals(that.email);
     }

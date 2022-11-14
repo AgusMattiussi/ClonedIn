@@ -47,8 +47,12 @@ public class JobOfferSkill {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         JobOfferSkill that = (JobOfferSkill) o;
         return jobOffer.equals(that.jobOffer) && skill.equals(that.skill);
     }

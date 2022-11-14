@@ -41,8 +41,12 @@ public class Image {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Image image = (Image) o;
         return id == image.id && Arrays.equals(bytes, image.bytes);
     }

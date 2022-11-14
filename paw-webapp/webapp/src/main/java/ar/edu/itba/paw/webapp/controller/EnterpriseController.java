@@ -251,7 +251,7 @@ public class EnterpriseController {
 
         boolean accepted = contactService.acceptJobOffer(user, jobOffer);
         if(accepted)
-            emailService.sendAcceptApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            emailService.sendAcceptApplicationEmail(user, enterprise.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
     }
@@ -280,7 +280,7 @@ public class EnterpriseController {
 
         boolean rejected = contactService.rejectJobOffer(user, jobOffer);
         if(rejected)
-            emailService.sendRejectApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            emailService.sendRejectApplicationEmail(user, enterprise.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
     }

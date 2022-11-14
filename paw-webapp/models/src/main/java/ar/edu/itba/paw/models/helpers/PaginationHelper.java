@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.helpers;
 
-public class PaginationHelper {
+public final class PaginationHelper {
     private PaginationHelper() {
     }
 

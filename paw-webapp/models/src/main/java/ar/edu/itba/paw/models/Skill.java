@@ -49,8 +49,12 @@ public class Skill {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Skill skill = (Skill) o;
         return id.equals(skill.id) && description.equals(skill.description);
     }

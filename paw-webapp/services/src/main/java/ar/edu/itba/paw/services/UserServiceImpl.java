@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Primary
@@ -23,8 +22,6 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-    private static final int HIDE_VALUE=0;
-    private static final int SHOW_VALUE=1;
     private final ImageService imageService;
 
     @Autowired
@@ -148,23 +145,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
                                       Category newCategory, String newEducationLevel) {
-        if(!newName.isEmpty())
+        if(!newName.isEmpty()) {
             updateName(userID, newName);
+        }
 
-        if(!newDescription.isEmpty())
+        if(!newDescription.isEmpty()) {
             updateDescription(userID, newDescription);
+        }
 
-        if(!newLocation.isEmpty())
+        if(!newLocation.isEmpty()) {
             updateLocation(userID, newLocation);
+        }
 
-        if(!newPosition.isEmpty())
+        if(!newPosition.isEmpty()) {
             updateCurrentPosition(userID, newPosition);
+        }
 
-        if(newCategory != null)
+        if(newCategory != null) {
             updateCategory(userID, newCategory);
+        }
 
-        if(!newEducationLevel.isEmpty())
+        if(!newEducationLevel.isEmpty()) {
             updateEducationLevel(userID, newEducationLevel);
+        }
     }
 
     @Override

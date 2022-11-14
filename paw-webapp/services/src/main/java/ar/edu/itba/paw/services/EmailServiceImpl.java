@@ -4,9 +4,10 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -32,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     private MessageSource messageSource;
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
-    private final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
+    private static final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
@@ -45,6 +46,8 @@ public class EmailServiceImpl implements EmailService {
     private static final String REJECT_APPLICATION = "reject";
     private static final String SEND_APPLICATION = "sendApplication";
     private static final String CANCEL_APPLICATION = "cancelApplication";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 
     @Async
@@ -61,6 +64,7 @@ public class EmailServiceImpl implements EmailService {
 
             mailSender.send(mimeMessage);
         } catch(MessagingException messagingException) {
+            LOGGER.error("MessagingException: error sending email in EmailServiceImpl");
         }
     }
 
@@ -223,6 +227,6 @@ public class EmailServiceImpl implements EmailService {
 
         String subject = messageSource.getMessage(action + "ApplicationMail.subject", null, locale);
 
-        sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
+        sendEmail(email, subject, ANSWER_TEMPLATE, mailMap);
     }
 }

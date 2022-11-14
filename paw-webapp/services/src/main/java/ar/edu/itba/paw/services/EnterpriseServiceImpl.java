@@ -101,26 +101,33 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers) {
-        if(!newName.isEmpty())
+        if(!newName.isEmpty()) {
             updateName(enterpriseID, newName);
+        }
 
-        if(!newDescription.isEmpty())
+        if(!newDescription.isEmpty()) {
             updateDescription(enterpriseID, newDescription);
+        }
 
-        if(!newLocation.isEmpty())
+        if(!newLocation.isEmpty()) {
             updateLocation(enterpriseID, newLocation);
+        }
 
-        if(newCategory != null)
+        if(newCategory != null) {
             updateCategory(enterpriseID, newCategory);
+        }
 
-        if(!newLink.isEmpty())
+        if(!newLink.isEmpty()) {
             updateLink(enterpriseID, newLink);
+        }
 
-        if(newYear != null)
+        if(newYear != null) {
             updateYear(enterpriseID, newYear);
+        }
 
-        if(!newWorkers.isEmpty())
+        if(!newWorkers.isEmpty()) {
             updateWorkers(enterpriseID, newWorkers);
+        }
 
     }
 

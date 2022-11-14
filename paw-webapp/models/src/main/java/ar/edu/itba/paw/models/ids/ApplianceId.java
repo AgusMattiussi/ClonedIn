@@ -17,8 +17,12 @@ public class ApplianceId implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplianceId that = (ApplianceId) o;
         return Objects.equals(user, that.user) && Objects.equals(jobOffer, that.jobOffer);
     }

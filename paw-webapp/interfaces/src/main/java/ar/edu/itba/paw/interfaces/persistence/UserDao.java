@@ -15,7 +15,7 @@ public interface UserDao {
 
     Optional<User> findById(long userId);
 
-    public Optional<Long> getIdForEmail(String email);
+    Optional<Long> getIdForEmail(String email);
 
     boolean userExists(String email);
 

@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
 

@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models.helpers;
 
 import ar.edu.itba.paw.models.enums.SortBy;
 
-public class SortHelper {
+public final class SortHelper {
     private SortHelper() {
     }
 

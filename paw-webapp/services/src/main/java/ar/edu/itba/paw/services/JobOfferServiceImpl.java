@@ -1,17 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.JobOffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Primary
