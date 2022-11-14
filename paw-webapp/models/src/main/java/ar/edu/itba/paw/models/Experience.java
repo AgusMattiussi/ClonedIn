@@ -20,7 +20,6 @@ public class Experience {
     @JoinColumn(name = "idUsuario", referencedColumnName="id")
     private User user;
 
-    //FIXme: check
     @Column(name = "mesDesde")
     private int monthFrom;
 

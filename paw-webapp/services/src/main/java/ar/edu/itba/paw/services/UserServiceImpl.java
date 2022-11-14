@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
@@ -13,8 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.TypedQuery;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Primary
 @Service
@@ -184,6 +184,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateProfileImage(long userId, Image newImage) {
         userDao.updateUserProfileImage(userId, newImage);
+    }
+
+    @Override
+    public Map<Long, Boolean> getUserContactMap(Set<Contact> contacts) {
+        Map<Long, Boolean> toReturn = new HashMap<>();
+        for (Contact contact : contacts) {
+            toReturn.putIfAbsent(contact.getJobOffer().getId(), true);
+        }
+        return toReturn;
     }
 
 }

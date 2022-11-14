@@ -10,8 +10,6 @@ import java.util.Objects;
 @IdClass(UserSkillId.class)
 public class UserSkill {
 
-    //TODO: chequear mapeo de relaciones
-
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idUsuario")

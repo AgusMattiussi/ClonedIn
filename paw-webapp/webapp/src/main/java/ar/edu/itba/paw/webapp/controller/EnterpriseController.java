@@ -76,6 +76,11 @@ public class EnterpriseController {
         final long usersCount;
         StringBuilder path = new StringBuilder();
 
+        Enterprise enterprise = enterpriseService.findByEmail(loggedUser.getName()).orElseThrow(() -> {
+            LOGGER.error("/ : Enterprise {} not found in home()", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+
         long categoryID;
         try {
             categoryID = Long.parseLong(enterpriseFilterForm.getCategory());
@@ -121,6 +126,7 @@ public class EnterpriseController {
                 .append("&term=").append(searchForm.getTerm());
 
         mav.addObject("users", usersList);
+        mav.addObject("contactedUsers", enterpriseService.getUserContactMap(enterprise.getContacts()));
         mav.addObject("categories", categoryService.getAllCategories());
         mav.addObject("skills", skillService.getAllSkills());
         mav.addObject("path", path.toString());
@@ -176,7 +182,7 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
-    //TODO: Sirve este metodo?
+
     @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
     @RequestMapping("/cancelJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
@@ -225,12 +231,11 @@ public class EnterpriseController {
     }
 
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
-    @RequestMapping("/answerApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}/{answer}")
-    public ModelAndView answerApplication(Authentication loggedUser,
-                                       @PathVariable("jobOfferId") final long jobOfferId,
-                                       @PathVariable("userId") final long userId,
-                                       @PathVariable("answer") final long answer,
-                                       @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
+    @RequestMapping("/acceptApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView acceptApplication(Authentication loggedUser,
+                                          @PathVariable("jobOfferId") final long jobOfferId,
+                                          @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
 
         long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
         Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
@@ -247,14 +252,38 @@ public class EnterpriseController {
             return new UserNotFoundException();
         });
 
-        if(answer==0) {
-            contactService.rejectJobOffer(user, jobOffer);
-            emailService.sendRejectApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
-        }
-        else {
-            contactService.acceptJobOffer(user, jobOffer);
+        boolean accepted = contactService.acceptJobOffer(user, jobOffer);
+        if(accepted)
             emailService.sendAcceptApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
-        }
+
+        return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @RequestMapping("/rejectApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
+    public ModelAndView rejectApplication(Authentication loggedUser,
+                                          @PathVariable("jobOfferId") final long jobOfferId,
+                                          @PathVariable("userId") final long userId,
+                                          @RequestParam(value = "eid", defaultValue = "0") long enterpriseId) {
+
+        long loggedUserId = authUserDetailsService.getLoggerUserId(loggedUser);
+        Enterprise enterprise = enterpriseService.findById(loggedUserId).orElseThrow(() -> {
+            LOGGER.error("Enterprise {} not found in cancelJobOffer()", loggedUser.getName());
+            return new UserNotFoundException();
+        });
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job Offer not found");
+            return new JobOfferNotFoundException();
+        });
+
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User not found");
+            return new UserNotFoundException();
+        });
+
+        boolean rejected = contactService.rejectJobOffer(user, jobOffer);
+        if(rejected)
+            emailService.sendRejectApplicationEmail(user, enterprise.getName(), enterprise.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
     }

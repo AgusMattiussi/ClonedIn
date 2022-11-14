@@ -398,7 +398,11 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public boolean closeJobOfferForEveryone(JobOffer jobOffer) {
-        return updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CLOSED);
+        Query query = em.createQuery("UPDATE Contact SET status = :status WHERE jobOffer = :jobOffer AND status = 'pendiente' ");
+        query.setParameter("status", JobOfferStatus.CLOSED.getStatus());
+        query.setParameter("jobOffer", jobOffer);
+
+        return query.executeUpdate() > 0;
     }
 
     @Override

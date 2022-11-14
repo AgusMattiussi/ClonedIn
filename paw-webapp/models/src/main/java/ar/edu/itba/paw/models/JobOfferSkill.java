@@ -9,8 +9,6 @@ import java.util.Objects;
 @Table(name = "aptitudOfertaLaboral")
 @IdClass(JobOfferSkillId.class)
 public class JobOfferSkill {
-    
-    //TODO: chequear mapeo de relaciones
 
     @Id
     @ManyToOne(fetch = FetchType.EAGER)

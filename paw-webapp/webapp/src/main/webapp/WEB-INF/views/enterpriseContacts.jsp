@@ -155,12 +155,14 @@
                                     <td><c:out value="${contact.date}"/></td>
                                     <c:set var="statusName" value="${contact.status}"/>
                                     <td>
-                                        <c:if test="${statusName} == 'cerrada'">
+                                        <c:choose>
+                                        <c:when test="${statusName == 'cerrada'}">
                                             <spring:message code="cancelada"/>
-                                        </c:if>
-                                        <c:if test="${statusName} != 'cerrada'">
+                                        </c:when>
+                                        <c:otherwise>
                                             <spring:message code="${statusName}"/>
-                                        </c:if>
+                                        </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>
                                     <c:if test="${statusName == 'pendiente'}">

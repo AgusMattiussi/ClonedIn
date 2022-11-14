@@ -101,9 +101,15 @@
                                                                 <img class="card-img-top small" alt="profile_image" src="<c:url value="/${us.id}/image/${image}"/>" width="100" height="200" style="object-fit: cover">
                                                             </c:otherwise>
                                                         </c:choose>
-
                                                         <div class="card-body">
-                                                            <h5 class="card-title"><c:out value="${us.name}"/></h5>
+                                                            <div class="d-flex justify-content-between">
+                                                                <h5 class="card-title"><c:out value="${us.name}"/></h5>
+                                                                <c:if test="${contactedUsers[us.id] != null}">
+                                                                    <span class="badge bg-secondary pt-2" style="max-height: 30px;">
+                                                                        <spring:message code="alreadyContacted"/>
+                                                                    </span>
+                                                                </c:if>
+                                                            </div>
                                                             <c:set var="categoryName" value="${us.category.name}"/>
                                                                 <p><i class="bi bi-list-ul" style="margin-right: 5px"></i><spring:message code="indexCategory"/>
                                                                     <c:choose>

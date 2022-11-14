@@ -61,10 +61,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
 
-    private String xd = "xd";
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Contact> contacts;
 
-    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition,
-                String description, String education, int visibility, Image image) {
+    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -86,7 +86,6 @@ public class User {
     /* package */ User() {
     // Just for Hibernate, we love you!
     }
-
 
     public Long getId() {
         return id;
@@ -138,6 +137,10 @@ public class User {
 
     public Set<UserSkill> getUserSkillSet() {
         return userSkills;
+    }
+
+    public Set<Contact> getContacts() {
+        return contacts;
     }
 
     public List<Skill> getSkills(){

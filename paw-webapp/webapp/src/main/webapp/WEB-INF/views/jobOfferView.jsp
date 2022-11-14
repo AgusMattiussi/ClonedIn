@@ -78,12 +78,14 @@
                         <c:forEach items="${job.skills}" var="skill">
                             <sec:authorize access="hasRole('ENTERPRISE')">
                             <a href="<c:url value="/?skill=${skill.description}"/>">
-                                <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                <span class="badge badge-success" style="margin-bottom: 1rem">
+                                    <c:out value="${skill.description}"/></span>
                             </a>
                             </sec:authorize>
                             <sec:authorize access="hasRole('USER')">
                                 <a href="<c:url value="/home?skill=${skill.description}"/>">
-                                    <h5><span class="badge badge-success"><c:out value="${skill.description}"/></span></h5>
+                                    <span class="badge badge-pill badge-success" style="margin-bottom: 0.5rem">
+                                        <c:out value="${skill.description}"/></span>
                                 </a>
                             </sec:authorize>
                         </c:forEach>
@@ -111,6 +113,10 @@
             </c:choose>
         </div>
     </div>
+        <!-- Modal -->
+        <jsp:include page="../components/applicationModal.jsp">
+            <jsp:param name="jobOfferId" value="${job.id}"/>
+        </jsp:include>
     </div>
     </body>
 </html>

@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserService {
     User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education);
@@ -14,7 +17,7 @@ public interface UserService {
 
     Optional<User> findById(long userId);
 
-    public Optional<Long> getIdForEmail(String email);
+    Optional<Long> getIdForEmail(String email);
 
     boolean userExists(String email);
 
@@ -62,4 +65,5 @@ public interface UserService {
     
     void updateProfileImage(long userId, Image image);
 
+    Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 }

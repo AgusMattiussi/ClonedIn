@@ -14,12 +14,9 @@ public class Education {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educacion_id_seq")
     @SequenceGenerator(sequenceName = "educacion_id_seq", name = "educacion_id_seq", allocationSize = 1)
     private Long id;
-
-    //FIXme: o @OneToMany
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idUsuario")
     private User user;
-    //FIXme: check
     @Column(name = "mesDesde")
     private int monthFrom;
     @Column(name = "anioDesde")
