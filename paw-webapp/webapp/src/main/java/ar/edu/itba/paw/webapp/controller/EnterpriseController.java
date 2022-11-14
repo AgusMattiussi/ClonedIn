@@ -506,7 +506,7 @@ public class EnterpriseController {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId)")
     @RequestMapping(value = "/contact/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView contact(Authentication loggedUser, @Valid @ModelAttribute("simpleContactForm") final ContactForm form,
                                 final BindingResult errors, @PathVariable("userId") final long userId) {
