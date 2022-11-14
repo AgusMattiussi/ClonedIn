@@ -141,9 +141,9 @@ public class UserHibernateDao implements UserDao {
             queryStringBuilder.append(" AND u.education = :education");
         if(!term.isEmpty()) {
             queryStringBuilder.append(" AND (EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u ")
-                    .append("AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')))")
-                    .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%'))")
-                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')))");
+                    .append("AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')")
+                    .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')");
         }
         if(minExpYears != null || maxExpYears != null){
             queryStringBuilder.append(" GROUP BY u.id HAVING");
@@ -198,6 +198,9 @@ public class UserHibernateDao implements UserDao {
     @Override
     public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears,
                                             Integer maxExpYears, int page, int pageSize) {
+        term = term.replace("_", "\\_");
+        term = term.replace("%", "\\%");
+
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
 
         if(minExpYears != null || maxExpYears != null){
@@ -227,6 +230,9 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears) {
+        term = term.replace("_", "\\_");
+        term = term.replace("%", "\\%");
+
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(DISTINCT u) FROM User u");
 
         if(minExpYears != null || maxExpYears != null){
