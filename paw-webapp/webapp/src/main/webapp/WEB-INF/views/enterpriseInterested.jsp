@@ -156,6 +156,7 @@
                                                             <c:out value="${skill.description}"/>
                                                         </span>
                                                     </a>
+                                                    <br>
                                                 </c:forEach>
                                             </c:otherwise>
                                         </c:choose>

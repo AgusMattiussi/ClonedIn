@@ -131,7 +131,7 @@
                                 <div class="col">
                                     <div class="row">
                                         <h5 class="card-title"><spring:message code="notificationsMode"/></h5>
-                                        <p class="card-text"><c:out value="${contact.jobOffer.modality}"/></p>
+                                        <p class="card-text"><spring:message code="${contact.jobOffer.modality}"/></p>
                                     </div>
                                 </div>
                                 <div class="col">
