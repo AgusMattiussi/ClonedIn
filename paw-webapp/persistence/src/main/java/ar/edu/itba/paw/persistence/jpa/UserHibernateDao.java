@@ -258,7 +258,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public void updateName(long userID, String newName) {
-        Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID AND ");
+        Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID");
         query.setParameter("newName", newName);
         query.setParameter("userID", userID);
         query.executeUpdate();
