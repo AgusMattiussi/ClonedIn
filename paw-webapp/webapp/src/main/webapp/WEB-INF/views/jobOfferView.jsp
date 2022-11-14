@@ -94,13 +94,22 @@
             </div>
             <div class="d-flex justify-content-between">
                 <h5 class="card-title"><spring:message code="notificationsDescription"/></h5>
-                <sec:authorize access="hasRole('USER')">
-                    <a>
-                        <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
-                            <spring:message code="userHomeApplicationButton"/>
-                        </button>
-                    </a>
-                </sec:authorize>
+                    <c:choose>
+                        <c:when test="${job.available == 'Cerrada'}">
+                            <h5><span class="badge badge-danger p-2 mb-2">
+                                    <spring:message code="profileEnterpriseCloseJobOffer"/>
+                            </span></h5>
+                        </c:when>
+                        <c:otherwise>
+                            <sec:authorize access="hasRole('USER')">
+                                <a>
+                                    <button type="button" class="btn btn-outline-dark" style="margin-bottom: 1rem;" data-bs-toggle="modal" data-bs-target="#applicationModal${job.id}">
+                                        <spring:message code="userHomeApplicationButton"/>
+                                    </button>
+                                </a>
+                            </sec:authorize>
+                        </c:otherwise>
+                    </c:choose>
             </div>
             <c:set var="desc" value="${job.description}"/>
             <c:choose>

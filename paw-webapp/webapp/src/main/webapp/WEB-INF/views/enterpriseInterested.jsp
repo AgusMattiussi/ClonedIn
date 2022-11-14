@@ -123,7 +123,7 @@
                             <c:forEach var="contact" items="${contactList}">
                                 <tr>
                                     <td>
-                                        <a href="<c:url value="/jobOffer/${contact.jobOffer.id}"/>" class="text-decoration-none">
+                                        <a href="<c:url value="/jobOffer/${contact.jobOffer.id}?eid=${loggedUserID}"/>" class="text-decoration-none">
                                             <c:out value="${contact.jobOffer.position}"/>
                                         </a>
                                     </td>
@@ -150,7 +150,7 @@
                                                 <spring:message code="profileInfoNotSpecified"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:forEach var="skill" items="${contact.user.skills}" begin="0" end="2">
+                                                <c:forEach var="skill" items="${contact.user.skills}" begin="0" end="1">
                                                     <a href="<c:url value="/?term=${skill.description}"/>">
                                                         <span class="badge badge-pill badge-success" style="margin-bottom: 0.5rem">
                                                             <c:out value="${skill.description}"/>

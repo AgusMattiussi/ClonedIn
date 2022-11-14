@@ -121,7 +121,7 @@
                             <c:forEach var="contact" items="${contactList}">
                                 <tr>
                                     <td>
-                                        <a href="<c:url value="/jobOffer/${contact.jobOffer.id}"/>" class="text-decoration-none">
+                                        <a href="<c:url value="/jobOffer/${contact.jobOffer.id}?eid=${loggedUserID}"/>" class="text-decoration-none">
                                             <c:out value="${contact.jobOffer.position}"/>
                                         </a>
                                     </td>
