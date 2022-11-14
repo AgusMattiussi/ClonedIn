@@ -1,14 +1,9 @@
 package ar.edu.itba.paw.persistence.jpa;
 
-import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
-import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
-import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.math.BigInteger;
 import java.util.Optional;
 
 @Primary
