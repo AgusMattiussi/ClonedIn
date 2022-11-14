@@ -57,6 +57,11 @@
                                 <form:input type="number" path="maxExperience" cssStyle="border-radius: 5px; width: 80px" placeholder="${maxFilterPlaceholder}"/>
                             </div>
                         </div>
+                        <div class="dropdown ml-2 mt-2">
+                            <button class="btn btn-secondary filterbtn btn-outline-light" type="submit">
+                                <spring:message code="indexFilterBtn"/>
+                            </button>
+                        </div>
                         <br>
                         <div class="dropdown ml-2 mt-2">
                             <a href="<c:url value="/?page=1"/>">
@@ -64,11 +69,6 @@
                                     <spring:message code="indexClearFilter"/>
                                 </button>
                             </a>
-                        </div>
-                        <div class="dropdown ml-2 mt-2">
-                            <button class="btn btn-secondary filterbtn btn-outline-light" type="submit">
-                                <spring:message code="indexFilterBtn"/>
-                            </button>
                         </div>
                 </div>
                 <div class="col mr-2">

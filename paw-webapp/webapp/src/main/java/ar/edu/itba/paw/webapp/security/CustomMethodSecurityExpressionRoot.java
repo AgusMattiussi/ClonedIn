@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.security;
 
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;

@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
-import org.postgresql.core.NativeQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.lang.annotation.Native;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;

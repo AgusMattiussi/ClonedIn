@@ -61,18 +61,18 @@
                     </div>
                 </div>
                     <div class="dropdown ml-2 mt-2">
-                        <a href="<c:url value="/home?page=1"/>">
-                            <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
-                                <spring:message code="indexClearFilter"/>
-                            </button>
-                        </a>
-                    </div>
-                    <div class="dropdown ml-2 mt-2">
                         <button class="btn btn-secondary filterbtn btn-outline-light" type="submit">
                             <spring:message code="indexFilterBtn"/>
                         </button>
                     </div>
                 <br>
+                <div class="dropdown ml-2 mt-2">
+                    <a href="<c:url value="/home?page=1"/>">
+                        <button class="btn btn-secondary filterbtn btn-outline-light" type="button">
+                            <spring:message code="indexClearFilter"/>
+                        </button>
+                    </a>
+                </div>
             </div>
             <div class="col mr-2">
                 <h3 class="mt-2 mb-2"><spring:message code="navbarMyNetwork"/></h3>
