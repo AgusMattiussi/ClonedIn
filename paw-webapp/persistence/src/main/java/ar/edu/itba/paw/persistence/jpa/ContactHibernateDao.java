@@ -200,32 +200,64 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
+    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
+        switch (sortBy){
+            case USERNAME:
+                queryBuilder.append(" JOIN c.user u");
+                break;
+            case JOB_OFFER_POSITION:
+                queryBuilder.append(" JOIN c.jobOffer j");
+        }
+
+        queryBuilder.append(" WHERE c.enterprise = :enterprise");
+
+        if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
+        || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
+            queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
+        } else {
+            queryBuilder.append(" AND c.status = :status");
+        }
+
+        if(!filledBy.equals(FilledBy.ANY)) {
+            queryBuilder.append(" AND c.filledBy = :filledBy");
+        }
+
+        switch (sortBy){
+            case USERNAME:
+                queryBuilder.append(" ORDER BY u.name");
+                break;
+            case JOB_OFFER_POSITION:
+                queryBuilder.append(" ORDER BY j.position");
+                break;
+            case DATE_ASC:
+                queryBuilder.append(" ORDER BY c.date ASC");
+                break;
+            case DATE_DESC:
+                queryBuilder.append(" ORDER BY c.date DESC");
+                break;
+        }
+    }
+
+    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, FilledBy filledBy, String status){
+        query.setParameter("enterprise", enterprise);
+        query.setParameter("status", status);
+
+        if(!filledBy.equals(FilledBy.ANY)) {
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+    }
+
     @Override
     public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
+        StringBuilder queryBuilder = new StringBuilder().append("SELECT c FROM Contact c");
 
-        if(filledBy.equals(FilledBy.ANY))
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
-        else {
-            if(sortBy.equals(SortBy.USERNAME))
-                query = em.createQuery("SELECT c FROM Contact c JOIN c.user u WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY u.name", Contact.class);
-            else if(sortBy.equals(SortBy.STATUS))
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.status", Contact.class);
-            else if(sortBy.equals(SortBy.JOB_OFFER_POSITION))
-                query = em.createQuery("SELECT c FROM Contact c JOIN c.jobOffer j WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY j.position", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_ASC))
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.date ASC", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_DESC))
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
-            else
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
-        }
+        getContactsForEnterpriseAppendConditions(queryBuilder, filledBy, status, sortBy);
 
-        query.setParameter("enterprise", enterprise);
-        query.setParameter("status", status);
+        query = em.createQuery(queryBuilder.toString(), Contact.class);
+        getContactsForEnterpriseSetParameters(query, enterprise, filledBy, status);
+
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-
         return query.getResultList();
     }
 
