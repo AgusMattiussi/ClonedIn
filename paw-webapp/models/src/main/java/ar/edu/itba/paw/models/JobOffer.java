@@ -58,7 +58,7 @@ public class JobOffer {
         this.available = available;
     }
 
-    public JobOffer(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {;
+    public JobOffer(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {
         this.enterprise = enterprise;
         this.category = category;
         this.position = position;

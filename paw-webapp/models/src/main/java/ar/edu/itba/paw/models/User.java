@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.models;
 
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -151,8 +148,9 @@ public class User {
         int result = 0;
         int currentYear=2022;
         
-        for (Experience experience : experiences)
-            result += (experience.getYearTo() == null? currentYear:experience.getYearTo()) - experience.getYearFrom();
+        for (Experience experience : experiences) {
+            result += (experience.getYearTo() == null ? currentYear : experience.getYearTo()) - experience.getYearFrom();
+        }
 
         return result;
     }
