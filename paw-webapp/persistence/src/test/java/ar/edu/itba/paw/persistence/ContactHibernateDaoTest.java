@@ -37,26 +37,11 @@ import static org.junit.Assert.*;
 @Transactional
 public class ContactHibernateDaoTest {
 
-    private static final String ENTERPRISE_ID = "idEmpresa";
-    private static final String USER_ID = "idUsuario";
     private static final String TEST_USER_EMAIL = "johnlennon@gmail.com";
-    private static final String TEST_ENTERPRISE_EMAIL = "empresaurio@gmail.com";
     private static final String NEW_ENTERPRISE_NAME = "Empresa1";
     private static final String NEW_ENTERPRISE_EMAIL = "empresa1@gmail.com";
     private static final String NEW_ENTERPRISE_PASSWORD = "pass123";
-    private static final String NEW_ENTERPRISE_LOCATION = "Calle Falsa para Empresas 123";
     private static final Integer NEW_ENTERPRISE_YEAR = 2008;
-    private static final String NEW_ENTERPRISE_DESCRIPTION = "La mejor empresa del mundo";
-    private static final String NEW_USER_NAME = "John Doe";
-    private static final String NEW_USER_EMAIL = "johndoe@gmail.com";
-    private static final String NEW_USER_PASSWORD = "pass123";
-    private static final String NEW_USER_LOCATION = "Calle Falsa 123";
-    private static final String NEW_USER_CATEGORY_NAME = "testCategory";
-    private static final String NEW_USER_CURRENT_POSITION = "CEO de PAW";
-    private static final String NEW_USER_DESCRIPTION = "Un tipo muy laburante";
-    private static final String NEW_USER_EDUCATION = "Licenciado en la Universidad de la Calle";
-    private static final String TEST_SKILL = "unaskill";
-    private static final long NON_EXISTING_JOB_OFFER_ID = 777;
     public static final String TEST_CATEGORY_DESC = "unaCategoria";
     public static final String EMPTY_FIELD = "-";
     public static final String NEW_JOB_OFFER_POSITION = "position";
@@ -65,7 +50,6 @@ public class ContactHibernateDaoTest {
     public static final String NEW_OFFER_AVAILABILITY = JobOfferAvailability.ACTIVE.getStatus();
     public static final String NEW_OFFER_STATUS = JobOfferStatus.PENDING.getStatus();
     public static final FilledBy NEW_JOB_OFFER_FILLED_BY = FilledBy.ENTERPRISE;
-
 
     @PersistenceContext
     private EntityManager em;

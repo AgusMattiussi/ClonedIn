@@ -149,8 +149,8 @@ public class UserHibernateDao implements UserDao {
         if(!educationLevel.isEmpty())
             queryStringBuilder.append(" AND u.education = :education");
         if(!term.isEmpty()) {
-            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u ")
-                    .append("AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')))")
+            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u")
+                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')))")
                     .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%'))")
                     .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%'))");
         }
