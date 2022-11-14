@@ -8,9 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.DatabasePopulator;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -70,29 +67,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return ds;
     }
 
-//    @Bean
-//    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
-//        final DataSourceInitializer dsInit = new DataSourceInitializer();
-//
-//        dsInit.setDataSource(ds);
-//        dsInit.setDatabasePopulator(dataSourcePopulator());
-//
-//        return dsInit;
-//    }
-//
-//    private DatabasePopulator dataSourcePopulator() {
-//        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-//
-//        dbp.addScript(schemaSql);
-//        dbp.addScript(categorySql);
-//
-//        return dbp;
-//    }
-//
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        return multipartResolver;
+        return new CommonsMultipartResolver();
     }
 
     @Bean
