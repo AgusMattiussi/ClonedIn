@@ -69,7 +69,6 @@ public class EnterpriseController {
     @RequestMapping(value = "/", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("enterpriseFilterForm") final EnterpriseFilterForm enterpriseFilterForm,
-                             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
                              HttpServletRequest request) {
         final ModelAndView mav = new ModelAndView("enterpriseHome");
         final List<User> usersList;
@@ -88,11 +87,10 @@ public class EnterpriseController {
             LOGGER.error("Invalid CategoryID {} in 'home'", enterpriseFilterForm.getCategory());
             categoryID = 0;
         }
-
-
+        
         Category category = categoryService.findById(categoryID).orElse(null);
         String educationLevel = enterpriseFilterForm.getEducationLevel();
-        String term = searchForm.getTerm();
+        String term = enterpriseFilterForm.getTerm();
         String minExperience = enterpriseFilterForm.getMinExperience();
         String maxExperience = enterpriseFilterForm.getMaxExperience();
 
@@ -118,12 +116,11 @@ public class EnterpriseController {
         usersList = userService.getUsersListByFilters(category, educationLevel, term, minExpInt, maxExpInt, page-1, HOME_JOB_OFFERS_PER_PAGE);
         usersCount = userService.getUsersCountByFilters(category, educationLevel, term, minExpInt, maxExpInt);
 
-        //TODO: Arreglar path term
         path.append("?category=").append(enterpriseFilterForm.getCategory())
                 .append("&educationLevel=").append(educationLevel)
                 .append("&minExperience=").append(minExperience)
                 .append("&maxExperience=").append(maxExperience)
-                .append("&term=").append(searchForm.getTerm());
+                .append("&term=").append(term);
 
         mav.addObject("users", usersList);
         mav.addObject("contactedUsers", enterpriseService.getUserContactMap(enterprise.getContacts()));

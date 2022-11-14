@@ -10,25 +10,20 @@
         <title>ClonedIn</title>
     </head>
     <body>
-        <c:set var="searchFormModel" value="${searchForm}" scope="request" />
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="id" value="${loggedUserID}" />
-            <jsp:param name="model" value="searchFormModel"/>
         </jsp:include>
             <div class="row h-100 w-100">
                 <div class="col-sm-2 sidebar">
                     <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexSearchFilter"/></h5>
                     <c:url value="/" var="getPath"/>
-                    <form:form modelAttribute="searchForm" action="${getPath}" method="get">
+                    <form:form modelAttribute="enterpriseFilterForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2 mt-2">
                             <spring:message code="navbarSearch1" var="searchBarPlaceholder"/>
                             <form:input type="text" path="term" cssStyle="border-radius: 5px" placeholder="${searchBarPlaceholder}"/>
                             <button class="btn btn-secondary filterbtn btn-outline-light mt-2" type="submit"><i class="bi bi-search"></i></button>
                         </div>
-                    </form:form>
                     <h5 class="ml-2 mt-2" style="color:white"><spring:message code="indexFilter"/></h5>
-                    <c:url value="/" var="getPath"/>
-                    <form:form modelAttribute="enterpriseFilterForm" action="${getPath}" method="get">
                         <div class="d-flex flex-wrap justify-content-center ml-2">
                             <form:select path="category" cssClass="form-select">
                                 <form:option value=""><spring:message code="indexCategoryFilter"/></form:option>
@@ -50,7 +45,6 @@
                                 <form:option value="Posgrado"><spring:message code="Posgrado"/></form:option>
                             </form:select>
                         </div>
-                        <br>
                         <label class="d-flex flex-wrap justify-content-center ml-2 mt-2" style="color:white"><spring:message code="contactOrderFormSortByYearsOfExperience"/></label>
                         <div class="d-flex justify-content-center ml-2">
                             <div>

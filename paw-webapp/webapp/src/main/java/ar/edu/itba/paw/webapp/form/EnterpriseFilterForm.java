@@ -11,6 +11,8 @@ public class EnterpriseFilterForm {
 
     @Size(max = 50)
     private String maxExperience ="";
+    @Size(max = 50)
+    private String term ="";
     private int sortBy=0;
 
     public String getCategory() {
@@ -44,6 +46,15 @@ public class EnterpriseFilterForm {
     public void setMaxExperience(String maxExperience) {
         this.maxExperience = maxExperience;
     }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
     public int getSortBy() {
         return sortBy;
     }

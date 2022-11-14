@@ -13,10 +13,8 @@
         <title>ClonedIn</title>
     </head>
     <body>
-        <c:set var="searchFormModel" value="${searchForm}" scope="request" />
         <jsp:include page="../components/navbar.jsp">
             <jsp:param name="id" value="${loggedUserID}" />
-            <jsp:param name="model" value="searchFormModel"/>
         </jsp:include>
         <div class="row h-100 w-100">
             <div class="col-sm-2 sidebar">
