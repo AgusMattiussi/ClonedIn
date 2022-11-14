@@ -84,20 +84,41 @@ public class EnterpriseController {
             categoryID = 0;
         }
 
+
         Category category = categoryService.findById(categoryID).orElse(null);
         String educationLevel = enterpriseFilterForm.getEducationLevel();
         String term = searchForm.getTerm();
         String minExperience = enterpriseFilterForm.getMinExperience();
         String maxExperience = enterpriseFilterForm.getMaxExperience();
 
-        usersList = userService.getUsersListByFilters(category, educationLevel, term, page-1, HOME_JOB_OFFERS_PER_PAGE);
-        usersCount = userService.getUsersCountByFilters(category, educationLevel, term);
+        Integer minExpInt = null;
+        Integer maxExpInt = null;
 
+        if(!minExperience.isEmpty()){
+            try {
+                minExpInt = Integer.valueOf(minExperience);
+            } catch (NumberFormatException e){
+                LOGGER.error("Invalid Minimum Experience {} in 'home'", minExperience);
+            }
+        }
+
+        if(!maxExperience.isEmpty()){
+            try {
+                maxExpInt = Integer.valueOf(maxExperience);
+            } catch (NumberFormatException e){
+                LOGGER.error("Invalid Maximum Experience {} in 'home'", maxExperience);
+            }
+        }
+
+        usersList = userService.getUsersListByFilters(category, educationLevel, term, minExpInt, maxExpInt, page-1, HOME_JOB_OFFERS_PER_PAGE);
+        usersCount = userService.getUsersCountByFilters(category, educationLevel, term, minExpInt, maxExpInt);
+
+        //TODO: Arreglar path term
         path.append("?category=").append(enterpriseFilterForm.getCategory())
                 .append("&educationLevel=").append(educationLevel)
                 .append("&minExperience=").append(minExperience)
                 .append("&maxExperience=").append(maxExperience)
-                .append("?term=").append(searchForm.getTerm());
+                .append("&term=").append(searchForm.getTerm());
 
         mav.addObject("users", usersList);
         mav.addObject("categories", categoryService.getAllCategories());

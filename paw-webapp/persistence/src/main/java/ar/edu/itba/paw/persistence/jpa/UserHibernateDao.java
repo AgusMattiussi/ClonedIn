@@ -14,10 +14,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -143,7 +140,8 @@ public class UserHibernateDao implements UserDao {
             queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
     }
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String educationLevel, String term){
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String educationLevel, String term,
+                                             Integer minExpYears, Integer maxExpYears){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
         if(!educationLevel.isEmpty())
@@ -153,6 +151,15 @@ public class UserHibernateDao implements UserDao {
                     .append("AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')))")
                     .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%'))")
                     .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')))");
+        }
+        if(minExpYears != null || maxExpYears != null){
+            queryStringBuilder.append(" GROUP BY u.id HAVING");
+            if(minExpYears != null)
+                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo,0) - COALESCE(exp.yearFrom,0)) >= :minExpYears");
+            if(minExpYears != null && maxExpYears != null)
+                queryStringBuilder.append(" AND");
+            if(maxExpYears != null)
+                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, 0) - COALESCE(exp.yearFrom, 0)) <= :maxExpYears");
         }
     }
 
@@ -168,7 +175,8 @@ public class UserHibernateDao implements UserDao {
             query.setParameter("skillDescription", skillDescription);
     }
 
-    private void filterQuerySetParameters(Query query, Category category, String educationLevel, String term){
+    private void filterQuerySetParameters(Query query, Category category, String educationLevel, String term, Integer minExpYears,
+                                            Integer maxExpYears){
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
@@ -176,6 +184,10 @@ public class UserHibernateDao implements UserDao {
             query.setParameter("education", educationLevel);
         if(!term.isEmpty())
             query.setParameter("term", term);
+        if(minExpYears != null)
+            query.setParameter("minExpYears", Long.valueOf(minExpYears));
+        if(maxExpYears != null)
+            query.setParameter("maxExpYears", Long.valueOf(maxExpYears));
     }
 
     @Override
@@ -191,12 +203,19 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, int page, int pageSize) {
-        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u WHERE visibilidad = :visible");
-        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term);
+    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears,
+                                            Integer maxExpYears, int page, int pageSize) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
+
+        if(minExpYears != null || maxExpYears != null){
+            queryStringBuilder.append(" LEFT JOIN u.experiences exp");
+        }
+
+        queryStringBuilder.append(" WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, minExpYears, maxExpYears);
 
         TypedQuery<User> query = em.createQuery(queryStringBuilder.toString(), User.class);
-        filterQuerySetParameters(query, category, educationLevel, term);
+        filterQuerySetParameters(query, category, educationLevel, term, minExpYears, maxExpYears);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -214,20 +233,33 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public long getUsersCountByFilters(Category category, String educationLevel, String term) {
-        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(u) FROM User u WHERE visibilidad = :visible");
-        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term);
+    public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears) {
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(DISTINCT u) FROM User u");
+
+        if(minExpYears != null || maxExpYears != null){
+            queryStringBuilder.append(" LEFT JOIN u.experiences exp");
+        }
+
+        queryStringBuilder.append(" WHERE visibilidad = :visible");
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, minExpYears, maxExpYears);
 
         Query query = em.createQuery(queryStringBuilder.toString());
-        filterQuerySetParameters(query, category, educationLevel, term);
+        filterQuerySetParameters(query, category, educationLevel, term, minExpYears, maxExpYears);
 
-        return (Long) query.getSingleResult();
+        long result;
+        try {
+            result = (Long) query.getSingleResult();
+        } catch (NoResultException e) {
+            result = 0;
+        }
+
+        return result;
     }
 
 
     @Override
     public void updateName(long userID, String newName) {
-        Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID");
+        Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID AND ");
         query.setParameter("newName", newName);
         query.setParameter("userID", userID);
         query.executeUpdate();

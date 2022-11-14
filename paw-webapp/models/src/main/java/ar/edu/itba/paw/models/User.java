@@ -61,7 +61,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
 
-    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
+    private String xd = "xd";
+
+    public User(Long id, String email, String password, String name, String location, Category category, String currentPosition,
+                String description, String education, int visibility, Image image) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -75,7 +78,8 @@ public class User {
         this.image = image;
     }
 
-    public User(String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
+    public User(String email, String password, String name, String location, Category category, String currentPosition,
+                String description, String education, int visibility, Image image) {
         this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
     }
 

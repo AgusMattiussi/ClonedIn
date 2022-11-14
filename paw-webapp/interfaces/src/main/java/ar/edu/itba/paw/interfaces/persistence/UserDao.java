@@ -27,7 +27,7 @@ public interface UserDao {
 
     long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription);
 
-    long getUsersCountByFilters(Category category, String educationLevel, String term);
+    long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears);
 
     List<User> getVisibleUsers(int page, int pageSize);
 
@@ -39,7 +39,8 @@ public interface UserDao {
 
     List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize);
 
-    List<User> getUsersListByFilters(Category category, String educationLevel, String term, int page, int pageSize);
+    List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+                                     int page, int pageSize);
 
     void updateName(long userID, String newName);
 

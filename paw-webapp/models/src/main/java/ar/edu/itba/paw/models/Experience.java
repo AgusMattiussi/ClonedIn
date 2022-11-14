@@ -106,7 +106,7 @@ public class Experience {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return id == that.id && user.getId() == that.user.getId();
+        return Objects.equals(id, that.id) && Objects.equals(user.getId(), that.user.getId());
     }
 
     @Override
