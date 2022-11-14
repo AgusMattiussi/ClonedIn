@@ -146,10 +146,10 @@ public class JobOfferHibernateDao implements JobOfferDao {
         if(maxSalary != null)
             queryStringBuilder.append(" AND jo.salary <= :maxSalary");
         if(!term.isEmpty()) {
-            queryStringBuilder.append(" AND (LOWER(jo.position) LIKE LOWER(CONCAT('%', :term, '%'))")
-                    .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%'))")
+            queryStringBuilder.append(" AND (LOWER(jo.position) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
                     .append(" OR EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
-                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%'))))");
+                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'))");
         }
     }
 
@@ -207,6 +207,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
+        term = term.replace("_", "\\_");
+        term = term.replace("%", "\\%");
+
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
         if(!term.isEmpty())
@@ -244,6 +247,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
+        term = term.replace("_", "\\_");
+        term = term.replace("%", "\\%");
+
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
 
         if(!term.isEmpty())
