@@ -68,7 +68,7 @@ public class Experience {
         return id;
     }
 
-    public User getUserId() {
+    public User getUser() {
         return user;
     }
 

@@ -30,8 +30,6 @@ public class JobOfferHibernateDao implements JobOfferDao {
     @Autowired
     private ContactDao contactDao;
 
-    private static final int UNEXISTING_CATEGORY_ID = 0;
-
     @Override
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
         final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary, modality, JobOfferAvailability.ACTIVE.getStatus());

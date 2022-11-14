@@ -55,9 +55,8 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public void deleteExperience(long experienceId) {
-        final Query query = em.createQuery("DELETE FROM Experience AS e WHERE e.id = :experienceId");
-        query.setParameter("experienceId", experienceId);
-        query.executeUpdate();
+        Optional<Experience> toDelete = findById(experienceId);
+        toDelete.ifPresent(experience -> em.remove(experience));
     }
 
 }

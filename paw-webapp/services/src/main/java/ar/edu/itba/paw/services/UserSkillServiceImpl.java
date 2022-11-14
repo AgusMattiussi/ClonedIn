@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
 import ar.edu.itba.paw.interfaces.services.UserSkillService;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ public class UserSkillServiceImpl implements UserSkillService {
 
 
     @Override
-    public void addSkillToUser(Skill skill, User user) {
-        userSkillDao.addSkillToUser(skill, user);
+    public UserSkill addSkillToUser(Skill skill, User user) {
+        return userSkillDao.addSkillToUser(skill, user);
     }
 
 

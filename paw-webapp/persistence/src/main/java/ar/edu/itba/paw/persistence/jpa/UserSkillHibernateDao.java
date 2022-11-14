@@ -23,9 +23,10 @@ public class UserSkillHibernateDao implements UserSkillDao {
     private EntityManager em;
 
     @Override
-    public void addSkillToUser(Skill skill, User user) {
+    public UserSkill addSkillToUser(Skill skill, User user) {
         UserSkill userSkill = new UserSkill(user, skill);
         em.persist(userSkill);
+        return userSkill;
     }
 
     @Override
