@@ -19,8 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collection;
 
-public class SimpleUrlAuthenticationSuccessHandler
-        implements AuthenticationSuccessHandler {
+public class SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     protected Log logger = LogFactory.getLog(this.getClass());
 
@@ -88,8 +87,6 @@ public class SimpleUrlAuthenticationSuccessHandler
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
-
-
 
 }
 

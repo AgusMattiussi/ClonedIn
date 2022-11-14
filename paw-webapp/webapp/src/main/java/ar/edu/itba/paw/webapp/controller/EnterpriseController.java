@@ -250,8 +250,9 @@ public class EnterpriseController {
         });
 
         boolean accepted = contactService.acceptJobOffer(user, jobOffer);
-        if(accepted)
+        if(accepted) {
             emailService.sendAcceptApplicationEmail(user, enterprise.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        }
 
         return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
     }
@@ -279,8 +280,9 @@ public class EnterpriseController {
         });
 
         boolean rejected = contactService.rejectJobOffer(user, jobOffer);
-        if(rejected)
+        if(rejected) {
             emailService.sendRejectApplicationEmail(user, enterprise.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        }
 
         return new ModelAndView("redirect:/interestedEnterprise/" + loggedUserId);
     }
@@ -514,8 +516,9 @@ public class EnterpriseController {
         boolean alreadyContacted = contactService.alreadyContacted(userId, jobOfferId);
 
         if (errors.hasErrors() || alreadyContacted) {
-            if(alreadyContacted)
+            if(alreadyContacted) {
                 errors.rejectValue("jobOfferId", "ExistingJobOffer", "You've already sent this job offer to this user.");
+            }
 
             LOGGER.warn("Contact form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return contactForm(loggedUser, form, userId);

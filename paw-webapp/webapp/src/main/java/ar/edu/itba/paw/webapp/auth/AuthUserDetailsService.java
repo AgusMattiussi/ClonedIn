@@ -23,7 +23,6 @@ public class AuthUserDetailsService implements UserDetailsService {
     private static final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
     public static final String USER_ROLE = "ROLE_USER";
     public static final String ENTERPRISE_ROLE = "ROLE_ENTERPRISE";
-
     private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(USER_ROLE);
     private static final GrantedAuthority ENTERPRISE_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(ENTERPRISE_ROLE);
 
@@ -43,8 +42,9 @@ public class AuthUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         // Puede ser usuario normal
         final Optional<User> optUser = us.findByEmail(email);
-        if(optUser.isPresent())
+        if(optUser.isPresent()) {
             return defaultUserDetails(optUser.get());
+        }
         
         // Puede ser empresa. Si no, no existe el usuario
         final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user by the email " + email));
