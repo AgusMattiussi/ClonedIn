@@ -1,23 +1,15 @@
 package ar.edu.itba.paw.persistence.jpa;
 
-import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
-import ar.edu.itba.paw.interfaces.persistence.SkillDao;
-import ar.edu.itba.paw.interfaces.services.JobOfferService;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.JobOfferSkill;
 import ar.edu.itba.paw.models.Skill;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
-import ar.edu.itba.paw.models.exceptions.SkillNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
