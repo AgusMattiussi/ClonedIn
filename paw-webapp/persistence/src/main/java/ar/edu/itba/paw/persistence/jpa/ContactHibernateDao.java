@@ -85,6 +85,7 @@ public class ContactHibernateDao implements ContactDao {
     public List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
+
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
         else {
@@ -118,26 +119,48 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
+    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
+        if(!filledBy.equals(FilledBy.ANY)){
+            queryBuilder.append(" AND c.filledBy = :filledBy");
+        }
+
+        if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
+        || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
+            queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
+        } else {
+            queryBuilder.append(" AND c.status = :status");
+        }
+
+        switch (sortBy){
+            case DATE_ASC:
+                queryBuilder.append(" ORDER BY c.date ASC");
+                break;
+            case DATE_DESC:
+                queryBuilder.append(" ORDER BY c.date DESC");
+                break;
+        }
+    }
+
+    private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, String status){
+        query.setParameter("user", user);
+        query.setParameter("status", status);
+
+        if(!filledBy.equals(FilledBy.ANY)) {
+            query.setParameter("filledBy", filledBy.getFilledBy());
+        }
+    }
+
     @Override
     public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
+        StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c WHERE c.user = :user");
 
-        if(filledBy.equals(FilledBy.ANY))
-            query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
-        else {
-            if(sortBy.equals(SortBy.DATE_ASC))
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status ORDER BY c.date ASC", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_DESC))
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status ORDER BY c.date DESC", Contact.class);
-            else
-                query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy AND c.status = :status", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
-        }
+        getContactsForUserAppendConditions(queryBuilder, filledBy, status, sortBy);
 
-        query.setParameter("user", user);
-        query.setParameter("status", status);
+        query = em.createQuery(queryBuilder.toString(), Contact.class);
+        getContactsForUserSetParameters(query, user, filledBy, status);
+
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-
         return query.getResultList();
     }
 
