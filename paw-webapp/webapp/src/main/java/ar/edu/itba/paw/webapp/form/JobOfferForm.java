@@ -18,7 +18,7 @@ public class JobOfferForm {
     @Size(max=5000)
     private String jobDescription;
 
-    @Min(0)
+    @Min(1)
     @Max(1000000000)
     private BigDecimal salary;
 

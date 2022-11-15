@@ -163,7 +163,7 @@
                                                                     <c:otherwise>
                                                                         <c:forEach var="skill" items="${us.skills}" begin="0" end="3">
                                                                             <a href="<c:url value="?term=${skill.description}"/>">
-                                                                                <span class="badge badge-pill badge-success">
+                                                                                <span class="badge badge-pill badge-success" style="margin-bottom: 1rem">
                                                                                     <c:out value="${skill.description}"/>
                                                                                 </span>
                                                                             </a>
