@@ -148,11 +148,11 @@ public class UserHibernateDao implements UserDao {
         if(minExpYears != null || maxExpYears != null){
             queryStringBuilder.append(" GROUP BY u.id HAVING");
             if(minExpYears != null)
-                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo,0) - COALESCE(exp.yearFrom,0)) >= :minExpYears");
+                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) >= :minExpYears");
             if(minExpYears != null && maxExpYears != null)
                 queryStringBuilder.append(" AND");
             if(maxExpYears != null)
-                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, 0) - COALESCE(exp.yearFrom, 0)) <= :maxExpYears");
+                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom, YEAR(CURRENT_DATE))) <= :maxExpYears");
         }
     }
 
