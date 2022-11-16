@@ -485,7 +485,7 @@ public class EnterpriseController {
         return profileImage;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId)")
     @RequestMapping(value ="/contact/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView contactForm(Authentication loggedUser, @ModelAttribute("simpleContactForm") final ContactForm form, @PathVariable("userId") final long userId) {
         long loggedUserID = authUserDetailsService.getLoggerUserId(loggedUser);
@@ -543,7 +543,7 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/");
     }
 
-    @PreAuthorize("(hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)) OR hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') OR (canAccessEnterpriseProfile(#loggedUser, #enterpriseId) AND isJobOfferOwner(#enterpriseId, #jobOfferId))")
     @RequestMapping("/jobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView jobOffer(Authentication loggedUser,
                                  @PathVariable("jobOfferId") final long jobOfferId,

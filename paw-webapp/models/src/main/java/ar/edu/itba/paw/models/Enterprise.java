@@ -52,6 +52,9 @@ public class Enterprise {
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
     private Set<Contact> contacts;
 
+    @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
+    private Set<JobOffer> jobOffersSet;
+
     @Override
     public String toString() {
         return "Enterprise{" +
@@ -125,7 +128,6 @@ public class Enterprise {
         return link;
     }
 
-
     public String getDescription() {
         return description;
     }
@@ -138,6 +140,23 @@ public class Enterprise {
         return contacts;
     }
 
+    public Set<JobOffer> getJobOffersSet() {
+        return jobOffersSet;
+    }
+
+    public boolean isJobOfferOwner(long jobOfferId){
+        if(jobOffersSet == null || jobOffersSet.isEmpty()) {
+            return false;
+        }
+
+        for(JobOffer jo : jobOffersSet){
+            if(jo.getId().equals(jobOfferId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -147,7 +166,7 @@ public class Enterprise {
             return false;
         }
         Enterprise that = (Enterprise) o;
-        return id == that.id && email.equals(that.email);
+        return Objects.equals(id, that.id) && email.equals(that.email);
     }
 
     @Override
