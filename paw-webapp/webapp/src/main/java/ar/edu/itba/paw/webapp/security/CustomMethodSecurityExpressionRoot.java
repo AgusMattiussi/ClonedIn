@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.security;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
@@ -48,6 +47,11 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
 
     public boolean isJobOfferOwner(long enterpriseID, long jobOfferId){
         Enterprise enterprise = enterpriseService.findById(enterpriseID).orElseThrow(UserNotFoundException::new);
+        return enterprise.isJobOfferOwner(jobOfferId);
+    }
+
+    public boolean isJobOfferOwner(Authentication loggedEnterprise, long jobOfferId){
+        Enterprise enterprise = enterpriseService.findByEmail(loggedEnterprise.getName()).orElseThrow(UserNotFoundException::new);
         return enterprise.isJobOfferOwner(jobOfferId);
     }
 

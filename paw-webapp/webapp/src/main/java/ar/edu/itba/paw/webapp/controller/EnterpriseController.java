@@ -158,7 +158,7 @@ public class EnterpriseController {
         return mav;
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)  AND isJobOfferOwner(#enterpriseId, #jobOfferId)")
     @RequestMapping("/closeJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView closeJobOffer(Authentication loggedUser,
                                       @PathVariable("jobOfferId") final long jobOfferId,
@@ -180,7 +180,7 @@ public class EnterpriseController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isJobOfferOwner(#loggedUser, #jobOfferId)")
     @RequestMapping("/cancelJobOffer/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
                                       @PathVariable("jobOfferId") final long jobOfferId) {
@@ -200,7 +200,7 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/profileEnterprise/" + enterprise.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId) AND isJobOfferOwner(#enterpriseId, #jobOfferId)")
     @RequestMapping("/cancelJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView cancelJobOffer(Authentication loggedUser,
                                       @PathVariable("userId") final long userId,
@@ -227,7 +227,7 @@ public class EnterpriseController {
         return new ModelAndView("redirect:/contactsEnterprise/" + enterprise.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId)")
+    @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND canAccessEnterpriseProfile(#loggedUser, #enterpriseId) AND isJobOfferOwner(#enterpriseId, #jobOfferId)")
     @RequestMapping("/acceptApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView acceptApplication(Authentication loggedUser,
                                           @PathVariable("jobOfferId") final long jobOfferId,
