@@ -82,7 +82,11 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <sec:authorize access="hasRole('USER')">
-                                                    <span class="badge badge-pill badge-light p-2"><spring:message code="${categoryName}"/></span>
+                                                    <a href="<c:url value="/home?category=${user.category.id}"/>">
+                                                        <span class="badge badge-pill badge-success p-2">
+                                                            <spring:message code="${categoryName}"/>
+                                                        </span>
+                                                    </a>
                                                 </sec:authorize>
                                                 <sec:authorize access="hasRole('ENTERPRISE')">
                                                     <a href="<c:url value="/?category=${user.category.id}"/>">
