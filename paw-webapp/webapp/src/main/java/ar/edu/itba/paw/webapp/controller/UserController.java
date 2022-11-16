@@ -242,7 +242,7 @@ public class UserController {
             return new UserNotFoundException();
         });
 
-        boolean rejected = contactService.acceptJobOffer(user, jobOffer);
+        boolean rejected = contactService.rejectJobOffer(user, jobOffer);
         if(rejected)
             emailService.sendRejectJobOfferEmail(enterprise, user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
@@ -404,7 +404,7 @@ public class UserController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
         experienceService.deleteExperience(experienceId);
@@ -455,7 +455,7 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isEducationOwner(#userId, #educationId)")
     @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
         educationService.deleteEducation(educationId);

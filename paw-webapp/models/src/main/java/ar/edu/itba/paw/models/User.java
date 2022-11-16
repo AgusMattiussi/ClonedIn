@@ -56,6 +56,9 @@ public class User {
     private Set<Experience> experiences;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Education> educationSet;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserSkill> userSkills;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -140,6 +143,14 @@ public class User {
         return contacts;
     }
 
+    public Set<Education> getEducationSet() {
+        return educationSet;
+    }
+
+    public Set<UserSkill> getUserSkills() {
+        return userSkills;
+    }
+
     public List<Skill> getSkills(){
         return userSkills.stream().map(UserSkill::getSkill).collect(Collectors.toList());
     }
@@ -153,6 +164,45 @@ public class User {
         }
 
         return result;
+    }
+
+    public boolean hasSkill(long skillId){
+        if(userSkills == null || userSkills.isEmpty()) {
+            return false;
+        }
+
+        for(UserSkill usk : userSkills){
+            if(usk.getSkill().getId().equals(skillId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasEducation(long educationId){
+        if(educationSet == null || educationSet.isEmpty()) {
+            return false;
+        }
+
+        for(Education e : educationSet){
+            if(e.getId().equals(educationId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasExperience(long experienceID){
+        if(experiences == null || experiences.isEmpty()) {
+            return false;
+        }
+
+        for(Experience e : experiences){
+            if(e.getId().equals(experienceID)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -55,6 +55,16 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
         return enterprise.isJobOfferOwner(jobOfferId);
     }
 
+    public boolean isEducationOwner(long userID, long educationID){
+        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        return user.hasEducation(educationID);
+    }
+
+    public boolean isExperienceOwner(long userID, long experienceID){
+        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        return user.hasExperience(experienceID);
+    }
+
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
