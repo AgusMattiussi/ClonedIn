@@ -11,27 +11,32 @@ import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
-@Controller
-public class UserController {
+//@Controller
+/*public class UserController {
     private final UserService userService;
     private final ExperienceService experienceService;
     private final EducationService educationService;
@@ -601,46 +606,54 @@ public class UserController {
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
 
-}
+}*/
 
 //EJEMPLO DE USER CONTROLLER CON JERSEY
-/*@Path("users")
+//TODO --> actualizarlo para que funcione con nuestro service
+@Path("users")
 @Component
 public class UserController {
     @Autowired
     private UserService us;
     @Context
     private UriInfo uriInfo;
-    @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listUsers() {
-        final List<User> allUsers = us.getAll();
-        return Response.ok(new UserList(allUsers)).build();
+    @Autowired
+    public UserController(final UserService userService) {
+        this.us = userService;
     }
-    @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createUser(final UserDTO userDto) {
-        final User user = us.register(userDto.getUsername(), userDto.getPassword());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(user.getId())).build();
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
+        final List<UserDTO> allUsers = us.getAllUsers(page).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
+        if (allUsers.isEmpty()) {
+            return Response.noContent().build();
+        }
+        return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+    //@POST
+    //@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response createUser (@Valid final UserForm userForm) {
+        final User user = us.register(userForm.getEmail(), userForm.getPassword());
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response getById(@PathParam("id") final long id) {
-        final User user = us.getById(id);
-        if (user != null) {
-            return Response.ok(new UserDTO(user)).build();
-        } else {
-            return Response.status(Status.NOT_FOUND).build();
+        Optional<UserDTO> maybeUser = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u));
+        if (maybeUser.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
+        return Response.ok(maybeUser.get()).build();
     }
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        us.deleteById(id);
+        //us.deleteById(id);
         return Response.noContent().build();
     }
-}*/
+}

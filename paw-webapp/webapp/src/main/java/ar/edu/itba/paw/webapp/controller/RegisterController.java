@@ -25,13 +25,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Controller
-public class RegisterController {
+//@Controller
+/*public class RegisterController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
     private final UserService userService;
@@ -118,4 +117,4 @@ public class RegisterController {
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-}
+}*/

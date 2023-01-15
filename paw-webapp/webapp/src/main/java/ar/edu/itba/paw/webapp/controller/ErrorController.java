@@ -7,10 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 
-@ControllerAdvice
-public class ErrorController {
+//@ControllerAdvice
+/*public class ErrorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, ExperienceNotFoundException.class,
                         ImageNotFoundException.class, JobOfferNotFoundException.class, SkillNotFoundException.class})
@@ -26,4 +25,4 @@ public class ErrorController {
         LOGGER.error("Error 403 - Forbidden");
         return new ModelAndView("403");
     }
-}
+}*/

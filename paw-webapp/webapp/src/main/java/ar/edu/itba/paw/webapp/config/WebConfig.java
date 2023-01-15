@@ -15,40 +15,22 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-@EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig {
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
     @Value("classpath:category.sql")
     private Resource categorySql;
-
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-
-        vr.setViewClass(JstlView.class);
-        vr.setPrefix("/WEB-INF/views/");
-        vr.setSuffix(".jsp");
-
-        return vr;
-    }
 
     @Bean
     public DataSource dataSource(){
@@ -79,15 +61,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         messageSource.setCacheSeconds(5);
         return messageSource;
-    }
-
-    @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        super.addResourceHandlers(registry);
-        registry.addResourceHandler("/assets/**")
-                .addResourceLocations("/assets/css")
-                .addResourceLocations("/assets/images")
-                .addResourceLocations("/assets/js");
     }
 
     @Bean
