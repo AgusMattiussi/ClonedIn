@@ -18,9 +18,9 @@ public class UserDTO {
         dto.username = user.getEmail();
         final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("users").path(String.valueOf(user.getId()));
         dto.self = userUriBuilder.build();
-        final UriBuilder issuesUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("issues");
-        dto.assignedIssues = issuesUriBuilder.clone().queryParam("assignedTo", String.valueOf(user.getId())).build();
-        dto.reportedIssues = issuesUriBuilder.clone().queryParam("reportedTo", String.valueOf(user.getId())).build();
+        //final UriBuilder issuesUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("issues");
+        //dto.assignedIssues = issuesUriBuilder.clone().queryParam("assignedTo", String.valueOf(user.getId())).build();
+        //dto.reportedIssues = issuesUriBuilder.clone().queryParam("reportedTo", String.valueOf(user.getId())).build();
         return dto;
     }
 
@@ -56,4 +56,11 @@ public class UserDTO {
         this.reportedIssues = reportedIssues;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "username='" + username + '\'' +
+                ", self=" + self +
+                '}';
+    }
 }

@@ -613,18 +613,29 @@ import java.util.stream.Collectors;
 @Path("users")
 @Component
 public class UserController {
+
+    private static final String DUMMY_DATA = "dummy";
+    public static final int PAGE_SIZE = 10;
+
+    @Autowired
+    private CategoryService categoryService;
     @Autowired
     private UserService us;
     @Context
     private UriInfo uriInfo;
     @Autowired
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, final CategoryService categoryService) {
         this.us = userService;
+        this.categoryService = categoryService;
     }
+
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
-        final List<UserDTO> allUsers = us.getAllUsers(page).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
+        final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
+
+        System.out.println("USERS LIST (" + allUsers.size() + "):\n\n\n\n" + allUsers + "\n\n\n");
+
         if (allUsers.isEmpty()) {
             return Response.noContent().build();
         }
@@ -634,22 +645,26 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
-    //@POST
-    //@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createUser (@Valid final UserForm userForm) {
-        final User user = us.register(userForm.getEmail(), userForm.getPassword());
+        final User user = us.register(userForm.getEmail(), userForm.getPassword(), DUMMY_DATA, DUMMY_DATA, categoryService.findById(0).get(),
+                DUMMY_DATA, DUMMY_DATA, DUMMY_DATA);
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }
+
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") final long id) {
         Optional<UserDTO> maybeUser = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u));
-        if (maybeUser.isEmpty()) {
+        if (!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(maybeUser.get()).build();
     }
+
     @DELETE
     @Path("/{id}")
     public Response deleteById(@PathParam("id") final long id) {
