@@ -88,7 +88,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) {
         web.ignoring().antMatchers("/assets/css/**", "/assets/js/**", "/assets/images/**",
-                "/views/403", "/views/404","/views/500", "/users");
+                "/views/403", "/views/404","/views/500", "/users/**");
     }
 
     @Bean

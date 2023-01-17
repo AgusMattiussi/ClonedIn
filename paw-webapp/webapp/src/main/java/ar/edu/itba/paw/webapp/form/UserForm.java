@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-@StringMatches(string1 = "password", string2 = "repeatPassword")
+//@StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
     @NotExistingEmail
     @Email
@@ -18,7 +18,7 @@ public class UserForm {
     @Size(min = 6, max = 20)
     private String password;
 
-    @Size(min = 6, max = 20)
+   /* @Size(min = 6, max = 20)
     private String repeatPassword;
 
     @NotEmpty
@@ -38,7 +38,7 @@ public class UserForm {
     private String category;
 
     @NotEmpty
-    private String level;
+    private String level;*/
 
     public String getPassword() {
         return password;
@@ -48,13 +48,13 @@ public class UserForm {
         this.password = password;
     }
 
-    public String getRepeatPassword() {
+    /*public String getRepeatPassword() {
         return repeatPassword;
     }
 
     public void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
-    }
+    }*/
 
     public String getEmail() {
         return email;
@@ -64,7 +64,7 @@ public class UserForm {
         this.email = email;
     }
 
-    public String getName() {
+    /*public String getName() {
         return name;
     }
 
@@ -110,5 +110,5 @@ public class UserForm {
 
     public void setLevel(String level) {
         this.level = level;
-    }
+    }*/
 }

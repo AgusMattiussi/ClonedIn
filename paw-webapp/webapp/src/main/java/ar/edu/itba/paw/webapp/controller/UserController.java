@@ -649,8 +649,8 @@ public class UserController {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createUser (@Valid final UserForm userForm) {
-        final User user = us.register(userForm.getEmail(), userForm.getPassword(), DUMMY_DATA, DUMMY_DATA, categoryService.findById(0).get(),
-                DUMMY_DATA, DUMMY_DATA, DUMMY_DATA);
+        final User user = us.register(userForm.getEmail(), userForm.getPassword(), DUMMY_DATA, DUMMY_DATA, categoryService.findById(1).get(),
+                DUMMY_DATA, DUMMY_DATA, "Graduado");
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }
