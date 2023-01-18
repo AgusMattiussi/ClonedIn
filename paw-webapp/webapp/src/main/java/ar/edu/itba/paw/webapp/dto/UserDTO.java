@@ -10,8 +10,9 @@ public class UserDTO {
 
     private String username;
     private URI self;
-    private  URI assignedIssues;
-    private URI reportedIssues;
+    //TODO: Completar con info relevante para usuarios
+    /*private  URI assignedIssues;
+    private URI reportedIssues;*/
 
     public static UserDTO fromUser(final UriInfo uriInfo, final User user) {
         final UserDTO dto = new UserDTO();
@@ -40,7 +41,7 @@ public class UserDTO {
         this.self = self;
     }
 
-    public URI getAssignedIssues() {
+    /*public URI getAssignedIssues() {
         return assignedIssues;
     }
 
@@ -54,7 +55,7 @@ public class UserDTO {
 
     public void setReportedIssues(URI reportedIssues) {
         this.reportedIssues = reportedIssues;
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -648,9 +648,30 @@ public class UserController {
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response createUser (@Valid final UserForm userForm) {
-        final User user = us.register(userForm.getEmail(), userForm.getPassword(), DUMMY_DATA, DUMMY_DATA, categoryService.findById(1).get(),
-                DUMMY_DATA, DUMMY_DATA, "Graduado");
+    public Response createUser (@Valid final UserForm userForm /*, final BindingResult errors, HttpServletRequest request*/) {
+
+        //TODO: Desarrollar errores del formulario como "reenvio la pagina"
+        /*if (errors.hasErrors()) {
+            LOGGER.warn("User register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return;
+        }*/
+
+        Optional<Category> optCategory = categoryService.findByName(userForm.getCategory());
+        if (!optCategory.isPresent()) {
+            //TODO: Desarrollar errores
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), optCategory.get(),
+                userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+
+        //TODO: revisar uso de mail y autologeado
+        //emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
+        //authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
+
+        LOGGER.debug("A new user was registered under id: {}", user.getId());
+        LOGGER.info("A new user was registered");
+
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }
@@ -665,7 +686,7 @@ public class UserController {
         return Response.ok(maybeUser.get()).build();
     }
 
-    @DELETE
+    /*@DELETE
     @Path("/{id}")
     public Response deleteById(@PathParam("id") final long id) {
         //us.deleteById(id);
