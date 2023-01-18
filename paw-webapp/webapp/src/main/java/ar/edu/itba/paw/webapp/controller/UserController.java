@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.*;
+import com.sun.tools.javac.comp.Enter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,6 +80,7 @@ import java.util.stream.Collectors;
         this.skillService = skillService;
         this.authUserDetailsService = authUserDetailsService;
     }
+    // TODO:
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
@@ -625,7 +627,12 @@ public class UserController {
     private CategoryService categoryService;
     @Autowired
     private UserService us;
-
+    @Autowired
+    private JobOfferService jobOfferService;
+    @Autowired
+    private EnterpriseService enterpriseService;
+    @Autowired
+    private ContactService contactService;
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -634,9 +641,13 @@ public class UserController {
     private UriInfo uriInfo;
 
     @Autowired
-    public UserController(final UserService userService, final CategoryService categoryService) {
+    public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
+                          final EnterpriseService enterpriseService, final ContactService contactService) {
         this.us = userService;
         this.categoryService = categoryService;
+        this.jobOfferService = jobOfferService;
+        this.enterpriseService = enterpriseService;
+        this.contactService = contactService;
     }
 
     @GET
@@ -702,6 +713,42 @@ public class UserController {
         //us.deleteById(id);
         return Response.noContent().build();
     }*/
+
+    @POST
+    @Path("/{id}/applications")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("joid") final long jobOfferId){
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
+        if(!optJobOffer.isPresent()){
+            LOGGER.error("Job offer with ID={} not found", jobOfferId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        long enterpriseId = optJobOffer.get().getEnterpriseID();
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(enterpriseId);
+        if(!optEnterprise.isPresent()){
+            LOGGER.error("Enterprise with ID={} not found", enterpriseId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        //long userId = optUser.get().getId();
+        if(contactService.alreadyContacted(id, jobOfferId)) {
+            LOGGER.error("User with ID={} has already applied to job offer with ID={}", id, jobOfferId);
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+
+        contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.USER);
+        //TODO: emailService.sendApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
+        return Response.created(uri).build();
+    }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
