@@ -16,10 +16,14 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -608,8 +612,6 @@ import java.util.stream.Collectors;
 
 }*/
 
-//EJEMPLO DE USER CONTROLLER CON JERSEY
-//TODO --> actualizarlo para que funcione con nuestro service
 @Path("users")
 @Component
 public class UserController {
@@ -617,12 +619,20 @@ public class UserController {
     private static final String DUMMY_DATA = "dummy";
     public static final int PAGE_SIZE = 10;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private CategoryService categoryService;
     @Autowired
     private UserService us;
+
+    //private final EmailService emailService;
+    @Autowired
+    protected AuthenticationManager authenticationManager;
+
     @Context
     private UriInfo uriInfo;
+
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService) {
         this.us = userService;
@@ -691,5 +701,12 @@ public class UserController {
     public Response deleteById(@PathParam("id") final long id) {
         //us.deleteById(id);
         return Response.noContent().build();
+    }*/
+
+    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authToken.setDetails(new WebAuthenticationDetails(request));
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

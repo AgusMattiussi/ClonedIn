@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +18,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 //@Controller
 /*public class EnterpriseController {
@@ -559,3 +569,78 @@ import java.util.*;
         return mav;
     }
 }*/
+
+@Path("enterprises")
+@Component
+public class EnterpriseController {
+
+    private static final String DUMMY_DATA = "dummy";
+    public static final int PAGE_SIZE = 10;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
+
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private EnterpriseService en;
+    //private final EmailService emailService;
+    @Autowired
+    protected AuthenticationManager authenticationManager;
+    @Context
+    private UriInfo uriInfo;
+
+    @Autowired
+    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService) {
+        this.en = enterpriseService;
+        this.categoryService = categoryService;
+    }
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response createEnterprise (@Valid final EnterpriseForm enterpriseForm/*, final BindingResult errors, HttpServletRequest request*/) {
+
+        //TODO: Desarrollar errores del formulario como "reenvio la pagina"
+        /*if (errors.hasErrors()) {
+            LOGGER.warn("Enterprise register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return
+        }*/
+
+        Optional<Category> optCategory = categoryService.findByName(enterpriseForm.getCategory());
+        if (!optCategory.isPresent()) {
+            //TODO: Desarrollar errores
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Integer year = enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear());
+
+        final Enterprise enterprise = en.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(),
+                enterpriseForm.getCity(), optCategory.get(), enterpriseForm.getWorkers(), year, enterpriseForm.getLink(), enterpriseForm.getAboutUs());
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(enterprise.getId())).build();
+
+        //TODO: revisar uso de mail y autologeado
+        //emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
+        //authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
+
+        LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());
+        LOGGER.info("A new enterprise was registered");
+
+        return Response.created(uri).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getById(@PathParam("id") final long id) {
+        Optional<EnterpriseDTO> maybeEnterprise = en.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo,e));
+        if (!maybeEnterprise.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(maybeEnterprise.get()).build();
+    }
+
+    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        authToken.setDetails(new WebAuthenticationDetails(request));
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+}
