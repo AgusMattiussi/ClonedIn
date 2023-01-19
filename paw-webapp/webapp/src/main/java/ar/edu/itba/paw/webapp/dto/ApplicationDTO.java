@@ -28,4 +28,45 @@ public class ApplicationDTO {
 
         return dto;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
+    public long getJobOfferId() {
+        return jobOfferId;
+    }
+
+    public void setJobOfferId(long jobOfferId) {
+        this.jobOfferId = jobOfferId;
+    }
+
+    public int getFilledBy() {
+        return filledBy;
+    }
+
+    public void setFilledBy(int filledBy) {
+        this.filledBy = filledBy;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
 }

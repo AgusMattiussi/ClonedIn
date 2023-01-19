@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
@@ -11,9 +12,9 @@ import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.webapp.dto.ApplicationDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.*;
-import com.sun.tools.javac.comp.Enter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -667,6 +668,7 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
+
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createUser (@Valid final UserForm userForm /*, final BindingResult errors, HttpServletRequest request*/) {
@@ -699,6 +701,7 @@ public class UserController {
 
     @GET
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, })
     public Response getById(@PathParam("id") final long id) {
         Optional<UserDTO> maybeUser = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u));
         if (!maybeUser.isPresent()) {
@@ -713,6 +716,26 @@ public class UserController {
         //us.deleteById(id);
         return Response.noContent().build();
     }*/
+
+    //TODO: Agregar orden y filtros
+    @GET
+    @Path("/{id}/applications")
+    public Response getApplications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page){
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<ApplicationDTO> applications = contactService.getContactsForUser(optUser.get(), FilledBy.USER, SortBy.ANY, page-1, PAGE_SIZE)
+                .stream().map(contact -> ApplicationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<ApplicationDTO>>(applications) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
 
     @POST
     @Path("/{id}/applications")
