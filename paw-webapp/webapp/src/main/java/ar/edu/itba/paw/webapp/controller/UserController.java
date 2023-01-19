@@ -13,6 +13,7 @@ import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.ApplicationDTO;
+import ar.edu.itba.paw.webapp.dto.ExperienceDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +209,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
-
+    //TODO:
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView acceptJobOffer(Authentication loggedUser,
@@ -234,7 +235,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
-
+    //TODO
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/rejectJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView rejectJobOffer(Authentication loggedUser,
@@ -634,6 +635,8 @@ public class UserController {
     private EnterpriseService enterpriseService;
     @Autowired
     private ContactService contactService;
+    @Autowired
+    private ExperienceService experienceService;
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -643,12 +646,13 @@ public class UserController {
 
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
-                          final EnterpriseService enterpriseService, final ContactService contactService) {
+                          final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService) {
         this.us = userService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
         this.enterpriseService = enterpriseService;
         this.contactService = contactService;
+        this.experienceService = experienceService;
     }
 
     @GET
@@ -772,6 +776,29 @@ public class UserController {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.created(uri).build();
     }
+
+    @GET
+    @Path("/{id}/experiences")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getExperiences(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+         Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<ExperienceDTO> experiences = experienceService.findByUser(optUser.get())
+                .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+
+
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
