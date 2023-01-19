@@ -777,6 +777,27 @@ public class UserController {
         return Response.created(uri).build();
     }
 
+    @PUT
+    @Path("/{id}/applications/{jobOfferId}")
+    public Response cancelApplication(@PathParam("id") final long id, @PathParam("id") final long jobOfferId) {
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
+        if(!optJobOffer.isPresent()){
+            LOGGER.error("Job offer with ID={} not found", jobOfferId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if(!contactService.cancelJobOffer(optUser.get(), optJobOffer.get()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        return Response.ok().build();
+    }
+
     @GET
     @Path("/{id}/experiences")
     @Produces({ MediaType.APPLICATION_JSON, })
@@ -790,6 +811,7 @@ public class UserController {
         List<ExperienceDTO> experiences = experienceService.findByUser(optUser.get())
                 .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
 
+        //TODO: Generar links con sentido
         return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
@@ -799,7 +821,7 @@ public class UserController {
 
 
 
-
+    /** Autologin **/
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
         authToken.setDetails(new WebAuthenticationDetails(request));
