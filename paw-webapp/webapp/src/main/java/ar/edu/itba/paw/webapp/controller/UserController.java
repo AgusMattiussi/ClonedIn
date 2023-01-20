@@ -741,6 +741,9 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
+
+    //TODO: Implementar GET /{id}/applications/{jobOfferId}
+
     @POST
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
@@ -802,7 +805,7 @@ public class UserController {
     @Path("/{id}/experiences")
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response getExperiences(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-         Optional<User> optUser = us.findById(id);
+        Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
             LOGGER.error("User with ID={} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -817,6 +820,82 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @GET
+    @Path("/{id}/experiences/{expId}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<ExperienceDTO> optExperience = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp));
+        if (!optExperience.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optExperience.get()).build();
+    }
+
+    @POST
+    @Path("/{id}/experiences")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response addExperience(@PathParam("id") final long id, @Valid /*@ModelAttribute("experienceForm")*/ final ExperienceForm experienceForm, final BindingResult errors){
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        //TODO: Eliminar esta logica del controller
+        String formYearTo = experienceForm.getYearTo();
+        String formMonthTo = experienceForm.getMonthTo();
+        String formYearFrom = experienceForm.getYearFrom();
+
+        boolean yearToIsEmpty = formYearTo.isEmpty();
+        boolean monthToIsEmpty = formMonthTo.equals("No-especificado");
+        boolean monthOrYearEmpty = yearToIsEmpty && !monthToIsEmpty || !yearToIsEmpty && monthToIsEmpty;
+        boolean yearFromIsEmpty = formYearFrom.isEmpty();
+        boolean yearWrongFormat = false;
+
+        Integer yearTo;
+        Integer yearFrom;
+        try {
+            yearTo = yearToIsEmpty ? null : Integer.valueOf(formYearTo);
+            yearFrom = yearFromIsEmpty ? null : Integer.valueOf(formYearFrom);
+        } catch (NumberFormatException e) {
+            yearWrongFormat = true;
+            yearTo = null;
+            yearFrom = null;
+        };
+
+        Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
+        Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
+
+        boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat && yearFrom != null &&
+                !DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo);
+
+
+        if (errors.hasErrors() || yearFromIsEmpty || yearWrongFormat || monthOrYearEmpty || invalidDate) {
+            if(monthOrYearEmpty)
+                errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick a year and month, or let both fields empty");
+            else if (invalidDate)
+                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
+
+            LOGGER.warn("Experience form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Experience experience = experienceService.create(optUser.get(), DateHelper.monthToNumber(experienceForm.getMonthFrom()),
+                Integer.parseInt(experienceForm.getYearFrom()), monthTo, yearTo,experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
+
+        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
+        LOGGER.info("A new experience was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(experience.getId())).build();
+        return Response.created(uri).build();
     }
 
 
