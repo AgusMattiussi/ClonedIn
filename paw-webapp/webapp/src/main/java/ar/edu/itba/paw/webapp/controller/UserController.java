@@ -920,7 +920,7 @@ public class UserController {
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/experiences")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response addExperience(@PathParam("id") final long id, @Valid final ExperienceForm experienceForm, /*final BindingResult errors*/){
+    public Response addExperience(@PathParam("id") final long id, @Valid final ExperienceForm experienceForm /*, final BindingResult errors*/){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
             LOGGER.error("User with ID={} not found", id);
