@@ -869,7 +869,7 @@ public class UserController {
         }
 
         List<NotificationDTO> notifications = contactService.getContactsForUser(optUser.get(), FilledBy.ENTERPRISE, SortBy.ANY, page-1, PAGE_SIZE)
-                .stream().map(contact -> ApplicationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+                .stream().map(contact -> NotificationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
