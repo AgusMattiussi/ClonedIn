@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.ApplicationDTO;
 import ar.edu.itba.paw.webapp.dto.ExperienceDTO;
+import ar.edu.itba.paw.webapp.dto.NotificationDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ import java.util.stream.Collectors;
         this.skillService = skillService;
         this.authUserDetailsService = authUserDetailsService;
     }
-    // TODO:
+    // TODO: REHACER LOS GETTERS CON LAS JOBOFERS Y SUS FILTROS
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
@@ -132,7 +133,7 @@ import java.util.stream.Collectors;
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
-
+    // DONE
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/applyToJobOffer/{jobOfferId:[0-9]+}")
@@ -162,7 +163,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
-
+    //DONE: CREO QUE SE RESUELVE CON UN GET USER BY ID PASANDOLE EL ID DEL USUARIO LOGGEADO
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
@@ -181,7 +182,7 @@ import java.util.stream.Collectors;
         mav.addObject("loggedUserID", authUserDetailsService.getLoggerUserId(loggedUser));
         return mav;
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/cancelApplication/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView cancelApplication(Authentication loggedUser,
@@ -209,7 +210,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
-    //TODO:
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView acceptJobOffer(Authentication loggedUser,
@@ -235,7 +236,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
-    //TODO
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/rejectJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView rejectJobOffer(Authentication loggedUser,
@@ -261,7 +262,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -303,7 +304,7 @@ import java.util.stream.Collectors;
         mav.addObject("currentPage", page);
         return mav;
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/applicationsUser/{userId:[0-9]+}")
     public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -345,7 +346,7 @@ import java.util.stream.Collectors;
         mav.addObject("currentPage", page);
         return mav;
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
@@ -359,7 +360,6 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -416,7 +416,7 @@ import java.util.stream.Collectors;
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
@@ -437,7 +437,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-
+    //TODO: TODOS ESTOS METODOS HACIA ABAJO (HACIA ARRIBA REVISAR)
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -644,6 +644,8 @@ public class UserController {
     @Context
     private UriInfo uriInfo;
 
+    // TODO: REVISAR EL TEMA DE LOS PERMISOS DE CADA USUARIOS PARA CADA METODO
+
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
                           final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService) {
@@ -741,10 +743,11 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
-
     //TODO: Implementar GET /{id}/applications/{jobOfferId}
 
     @POST
+    //@Transactional
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("joid") final long jobOfferId){
@@ -774,15 +777,16 @@ public class UserController {
         }
 
         contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.USER);
-        //TODO: emailService.sendApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        //emailService.sendApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.created(uri).build();
     }
 
     @PUT
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/applications/{jobOfferId}")
-    public Response cancelApplication(@PathParam("id") final long id, @PathParam("id") final long jobOfferId) {
+    public Response cancelApplication(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
             LOGGER.error("User with ID={} not found", id);
@@ -797,8 +801,81 @@ public class UserController {
 
         if(!contactService.cancelJobOffer(optUser.get(), optJobOffer.get()))
             return Response.status(Response.Status.BAD_REQUEST).build();
+
         //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+
         return Response.ok().build();
+    }
+
+    @PUT
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/applications/{jobOfferId}")
+    public Response acceptJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
+        if(!optJobOffer.isPresent()){
+            LOGGER.error("Job offer with ID={} not found", jobOfferId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/applications/{jobOfferId}")
+    public Response rejectJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
+        if(!optJobOffer.isPresent()){
+            LOGGER.error("Job offer with ID={} not found", jobOfferId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+
+        return Response.ok().build();
+    }
+
+    //TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
+    @GET
+    @Path("/{id}/notifications")
+    public Response getNotifications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<NotificationDTO> notifications = contactService.getContactsForUser(optUser.get(), FilledBy.ENTERPRISE, SortBy.ANY, page-1, PAGE_SIZE)
+                .stream().map(contact -> ApplicationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
     @GET
@@ -840,9 +917,10 @@ public class UserController {
     }
 
     @POST
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/experiences")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response addExperience(@PathParam("id") final long id, @Valid /*@ModelAttribute("experienceForm")*/ final ExperienceForm experienceForm, final BindingResult errors){
+    public Response addExperience(@PathParam("id") final long id, @Valid final ExperienceForm experienceForm, /*final BindingResult errors*/){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
             LOGGER.error("User with ID={} not found", id);
@@ -877,7 +955,7 @@ public class UserController {
         boolean invalidDate = !yearToIsEmpty && !monthToIsEmpty && !yearWrongFormat && yearFrom != null &&
                 !DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo);
 
-
+        /*
         if (errors.hasErrors() || yearFromIsEmpty || yearWrongFormat || monthOrYearEmpty || invalidDate) {
             if(monthOrYearEmpty)
                 errors.rejectValue("yearTo", "YearOrMonthEmpty", "You must pick a year and month, or let both fields empty");
@@ -886,7 +964,7 @@ public class UserController {
 
             LOGGER.warn("Experience form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        }*/
 
         Experience experience = experienceService.create(optUser.get(), DateHelper.monthToNumber(experienceForm.getMonthFrom()),
                 Integer.parseInt(experienceForm.getYearFrom()), monthTo, yearTo,experienceForm.getCompany(), experienceForm.getJob(), experienceForm.getJobDesc());
@@ -898,7 +976,13 @@ public class UserController {
         return Response.created(uri).build();
     }
 
-
+    @DELETE
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
+    @Path("/{id}/experiences/{expId}")
+    public Response deleteById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+        experienceService.deleteExperience(expId);
+        return Response.noContent().build();
+    }
 
     /** Autologin **/
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
