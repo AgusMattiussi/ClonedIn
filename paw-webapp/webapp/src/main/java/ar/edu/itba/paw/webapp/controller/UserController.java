@@ -1024,6 +1024,14 @@ public class UserController {
         return Response.ok(optEducation.get()).build();
     }
 
+    @DELETE
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
+    @Path("/{id}/educations/{educationId}")
+    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+        educationService.deleteEducation(educationId);
+        return Response.noContent().build();
+    }
+
     /** Autologin **/
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
