@@ -345,6 +345,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -408,7 +409,7 @@ import java.util.stream.Collectors;
         experienceService.deleteExperience(experienceId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
@@ -422,7 +423,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-    //TODO: TODOS ESTOS METODOS HACIA ABAJO (HACIA ARRIBA REVISAR)
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -452,7 +453,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isEducationOwner(#userId, #educationId)")
     @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
@@ -624,6 +625,10 @@ public class UserController {
     private ExperienceService experienceService;
     @Autowired
     private EducationService educationService;
+    @Autowired
+    private SkillService skillService;
+    @Autowired
+    private UserSkillService userSkillService;
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -637,7 +642,8 @@ public class UserController {
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
                           final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService,
-                          final EducationService educationService, ImageService imageService) {
+                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
+                          ImageService imageService) {
         this.us = userService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
@@ -645,6 +651,8 @@ public class UserController {
         this.contactService = contactService;
         this.experienceService = experienceService;
         this.educationService = educationService;
+        this.skillService = skillService;
+        this.userSkillService = userSkillService;
         this.imageService = imageService;
     }
 
@@ -664,7 +672,6 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
-
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
@@ -1065,7 +1072,28 @@ public class UserController {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
     }
+    @GET
+    @Path("/{id}/skills")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getSkills(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
+        List<UserSkillDTO> skills = userSkillService.getSkillsForUser(optUser.get())
+                .stream().map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s)).collect(Collectors.toList());
+
+        //TODO: Generar links con sentido
+        return Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    //TODO: refactor -> verbo
     @PUT
     // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/hide")
@@ -1078,6 +1106,22 @@ public class UserController {
         }
 
         us.hideUserProfile(id);
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/show")
+    public Response showUserProfile(@PathParam("id") final long id) {
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        us.showUserProfile(id);
 
         return Response.ok().build();
     }
@@ -1097,35 +1141,19 @@ public class UserController {
     }
 
     //TDOD: creo que esto no se cambia
-    @GET
-    @Path("/{id}/image/imgId")
-    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
-        LOGGER.debug("Trying to access profile image");
-
-        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
-            LOGGER.error("Error loading image {}", imageId);
-            return new ImageNotFoundException();
-        });
-
-        LOGGER.info("Profile image accessed.");
-        return profileImage.getBytes();
-    }
-
-    @PUT
-    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/show")
-    public Response showUserProfile(@PathParam("id") final long id) {
-
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        us.showUserProfile(id);
-
-        return Response.ok().build();
-    }
+//    @GET
+//    @Path("/{id}/image/imgId")
+//    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
+//        LOGGER.debug("Trying to access profile image");
+//
+//        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
+//            LOGGER.error("Error loading image {}", imageId);
+//            return new ImageNotFoundException();
+//        });
+//
+//        LOGGER.info("Profile image accessed.");
+//        return profileImage.getBytes();
+//    }
 
     /** Autologin **/
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
