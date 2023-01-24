@@ -12,10 +12,7 @@ import ar.edu.itba.paw.models.helpers.PaginationHelper;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
-import ar.edu.itba.paw.webapp.dto.ApplicationDTO;
-import ar.edu.itba.paw.webapp.dto.ExperienceDTO;
-import ar.edu.itba.paw.webapp.dto.NotificationDTO;
-import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -637,6 +634,8 @@ public class UserController {
     private ContactService contactService;
     @Autowired
     private ExperienceService experienceService;
+    @Autowired
+    private EducationService educationService;
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -648,13 +647,15 @@ public class UserController {
 
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
-                          final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService) {
+                          final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService,
+                          final EducationService educationService) {
         this.us = userService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
         this.enterpriseService = enterpriseService;
         this.contactService = contactService;
         this.experienceService = experienceService;
+        this.educationService = educationService;
     }
 
     @GET
@@ -750,7 +751,7 @@ public class UserController {
     //@PreAuthorize("hasRole('ROLE_USER')")
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("joid") final long jobOfferId){
+    public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("jobOfferId") final long jobOfferId){
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
             LOGGER.error("User with ID={} not found", id);
@@ -810,7 +811,7 @@ public class UserController {
 
     @PUT
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/applications/{jobOfferId}")
+    @Path("/{id}/notifications/{jobOfferId}")
     public Response acceptJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
 
         Optional<User> optUser = us.findById(id);
@@ -833,9 +834,10 @@ public class UserController {
         return Response.ok().build();
     }
 
-    @PUT
+    //TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
+/*    @PUT
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/applications/{jobOfferId}")
+    @Path("/{id}/notifications/{jobOfferId}")
     public Response rejectJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
 
         Optional<User> optUser = us.findById(id);
@@ -856,7 +858,7 @@ public class UserController {
         //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
         return Response.ok().build();
-    }
+    }*/
 
     //TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
     @GET
@@ -982,6 +984,27 @@ public class UserController {
     public Response deleteById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
         experienceService.deleteExperience(expId);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/{id}/educations")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getEducations(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<EducationDTO> educations = educationService.findByUser(optUser.get())
+                .stream().map(exp -> EducationDTO.fromEducation(uriInfo, exp)).collect(Collectors.toList());
+
+        //TODO: Generar links con sentido
+        return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
     /** Autologin **/
