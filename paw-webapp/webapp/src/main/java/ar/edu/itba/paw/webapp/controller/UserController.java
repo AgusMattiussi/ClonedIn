@@ -981,7 +981,7 @@ public class UserController {
     @DELETE
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/experiences/{expId}")
-    public Response deleteById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+    public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
         experienceService.deleteExperience(expId);
         return Response.noContent().build();
     }
@@ -997,7 +997,7 @@ public class UserController {
         }
 
         List<EducationDTO> educations = educationService.findByUser(optUser.get())
-                .stream().map(exp -> EducationDTO.fromEducation(uriInfo, exp)).collect(Collectors.toList());
+                .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
         //TODO: Generar links con sentido
         return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
@@ -1005,6 +1005,23 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @GET
+    @Path("/{id}/educations/{educationId}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<EducationDTO> optEducation = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed));
+        if (!optEducation.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optEducation.get()).build();
     }
 
     /** Autologin **/
