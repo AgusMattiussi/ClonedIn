@@ -1110,6 +1110,34 @@ public class UserController {
         return Response.ok(optSkill.get()).build();
     }
 
+    @POST
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/skills")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm /*, final BindingResult errors*/){
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
+
+        /*if (errors.hasErrors() || userSkillService.alreadyExists(skill, user)) {
+            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
+            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return formSkill(loggedUser, skillForm, userId);
+        }*/
+
+        userSkillService.addSkillToUser(skill, optUser.get());
+
+        LOGGER.debug("A new skill was registered under id: {}", skill.getId());
+        LOGGER.info("A new skill was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(skill.getId())).build();
+        return Response.created(uri).build();
+    }
+
     @DELETE
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/skills/{skillId}")
