@@ -4,36 +4,23 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.models.helpers.PaginationHelper;
-import ar.edu.itba.paw.models.helpers.SortHelper;
-import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
+import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -582,17 +569,20 @@ public class EnterpriseController {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private EnterpriseService en;
+    private EnterpriseService enterpriseService;
     //private final EmailService emailService;
+    @Autowired
+    final JobOfferService jobOfferService;
     @Autowired
     protected AuthenticationManager authenticationManager;
     @Context
     private UriInfo uriInfo;
 
     @Autowired
-    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService) {
-        this.en = enterpriseService;
+    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService, final JobOfferService jobOfferService) {
+        this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
+        this.jobOfferService = jobOfferService;
     }
 
     @POST
@@ -613,7 +603,7 @@ public class EnterpriseController {
 
         Integer year = enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear());
 
-        final Enterprise enterprise = en.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(),
+        final Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(),
                 enterpriseForm.getCity(), optCategory.get(), enterpriseForm.getWorkers(), year, enterpriseForm.getLink(), enterpriseForm.getAboutUs());
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(enterprise.getId())).build();
 
@@ -629,8 +619,9 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, })
     public Response getById(@PathParam("id") final long id) {
-        Optional<EnterpriseDTO> maybeEnterprise = en.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo,e));
+        Optional<EnterpriseDTO> maybeEnterprise = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo,e));
         if (!maybeEnterprise.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -643,4 +634,27 @@ public class EnterpriseController {
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+    
+    //TODO: Agregar orden y filtros
+    @GET
+    @Path("/{id}/jobOffers")
+    public Response getJobOffers(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page){
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if(!optEnterprise.isPresent()){
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+
+        List<JobOfferDTO> jobOffers = jobOfferService.findActiveByEnterprise(optEnterprise.get(), page-1, PAGE_SIZE)
+                .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+    
+    
 }
