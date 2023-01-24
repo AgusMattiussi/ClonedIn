@@ -1093,6 +1093,23 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
+    @GET
+    @Path("/{id}/skills/{skillId}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getSkillById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<UserSkillDTO> optSkill = skillService.findById(skillId).map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s));
+        if (!optSkill.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optSkill.get()).build();
+    }
+
     @DELETE
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/skills/{skillId}")
@@ -1151,7 +1168,7 @@ public class UserController {
     //TDOD: creo que esto no se cambia
 //    @GET
 //    @Path("/{id}/image/imgId")
-//    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
+//    public @ResponseBody byte[] getProfileImage(@PathVariable("id") final long id, @PathVariable("imageId") final int imageId) {
 //        LOGGER.debug("Trying to access profile image");
 //
 //        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
