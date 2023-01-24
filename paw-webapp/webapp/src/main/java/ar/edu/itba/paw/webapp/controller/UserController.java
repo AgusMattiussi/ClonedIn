@@ -1093,6 +1093,14 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
+    @DELETE
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
+    @Path("/{id}/skills/{skillId}")
+    public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+        userSkillService.deleteSkillFromUser(id, skillId);
+        return Response.noContent().build();
+    }
+
     //TODO: refactor -> verbo
     @PUT
     // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
