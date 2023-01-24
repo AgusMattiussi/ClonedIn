@@ -4,28 +4,17 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
-import ar.edu.itba.paw.models.helpers.PaginationHelper;
-import ar.edu.itba.paw.models.helpers.SortHelper;
-import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.io.IOException;
 import java.util.stream.Collectors;
 
 //@Controller
@@ -596,14 +584,14 @@ import java.util.stream.Collectors;
                 editUserForm.getPosition(), category, editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/hideUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView hideUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
         userService.hideUserProfile(userId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/showUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
@@ -642,13 +630,14 @@ public class UserController {
 
     @Context
     private UriInfo uriInfo;
+    private ImageService imageService;
 
     // TODO: REVISAR EL TEMA DE LOS PERMISOS DE CADA USUARIOS PARA CADA METODO
 
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
                           final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService,
-                          final EducationService educationService) {
+                          final EducationService educationService, ImageService imageService) {
         this.us = userService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
@@ -656,6 +645,7 @@ public class UserController {
         this.contactService = contactService;
         this.experienceService = experienceService;
         this.educationService = educationService;
+        this.imageService = imageService;
     }
 
     @GET
@@ -812,7 +802,7 @@ public class UserController {
     @PUT
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/notifications/{jobOfferId}")
-    public Response acceptJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
+    public Response statusJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId, @QueryParam("newStatus") final String NewStatus) {
 
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -825,13 +815,20 @@ public class UserController {
             LOGGER.error("Job offer with ID={} not found", jobOfferId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
-        //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
-
+        if (NewStatus.compareTo("aceptado") == 0) {
+            if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+            //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        }
+        else if (NewStatus.compareTo("rechazado") == 0) {
+            if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+            //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        }
         return Response.ok().build();
+
     }
 
     //TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
@@ -1030,6 +1027,67 @@ public class UserController {
     public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/hide")
+    public Response hideUserProfile(@PathParam("id") final long id) {
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        us.hideUserProfile(id);
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/image")
+    public Response uploadImage(@PathParam("id") final long id, @Valid final ImageForm imageForm /* , final BindingResult errors */) throws IOException {
+        /*if (errors.hasErrors()) {
+            return formImage(loggedUser, imageForm, userId);
+        }*/
+
+        Image image = imageService.uploadImage(imageForm.getImage().getBytes());
+        us.updateProfileImage(id, image);
+
+        return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
+    }
+
+    //TDOD: creo que esto no se cambia
+    @GET
+    @Path("/{id}/image/imgId")
+    public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
+        LOGGER.debug("Trying to access profile image");
+
+        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
+            LOGGER.error("Error loading image {}", imageId);
+            return new ImageNotFoundException();
+        });
+
+        LOGGER.info("Profile image accessed.");
+        return profileImage.getBytes();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/show")
+    public Response showUserProfile(@PathParam("id") final long id) {
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        us.showUserProfile(id);
+
+        return Response.ok().build();
     }
 
     /** Autologin **/
