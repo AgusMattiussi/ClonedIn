@@ -663,6 +663,9 @@ public class UserController {
         if (allUsers.isEmpty()) {
             return Response.noContent().build();
         }
+
+        //TODO: AGREGAR FILTROS
+
         return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
