@@ -666,10 +666,16 @@ public class EnterpriseController {
     }
 
     @GET
-    @Path("/{id}/jobOffers/{id}")
+    @Path("/{id}/jobOffers/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
-    public Response getJobOfferById(@PathParam("id") final long id) {
-        Optional<JobOfferDTO> optJobOffer = jobOfferService.findById(id).map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo,jobOffer));
+    public Response getJobOfferById(@PathParam("id") final long id, @PathParam("id") final long joid) {
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOfferDTO> optJobOffer = jobOfferService.findById(joid).map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo,jobOffer));
         if (!optJobOffer.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -696,21 +702,21 @@ public class EnterpriseController {
         JobOffer jobOffer = jobOfferService.create(optEnterprise.get(), optCategory.get(), jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
 
-        if (jobOfferForm.getSkill1() != null && !jobOfferForm.getSkill1().isEmpty()) {
+        if (!jobOfferForm.getSkill1().isEmpty()) {
             Skill skill1 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill1());
             System.out.println(skill1);
             System.out.println(jobOffer);
             jobOfferSkillService.addSkillToJobOffer(skill1, jobOffer);
         }
-        if (jobOfferForm.getSkill2() != null && !jobOfferForm.getSkill2().isEmpty()) {
+        if (!jobOfferForm.getSkill2().isEmpty()) {
             Skill skill2 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill2());
             jobOfferSkillService.addSkillToJobOffer(skill2, jobOffer);
         }
-        if (jobOfferForm.getSkill3() != null && !jobOfferForm.getSkill3().isEmpty()) {
+        if (!jobOfferForm.getSkill3().isEmpty()) {
             Skill skill3 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill3());
             jobOfferSkillService.addSkillToJobOffer(skill3, jobOffer);
         }
-        if (jobOfferForm.getSkill4() != null && !jobOfferForm.getSkill4().isEmpty()) {
+        if (!jobOfferForm.getSkill4().isEmpty()) {
             Skill skill4 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill4());
             jobOfferSkillService.addSkillToJobOffer(skill4, jobOffer);
         }
