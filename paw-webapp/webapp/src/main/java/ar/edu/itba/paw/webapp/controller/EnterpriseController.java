@@ -16,8 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -563,7 +561,6 @@ import java.util.stream.Collectors;
 @Component
 public class EnterpriseController {
 
-    private static final String DUMMY_DATA = "dummy";
     public static final int PAGE_SIZE = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
