@@ -700,10 +700,11 @@ public class UserController {
         return Response.created(uri).build();
     }
 
-    @GET
+    //FIXME: Pasarlo a JobOfferController?
+    /*@GET
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
-                             final ContactOrderForm contactOrderForm/*, HttpServletRequest request*/) {
+                             final ContactOrderForm contactOrderForm*//*, HttpServletRequest request*//*) {
 
         Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
         if (!optCategory.isPresent()) {
@@ -737,7 +738,7 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
-    }
+    }*/
 
     @GET
     @Path("/{id}")
@@ -839,7 +840,7 @@ public class UserController {
         //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
         //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
-        return Response.ok().build();
+        return Response.ok(optJobOffer.get()).build();
     }
 
     @PUT

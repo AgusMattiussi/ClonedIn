@@ -665,17 +665,37 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/jobOffers/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
-    public Response getJobOfferById(@PathParam("id") final long id, @PathParam("id") final long joid) {
+    public Response getJobOfferById(@PathParam("id") final long id, @PathParam("joid") final long joid) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
         if (!optEnterprise.isPresent()) {
             LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         Optional<JobOfferDTO> optJobOffer = jobOfferService.findById(joid).map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo,jobOffer));
         if (!optJobOffer.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        return Response.ok(optJobOffer.get()).build();
+    }
+
+    @PUT
+    @Path("/{id}/jobOffers/{joid}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    @Transactional
+    public Response closeJobOffer(@PathParam("id") final long id, @PathParam("joid") final long joid) {
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(joid);
+        if (!optJobOffer.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        jobOfferService.closeJobOffer(optJobOffer.get());
         return Response.ok(optJobOffer.get()).build();
     }
 
