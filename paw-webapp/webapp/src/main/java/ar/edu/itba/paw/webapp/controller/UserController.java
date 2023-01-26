@@ -4,29 +4,18 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
-import ar.edu.itba.paw.models.helpers.PaginationHelper;
-import ar.edu.itba.paw.models.helpers.SortHelper;
-import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.io.IOException;
 import java.util.stream.Collectors;
 
 //@Controller
@@ -413,14 +401,13 @@ import java.util.stream.Collectors;
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
         experienceService.deleteExperience(experienceId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
@@ -434,7 +421,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-    //TODO: TODOS ESTOS METODOS HACIA ABAJO (HACIA ARRIBA REVISAR)
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -464,14 +451,14 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isEducationOwner(#userId, #educationId)")
     @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
         educationService.deleteEducation(educationId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
@@ -482,7 +469,6 @@ import java.util.stream.Collectors;
         }));
         return mav;
     }
-
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
@@ -508,14 +494,14 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/deleteSkill/{userId:[0-9]+}/{skillId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteSkill(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("skillId") final long skillId) {
         userSkillService.deleteSkillFromUser(userId, skillId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
@@ -529,7 +515,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors,
@@ -543,7 +529,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
         LOGGER.debug("Trying to access profile image");
@@ -556,7 +542,7 @@ import java.util.stream.Collectors;
         LOGGER.info("Profile image accessed.");
         return profileImage.getBytes();
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
@@ -572,7 +558,6 @@ import java.util.stream.Collectors;
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
     }
-
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView editUser(Authentication loggedUser, @Valid @ModelAttribute("editUserForm") final EditUserForm editUserForm,
@@ -596,14 +581,14 @@ import java.util.stream.Collectors;
                 editUserForm.getPosition(), category, editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/hideUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView hideUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
         userService.hideUserProfile(userId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/showUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
@@ -617,7 +602,6 @@ import java.util.stream.Collectors;
 @Component
 public class UserController {
 
-    private static final String DUMMY_DATA = "dummy";
     public static final int PAGE_SIZE = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -636,19 +620,25 @@ public class UserController {
     private ExperienceService experienceService;
     @Autowired
     private EducationService educationService;
+    @Autowired
+    private SkillService skillService;
+    @Autowired
+    private UserSkillService userSkillService;
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
     @Context
     private UriInfo uriInfo;
+    private final ImageService imageService;
 
     // TODO: REVISAR EL TEMA DE LOS PERMISOS DE CADA USUARIOS PARA CADA METODO
 
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
                           final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService,
-                          final EducationService educationService) {
+                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
+                          ImageService imageService) {
         this.us = userService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
@@ -656,6 +646,9 @@ public class UserController {
         this.contactService = contactService;
         this.experienceService = experienceService;
         this.educationService = educationService;
+        this.skillService = skillService;
+        this.userSkillService = userSkillService;
+        this.imageService = imageService;
     }
 
     @GET
@@ -674,7 +667,6 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
-
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
@@ -812,7 +804,7 @@ public class UserController {
     @PUT
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/notifications/{jobOfferId}")
-    public Response acceptJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
+    public Response statusJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId, @QueryParam("newStatus") final String NewStatus) {
 
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -825,13 +817,20 @@ public class UserController {
             LOGGER.error("Job offer with ID={} not found", jobOfferId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
-        //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
-
+        if (NewStatus.compareTo("aceptado") == 0) {
+            if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+            //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        }
+        else if (NewStatus.compareTo("rechazado") == 0) {
+            if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+            //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        }
         return Response.ok().build();
+
     }
 
     //TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
@@ -949,7 +948,7 @@ public class UserController {
             yearWrongFormat = true;
             yearTo = null;
             yearFrom = null;
-        };
+        }
 
         Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
         Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
@@ -981,7 +980,7 @@ public class UserController {
     @DELETE
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/experiences/{expId}")
-    public Response deleteById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+    public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
         experienceService.deleteExperience(expId);
         return Response.noContent().build();
     }
@@ -997,7 +996,7 @@ public class UserController {
         }
 
         List<EducationDTO> educations = educationService.findByUser(optUser.get())
-                .stream().map(exp -> EducationDTO.fromEducation(uriInfo, exp)).collect(Collectors.toList());
+                .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
         //TODO: Generar links con sentido
         return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
@@ -1005,6 +1004,217 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @GET
+    @Path("/{id}/educations/{educationId}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<EducationDTO> optEducation = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed));
+        if (!optEducation.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optEducation.get()).build();
+    }
+
+    @POST
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/educations")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response addEducation(@PathParam("id") final long id, @Valid final EducationForm educationForm /*, final BindingResult errors*/){
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        //TODO: Eliminar esta logica del controller
+        /*
+        boolean isYearValid = DateHelper.isIntervalValid(educationForm.getYearFrom(), educationForm.getYearTo());
+        boolean isMonthValid = DateHelper.isIntervalValid(DateHelper.monthToNumber(educationForm.getMonthFrom()), DateHelper.monthToNumber(educationForm.getMonthTo()));
+
+        if (errors.hasErrors() || !isYearValid || !isMonthValid) {
+            if(!isYearValid)
+                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
+            else if (!isMonthValid)
+                errors.rejectValue("monthTo", "InvalidDate", "End date cannot be before initial date");
+            LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        */
+
+        Education education = educationService.add(optUser.get(), DateHelper.monthToNumber(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
+                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(),
+                educationForm.getCollege(), educationForm.getComment());
+
+        LOGGER.debug("A new education was registered under id: {}", education.getId());
+        LOGGER.info("A new education was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(education.getId())).build();
+        return Response.created(uri).build();
+    }
+
+    @DELETE
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
+    @Path("/{id}/educations/{educationId}")
+    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+        educationService.deleteEducation(educationId);
+        return Response.noContent().build();
+    }
+    @GET
+    @Path("/{id}/skills")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getSkills(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<UserSkillDTO> skills = userSkillService.getSkillsForUser(optUser.get())
+                .stream().map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s)).collect(Collectors.toList());
+
+        //TODO: Generar links con sentido
+        return Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @GET
+    @Path("/{id}/skills/{skillId}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getSkillById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<UserSkillDTO> optSkill = skillService.findById(skillId).map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s));
+        if (!optSkill.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optSkill.get()).build();
+    }
+
+    @POST
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/skills")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm /*, final BindingResult errors*/){
+        Optional<User> optUser = us.findById(id);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
+
+        /*if (errors.hasErrors() || userSkillService.alreadyExists(skill, user)) {
+            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
+            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
+            return formSkill(loggedUser, skillForm, userId);
+        }*/
+
+        userSkillService.addSkillToUser(skill, optUser.get());
+
+        LOGGER.debug("A new skill was registered under id: {}", skill.getId());
+        LOGGER.info("A new skill was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(skill.getId())).build();
+        return Response.created(uri).build();
+    }
+
+    @DELETE
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
+    @Path("/{id}/skills/{skillId}")
+    public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+        userSkillService.deleteSkillFromUser(id, skillId);
+        return Response.noContent().build();
+    }
+
+    @PUT
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/profile")
+    public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
+        /*if (errors.hasErrors()) {
+            return formEditUser(loggedUser, editUserForm, userId);
+        }*/
+
+        Optional<Category> optCategory = categoryService.findByName(editUserForm.getCategory());
+        if (!optCategory.isPresent()) {
+            //TODO: Desarrollar errores
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+                editUserForm.getPosition(), optCategory.get(), editUserForm.getLevel());
+
+        return Response.noContent().build();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/visibility")
+    public Response hideUserProfile(@PathParam("id") final long id) {
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if (optUser.get().getVisibility() == Visibility.VISIBLE.getValue()) {
+            us.hideUserProfile(id);
+        } else {
+            us.showUserProfile(id);
+        }
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/image")
+    public Response uploadImage(@PathParam("id") final long id, @Valid final ImageForm imageForm /* , final BindingResult errors */) throws IOException {
+        /*if (errors.hasErrors()) {
+            return formImage(loggedUser, imageForm, userId);
+        }*/
+
+        Image image = imageService.uploadImage(imageForm.getImage().getBytes());
+        us.updateProfileImage(id, image);
+
+        return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
+    }
+
+    @GET
+    @Path("/{id}/image")
+    @Produces(value = {"image/webp"})
+    public Response getProfileImage(@PathParam("id") final long id) {
+        LOGGER.debug("Trying to access profile image");
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        long imageId = optUser.get().getImage().getId();
+
+        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
+            LOGGER.error("Error loading image {}", imageId);
+            return new ImageNotFoundException();
+        });
+
+        LOGGER.info("Profile image accessed.");
+        return Response.ok(profileImage.getBytes()).build();
     }
 
     /** Autologin **/
