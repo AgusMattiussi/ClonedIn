@@ -628,8 +628,6 @@ public class UserController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-    private static final int JOB_OFFERS_PER_PAGE = 3;
-
     @Context
     private UriInfo uriInfo;
     private final ImageService imageService;
@@ -663,6 +661,9 @@ public class UserController {
         if (allUsers.isEmpty()) {
             return Response.noContent().build();
         }
+
+        //TODO: AGREGAR FILTROS
+
         return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
@@ -698,45 +699,6 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
-    }
-
-    @GET
-    @Produces({ MediaType.APPLICATION_JSON, })
-    public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
-                             final ContactOrderForm contactOrderForm/*, HttpServletRequest request*/) {
-
-        Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        long categoryID;
-        try {
-            categoryID = Long.parseLong(filterForm.getCategory());
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid CategoryID {} in 'home'", filterForm.getCategory());
-            categoryID = 0;
-        }
-
-        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
-        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
-        Category category = categoryService.findById(categoryID).orElse(null);
-        String modality = filterForm.getModality();
-        String searchTerm = filterForm.getTerm();
-        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
-        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
-
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalaryBigDec, maxSalaryBigDec);
-
-        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalaryBigDec,
-                maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE).stream().map(u -> JobOfferDTO.fromJobOffer(uriInfo,u)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
     @GET
