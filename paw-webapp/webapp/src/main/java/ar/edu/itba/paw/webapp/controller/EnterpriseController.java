@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
-import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
@@ -16,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -572,22 +574,29 @@ public class EnterpriseController {
     private EnterpriseService enterpriseService;
     //private final EmailService emailService;
     @Autowired
-    final JobOfferService jobOfferService;
+    private JobOfferService jobOfferService;
+    @Autowired
+    private SkillService skillService;
+    @Autowired
+    private JobOfferSkillService jobOfferSkillService;
     @Autowired
     protected AuthenticationManager authenticationManager;
     @Context
     private UriInfo uriInfo;
 
     @Autowired
-    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService, final JobOfferService jobOfferService) {
+    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService,
+                                final JobOfferService jobOfferService, final SkillService skillService, final JobOfferSkillService jobOfferSkillService) {
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
+        this.skillService = skillService;
+        this.jobOfferSkillService = jobOfferSkillService;
     }
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response createEnterprise (@Valid final EnterpriseForm enterpriseForm/*, final BindingResult errors, HttpServletRequest request*/) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    public Response createEnterprise(@Valid final EnterpriseForm enterpriseForm/*, final BindingResult errors, HttpServletRequest request*/) {
 
         //TODO: Desarrollar errores del formulario como "reenvio la pagina"
         /*if (errors.hasErrors()) {
@@ -601,7 +610,7 @@ public class EnterpriseController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Integer year = enterpriseForm.getYear().isEmpty()? null : Integer.valueOf(enterpriseForm.getYear());
+        Integer year = enterpriseForm.getYear().isEmpty() ? null : Integer.valueOf(enterpriseForm.getYear());
 
         final Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(),
                 enterpriseForm.getCity(), optCategory.get(), enterpriseForm.getWorkers(), year, enterpriseForm.getLink(), enterpriseForm.getAboutUs());
@@ -619,9 +628,9 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces({MediaType.APPLICATION_JSON,})
     public Response getById(@PathParam("id") final long id) {
-        Optional<EnterpriseDTO> maybeEnterprise = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo,e));
+        Optional<EnterpriseDTO> maybeEnterprise = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e));
         if (!maybeEnterprise.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -634,27 +643,80 @@ public class EnterpriseController {
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    
+
     //TODO: Agregar orden y filtros
     @GET
     @Path("/{id}/jobOffers")
-    public Response getJobOffers(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page){
+    public Response getJobOffers(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if(!optEnterprise.isPresent()){
+        if (!optEnterprise.isPresent()) {
             LOGGER.error("Enterprise with ID={} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-
-        List<JobOfferDTO> jobOffers = jobOfferService.findActiveByEnterprise(optEnterprise.get(), page-1, PAGE_SIZE)
+        List<JobOfferDTO> jobOffers = jobOfferService.findActiveByEnterprise(optEnterprise.get(), page - 1, PAGE_SIZE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {})
+        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {
+                })
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
-    
-    
+
+    @GET
+    @Path("/{id}/jobOffers/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getJobOfferById(@PathParam("id") final long id) {
+        Optional<JobOfferDTO> optJobOffer = jobOfferService.findById(id).map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo,jobOffer));
+        if (!optJobOffer.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optJobOffer.get()).build();
+    }
+
+    @POST
+    @Path("/{id}/jobOffers")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    @Transactional
+    public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm/*, final BindingResult errors*/) {
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Optional<Category> optCategory = categoryService.findByName(jobOfferForm.getCategory());
+        if (!optCategory.isPresent()) {
+            LOGGER.error("Category '{}' not found in createJobOffer()", jobOfferForm.getCategory());
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        JobOffer jobOffer = jobOfferService.create(optEnterprise.get(), optCategory.get(), jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
+
+        if (jobOfferForm.getSkill1() != null && !jobOfferForm.getSkill1().isEmpty()) {
+            Skill skill1 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill1());
+            System.out.println(skill1);
+            System.out.println(jobOffer);
+            jobOfferSkillService.addSkillToJobOffer(skill1, jobOffer);
+        }
+        if (jobOfferForm.getSkill2() != null && !jobOfferForm.getSkill2().isEmpty()) {
+            Skill skill2 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill2());
+            jobOfferSkillService.addSkillToJobOffer(skill2, jobOffer);
+        }
+        if (jobOfferForm.getSkill3() != null && !jobOfferForm.getSkill3().isEmpty()) {
+            Skill skill3 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill3());
+            jobOfferSkillService.addSkillToJobOffer(skill3, jobOffer);
+        }
+        if (jobOfferForm.getSkill4() != null && !jobOfferForm.getSkill4().isEmpty()) {
+            Skill skill4 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill4());
+            jobOfferSkillService.addSkillToJobOffer(skill4, jobOffer);
+        }
+
+        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
+        LOGGER.info("A new job offer was registered");
+        return Response.created(uri).build();
+    }
 }

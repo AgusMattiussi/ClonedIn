@@ -40,7 +40,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().cacheControl().disable()
-                .and().authorizeRequests().antMatchers("/**").permitAll()
+                .and().authorizeRequests()/*.antMatchers("/users/**").permitAll()
+                .antMatchers("/enterprises/**").permitAll()*/
+                .antMatchers("/**").permitAll()
                 /*    .invalidSessionUrl("/login")
                 .and().authorizeRequests()
                     .antMatchers("/login").anonymous()
@@ -85,10 +87,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    //FIXME: Revisar esto
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/assets/css/**", "/assets/js/**", "/assets/images/**",
-                "/views/403", "/views/404","/views/500", "/users/**");
+        web.ignoring().antMatchers( "/assets/css/**", "/assets/js/**", "/assets/images/**",
+                "/views/403", "/views/404","/views/500", "/enterprises/**", "/users/**");
     }
 
     @Bean
