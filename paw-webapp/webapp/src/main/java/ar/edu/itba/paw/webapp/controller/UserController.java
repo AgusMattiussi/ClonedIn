@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ import java.util.stream.Collectors;
         this.skillService = skillService;
         this.authUserDetailsService = authUserDetailsService;
     }
-    // TODO: REHACER LOS GETTERS CON LAS JOBOFERS Y SUS FILTROS
+    // DONE
     @RequestMapping(value = "/home", method = { RequestMethod.GET })
     public ModelAndView home(Authentication loggedUser, @RequestParam(value = "page", defaultValue = "1") final int page,
                              @Valid @ModelAttribute("userFilterForm") final UserFilterForm filterForm,
@@ -148,7 +149,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
-    //DONE: CREO QUE SE RESUELVE CON UN GET USER BY ID PASANDOLE EL ID DEL USUARIO LOGGEADO
+    // DONE
     @PreAuthorize("hasRole('ROLE_ENTERPRISE') AND isUserVisible(#userId) OR canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/profileUser/{userId:[0-9]+}")
     public ModelAndView profileUser(Authentication loggedUser, @PathVariable("userId") final long userId) {
@@ -195,7 +196,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/applicationsUser/" + user.getId());
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/acceptJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView acceptJobOffer(Authentication loggedUser,
@@ -221,7 +222,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/rejectJobOffer/{userId:[0-9]+}/{jobOfferId:[0-9]+}")
     public ModelAndView rejectJobOffer(Authentication loggedUser,
@@ -247,7 +248,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/notificationsUser/" + userId);
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/notificationsUser/{userId:[0-9]+}")
     public ModelAndView notificationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -289,7 +290,7 @@ import java.util.stream.Collectors;
         mav.addObject("currentPage", page);
         return mav;
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping("/applicationsUser/{userId:[0-9]+}")
     public ModelAndView applicationsUser(Authentication loggedUser, @PathVariable("userId") final long userId,
@@ -331,7 +332,7 @@ import java.util.stream.Collectors;
         mav.addObject("currentPage", page);
         return mav;
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formExperience(Authentication loggedUser, @ModelAttribute("experienceForm") final ExperienceForm experienceForm, @PathVariable("userId") final long userId) {
@@ -581,21 +582,20 @@ import java.util.stream.Collectors;
                 editUserForm.getPosition(), category, editUserForm.getLevel());
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/hideUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView hideUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
         userService.hideUserProfile(userId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/showUserProfile/{userId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showUserProfile(Authentication loggedUser, @PathVariable("userId") final long userId) {
         userService.showUserProfile(userId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
 }*/
 
 @Path("users")
@@ -627,6 +627,8 @@ public class UserController {
     //private final EmailService emailService;
     @Autowired
     protected AuthenticationManager authenticationManager;
+
+    private static final int JOB_OFFERS_PER_PAGE = 3;
 
     @Context
     private UriInfo uriInfo;
@@ -696,6 +698,45 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
+                             final ContactOrderForm contactOrderForm/*, HttpServletRequest request*/) {
+
+        Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
+        if (!optCategory.isPresent()) {
+            //TODO: Desarrollar errores
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        long categoryID;
+        try {
+            categoryID = Long.parseLong(filterForm.getCategory());
+        } catch (NumberFormatException e) {
+            LOGGER.error("Invalid CategoryID {} in 'home'", filterForm.getCategory());
+            categoryID = 0;
+        }
+
+        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
+        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
+        Category category = categoryService.findById(categoryID).orElse(null);
+        String modality = filterForm.getModality();
+        String searchTerm = filterForm.getTerm();
+        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
+        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
+
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalaryBigDec, maxSalaryBigDec);
+
+        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalaryBigDec,
+                maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE).stream().map(u -> JobOfferDTO.fromJobOffer(uriInfo,u)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 
     @GET
