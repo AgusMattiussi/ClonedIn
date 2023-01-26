@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -1164,16 +1165,15 @@ public class UserController {
     // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/visibility")
     public Response hideUserProfile(@PathParam("id") final long id) {
-
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
             LOGGER.error("User with ID={} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
         if (optUser.get().getVisibility() == Visibility.VISIBLE.getValue()) {
             us.hideUserProfile(id);
-        }
-        if (optUser.get().getVisibility() == Visibility.INVISIBLE.getValue()) {
+        } else {
             us.showUserProfile(id);
         }
 
@@ -1194,20 +1194,28 @@ public class UserController {
         return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
     }
 
-    //TODO: NO SE COMO CAMBIAR EL byte[] POR UN RESPONSE DE LA API
-//    @GET
-//    @Path("/{id}/image/imgId")
-//    public @ResponseBody byte[] getProfileImage(@PathVariable("id") final long id, @PathVariable("imageId") final int imageId) {
-//        LOGGER.debug("Trying to access profile image");
-//
-//        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
-//            LOGGER.error("Error loading image {}", imageId);
-//            return new ImageNotFoundException();
-//        });
-//
-//        LOGGER.info("Profile image accessed.");
-//        return profileImage.getBytes();
-//    }
+    @GET
+    @Path("/{id}/image")
+    @Produces(value = {"image/webp"})
+    public Response getProfileImage(@PathParam("id") final long id) {
+        LOGGER.debug("Trying to access profile image");
+
+        Optional<User> optUser = us.findById(id);
+        if (!optUser.isPresent()) {
+            LOGGER.error("User with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        long imageId = optUser.get().getImage().getId();
+
+        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
+            LOGGER.error("Error loading image {}", imageId);
+            return new ImageNotFoundException();
+        });
+
+        LOGGER.info("Profile image accessed.");
+        return Response.ok(profileImage.getBytes()).build();
+    }
 
     /** Autologin **/
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
