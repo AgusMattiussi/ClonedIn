@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.SortBy;
-import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -345,7 +344,6 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createExperience/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createExperience(Authentication loggedUser, @Valid @ModelAttribute("experienceForm") final ExperienceForm experienceForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -402,14 +400,13 @@ import java.util.stream.Collectors;
         return new ModelAndView("redirect:/profileUser/" + user.getId());
 
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @RequestMapping(value = "/deleteExperience/{userId:[0-9]+}/{experienceId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteExperience(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("experienceId") final long experienceId) {
         experienceService.deleteExperience(experienceId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-    //DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEducation(Authentication loggedUser, @ModelAttribute("educationForm") final EducationForm educationForm, @PathVariable("userId") final long userId) {
@@ -423,7 +420,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createEducation/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView createEducation(Authentication loggedUser, @Valid @ModelAttribute("educationForm") final EducationForm educationForm, final BindingResult errors, @PathVariable("userId") final long userId) {
@@ -453,14 +450,14 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
-    //DONE
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isEducationOwner(#userId, #educationId)")
     @RequestMapping(value = "/deleteEducation/{userId:[0-9]+}/{educationId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteEducation(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("educationId") final long educationId) {
         educationService.deleteEducation(educationId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formSkill(Authentication loggedUser, @ModelAttribute("skillForm") final SkillForm skillForm, @PathVariable("userId") final long userId) {
@@ -471,7 +468,6 @@ import java.util.stream.Collectors;
         }));
         return mav;
     }
-
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/createSkill/{userId:[0-9]+}", method = { RequestMethod.POST })
@@ -497,14 +493,14 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + user.getId());
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/deleteSkill/{userId:[0-9]+}/{skillId:[0-9]+}", method = { RequestMethod.POST, RequestMethod.DELETE, RequestMethod.GET })
     public ModelAndView deleteSkill(Authentication loggedUser, @PathVariable("userId") final long userId, @PathVariable("skillId") final long skillId) {
         userSkillService.deleteSkillFromUser(userId, skillId);
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formImage(Authentication loggedUser, @ModelAttribute("imageForm") final ImageForm imageForm, @PathVariable("userId") final long userId) {
@@ -518,7 +514,7 @@ import java.util.stream.Collectors;
         mav.addObject("user", user);
         return mav;
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/uploadProfileImage/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView uploadImage(Authentication loggedUser, @Valid @ModelAttribute("imageForm") final ImageForm imageForm, final BindingResult errors,
@@ -532,7 +528,7 @@ import java.util.stream.Collectors;
 
         return new ModelAndView("redirect:/profileUser/" + userId);
     }
-
+    // DONE
     @RequestMapping(value = "/{userId:[0-9]+}/image/{imageId}", method = RequestMethod.GET, produces = "image/*")
     public @ResponseBody byte[] getProfileImage(@PathVariable("userId") final long userId, @PathVariable("imageId") final int imageId) {
         LOGGER.debug("Trying to access profile image");
@@ -545,7 +541,7 @@ import java.util.stream.Collectors;
         LOGGER.info("Profile image accessed.");
         return profileImage.getBytes();
     }
-
+    // DONE
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.GET })
     public ModelAndView formEditUser(Authentication loggedUser, @ModelAttribute("editUserForm") final EditUserForm editUserForm,
@@ -561,7 +557,6 @@ import java.util.stream.Collectors;
         mav.addObject("categories", categoryService.getAllCategories());
         return mav;
     }
-
     @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @RequestMapping(value = "/editUser/{userId:[0-9]+}", method = { RequestMethod.POST })
     public ModelAndView editUser(Authentication loggedUser, @Valid @ModelAttribute("editUserForm") final EditUserForm editUserForm,
@@ -606,7 +601,6 @@ import java.util.stream.Collectors;
 @Component
 public class UserController {
 
-    private static final String DUMMY_DATA = "dummy";
     public static final int PAGE_SIZE = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -635,7 +629,7 @@ public class UserController {
 
     @Context
     private UriInfo uriInfo;
-    private ImageService imageService;
+    private final ImageService imageService;
 
     // TODO: REVISAR EL TEMA DE LOS PERMISOS DE CADA USUARIOS PARA CADA METODO
 
@@ -953,7 +947,7 @@ public class UserController {
             yearWrongFormat = true;
             yearTo = null;
             yearFrom = null;
-        };
+        }
 
         Integer monthTo = monthToIsEmpty ? null : DateHelper.monthToNumber(formMonthTo);
         Integer monthFrom = DateHelper.monthToNumber(experienceForm.getMonthFrom());
@@ -1146,10 +1140,29 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    //TODO: refactor -> verbo
+    @PUT
+    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
+    @Path("/{id}/profile")
+    public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
+        /*if (errors.hasErrors()) {
+            return formEditUser(loggedUser, editUserForm, userId);
+        }*/
+
+        Optional<Category> optCategory = categoryService.findByName(editUserForm.getCategory());
+        if (!optCategory.isPresent()) {
+            //TODO: Desarrollar errores
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+                editUserForm.getPosition(), optCategory.get(), editUserForm.getLevel());
+
+        return Response.noContent().build();
+    }
+
     @PUT
     // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/hide")
+    @Path("/{id}/visibility")
     public Response hideUserProfile(@PathParam("id") final long id) {
 
         Optional<User> optUser = us.findById(id);
@@ -1157,24 +1170,12 @@ public class UserController {
             LOGGER.error("User with ID={} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        us.hideUserProfile(id);
-
-        return Response.ok().build();
-    }
-
-    @PUT
-    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/show")
-    public Response showUserProfile(@PathParam("id") final long id) {
-
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+        if (optUser.get().getVisibility() == Visibility.VISIBLE.getValue()) {
+            us.hideUserProfile(id);
         }
-
-        us.showUserProfile(id);
+        if (optUser.get().getVisibility() == Visibility.INVISIBLE.getValue()) {
+            us.showUserProfile(id);
+        }
 
         return Response.ok().build();
     }
@@ -1193,7 +1194,7 @@ public class UserController {
         return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
     }
 
-    //TDOD: creo que esto no se cambia
+    //TODO: NO SE COMO CAMBIAR EL byte[] POR UN RESPONSE DE LA API
 //    @GET
 //    @Path("/{id}/image/imgId")
 //    public @ResponseBody byte[] getProfileImage(@PathVariable("id") final long id, @PathVariable("imageId") final int imageId) {
