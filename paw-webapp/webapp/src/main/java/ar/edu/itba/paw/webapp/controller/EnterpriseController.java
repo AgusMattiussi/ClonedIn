@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
+import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.helpers.SortHelper;
+import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
@@ -562,7 +565,7 @@ import java.util.stream.Collectors;
 public class EnterpriseController {
 
     public static final int PAGE_SIZE = 10;
-
+    private static final int CONTACTS_PER_PAGE = 10;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     @Autowired
@@ -577,18 +580,22 @@ public class EnterpriseController {
     @Autowired
     private JobOfferSkillService jobOfferSkillService;
     @Autowired
+    private ContactService contactService;
+    @Autowired
     protected AuthenticationManager authenticationManager;
     @Context
     private UriInfo uriInfo;
 
     @Autowired
     public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService,
-                                final JobOfferService jobOfferService, final SkillService skillService, final JobOfferSkillService jobOfferSkillService) {
+                                final JobOfferService jobOfferService, final SkillService skillService,
+                                final JobOfferSkillService jobOfferSkillService, final ContactService contactService) {
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
         this.skillService = skillService;
         this.jobOfferSkillService = jobOfferSkillService;
+        this.contactService = contactService;
     }
 
     @POST
@@ -741,5 +748,50 @@ public class EnterpriseController {
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");
         return Response.created(uri).build();
+    }
+
+    //TODO: Mejorar el SortBy, deberia ser mas descriptivo
+    //TODO: Mejorar el FilledBy, deberia ser mas descriptivo
+    // https://javaee.github.io/javaee-spec/javadocs/javax/ws/rs/QueryParam.html
+    @GET
+    @Path("/{id}/contacts")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getContacts(@PathParam("id") final long id,
+                                    @QueryParam("page") @DefaultValue("1") final int page,
+                                    @QueryParam("status") final String status,
+                                    @QueryParam("filledBy") final int filledBy,
+                                    @QueryParam("sortBy") final int sortBy) {
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        //Fixme: Cambiar esto, ponerlo en un helper por ej
+        FilledBy enumFilledBy;
+        if(filledBy == 0)
+            enumFilledBy = FilledBy.ENTERPRISE;
+        else if(filledBy == 1)
+            enumFilledBy = FilledBy.USER;
+        else
+            enumFilledBy = FilledBy.ANY;
+
+        List<ContactDTO> contactList;
+        //TODO: Cambiar el metodo en el back para no hacer esta bifurcacion solo por el status
+        if(status == null) {
+            contactList = contactService.getContactsForEnterprise(optEnterprise.get(), enumFilledBy, SortHelper.getSortBy(sortBy),
+                    page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+        }
+        else {
+            contactList = contactService.getContactsForEnterprise(optEnterprise.get(), enumFilledBy, status, SortHelper.getSortBy(sortBy),
+                    page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+        }
+
+
+        return Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
 }
