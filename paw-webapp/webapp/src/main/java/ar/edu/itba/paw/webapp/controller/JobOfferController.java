@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;
 
-@Path("joboffers")
+@Path("jobOffers")
 @Component
 public class JobOfferController {
 
@@ -37,10 +37,11 @@ public class JobOfferController {
 
     private static final int JOB_OFFERS_PER_PAGE = 3;
 
-    //TODO: arreglar para distinguir por usuario
+    /*//TODO: arreglar para distinguir por usuario
     @GET
+    @Produces({ MediaType.APPLICATION_JSON, })
     public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
-                                 final ContactOrderForm contactOrderForm/*, HttpServletRequest request*/) {
+                                 final ContactOrderForm contactOrderForm*//*, HttpServletRequest request*//*) {
 
         Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
         if (!optCategory.isPresent()) {
@@ -74,6 +75,44 @@ public class JobOfferController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }*/
+
+    //TODO: arreglar para distinguir por usuario
+    // TODO: Cambiar a BeanParam
+    /* TODO: Esta bien BigDecimal en QueryParam? Si no pedir double o similar y convertirlo */
+    /* TODO: Si la category no existe, bad request o resultado vacio? */
+    // FIXME: Falla cuando minSalary o maxSalary no son numeros
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response jobOfferList(@QueryParam("page") @DefaultValue("1") final int page,
+                                 @QueryParam("category") final String categoryName,
+                                 @QueryParam("minSalary") final BigDecimal minSalary,
+                                 @QueryParam("maxSalary") final BigDecimal maxSalary,
+                                 @QueryParam("modality") @DefaultValue("") final String modality,
+                                 @QueryParam("query") @DefaultValue("") final String searchTerm) {
+
+        Category category = null;
+        if(categoryName != null){
+            Optional<Category> optCategory = categoryService.findByName(categoryName);
+            if(optCategory.isPresent()){
+                category = optCategory.get();
+            } else {
+                LOGGER.error("Category '{}' not found in JobOfferList()", categoryName);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }
+
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
+        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
+
+        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalary,
+                maxSalary, page - 1, JOB_OFFERS_PER_PAGE).stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
     }
 
     @GET

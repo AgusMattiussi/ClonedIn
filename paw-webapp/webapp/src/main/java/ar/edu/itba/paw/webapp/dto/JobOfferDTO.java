@@ -12,8 +12,8 @@ import java.net.URI;
 public class JobOfferDTO {
 
     private Long id;
-    private Enterprise enterprise;
-    private Category category;
+    private String enterprise;
+    private String category;
     private String position;
     private String description;
     private BigDecimal salary;
@@ -24,8 +24,8 @@ public class JobOfferDTO {
     public static JobOfferDTO fromJobOffer(final UriInfo uriInfo, final JobOffer jobOffer) {
         final JobOfferDTO dto = new JobOfferDTO();
         dto.id = jobOffer.getId();
-        dto.enterprise = jobOffer.getEnterprise();
-        dto.category = jobOffer.getCategory();
+        dto.enterprise = jobOffer.getEnterprise().getName();
+        dto.category = jobOffer.getCategory().getName();
         dto.position = jobOffer.getPosition();
         dto.description = jobOffer.getDescription();
         dto.salary = jobOffer.getSalary();
@@ -44,19 +44,19 @@ public class JobOfferDTO {
         this.id = id;
     }
 
-    public Enterprise getEnterprise() {
+    public String getEnterprise() {
         return enterprise;
     }
 
-    public void setEnterprise(Enterprise enterprise) {
+    public void setEnterprise(String enterprise) {
         this.enterprise = enterprise;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
