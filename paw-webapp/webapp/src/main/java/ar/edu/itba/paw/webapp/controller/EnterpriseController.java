@@ -572,7 +572,8 @@ public class EnterpriseController {
     private CategoryService categoryService;
     @Autowired
     private EnterpriseService enterpriseService;
-    //private final EmailService emailService;
+    @Autowired
+    private final EmailService emailService;
     @Autowired
     private JobOfferService jobOfferService;
     @Autowired
@@ -582,6 +583,8 @@ public class EnterpriseController {
     @Autowired
     private ContactService contactService;
     @Autowired
+    private UserService userService;
+    @Autowired
     protected AuthenticationManager authenticationManager;
     @Context
     private UriInfo uriInfo;
@@ -589,13 +592,16 @@ public class EnterpriseController {
     @Autowired
     public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService,
                                 final JobOfferService jobOfferService, final SkillService skillService,
-                                final JobOfferSkillService jobOfferSkillService, final ContactService contactService) {
+                                final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
+                                final UserService userService, final EmailService emailService) {
         this.enterpriseService = enterpriseService;
         this.categoryService = categoryService;
         this.jobOfferService = jobOfferService;
         this.skillService = skillService;
         this.jobOfferSkillService = jobOfferSkillService;
         this.contactService = contactService;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     @POST
@@ -793,5 +799,47 @@ public class EnterpriseController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @POST
+    @Path("/{id}/contacts")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    //@Transactional
+    public Response contactUser(@PathParam("id") final long id, @Valid final ContactForm contactForm, @QueryParam("uid") final long userId){
+
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if(userId <= 0) {
+            LOGGER.error("Invalid userId: {}", userId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        long jobOfferId = contactForm.getJobOfferId();
+        boolean alreadyContacted = contactService.alreadyContacted(userId, jobOfferId);
+        if(alreadyContacted)
+            return Response.status(Response.Status.CONFLICT).build();
+
+        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
+        if(!optJobOffer.isPresent()){
+            LOGGER.error("Job Offer {} not found in contactUser()", jobOfferId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<User> optUser = userService.findById(userId);
+        if(!optUser.isPresent()){
+            LOGGER.error("User with id={} not found in contactUser()", userId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        //TODO: emailService.sendContactEmail(optUser.get(), optEnterprise.get(), optJobOffer.get(), contactForm.getMessage(), LocaleContextHolder.getLocale());
+        Contact contact = contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.ENTERPRISE);
+        //TODO: devolver Id correcto
+        // final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.get)).build();
+
+        return Response.ok().build();
     }
 }
