@@ -879,4 +879,22 @@ public class EnterpriseController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
+
+    @GET
+    @Path("/{id}/contacts/{joid}/{uid}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getContactById(@PathParam("id") final long id, @PathParam("joid") final long jobOfferId,
+                                    @PathParam("uid") final long userId) {
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Optional<ContactDTO> optJobOffer = contactService.findByPrimaryKey(userId, jobOfferId).map(c -> ContactDTO.fromContact(uriInfo,c));
+        if (!optJobOffer.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optJobOffer.get()).build();
+    }
 }
