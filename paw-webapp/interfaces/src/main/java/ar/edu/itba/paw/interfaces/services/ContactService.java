@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface ContactService {
 
+    Optional<Contact> findByPrimaryKey(long userID, long jobOfferID);
+
     Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
 
     List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy);

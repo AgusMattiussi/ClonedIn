@@ -30,6 +30,11 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
+        return contactDao.findByPrimaryKey(userID, jobOfferID);
+    }
+
+    @Override
     public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
         return contactDao.addContact(enterprise, user, jobOffer, filledBy);
     }

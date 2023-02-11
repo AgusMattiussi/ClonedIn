@@ -27,6 +27,16 @@ public class ContactHibernateDao implements ContactDao {
     @PersistenceContext
     private EntityManager em;
 
+    //FIXME: Revisar que este metodo devuelva correctamente
+    @Override
+    public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
+        Query query = em.createNativeQuery("SELECT * FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID");
+        query.setParameter("userID", userID);
+        query.setParameter("jobOfferID", jobOfferID);
+
+        return (Optional<Contact>) query.getResultList().stream().findFirst();
+    }
+
     @Override
     public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
         Contact contact = new Contact(user, enterprise, jobOffer, filledBy, Date.from(Instant.now()));
