@@ -837,10 +837,12 @@ public class EnterpriseController {
 
         //TODO: emailService.sendContactEmail(optUser.get(), optEnterprise.get(), optJobOffer.get(), contactForm.getMessage(), LocaleContextHolder.getLocale());
         Contact contact = contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.ENTERPRISE);
-        //TODO: devolver Id correcto
-        // final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.get)).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(contact.getJobOffer().getId()))
+                .path(String.valueOf(contact.getUser().getId()))
+                .build();
 
-        return Response.ok().build();
+        return Response.created(uri).build();
     }
 
     @GET

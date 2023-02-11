@@ -31,8 +31,9 @@ public class ContactDTO {
         dto.date = contact.getDate();
 
         //FIXME: Revisar si esta bien formado
-        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("jobOffers")
-                .path(String.valueOf(contact.getJobOffer().getId()));
+        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath("joid").path(String.valueOf(contact.getJobOffer().getId()))
+                .replacePath("uid").path(String.valueOf(contact.getUser().getId()));
         dto.self = contactUriBuilder.build();
 
         return dto;
