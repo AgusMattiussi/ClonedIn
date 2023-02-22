@@ -17,6 +17,7 @@ function Header() {
           <Navbar.Brand href="#home">
             <img
               src={logo}
+              alt=""
               height="40"
               className="d-inline-block align-top"
             />
