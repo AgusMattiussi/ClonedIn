@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Header from './header';
 import Login from './login';
+import { BrowserRouter } from 'react-router-dom';
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
 // Bootstrap Bundle JS
@@ -11,7 +12,10 @@ function App() {
   return (
     <div className="App">
       <Header/>
-      <Login/>
+      <BrowserRouter>
+        <Login/>
+      </BrowserRouter>
+      
     </div>
   );
 }

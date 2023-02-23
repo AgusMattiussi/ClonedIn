@@ -3,8 +3,16 @@ import * as Icon from 'react-bootstrap-icons';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+
+  const navigate = useNavigate();
+
+  const routeChange = () => {
+      navigate("/header");
+  }
+  
   return (
     <div className="d-flex justify-content-between mt-2">
         <Container>
@@ -26,18 +34,18 @@ function Login() {
         <Form.Check type="checkbox" label="Remember me" />
       </Form.Group>
       </div>
-      <Button className="action-button" type="submit"> Log In </Button>
+      <Button className="action-button" type="submit" onClick={ routeChange }> Log In </Button>
       <p>No account yet? Choose your user type to register.</p>
     </Form>
     <div className="row">
-                                            <div className="col">
-                                            <Button className="action-button waves-effect"><Icon.Person size={40}/></Button>
-                                                <p>Register as a User</p>
-                                            </div>
-                                            <div className="col">
-                                                <Button className="action-button waves-effect"><Icon.Building size={40}/></Button>
-                                                <p>Register as a Company</p>
-                                            </div>
+      <div className="col">
+        <Button className="action-button waves-effect"><Icon.Person size={40}/></Button>
+        <p>Register as a User</p>
+      </div>
+      <div className="col">
+        <Button className="action-button waves-effect"><Icon.Building size={40}/></Button>
+        <p>Register as a Company</p>
+      </div>
     </div>
     </div>
     </div>
