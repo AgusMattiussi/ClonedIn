@@ -1,60 +1,99 @@
 import Button from 'react-bootstrap/Button';
 import * as Icon from 'react-bootstrap-icons';
 import Container from 'react-bootstrap/esm/Container';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
+// import Card from 'react-bootstrap/Card';
+import Navigation from './navbar'
 import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import { useNavigate } from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
 
-function Login() {
-
-  const navigate = useNavigate();
-
-  const routeChange = () => {
-      navigate("/header");
-  }
-  
+function Jobs() {
   return (
-    <div className="d-flex justify-content-between mt-2">
-        <Container>
-        <div className="row justify-content-center mt-0">
-            <div className="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
-            <Card className="custom-card px-0 pt-4 pb-0 mt-3 mb-3">
-            <h2><strong>Welcome to ClonedIN!</strong></h2>
-            <div className="row">
-                        <div className="col-md-12 mx-0">
-    <Form className='msform'>
-        <div className="form-card">
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Control className='input' type="email" placeholder="Email" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Control className='input' type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Remember me" />
-      </Form.Group>
-      </div>
-      <Button className="action-button" type="submit" onClick={ routeChange }> Log In </Button>
-      <p>No account yet? Choose your user type to register.</p>
-    </Form>
-    <div className="row">
-      <div className="col">
-        <Button className="action-button waves-effect"><Icon.Person size={40}/></Button>
-        <p>Register as a User</p>
-      </div>
-      <div className="col">
-        <Button className="action-button waves-effect"><Icon.Building size={40}/></Button>
-        <p>Register as a Company</p>
-      </div>
-    </div>
-    </div>
-    </div>
-    </Card>
-    </div>
-    </div>
-    </Container>
+    <div>
+      <Navigation/>
+      <Container fluid>
+        <Row className="align-items-start d-flex">
+          <Col sm={2} className="sidebar">
+            <Row className="search">
+              <h5>Search by:</h5>
+            </Row>
+            <Row>
+              <Form className="d-flex">
+                <Form.Control
+                  type="search"
+                  placeholder="Skill, position..."
+                  className="me-2"
+                  aria-label="Search"
+                />
+                <Button variant="outline-light "className="search"><Icon.Search size={15}/></Button>
+              </Form>
+            </Row>
+            <br/>
+            <Row className="search">
+              <h5>Filter by:</h5>
+            </Row>
+            <Row>
+              <Dropdown>
+                <Dropdown.Toggle variant="light" id="dropdown-basic" className="dropdown">
+                  Category
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>Category 1</Dropdown.Item>
+                  <Dropdown.Item>Category 2</Dropdown.Item>
+                  <Dropdown.Item>Category 3</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Row>
+            <br/>
+            <Row>
+              <Dropdown>
+                <Dropdown.Toggle variant="light" id="dropdown" className="dropdown">
+                  Modality
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>Modality 1</Dropdown.Item>
+                  <Dropdown.Item>Modality 2</Dropdown.Item>
+                  <Dropdown.Item>Modality 3</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Row>
+            <br/>
+            <Row className = "search">
+              <h5>Salary</h5>
+            </Row>
+            <Row className = "search">
+              <Form className="d-flex" >
+                <Form.Control
+                  type="search"
+                  placeholder="Min"
+                  className="me-2"
+                  aria-label="Search"
+                />
+                <Form.Control
+                  type="search"
+                  placeholder="Max"
+                  className="me-2"
+                  aria-label="Search"
+                />
+              </Form>
+              <br/>
+              <Button variant="outline-light "className="search">Filter</Button>
+            </Row>
+            <br/>
+            <Row>
+            <Button variant="outline-light "className="search">Clear Filters</Button>
+            </Row>
+          </Col>
+          <Col sm={6} className="align-items-start d-flex">
+            <Row>
+              <h3>Discover Jobs</h3>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
 
-export default Login;
+export default Jobs;

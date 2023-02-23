@@ -32,7 +32,7 @@ function Navigation() {
             <Nav.Link className = "nav-item"href="#applications">My Applications</Nav.Link>
           </Nav>
           <button type="button" className="btn btn-outline-light waves-effect nav-item" >
-                    <i className="bi bi-box-arrow-right pr-2 nav-item"></i>
+                    <i className="bi pr-2 nav-item"></i>
                     <Icon.BoxArrowRight size={25}/>
                     Logout
           </button>

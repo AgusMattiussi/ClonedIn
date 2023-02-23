@@ -109,3 +109,17 @@
 .nav-item {
   color: #F2F2F2
 }
+
+.sidebar {
+  background-color: #459F78;
+  height: 100vh;
+}
+
+.search {
+  color:#F2F2F2;
+  text-align: left;
+}
+
+.dropdown {
+  width: 100%;
+}
