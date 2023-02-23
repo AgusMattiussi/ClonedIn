@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Header from './header';
 import Login from './login';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Jobs from './jobs'
 
 
@@ -14,11 +14,19 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 function App() {
   return (
     <div className="App">
-      <Header/>
       <BrowserRouter>
-        <Login/>
-      </BrowserRouter>
-      {/* <Jobs/> */}
+        <Routes>
+          <Route path="/" element= {
+            <div className="home">
+              <Header/>
+              <Login/>
+            </div>
+          } />
+          <Route path="/jobs" element= {
+            <Jobs/>
+          } />
+        </Routes>
+      </BrowserRouter>  
     </div>
   );
 }
