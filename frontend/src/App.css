@@ -100,3 +100,12 @@
 .action-button:hover, .action-button:focus {
   box-shadow: 0 0 0 2px white, 0 0 0 3px #459F78;
 }
+
+.color-nav {
+  background-color: #04704C; 
+  font-size: large;
+}
+
+.nav-item {
+  color: #F2F2F2
+}
