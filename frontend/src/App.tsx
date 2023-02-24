@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
-import Header from './header';
 import Login from './login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Jobs from './jobs'
+import DiscoverJobs from './discoverJobs'
 
 
 // Bootstrap CSS
@@ -17,13 +16,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element= {
-            <div className="home">
-              <Header/>
               <Login/>
-            </div>
           } />
-          <Route path="/jobs" element= {
-            <Jobs/>
+          <Route path="/home" element= {
+            <DiscoverJobs/>
           } />
         </Routes>
       </BrowserRouter>  

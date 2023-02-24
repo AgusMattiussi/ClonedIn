@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './images/logo.png';
 import * as Icon from 'react-bootstrap-icons';
+import Button from 'react-bootstrap/Button';
 import './App.css';
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,7 +16,7 @@ function Navigation() {
   return (
     <Navbar expand="lg" className="color-nav">
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/home">
           <img
             src={logo}
             alt=""
@@ -31,11 +32,10 @@ function Navigation() {
             <Nav.Link className = "nav-item" href="#offers">Job Offers</Nav.Link>
             <Nav.Link className = "nav-item"href="#applications">My Applications</Nav.Link>
           </Nav>
-          <button type="button" className="btn btn-outline-light waves-effect nav-item" >
-                    <i className="bi pr-2 nav-item"></i>
-                    <Icon.BoxArrowRight size={25}/>
-                    Logout
-          </button>
+          <Button href="/home" variant="outline-success">
+                  <Icon.BoxArrowRight color="white" size={25}/>
+                  Log out
+          </Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>

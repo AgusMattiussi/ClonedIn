@@ -8,7 +8,7 @@ import Navigation from './navbar'
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-function Jobs() {
+function DiscoverJobs() {
   return (
     <div>
       <Navigation/>
@@ -16,17 +16,19 @@ function Jobs() {
         <Row className="align-items-start d-flex">
           <Col sm={2} className="sidebar">
             <Row className="search">
-              <h5>Search by:</h5>
+              <h5 className="ml-2 mt-2">Search by:</h5>
             </Row>
             <Row>
-              <Form className="d-flex">
+              <Form className="search">
                 <Form.Control
                   type="search"
                   placeholder="Skill, position..."
                   className="me-2"
                   aria-label="Search"
                 />
-                <Button variant="outline-light "className="search"><Icon.Search size={15}/></Button>
+                <div className='d-flex flex-wrap justify-content-center mt-2'>
+                <Button variant="outline-light" className='filterbtn' type="submit"><Icon.Search size={15}/></Button>
+                </div>
               </Form>
             </Row>
             <br/>
@@ -52,9 +54,9 @@ function Jobs() {
                   Modality
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item>Modality 1</Dropdown.Item>
-                  <Dropdown.Item>Modality 2</Dropdown.Item>
-                  <Dropdown.Item>Modality 3</Dropdown.Item>
+                  <Dropdown.Item>Remoto</Dropdown.Item>
+                  <Dropdown.Item>Presencial</Dropdown.Item>
+                  <Dropdown.Item>Mixto</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Row>
@@ -70,22 +72,27 @@ function Jobs() {
                   className="me-2"
                   aria-label="Search"
                 />
+                -
                 <Form.Control
                   type="search"
                   placeholder="Max"
-                  className="me-2"
+                  className="ms-2"
                   aria-label="Search"
                 />
               </Form>
               <br/>
-              <Button variant="outline-light "className="search">Filter</Button>
+              <div className='d-flex flex-wrap justify-content-center mt-2'>
+              <Button variant="outline-light "className="filterbtn">Filter</Button>
+              </div>
             </Row>
             <br/>
             <Row>
-            <Button variant="outline-light "className="search">Clear Filters</Button>
+            <div className='d-flex flex-wrap justify-content-center'>
+            <Button variant="outline-light "className="filterbtn">Clear Filters</Button>
+            </div>
             </Row>
           </Col>
-          <Col sm={6} className="align-items-start d-flex">
+          <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
             <Row>
               <h3>Discover Jobs</h3>
             </Row>
@@ -96,4 +103,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default DiscoverJobs;

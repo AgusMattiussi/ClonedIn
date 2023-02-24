@@ -44,6 +44,13 @@
   margin-bottom: auto;
 }
 
+/*form styles*/
+.msform {
+  text-align: center;
+  position: relative;
+  margin-top: 20px;
+}
+
 .custom-card {
   background-color: #F2F2F2;
 }
@@ -118,6 +125,10 @@
 .search {
   color:#F2F2F2;
   text-align: left;
+}
+
+.filterbtn {
+  width:100%;
 }
 
 .dropdown {
