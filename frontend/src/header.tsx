@@ -13,11 +13,11 @@ function Header() {
   return (
     <>
       <Navbar className="custom-header">
-        <Container>
+        <div className="m-1 w-100 d-flex px-3">
           <Navbar.Brand href="/">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
-        </Container>
+        </div>
       </Navbar>
     </>
   )
