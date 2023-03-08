@@ -31,17 +31,19 @@ function Login() {
       </Form.Group>
       </div>
       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-      <Button href="/home" variant="success" type="submit"><strong>Log In</strong></Button>
+      <Button href="/discoverJobs" variant="success" type="submit"><strong>Log In</strong></Button>
       <p>No account yet? Choose your user type to register.</p>
     </Form>
     <div className="row">
       <div className="col">
-        <Button variant="success"><Icon.Person size={40}/></Button>
+        {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
+        <Button href="/registerUser" variant="success"><Icon.Person size={40}/></Button>
         <p>Register as a User</p>
       </div>
       <div className="col">
-        <Button variant="success"><Icon.Building size={40}/></Button>
-        <p>Register as a Company</p>
+        {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
+        <Button href="/registerEnterprise" variant="success"><Icon.Building size={40}/></Button>
+        <p>Register as an Enterprise</p>
       </div>
     </div>
     </div>

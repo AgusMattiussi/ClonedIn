@@ -2,7 +2,9 @@ import React from 'react';
 import './App.css';
 import Login from './login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import DiscoverJobs from './discoverJobs'
+import DiscoverJobs from './discoverJobs';
+import RegisterUser from './registerUser';
+import RegisterEnterprise from './registerEnterprise';
 
 
 // Bootstrap CSS
@@ -18,8 +20,14 @@ function App() {
           <Route path="/" element= {
               <Login/>
           } />
-          <Route path="/home" element= {
+          <Route path="/discoverJobs" element= {
             <DiscoverJobs/>
+          } />
+          <Route path="/registerUser" element= {
+              <RegisterUser/>
+            } />
+          <Route path="/registerUser" element= {
+            <RegisterEnterprise/>
           } />
         </Routes>
       </BrowserRouter>  
