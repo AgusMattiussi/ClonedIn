@@ -19,7 +19,7 @@ public class EnterpriseDTO {
         dto.name = enterprise.getEmail();
         dto.description = enterprise.getDescription();
 
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("enterprises").path(String.valueOf(enterprise.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/enterprises").path(String.valueOf(enterprise.getId()));
         dto.self = userUriBuilder.build();
 
         return dto;

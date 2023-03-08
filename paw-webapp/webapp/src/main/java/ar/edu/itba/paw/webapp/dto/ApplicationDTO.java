@@ -22,7 +22,7 @@ public class ApplicationDTO {
         dto.jobOfferId = contact.getJobOffer().getId();
 
         //FIXME: Revisar si esta bien formado
-        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("applications")
+        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/applications")
                 .path(String.valueOf(contact.getJobOffer().getId()));
         dto.self = contactUriBuilder.build();
 

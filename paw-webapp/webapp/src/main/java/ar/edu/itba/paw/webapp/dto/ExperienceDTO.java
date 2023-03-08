@@ -31,7 +31,7 @@ public class ExperienceDTO {
         dto.description = experience.getDescription();
 
         //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("experiences").path(String.valueOf(experience.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/experiences").path(String.valueOf(experience.getId()));
         dto.self = userUriBuilder.build();
 
         return dto;
