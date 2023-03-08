@@ -34,8 +34,8 @@ function Navigation() {
               My Applications
             </Nav.Link>
           </Nav>
-          <Button href="/home" variant="outline-success">
-            <Icon.BoxArrowRight color="white" size={25} />\ Log out
+          <Button href="/login" variant="outline-success">
+            <Icon.BoxArrowRight color="white" size={25}/> Log out
           </Button>
         </Navbar.Collapse>
       </div>

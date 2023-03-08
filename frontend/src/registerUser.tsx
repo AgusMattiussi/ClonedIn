@@ -29,16 +29,16 @@ function RegisterUser() {
         <Form.Control className='input' type="name" placeholder="Name *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Control className='input' type="password" placeholder="Password" />
+        <Form.Control className='input' type="password" placeholder="Password *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckPassword">
-        <Form.Control className='input' type="check_password" placeholder="Repeat Password" />
+        <Form.Control className='input' type="check_password" placeholder="Repeat Password *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicLocation">
-        <Form.Control className='input' type="location" placeholder="Location *" />
+        <Form.Control className='input' type="location" placeholder="Location" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPosition">
-        <Form.Control className='input' type="position" placeholder="Position *" />
+        <Form.Control className='input' type="position" placeholder="Position" />
       </Form.Group>
       <div className="d-flex mb-4">
         <label className="area">Education Level</label>
