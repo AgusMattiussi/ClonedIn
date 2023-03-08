@@ -19,7 +19,7 @@ public class UserSkillDTO {
         dto.description = skill.getDescription();
 
         //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("skills").path(String.valueOf(skill.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/skills").path(String.valueOf(skill.getId()));
         dto.self = userUriBuilder.build();
 
         return dto;

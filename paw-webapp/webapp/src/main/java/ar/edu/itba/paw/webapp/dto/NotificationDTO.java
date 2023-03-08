@@ -22,7 +22,7 @@ public class NotificationDTO {
         dto.jobOfferId = contact.getJobOffer().getId();
 
         //FIXME: Revisar si esta bien formado
-        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("notifications")
+        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/notifications")
                 .path(String.valueOf(contact.getJobOffer().getId()));
         dto.self = contactUriBuilder.build();
 

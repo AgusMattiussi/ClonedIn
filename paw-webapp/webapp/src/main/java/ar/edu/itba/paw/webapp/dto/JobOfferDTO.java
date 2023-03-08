@@ -31,7 +31,7 @@ public class JobOfferDTO {
         dto.salary = jobOffer.getSalary();
         dto.modality = jobOffer.getModality();
 
-        final UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("jobOffers").path(String.valueOf(jobOffer.getId()));
+        final UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/jobOffers").path(String.valueOf(jobOffer.getId()));
         dto.self = uriBuilder.build();
         return dto;
     }
