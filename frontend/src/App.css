@@ -38,7 +38,7 @@
 }
 
 .custom-header {
-  background-color: #04704C;
+  background-color: #04704c;
   font-size: large;
   width: 100;
   margin-bottom: auto;
@@ -52,7 +52,7 @@
 }
 
 .custom-card {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
 }
 
 .form-card {
@@ -89,13 +89,13 @@
   box-shadow: none !important;
   border: none;
   font-weight: bold;
-  border-bottom: 2px solid #459F78;
+  border-bottom: 2px solid #459f78;
   outline-width: 0;
 }
 
 .action-button {
   width: 100px;
-  background: #459F78;
+  background: #459f78;
   font-weight: bold;
   color: white;
   cursor: pointer;
@@ -104,37 +104,37 @@
   margin: 10px 5px;
 }
 
-.action-button:hover, .action-button:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px #459F78;
+.action-button:hover,
+.action-button:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #459f78;
 }
 
 .color-nav {
-  background-color: #04704C; 
+  background-color: #04704c;
   font-size: large;
 }
 
 .nav-item {
-  color: #F2F2F2
+  color: #f2f2f2;
 }
 
 .sidebar {
-  background-color: #459F78;
+  background-color: #459f78;
   height: 100vh;
 }
 
 .search {
-  color:#F2F2F2;
+  color: #f2f2f2;
   text-align: left;
 }
 
 .filterbtn {
-  width:100%;
+  width: 100%;
 }
 
 .dropdown {
   width: 100%;
 }
-
 .fs-title {
   font-size: 25px;
   color: #2C3E50;
