@@ -21,7 +21,7 @@ function App() {
           <Route path="/registerUser" element= {
               <RegisterUser/>
             } />
-          <Route path="/registerUser" element= {
+          <Route path="/registerEnterprise" element= {
             <RegisterEnterprise/>
           } />
         </Routes>
