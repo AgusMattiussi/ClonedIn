@@ -7,8 +7,24 @@ import Col from 'react-bootstrap/esm/Col';
 import Navigation from './navbar'
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useState, useEffect } from 'react';
 
 function DiscoverJobs() {
+
+  const [users, setUsers] = useState<any[]>([]);
+   useEffect(() => {
+      fetch('http://localhost:8080/webapp_war/users')
+         .then((response) => response.json())
+         .then((data) => {
+            console.log(data);
+            setUsers(data);
+         })
+         .catch((err) => {
+            console.log(err.message);
+         });
+   }, []);
+
+
   return (
     <div>
       <Navigation/>
@@ -95,6 +111,17 @@ function DiscoverJobs() {
           <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
             <Row>
               <h3>Discover Jobs</h3>
+            </Row>
+            <Row>
+            {
+            users.map((user) => {
+            return (
+                <div className="post-card" key={user.username}>
+                  <h2 className="post-title">{user.username}</h2>
+                  <p className="post-body">{user.self}</p>
+                </div>
+            );
+          })}
             </Row>
           </Col>
         </Row>
