@@ -35,7 +35,8 @@ function Navigation() {
             </Nav.Link>
           </Nav>
           <Button href="/home" variant="outline-success">
-            <Icon.BoxArrowRight color="white" size={25} />\ Log out
+            <Icon.BoxArrowRight color="white" size={25} />
+            &nbsp;Log out
           </Button>
         </Navbar.Collapse>
       </div>
