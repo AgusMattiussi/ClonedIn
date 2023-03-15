@@ -30,7 +30,7 @@ public class EducationDTO {
         dto.description = education.getDescription();
 
         //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("educations").path(String.valueOf(education.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/educations").path(String.valueOf(education.getId()));
         dto.self = userUriBuilder.build();
 
         return dto;
