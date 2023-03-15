@@ -13,16 +13,16 @@ function Navigation() {
   return (
     <Navbar expand="lg" className="color-nav">
       <div className="m-1 w-100 d-flex px-3">
-        <Navbar.Brand href="/home">
+        <Navbar.Brand href="/discoverJobs">
           <img src={logo} alt="" height="40" className="d-inline-block align-top" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link className="nav-item" href="#jobs">
+            <Nav.Link className="nav-item" href="/discoverJobs">
               Discover Jobs
             </Nav.Link>
-            <Nav.Link className="nav-item" href="#profile">
+            <Nav.Link className="nav-item" href="/profileUser">
               My Profile
             </Nav.Link>
             <Nav.Link className="nav-item" href="#offers">
