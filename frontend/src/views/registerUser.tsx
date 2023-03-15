@@ -91,7 +91,7 @@ function RegisterUser() {
           value={email} onChange={(e) => setEmail(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Control className='input' type="name" placeholder="Name *"
+        <Form.Control className='input' placeholder="Name *"
           value={name} onChange={(e) => setName(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -103,11 +103,11 @@ function RegisterUser() {
           value={repeatPassowrd} onChange={(e) => setRepeatPassowrd(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicLocation">
-        <Form.Control className='input' type="location" placeholder="Location"
+        <Form.Control className='input' placeholder="Location"
           value={city} onChange={(e) => setCity(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPosition">
-        <Form.Control className='input' type="position" placeholder="Position"
+        <Form.Control className='input' placeholder="Position"
           value={position} onChange={(e) => setPosition(e.target.value)} />
       </Form.Group>
       <div className="d-flex mb-4">
@@ -142,7 +142,7 @@ function RegisterUser() {
     </Form>
     <div className="row">
     <div className="col mt-2 mb-2">
-    <Button href="/login" variant="outline-secondary" type="submit"><strong>return</strong></Button>
+    <Button href="/login" variant="outline-secondary"><strong>return</strong></Button>
     </div>
     </div>
     </div>
