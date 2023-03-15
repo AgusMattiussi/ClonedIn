@@ -18,11 +18,6 @@ public class UserDTO {
         final UserDTO dto = new UserDTO();
         dto.username = user.getEmail();
 
-        System.out.println("\n\n" + uriInfo);
-        System.out.println(uriInfo.getBaseUri());
-        System.out.println(uriInfo.getPath());
-        System.out.println(uriInfo.getAbsolutePathBuilder().build());
-
         //TODO: Revisar si hace falta eliminar el webapp_war para deployar
         final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath("webapp_war/users").path(String.valueOf(user.getId()));
         dto.self = userUriBuilder.build();

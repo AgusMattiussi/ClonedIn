@@ -676,7 +676,6 @@ public class UserController {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createUser (@Valid final UserForm userForm /*, final BindingResult errors, HttpServletRequest request*/) {
-
         //TODO: Desarrollar errores del formulario como "reenvio la pagina"
         /*if (errors.hasErrors()) {
             LOGGER.warn("User register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());

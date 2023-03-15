@@ -3,9 +3,74 @@ import Header from '../components/header';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
+import * as React from 'react';
+import {useState, useEffect} from 'react';
 
 function RegisterUser() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassowrd, setRepeatPassowrd] = useState('');
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [category, setCategory] = useState('');
+  const [position, setPosition] = useState('');
+  const [description, setDescription] = useState('');
+  const [studiesLevel, setStudiesLevel] = useState('');
+  const [error, setError] = useState(null);
   
+  const register = async (email: string, password: string, repeatPassowrd:string, name: string, city: string, category: string, position: string, description: string, studiesLevel: string) => {
+    await fetch('http://localhost:8080/webapp_war/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        repeatPassowrd: repeatPassowrd,
+        name: name, 
+        city: city,
+        position: position,        
+        aboutMe: description,
+        category: category, 
+        level: studiesLevel
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        setEmail('');
+        setPassword('');
+        setRepeatPassowrd('');
+        setName('');
+        setCity('');
+        setCategory('');
+        setPosition('');
+        setDescription('');
+        setStudiesLevel('');
+    })
+    .catch((err) => {
+       console.log(err.message);
+    });
+  };
+
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+    console.log('Registrando...');
+    console.log('JSON ENVIADO: ' + JSON.stringify({
+      email: email,
+        password: password,
+        repeatPassowrd: repeatPassowrd,
+        name: name, 
+        city: city,
+        position: position,        
+        aboutMe: description,
+        category: category, 
+        level: studiesLevel
+    }));
+    register(email, password, repeatPassowrd, name, city, category, position, description, studiesLevel);
+  };  
+
   return (
     <div>
     <Header/>
@@ -18,30 +83,37 @@ function RegisterUser() {
             <p>Make sure to fill all fields before advancing.</p>
             <div className="row">
                         <div className="col-md-12 mx-0">
-    <Form className='msform'>
+    <Form className='msform' onSubmit={handleSubmit}>
         <div className="form-card">
         <h2 className="fs-title">Basic Information</h2>
       <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Control className='input' type="email" placeholder="Email *" />
+        <Form.Control className='input' type="email" placeholder="Email *"
+          value={email} onChange={(e) => setEmail(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Control className='input' type="name" placeholder="Name *" />
+        <Form.Control className='input' type="name" placeholder="Name *"
+          value={name} onChange={(e) => setName(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Control className='input' type="password" placeholder="Password *" />
+        <Form.Control className='input' type="password" placeholder="Password *"
+          value={password} onChange={(e) => setPassword(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckPassword">
-        <Form.Control className='input' type="check_password" placeholder="Repeat Password *" />
+        <Form.Control className='input' type="password" placeholder="Repeat Password *"
+          value={repeatPassowrd} onChange={(e) => setRepeatPassowrd(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicLocation">
-        <Form.Control className='input' type="location" placeholder="Location" />
+        <Form.Control className='input' type="location" placeholder="Location"
+          value={city} onChange={(e) => setCity(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPosition">
-        <Form.Control className='input' type="position" placeholder="Position" />
+        <Form.Control className='input' type="position" placeholder="Position"
+          value={position} onChange={(e) => setPosition(e.target.value)} />
       </Form.Group>
       <div className="d-flex mb-4">
         <label className="area">Education Level</label>
-        <Form.Select className="selectFrom" aria-label="Default select example">
+        <Form.Select className="selectFrom" aria-label="Default select example"
+          value={studiesLevel} onChange={(e) => setStudiesLevel(e.target.value)}>
           <option value="No-especificado">Choose</option>
           <option value="Primario">Primary</option>
           <option value="Secundario">Secondary</option>
@@ -52,18 +124,21 @@ function RegisterUser() {
       </div>
       <div className="d-flex mb-4">
         <label className="area">Job Category</label>
-        <Form.Select className="selectFrom" aria-label="Default select example">
+        <Form.Select className="selectFrom" aria-label="Default select example"
+          value={category} onChange={(e) => setCategory(e.target.value)}>
           {/* TODO: agregar for con las categories pasadas de la API*/}
-          <option value="category">Category Name</option>
+          <option value="categoria">Category</option>
+          <option value="Arte">Arte</option>
         </Form.Select>
       </div>
       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-        <Form.Control placeholder='About Me' as="textarea" rows={3} />
+        <Form.Control placeholder='About Me' as="textarea" rows={3} 
+          value={description} onChange={(e) => setDescription(e.target.value)} />
       </Form.Group>
       </div>
       <p>(*) Fields are required.</p>
       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-      <Button href="/discoverJobs" variant="success" type="submit"><strong>Register</strong></Button>
+      <Button variant="success" type="submit"><strong>Register</strong></Button>
     </Form>
     <div className="row">
     <div className="col mt-2 mb-2">
