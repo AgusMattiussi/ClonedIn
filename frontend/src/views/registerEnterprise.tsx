@@ -25,16 +25,16 @@ function RegisterEnterprise() {
         <Form.Control className='input' type="email" placeholder="Email *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Control className='input' type="name" placeholder="Enterprise Name *" />
+        <Form.Control className='input' placeholder="Enterprise Name *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Control className='input' type="password" placeholder="Password *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckPassword">
-        <Form.Control className='input' type="check_password" placeholder="Repeat Password *" />
+        <Form.Control className='input' type="password" placeholder="Repeat Password *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicLocation">
-        <Form.Control className='input' type="location" placeholder="Location" />
+        <Form.Control className='input' placeholder="Location" />
       </Form.Group>
       <div className="d-flex mb-4">
         <label className="area">Quantity of employees</label>
@@ -59,10 +59,10 @@ function RegisterEnterprise() {
         </Form.Select>
       </div>
       <Form.Group className="mb-3" controlId="formBasicYear">
-        <Form.Control className='input' type="Year" placeholder="Funding Year" />
+        <Form.Control className='input' placeholder="Funding Year" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicWebsite">
-        <Form.Control className='input' type="Website" placeholder="Website" />
+        <Form.Control className='input' placeholder="Website" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
         <Form.Control placeholder='About Us' as="textarea" rows={3} />
@@ -74,7 +74,7 @@ function RegisterEnterprise() {
     </Form>
     <div className="row">
     <div className="col mt-2 mb-2">
-    <Button href="/login" variant="outline-secondary" type="submit"><strong>return</strong></Button>
+    <Button href="/login" variant="outline-secondary"><strong>return</strong></Button>
     </div>
     </div>
     </div>
