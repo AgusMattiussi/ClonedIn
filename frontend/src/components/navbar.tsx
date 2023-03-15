@@ -1,13 +1,11 @@
-import React from "react"
-import logo from "./images/logo.png"
+import logo from "../images/logo.png"
 import * as Icon from "react-bootstrap-icons"
 import Button from "react-bootstrap/Button"
-import "./App.css"
+import "../styles/App.css"
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min"
-
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 

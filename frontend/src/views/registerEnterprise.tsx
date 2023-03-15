@@ -1,11 +1,10 @@
 import Button from 'react-bootstrap/Button';
-import * as Icon from 'react-bootstrap-icons';
-import Header from './header';
+import Header from '../components/header';
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 
-function RegisterUser() {
+function RegisterEnterprise() {
   
   return (
     <div>
@@ -26,7 +25,7 @@ function RegisterUser() {
         <Form.Control className='input' type="email" placeholder="Email *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Control className='input' type="name" placeholder="Name *" />
+        <Form.Control className='input' type="name" placeholder="Enterprise Name *" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Control className='input' type="password" placeholder="Password *" />
@@ -37,18 +36,19 @@ function RegisterUser() {
       <Form.Group className="mb-3" controlId="formBasicLocation">
         <Form.Control className='input' type="location" placeholder="Location" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicPosition">
-        <Form.Control className='input' type="position" placeholder="Position" />
-      </Form.Group>
       <div className="d-flex mb-4">
-        <label className="area">Education Level</label>
+        <label className="area">Quantity of employees</label>
         <Form.Select className="selectFrom" aria-label="Default select example">
-          <option value="No-especificado">Choose</option>
-          <option value="Primario">Primary</option>
-          <option value="Secundario">Secondary</option>
-          <option value="Terciario">Terciary</option>
-          <option value="Graduado">Graduate</option>
-          <option value="Postgrado">Postgraduate</option>
+        <option value="No-especificado">No-especificado</option>
+        <option value="1-10">1-10</option>
+        <option value="11-50">11-50</option>
+        <option value="51-100">51-100</option>
+        <option value="101-200">101-200</option>
+        <option value="201-500">201-500</option>
+        <option value="501-1000">501-1000</option>
+        <option value="1001-5000">1001-5000</option>
+        <option value="5001-10000">5001-10000</option>
+        <option value="10000+">10001+</option>
         </Form.Select>
       </div>
       <div className="d-flex mb-4">
@@ -58,13 +58,19 @@ function RegisterUser() {
           <option value="category">Category Name</option>
         </Form.Select>
       </div>
+      <Form.Group className="mb-3" controlId="formBasicYear">
+        <Form.Control className='input' type="Year" placeholder="Funding Year" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicWebsite">
+        <Form.Control className='input' type="Website" placeholder="Website" />
+      </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-        <Form.Control placeholder='About Me' as="textarea" rows={3} />
+        <Form.Control placeholder='About Us' as="textarea" rows={3} />
       </Form.Group>
       </div>
       <p>(*) Fields are required.</p>
       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-      <Button href="/discoverJobs" variant="success" type="submit"><strong>Register</strong></Button>
+      <Button href="/discoverProfiles" variant="success" type="submit"><strong>Register</strong></Button>
     </Form>
     <div className="row">
     <div className="col mt-2 mb-2">
@@ -82,4 +88,4 @@ function RegisterUser() {
     );
 }
 
-export default RegisterUser;
+export default RegisterEnterprise;

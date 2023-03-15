@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 // import Card from 'react-bootstrap/Card';
-import Navigation from './navbar'
+import Navigation from '../components/navbar'
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useState, useEffect } from 'react';
