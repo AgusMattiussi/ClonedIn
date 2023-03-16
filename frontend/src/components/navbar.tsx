@@ -14,7 +14,7 @@ function Navigation() {
   const { t } = useTranslation();
   
   return (
-    <Navbar expand="lg" className="color-nav">
+    <Navbar expand="lg" className="color-nav" variant="dark">
       <div className="m-1 w-100 d-flex px-3">
         <Navbar.Brand href="/discoverJobs">
           <img src={logo} alt="" height="40" className="d-inline-block align-top" />
@@ -28,14 +28,14 @@ function Navigation() {
             <Nav.Link className="nav-item" href="/profileUser">
             {t('My Profile')}
             </Nav.Link>
-            <Nav.Link className="nav-item" href="#offers">
+            <Nav.Link className="nav-item" href="/notificationsUser">
             {t('Job Offers')}
             </Nav.Link>
             <Nav.Link className="nav-item" href="#applications">
             {t('My Applications')}
             </Nav.Link>
           </Nav>
-          <Button href="/home" variant="outline-success">
+          <Button href="/home" variant="outline-success" style={{ color: "white" }}>
             <Icon.BoxArrowRight color="white" size={25} />
             &nbsp;Log out
           </Button>

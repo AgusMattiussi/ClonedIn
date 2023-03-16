@@ -13,10 +13,13 @@ import EducationUser from "./views/educationUser";
 import ContactForm from "./views/contactForm";
 import JobOfferEnterprise from "./views/jobOfferEnterprise";
 import ProfileUser from "./views/profileUser";
+import NotificationsUser from "./views/notificationsUser"
+
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min"
+import { Disc } from "react-bootstrap-icons";
 
 function App() {
   return (
@@ -34,6 +37,8 @@ function App() {
           {/*TODO: revisar --> distinto link para enterprise y user */}
 
           <Route path="/profileUser" element={<ProfileUser />} />
+          <Route path="/notificationsUser" element={<NotificationsUser />} />
+          <Route path="/applicationsUser" element={<DiscoverJobs />} />
           
           <Route path="/addSkill" element= {<SkillsUser/>} />
           <Route path="/addExperience" element= {<ExperienceUser/>} />
