@@ -8,8 +8,11 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min"
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
+import { useTranslation } from 'react-i18next';
 
 function Navigation() {
+  const { t } = useTranslation();
+  
   return (
     <Navbar expand="lg" className="color-nav">
       <div className="m-1 w-100 d-flex px-3">
@@ -20,16 +23,16 @@ function Navigation() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link className="nav-item" href="/discoverJobs">
-              Discover Jobs
+            {t('Discover Jobs')}
             </Nav.Link>
             <Nav.Link className="nav-item" href="/profileUser">
-              My Profile
+            {t('My Profile')}
             </Nav.Link>
             <Nav.Link className="nav-item" href="#offers">
-              Job Offers
+            {t('Job Offers')}
             </Nav.Link>
             <Nav.Link className="nav-item" href="#applications">
-              My Applications
+            {t('My Applications')}
             </Nav.Link>
           </Nav>
           <Button href="/home" variant="outline-success">
