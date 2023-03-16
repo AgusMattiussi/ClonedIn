@@ -12,6 +12,7 @@ import ExperienceUser from "./views/experienceUser";
 import EducationUser from "./views/educationUser";
 import ContactForm from "./views/contactForm";
 import JobOfferEnterprise from "./views/jobOfferEnterprise";
+import ProfileUser from "./views/profileUser";
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
@@ -29,9 +30,11 @@ function App() {
           <Route path="/discoverJobs" element={<DiscoverJobs />} />
           <Route path="/editUser" element= {<EditUser/>} />
           <Route path="/editEnterprise" element= {<EditEnterprise/>} />
-          <Route path="/imageProfile" element= {<ImageProfile/>} 
-          //TODO: revisar --> distinto link para enterprise y user
-          />
+          <Route path="/imageProfile" element= {<ImageProfile/>} />
+          {/*TODO: revisar --> distinto link para enterprise y user */}
+
+          <Route path="/profileUser" element={<ProfileUser />} />
+          
           <Route path="/addSkill" element= {<SkillsUser/>} />
           <Route path="/addExperience" element= {<ExperienceUser/>} />
           <Route path="/addEducation" element= {<EducationUser/>} />
