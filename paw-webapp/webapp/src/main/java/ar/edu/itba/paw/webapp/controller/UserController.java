@@ -598,7 +598,8 @@ import java.util.stream.Collectors;
     }
 }*/
 
-
+@Path("users")
+@Component
 public class UserController {
 
     private static final int PAGE_SIZE = 10;

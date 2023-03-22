@@ -8,6 +8,7 @@ import {useState, useEffect} from 'react';
 
 function RegisterUser() {
 
+  const [categoryList, setCategoryList] = useState([])
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassowrd, setRepeatPassowrd] = useState('');
@@ -18,7 +19,17 @@ function RegisterUser() {
   const [description, setDescription] = useState('');
   const [studiesLevel, setStudiesLevel] = useState('');
   const [error, setError] = useState(null);
-  
+
+  useEffect(() => {
+    fetch("http://localhost:8080/webapp_war/categories")
+        .then((response) => response.json())
+        .then((response) => {
+          setCategoryList(response);
+          setError(null);
+        })
+        .catch(setError);
+    }, []);
+    
   const register = async (email: string, password: string, repeatPassowrd:string, name: string, city: string, category: string, position: string, description: string, studiesLevel: string) => {
     await fetch('http://localhost:8080/webapp_war/users', {
       method: 'POST',
@@ -56,7 +67,7 @@ function RegisterUser() {
 
   const handleSubmit = (e:any) => {
     e.preventDefault();
-    console.log('Registrando...');
+    /* console.log('Registrando...');
     console.log('JSON ENVIADO: ' + JSON.stringify({
       email: email,
         password: password,
@@ -67,9 +78,10 @@ function RegisterUser() {
         aboutMe: description,
         category: category, 
         level: studiesLevel
-    }));
+    })); */
     register(email, password, repeatPassowrd, name, city, category, position, description, studiesLevel);
-  };  
+  };
+
 
   return (
     <div>
@@ -124,11 +136,11 @@ function RegisterUser() {
       </div>
       <div className="d-flex mb-4">
         <label className="area">Job Category</label>
-        <Form.Select className="selectFrom" aria-label="Default select example"
+          <Form.Select className="selectFrom" aria-label="Default select example"
           value={category} onChange={(e) => setCategory(e.target.value)}>
-          {/* TODO: agregar for con las categories pasadas de la API*/}
-          <option value="categoria">Category</option>
-          <option value="Arte">Arte</option>
+          {categoryList.map((categoryListItem: any) => (
+          <option key={categoryListItem.id} value={categoryListItem.name}>{categoryListItem.name}</option>
+        ))}
         </Form.Select>
       </div>
       <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
