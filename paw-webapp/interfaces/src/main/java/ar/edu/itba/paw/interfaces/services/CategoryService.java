@@ -13,5 +13,6 @@ public interface CategoryService {
 
     Optional<Category> findById(long id);
 
+    // TODO: Paginar
     List<Category> getAllCategories();
 }

@@ -598,12 +598,11 @@ import java.util.stream.Collectors;
     }
 }*/
 
-@Path("users")
-@Component
+
 public class UserController {
 
-    public static final int PAGE_SIZE = 10;
-
+    private static final int PAGE_SIZE = 10;
+    private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -628,7 +627,6 @@ public class UserController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-    private static final int JOB_OFFERS_PER_PAGE = 3;
 
     @Context
     private UriInfo uriInfo;
@@ -657,8 +655,6 @@ public class UserController {
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
         final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
-
-        System.out.println("USERS LIST (" + allUsers.size() + "):\n\n\n\n" + allUsers + "\n\n\n");
 
         if (allUsers.isEmpty()) {
             return Response.noContent().build();

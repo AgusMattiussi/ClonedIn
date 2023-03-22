@@ -38,4 +38,68 @@ public class ContactDTO {
 
         return dto;
     }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(String enterprise) {
+        this.enterprise = enterprise;
+    }
+
+    public String getJobOfferDesc() {
+        return jobOfferDesc;
+    }
+
+    public void setJobOfferDesc(String jobOfferDesc) {
+        this.jobOfferDesc = jobOfferDesc;
+    }
+
+    public long getJobOfferId() {
+        return jobOfferId;
+    }
+
+    public void setJobOfferId(long jobOfferId) {
+        this.jobOfferId = jobOfferId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getFilledBy() {
+        return filledBy;
+    }
+
+    public void setFilledBy(int filledBy) {
+        this.filledBy = filledBy;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
 }
