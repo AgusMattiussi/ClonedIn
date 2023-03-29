@@ -573,7 +573,7 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
     @Autowired
-    private final EmailService emailService;
+    private EmailService emailService;
     @Autowired
     private JobOfferService jobOfferService;
     @Autowired
@@ -613,6 +613,8 @@ public class EnterpriseController {
             LOGGER.warn("Enterprise register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
             return
         }*/
+
+        System.out.println("\n\n\n ==== CREANDO EMPRESA ==== \n" + enterpriseForm + "\n\n\n");
 
         Optional<Category> optCategory = categoryService.findByName(enterpriseForm.getCategory());
         if (!optCategory.isPresent()) {
