@@ -17,5 +17,17 @@
   "Education": "Educación",
   "Add Education": "Agregar Educación",
   "Skills": "Aptitudes",
-  "Add Skill": "Agregar Aptitud"
+  "Add Skill": "Agregar Aptitud",
+
+  "Search By": "Buscar por:",
+  "Search Placeholder": "Aptitud, ubicación...",
+  "Filter By": "Filtrar por:",
+  "Category": "Categoria",
+  "Modality": "Modalidad",
+  "Home Office": "Remoto",
+  "On Site": "Presencial",
+  "Mixed": "Mixto",
+  "Salary": "Salario",
+  "Filter": "Filtrar",
+  "Clear Filter": "Limpiar filtros"
 }
