@@ -94,5 +94,12 @@
   "Clear Filter": "Limpiar filtros",
   "Minimum": "Mínimo",
   "Maximum": "Máximo",
-  "Years Of Experience": "Años de Experiencia"
+  "Years Of Experience": "Años de Experiencia",
+
+  "Filter by status": "Filtrar por estado",
+  "Accepted": "Aceptado",
+  "Rejected": "Rechazado",
+  "Pending": "Pendiente",
+  "Cancelled": "Cancelado",
+  "View All": "Ver Todo"
 }
