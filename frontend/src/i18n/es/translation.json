@@ -22,6 +22,11 @@
   "About Me": "Acerca de Mi",
   "Fields required": "(*) Campos requeridos",
   "Return": "Volver",
+    "Enterprise Name*": "Nombre de la empresa *",
+    "Quantity of employees": "Cantidad de empleados",
+    "Funding Year": "Año de fundación",
+    "Website": "Sitio Web",
+    "About Us": "Acerca de Nosotros",
 
   "No-especificado": "Selecciona",
   "Primario": "Primario",
