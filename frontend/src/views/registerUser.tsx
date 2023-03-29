@@ -117,7 +117,7 @@ function RegisterUser() {
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckPassword">
         <Form.Control className='input' type="password" placeholder={t("Repeat Password*").toString()}
-          value={repeatPassowrd} onChange={(e) => setRepeatPassowrd(e.target.value)} />
+          value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicLocation">
         <Form.Control className='input' placeholder={t("Location").toString()}
