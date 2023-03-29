@@ -60,6 +60,11 @@
     "My Applications": "Mis Postulaciones",
     "Log Out": "Cerrar Sesión",
 
+    "Discover Profiles": "Descubrir Perfiles",
+    "My Job Offers": "Mis Ofertas de Trabajo",
+    "My Recruits": "Mis Reclutas",
+    "Interested": "Interesados",
+
     "Hide My Profile": "Ocultar Mi Perfil",
     "Edit Profile Picture": "Editar Foto de Perfil",
     "Experience": "Experiencia",
@@ -70,7 +75,9 @@
     "Add Skill": "Agregar Aptitud",
 
   "Search By": "Buscar por:",
-  "Search Placeholder": "Aptitud, ubicación...",
+  "Search Placeholder": "Skill, position...",
+  "Search Profile Placeholder": "Aptitud, ubicación...",
+  "Search Job Offer Placeholder": "Aptitud, posición...",
   "Filter By": "Filtrar por:",
   "Category": "Categoria",
   "Modality": "Modalidad",
@@ -79,5 +86,14 @@
   "Mixed": "Mixto",
   "Salary": "Salario",
   "Filter": "Filtrar",
-  "Clear Filter": "Limpiar filtros"
+  "Clear Filter": "Limpiar filtros",
+  "Minimum": "Mínimo",
+  "Maximum": "Máximo",
+
+  "Primary": "Primario",
+  "Secondary": "Secondario",
+  "Tertiary": "Terciario",
+  "College Graduate": "Graduado",
+  "Postgraduate": "Posgrado",
+  "Years Of Experience": "Años de Experiencia"
 }
