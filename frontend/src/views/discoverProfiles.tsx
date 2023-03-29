@@ -73,11 +73,11 @@ function DiscoverProfiles() {
                   {t("Education Level")}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item>{t("Primary")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Secondary")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Tertiary")}</Dropdown.Item>
-                  <Dropdown.Item>{t("College Graduate")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Postgraduate")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Primario")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Secondario")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Terciario")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Graduado")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Postgrado")}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Row>

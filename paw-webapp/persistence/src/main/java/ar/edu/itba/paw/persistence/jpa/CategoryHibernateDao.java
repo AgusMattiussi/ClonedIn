@@ -41,6 +41,6 @@ public class CategoryHibernateDao implements CategoryDao {
 
     @Override
     public List<Category> getAllCategories() {
-        return em.createQuery("SELECT c FROM Category c ORDER BY c.name ASC", Category.class).getResultList();
+        return em.createQuery("SELECT c FROM Category c WHERE c.id <> 1 ORDER BY c.name ASC", Category.class).getResultList();
     }
 }
