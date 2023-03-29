@@ -188,7 +188,7 @@ function RegisterUser() {
                             onChange={(e) => setCategory(e.target.value)}
                           >
                             <option key="1" value="No-Especificado">
-                              {t("No-Especificado")}
+                              {t("No-especificado")}
                             </option>
                             {categoryList.map((categoryListItem: any) => (
                               <option key={categoryListItem.id} value={categoryListItem.name}>
