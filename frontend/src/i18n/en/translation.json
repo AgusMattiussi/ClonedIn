@@ -5,6 +5,11 @@
   "My Applications": "My Applications",
   "Log Out": "Cerrar Sesión",
 
+  "Discover Profiles": "Discover Profiles",
+  "My Job Offers": "My Job Offers",
+  "My Recruits": "My Recruits",
+  "Interested": "Interested",
+
   "Hide My Profile": "Hide My Profile",
   "Edit Profile Picture": "Edit Profile Picture",
   "Job Category": "Job Category",
@@ -20,7 +25,8 @@
   "Add Skill": "Add Skill",
 
   "Search By": "Search by:",
-  "Search Placeholder": "Skill, position...",
+  "Search Profile Placeholder": "Skill, location...",
+  "Search Job Offer Placeholder": "Skill, position...",
   "Filter By": "Filter by:",
   "Category": "Category",
   "Modality": "Modality",
@@ -29,5 +35,14 @@
   "Mixed": "Mixed",
   "Salary": "Salary",
   "Filter": "Filter",
-  "Clear Filter": "Clear filters"
+  "Clear Filter": "Clear filters",
+  "Minimum": "Minimum",
+  "Maximum": "Maximum",
+
+  "Primary": "Primary",
+  "Secondary": "Secondary",
+  "Tertiary": "Tertiary",
+  "College Graduate": "College Graduate",
+  "Postgraduate": "Postgraduate",
+  "Years Of Experience": "Years Of Experience"
 }

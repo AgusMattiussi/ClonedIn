@@ -10,7 +10,7 @@ import Dropdown from "react-bootstrap/Dropdown"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-function DiscoverJobs() {
+function DiscoverProfiles() {
   const [users, setUsers] = useState<any[]>([])
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -39,7 +39,7 @@ function DiscoverJobs() {
               <Form className="search">
                 <Form.Control
                   type="search"
-                  placeholder={t("Search Job Offer Placeholder").toString()}
+                  placeholder={t("Search Profile Placeholder").toString()}
                   className="me-2"
                   aria-label="Search"
                 />
@@ -70,18 +70,20 @@ function DiscoverJobs() {
             <Row>
               <Dropdown>
                 <Dropdown.Toggle variant="light" id="dropdown" className="dropdown">
-                  {t("Modality")}
+                  {t("Education Level")}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item>{t("Home Office")}</Dropdown.Item>
-                  <Dropdown.Item>{t("On Site")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Mixed")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Primary")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Secondary")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Tertiary")}</Dropdown.Item>
+                  <Dropdown.Item>{t("College Graduate")}</Dropdown.Item>
+                  <Dropdown.Item>{t("Postgraduate")}</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Row>
             <br />
             <Row className="search">
-              <h5>{t("Salary")}</h5>
+              <h5>{t("Years of Experience")}</h5>
             </Row>
             <Row className="search">
               <Form className="d-flex">
@@ -117,7 +119,7 @@ function DiscoverJobs() {
           </Col>
           <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
             <Row>
-              <h3>{t("Discover Jobs")}</h3>
+              <h3>{t("Discover Profiles")}</h3>
             </Row>
             <Row>
               {users.map((user) => {
@@ -136,4 +138,4 @@ function DiscoverJobs() {
   )
 }
 
-export default DiscoverJobs
+export default DiscoverProfiles
