@@ -20,10 +20,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+
+
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -37,8 +45,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     //TODO: ACTUALIZAR LOS URLS
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.cors()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().cacheControl().disable()
                 .and().authorizeRequests()/*.antMatchers("/users/**").permitAll()
                 .antMatchers("/enterprises/**").permitAll()*/
@@ -92,6 +100,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) {
         web.ignoring().antMatchers( "/assets/css/**", "/assets/js/**", "/assets/images/**",
                 "/views/403", "/views/404","/views/500", "/enterprises/**", "/users/**", "/jobOffers/**", "/categories/**");
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration cors = new CorsConfiguration();
+        cors.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // React Frontend
+        cors.setAllowedMethods(Collections.singletonList("*"));
+        cors.setAllowedHeaders(Collections.singletonList("*"));
+        cors.setExposedHeaders(Arrays.asList("Authorization", "X-Refresh", "Location", "Link", "X-Total-Pages"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cors);
+        return source;
     }
 
     @Bean

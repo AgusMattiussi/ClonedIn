@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -22,9 +25,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @EnableTransactionManagement
+@PropertySource("classpath:application.properties")
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
 @Configuration
 public class WebConfig {
+
+    @Autowired
+    private Environment env;
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
@@ -38,13 +45,9 @@ public class WebConfig {
 
         ds.setDriverClass(org.postgresql.Driver.class);
 
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2022b-4");
-//        ds.setUsername("paw-2022b-4");
-//        ds.setPassword("UH1gunv4r");
-
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("admin");
+        ds.setUrl(env.getProperty("datasource.url"));
+        ds.setUsername(env.getProperty("datasource.username"));
+        ds.setPassword(env.getProperty("datasource.password"));
 
         return ds;
     }
