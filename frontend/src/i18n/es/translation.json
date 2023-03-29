@@ -58,6 +58,8 @@
     "My Profile": "Mi Perfil",
     "Job Offers": "Ofertas de Trabajo",
     "My Applications": "Mis Postulaciones",
+    "Log Out": "Cerrar Sesión",
+
     "Hide My Profile": "Ocultar Mi Perfil",
     "Edit Profile Picture": "Editar Foto de Perfil",
     "Experience": "Experiencia",
@@ -65,5 +67,17 @@
     "Education": "Educación",
     "Add Education": "Agregar Educación",
     "Skills": "Aptitudes",
-    "Add Skill": "Agregar Aptitud"
+    "Add Skill": "Agregar Aptitud",
+
+  "Search By": "Buscar por:",
+  "Search Placeholder": "Aptitud, ubicación...",
+  "Filter By": "Filtrar por:",
+  "Category": "Categoria",
+  "Modality": "Modalidad",
+  "Home Office": "Remoto",
+  "On Site": "Presencial",
+  "Mixed": "Mixto",
+  "Salary": "Salario",
+  "Filter": "Filtrar",
+  "Clear Filter": "Limpiar filtros"
 }

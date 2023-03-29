@@ -58,6 +58,7 @@
     "My Profile": "My Profile",
     "Job Offers": "Job Offers",
     "My Applications": "My Applications",
+    "Log Out": "Cerrar Sesión",
 
     "Hide My Profile": "Hide My Profile",
     "Edit Profile Picture": "Edit Profile Picture",
@@ -66,5 +67,17 @@
     "Education": "Education",
     "Add Education": "Add Education",
     "Skills": "Skills",
-    "Add Skill": "Add Skill"
+    "Add Skill": "Add Skill",
+
+    "Search By": "Search by:",
+    "Search Placeholder": "Skill, position...",
+    "Filter By": "Filter by:",
+    "Category": "Category",
+    "Modality": "Modality",
+    "Home Office": "Home office",
+    "On Site": "On site",
+    "Mixed": "Mixed",
+    "Salary": "Salary",
+    "Filter": "Filter",
+    "Clear Filter": "Clear filters"
 }

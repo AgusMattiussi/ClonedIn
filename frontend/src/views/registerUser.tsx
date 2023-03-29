@@ -12,7 +12,7 @@ function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [repeatPassowrd, setRepeatPassowrd] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
@@ -21,58 +21,61 @@ function RegisterUser() {
   const [studiesLevel, setStudiesLevel] = useState('');
   const [error, setError] = useState(null);
 
+  /* Cargar lista de rubros */
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/categories")
-        .then((response) => response.json())
-        .then((response) => {
-          setCategoryList(response);
-          setError(null);
-        })
-        .catch(setError);
-    }, []);
-    
-  const register = async (email: string, password: string, repeatPassowrd:string, name: string, city: string, category: string, position: string, description: string, studiesLevel: string) => {
+      .then((response) => response.json())
+      .then((response) => {
+        setCategoryList(response);
+        setError(null);
+      })
+      .catch(setError);
+  }, []);
+
+  /* Registra un usuario con los datos obtenidos del formulario */
+  const register = async (email: string, password: string, repeatPassword: string, name: string, city: string,
+     category: string, position: string, description: string, studiesLevel: string) => {
     await fetch('http://localhost:8080/webapp_war/users', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        repeatPassowrd: repeatPassowrd,
-        name: name, 
-        city: city,
-        position: position,        
-        aboutMe: description,
-        category: category, 
-        level: studiesLevel
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-    .then((response) => response.json())
-    .then((data) => {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          repeatPassword: repeatPassword,
+          name: name,
+          city: city,
+          position: position,
+          aboutMe: description,
+          category: category,
+          level: studiesLevel
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+      .then((response) => response.json())
+      .then((data) => {
         setEmail('');
         setPassword('');
-        setRepeatPassowrd('');
+        setRepeatPassword('');
         setName('');
         setCity('');
         setCategory('');
         setPosition('');
         setDescription('');
         setStudiesLevel('');
-    })
-    .catch((err) => {
-       console.log(err.message);
-    });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     /* console.log('Registrando...');
     console.log('JSON ENVIADO: ' + JSON.stringify({
       email: email,
         password: password,
-        repeatPassowrd: repeatPassowrd,
+        repeatPassword: repeatPassword,
         name: name, 
         city: city,
         position: position,        
@@ -80,16 +83,17 @@ function RegisterUser() {
         category: category, 
         level: studiesLevel
     })); */
-    register(email, password, repeatPassowrd, name, city, category, position, description, studiesLevel);
+    register(email, password, repeatPassword, name, city, category, position, description, studiesLevel);
   };
 
+  /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */  
   const { t } = useTranslation();
   return (
     <div>
-    <Header/>
-    <div className="d-flex justify-content-between mt-2">
+      <Header />
+      <div className="d-flex justify-content-between mt-2">
         <Container>
-        <div className="row justify-content-center mt-0">
+          <div className="row justify-content-center mt-0">
             <div className="col-11 col-sm-9 col-md-7 col-lg-6 p-0 mt-3 mb-2">
             <Card className="custom-card px-0 pt-4 pb-0 mt-3 mb-3">
             <h2 className="text-center p-0 mt-3 mb-2"><strong>{t("Register")}</strong></h2>

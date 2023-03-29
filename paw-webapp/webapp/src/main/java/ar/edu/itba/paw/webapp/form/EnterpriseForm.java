@@ -124,4 +124,19 @@ public class EnterpriseForm {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return "EnterpriseForm{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", repeatPassword='" + repeatPassword + '\'' +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", workers='" + workers + '\'' +
+                ", year='" + year + '\'' +
+                ", link='" + link + '\'' +
+                ", aboutUs='" + aboutUs + '\'' +
+                ", category='" + category + '\'' +
+                '}';
+    }
 }
