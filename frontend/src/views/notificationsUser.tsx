@@ -1,15 +1,14 @@
-import Button from 'react-bootstrap/Button';
-import * as Icon from 'react-bootstrap-icons';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
+import Button from "react-bootstrap/Button"
+import * as Icon from "react-bootstrap-icons"
+import Container from "react-bootstrap/esm/Container"
+import Row from "react-bootstrap/esm/Row"
+import Col from "react-bootstrap/esm/Col"
 // import Card from 'react-bootstrap/Card';
-import Navigation from '../components/navbar'
+import Navigation from "../components/navbar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 function NotifcationsUser() {
-
   const [users, setUsers] = useState<any[]>([])
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -27,7 +26,7 @@ function NotifcationsUser() {
 
   return (
     <div>
-      <Navigation/>
+      <Navigation />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <Col sm={2} className="sidebar">
@@ -35,28 +34,38 @@ function NotifcationsUser() {
               <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Accepted")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Accepted")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Rejected")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Rejected")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Pending")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Pending")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Cancelled")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Cancelled")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("View All")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("View All")}
+                </Button>
               </div>
             </Row>
           </Col>
@@ -64,13 +73,12 @@ function NotifcationsUser() {
             <Row>
               <h3>{t("Job Offers")}</h3>
             </Row>
-            <Row>
-            </Row>
+            <Row></Row>
           </Col>
         </Row>
       </Container>
     </div>
-  );
+  )
 }
 
-export default NotifcationsUser;
+export default NotifcationsUser

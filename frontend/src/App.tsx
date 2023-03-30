@@ -23,7 +23,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min"
 import { Disc } from "react-bootstrap-icons"
 
-
 function App() {
   return (
     <div className="App">

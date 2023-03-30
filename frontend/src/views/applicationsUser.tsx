@@ -1,11 +1,11 @@
-import Button from 'react-bootstrap/Button';
-import * as Icon from 'react-bootstrap-icons';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
-import Navigation from '../components/navbar'
-import Form from 'react-bootstrap/Form';
-import Dropdown from 'react-bootstrap/Dropdown';
+import Button from "react-bootstrap/Button"
+import * as Icon from "react-bootstrap-icons"
+import Container from "react-bootstrap/esm/Container"
+import Row from "react-bootstrap/esm/Row"
+import Col from "react-bootstrap/esm/Col"
+import Navigation from "../components/navbar"
+import Form from "react-bootstrap/Form"
+import Dropdown from "react-bootstrap/Dropdown"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -27,36 +27,46 @@ function ApplicationsUser() {
 
   return (
     <div>
-      <Navigation/>
+      <Navigation />
       <Container fluid>
         <Row className="align-items-start d-flex">
-        <Col sm={2} className="sidebar">
+          <Col sm={2} className="sidebar">
             <Row className="search">
               <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Accepted")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Accepted")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Rejected")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Rejected")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Pending")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Pending")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("Cancelled")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("Cancelled")}
+                </Button>
               </div>
             </Row>
             <Row>
-              <div className='d-flex flex-wrap justify-content-center mt-2'>
-                <Button variant="outline-light "className="filterbtn">{t("View All")}</Button>
+              <div className="d-flex flex-wrap justify-content-center mt-2">
+                <Button variant="outline-light " className="filterbtn">
+                  {t("View All")}
+                </Button>
               </div>
             </Row>
           </Col>
@@ -64,13 +74,12 @@ function ApplicationsUser() {
             <Row>
               <h3>{t("My Applications")}</h3>
             </Row>
-            <Row>
-            </Row>
+            <Row></Row>
           </Col>
         </Row>
       </Container>
     </div>
-  );
+  )
 }
 
-export default ApplicationsUser;
+export default ApplicationsUser
