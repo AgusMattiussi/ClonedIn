@@ -25,13 +25,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application.properties")
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
 @Configuration
 public class WebConfig {
 
-    @Autowired
-    private Environment env;
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
@@ -45,9 +42,9 @@ public class WebConfig {
 
         ds.setDriverClass(org.postgresql.Driver.class);
 
-        ds.setUrl(env.getProperty("datasource.url"));
-        ds.setUsername(env.getProperty("datasource.username"));
-        ds.setPassword(env.getProperty("datasource.password"));
+        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setUsername("postgres");
+        ds.setPassword("admin");
 
         return ds;
     }

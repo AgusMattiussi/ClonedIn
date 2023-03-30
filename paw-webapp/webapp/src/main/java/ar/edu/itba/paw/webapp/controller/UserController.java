@@ -874,7 +874,7 @@ public class UserController {
 
     }
 
-    //TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
+    // TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
 /*    @PUT
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/notifications/{jobOfferId}")
@@ -894,13 +894,13 @@ public class UserController {
 
         if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
             return Response.status(Response.Status.BAD_REQUEST).build();
-        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        // TODO: Otra opcion seria devolver la nueva application (201: CREATED)
         //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
         return Response.ok().build();
     }*/
 
-    //TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
+    // TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
     @GET
     @Path("/{id}/notifications")
     public Response getNotifications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {

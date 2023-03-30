@@ -12,7 +12,8 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>webapp Maven Webapp</name>
+  <name>ClonedIn Webapp</name>
+  <url>http://localhost:8080/webapp_war</url>
 
   <properties>
   </properties>

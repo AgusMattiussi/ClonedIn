@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -25,8 +26,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
-
-
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -42,49 +42,68 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /*
+    @Autowired
+    private JwtFilter jwtFilter;
+    */
+
     //TODO: ACTUALIZAR LOS URLS
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().cacheControl().disable()
-                .and().authorizeRequests()/*.antMatchers("/users/**").permitAll()
-                .antMatchers("/enterprises/**").permitAll()*/
-                .antMatchers("/**").permitAll()
-                /*    .invalidSessionUrl("/login")
                 .and().authorizeRequests()
-                    .antMatchers("/login").anonymous()
-                    .antMatchers("/createUser").anonymous()
-                    .antMatchers("/createEnterprise").anonymous()
-                    .antMatchers("/").hasRole("ENTERPRISE")
-                    .antMatchers("/createJobOffer/**").hasRole("ENTERPRISE")
-                    .antMatchers("/contact/**").hasRole("ENTERPRISE")
-                    .antMatchers("/editEnterprise/**").hasRole("ENTERPRISE")
-                    .antMatchers("//uploadEnterpriseProfileImage/**").hasRole("ENTERPRISE")
-                    .antMatchers("/home").hasRole("USER")
-                    .antMatchers("/editUser/**").hasRole("USER")
-                    .antMatchers("/createExperience/**").hasRole("USER")
-                    .antMatchers("/createEducation/**").hasRole("USER")
-                    .antMatchers("/createSkill/**").hasRole("USER")
-                    .antMatchers("//uploadProfileImage/**").hasRole("USER")
-                    .antMatchers("/**").authenticated() // .permitAll()
-                .and().formLogin()
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .successHandler(myAuthenticationSuccessHandler())
-                    .loginPage("/login")
-                .and().rememberMe()
-                    .rememberMeParameter("rememberMe")
-                    .userDetailsService(userDetailsService)
-                    .key(loadRememberMeKey())
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")*/
+                    // Users
+                .antMatchers(HttpMethod.GET, "/users").permitAll() // TODO: Cambiar por Authenticated y Empresa
+                .antMatchers(HttpMethod.GET,
+                        "/users/{id}",
+                        "/users/{id}/experiences/**",
+                        "/users/{id}/educations/**",
+                        "/users/{id}/skills/**",
+                        "/users/{id}/image").permitAll() // TODO: Cambiar por Authenticated Y Visible
+                .antMatchers(HttpMethod.GET,
+                        "/users/{id}/applications",
+                        "/users/{id}/notifications").permitAll() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.POST, "/users").anonymous()
+                .antMatchers(HttpMethod.POST,
+                        "/users/{id}/applications",
+                        "/users/{id}/experiences",
+                        "/users/{id}/educations",
+                        "/users/{id}/skills").permitAll() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.PUT,
+                        "/users/{id}/applications/{jobOfferId}",
+                        "/users/{id}/notifications/{jobOfferId}",
+                        "/users/{id}/profile",
+                        "/{id}/visibility",
+                        "/users/{id}/image").permitAll() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.DELETE,
+                        "/users/{id}/experiences/{expId}",
+                        "/users/{id}/educations/{educationId}",
+                        "/users/{id}/skills/{skillId}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                // Enterprises
+                .antMatchers(HttpMethod.GET,
+                        "/enterprises/{id}",
+                        "/enterprises/{id}/jobOffers",
+                        "/enterprises/{id}/jobOffers/{joid}").permitAll() // TODO: Cambiar por Authenticated y Usuario
+                .antMatchers(HttpMethod.GET,
+                        "/enterprises/{id}/contacts",
+                        "/enterprises/{id}/contacts/{joid}",
+                        "/enterprises/{id}/contacts/{joid}/{uid}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
+                .antMatchers(HttpMethod.POST,
+                        "/enterprises/{id}/jobOffers",
+                        "/enterprises/{id}/contacts").permitAll() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.PUT, "/enterprises/{id}/jobOffers/{joid}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                // Categories
+                .antMatchers(HttpMethod.GET, "/categories").permitAll()
+                // JobOffers
+                .antMatchers(HttpMethod.GET, "/jobOffers/**").permitAll() // TODO: Cambiar por Authenticated y Usuario
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")
-                .and().addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable();
+                    .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
+                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+                /*.and().addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable()*/;
     }
 
     private String loadRememberMeKey() {
@@ -99,7 +118,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) {
         web.ignoring().antMatchers( "/assets/css/**", "/assets/js/**", "/assets/images/**",
-                "/views/403", "/views/404","/views/500", "/enterprises/**", "/users/**", "/jobOffers/**", "/categories/**");
+                "/views/403", "/views/404","/views/500");
     }
 
     @Bean
