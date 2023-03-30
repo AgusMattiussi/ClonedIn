@@ -31,7 +31,7 @@ function Navigation() {
             <Nav.Link className="nav-item" href="/notificationsUser">
               {t("Job Offers")}
             </Nav.Link>
-            <Nav.Link className="nav-item" href="#applications">
+            <Nav.Link className="nav-item" href="/applicationsUser">
               {t("My Applications")}
             </Nav.Link>
           </Nav>

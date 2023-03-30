@@ -3,12 +3,13 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-// import Card from 'react-bootstrap/Card';
 import Navigation from "../components/navbar"
+import Form from "react-bootstrap/Form"
+import Dropdown from "react-bootstrap/Dropdown"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-function NotifcationsUser() {
+function ApplicationsUser() {
   const [users, setUsers] = useState<any[]>([])
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -71,7 +72,7 @@ function NotifcationsUser() {
           </Col>
           <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
             <Row>
-              <h3>{t("Job Offers")}</h3>
+              <h3>{t("My Applications")}</h3>
             </Row>
             <Row></Row>
           </Col>
@@ -81,4 +82,4 @@ function NotifcationsUser() {
   )
 }
 
-export default NotifcationsUser
+export default ApplicationsUser
