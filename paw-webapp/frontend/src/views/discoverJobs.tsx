@@ -3,12 +3,13 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-// import Card from 'react-bootstrap/Card';
+import Card from 'react-bootstrap/Card';
 import Navigation from "../components/navbar"
 import Form from "react-bootstrap/Form"
 import Dropdown from "react-bootstrap/Dropdown"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import CardHeader from "react-bootstrap/esm/CardHeader"
 
 function DiscoverJobs() {
   const [users, setUsers] = useState<any[]>([])
@@ -120,6 +121,44 @@ function DiscoverJobs() {
               <h3>{t("Discover Jobs")}</h3>
             </Row>
             <Row>
+              <Card className="custom-card w-100 mt-2 mr-2 ml-2">
+                    <Container>
+                      <Card className="justify-content-center mt-2 pt-2" >
+                        <CardHeader className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex justify-content-start">
+                            <h5>
+                              <p>ENTERPRISE'S NAME</p>
+                              <p>| JOB POSITION</p>
+                            </h5>
+                          </div>
+                          <span className="badge badge-pill badge-success p-2 mb-2">
+                            CATEGORY
+                          </span>
+                        </CardHeader>
+                          <div className="d-flex justify-content-between">
+                            <div>
+                              <h5>{t("Modality")}</h5>
+                              <p>modalidad</p>
+                            </div>
+                            <div>
+                              <h5>{t("Salary")}</h5>
+                              <p>salary</p>
+                            </div>
+                            <div>
+                              <h5>{t("Skills")}</h5>
+                                <span className="badge badge-pill badge-success">skill</span>
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-between">
+                            <h5>DESCRIPTION</h5>
+                            <Button variant="outline-dark"  href="/jobOffer">
+                              VIEW MORE
+                            </Button>             
+                          </div>
+                            <p>description</p>
+                        </Card>
+                        </Container>
+                        </Card>
               {users.map((user) => {
                 return (
                   <div className="post-card" key={user.username}>
