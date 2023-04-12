@@ -13,7 +13,7 @@ function ProfileUser() {
   return (
     <div>
       <Navigation />
-      <Container fluid style={{ background: "#F2F2F2" }}>
+      <Container fluid style={{ background: "#F2F2F2", height: "800px" }}>
         <Row className="row">
           <Col sm={3} className="col">
             <br />
@@ -21,7 +21,7 @@ function ProfileUser() {
               {t("Hide My Profile")}
             </Button>
             <br />
-            <Card className="profileCard" style={{ width: "12rem" }}>
+            <Card className="profileCard" style={{ width: "220px" }}>
               <Card.Img variant="top" src={defaultProfile} />
               <Button type="button" variant="success">
                 <Icon.PlusSquare color="white" size={20} style={{ marginRight: "5px" }} />

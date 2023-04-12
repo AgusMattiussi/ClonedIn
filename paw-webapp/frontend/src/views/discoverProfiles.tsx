@@ -3,10 +3,12 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-// import Card from 'react-bootstrap/Card';
+import Card from "react-bootstrap/Card"
+import Badge from "react-bootstrap/Badge"
 import Navigation from "../components/navbar"
 import Form from "react-bootstrap/Form"
 import Dropdown from "react-bootstrap/Dropdown"
+import defaultProfile from "../images/defaultProfilePicture.png"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -117,11 +119,55 @@ function DiscoverProfiles() {
               </div>
             </Row>
           </Col>
-          <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
+          <Col sm={6} className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
             <Row>
               <h3>{t("Discover Profiles")}</h3>
             </Row>
             <Row>
+              <Container className="mx-3 p-2" fluid style={{ background: "#F2F2F2" }}>
+                <Card className="profileCard" style={{ width: "15rem" }}>
+                  <Card.Img variant="top" src={defaultProfile} />
+                  <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
+                    <Card.Title>Username</Card.Title>
+                    <Card.Text>
+                      <div className="d-flex flex-column">
+                        <div className="d-flex justify-content-start align-items-center my-2">
+                          <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
+                          {t("Job Category")}:
+                          <Badge pill bg="success" className="mx-2">
+                            pill
+                          </Badge>
+                        </div>
+                        <div className="d-flex justify-content-start align-items-center my-2">
+                          <Icon.Briefcase color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
+                          {t("Current Position")}:
+                        </div>
+                        <div className="d-flex justify-content-start align-items-center my-2">
+                          <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
+                          {t("Education Level")}:
+                        </div>
+                        <div className="d-flex justify-content-start align-items-center my-2">
+                          <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
+                          {t("Location")}:
+                        </div>
+                        <div className="d-flex justify-content-start align-items-center my-2">
+                          <Badge pill bg="success" className="mx-2">
+                            skill1
+                          </Badge>
+                          <Badge pill bg="success" className="mx-2">
+                            skill2
+                          </Badge>
+                          <Badge pill bg="success" className="mx-2">
+                            skill3
+                          </Badge>
+                        </div>
+                      </div>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Container>
+            </Row>
+            {/* <Row>
               {users.map((user) => {
                 return (
                   <div className="post-card" key={user.username}>
@@ -130,7 +176,7 @@ function DiscoverProfiles() {
                   </div>
                 )
               })}
-            </Row>
+            </Row> */}
           </Col>
         </Row>
       </Container>
