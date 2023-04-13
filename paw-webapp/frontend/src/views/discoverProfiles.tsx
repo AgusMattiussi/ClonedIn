@@ -3,13 +3,11 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-import Card from "react-bootstrap/Card"
-import Badge from "react-bootstrap/Badge"
 import Navigation from "../components/navbar"
+import Form from "react-bootstrap/Form"
 import CategoriesSelect from "../components/categoriesSelect"
 import EducationLevelSelect from "../components/educationLevelSelect"
-import Form from "react-bootstrap/Form"
-import defaultProfile from "../images/defaultProfilePicture.png"
+import ProfileCard from "../components/profileCard"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -105,47 +103,12 @@ function DiscoverProfiles() {
               <h3>{t("Discover Profiles")}</h3>
             </Row>
             <Row>
-              <Container className="mx-3 p-2" fluid style={{ background: "#F2F2F2" }}>
-                <Card className="profileCard" style={{ width: "15rem" }}>
-                  <Card.Img variant="top" src={defaultProfile} />
-                  <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
-                    <Card.Title>Username</Card.Title>
-                    <Card.Text>
-                      <div className="d-flex flex-column">
-                        <div className="d-flex justify-content-start align-items-center my-2">
-                          <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
-                          {t("Job Category")}:
-                          <Badge pill bg="success" className="mx-2">
-                            pill
-                          </Badge>
-                        </div>
-                        <div className="d-flex justify-content-start align-items-center my-2">
-                          <Icon.Briefcase color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
-                          {t("Current Position")}:
-                        </div>
-                        <div className="d-flex justify-content-start align-items-center my-2">
-                          <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
-                          {t("Education Level")}:
-                        </div>
-                        <div className="d-flex justify-content-start align-items-center my-2">
-                          <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "3px" }} />
-                          {t("Location")}:
-                        </div>
-                        <div className="d-flex justify-content-start align-items-center my-2">
-                          <Badge pill bg="success" className="mx-2">
-                            skill1
-                          </Badge>
-                          <Badge pill bg="success" className="mx-2">
-                            skill2
-                          </Badge>
-                          <Badge pill bg="success" className="mx-2">
-                            skill3
-                          </Badge>
-                        </div>
-                      </div>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
+              <Container
+                className="mx-3 p-2 rounded-3"
+                fluid
+                style={{ background: "#F2F2F2", boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)" }}
+              >
+                <ProfileCard category="test" position="CEO" location="CABA" />
               </Container>
             </Row>
             {/* <Row>

@@ -4,6 +4,7 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Card from "react-bootstrap/Card"
+import ProfileCard from "../components/profileCard"
 import Navigation from "../components/navbar"
 import defaultProfile from "../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
@@ -21,35 +22,7 @@ function ProfileUser() {
               {t("Hide My Profile")}
             </Button>
             <br />
-            <Card className="profileCard" style={{ width: "220px" }}>
-              <Card.Img variant="top" src={defaultProfile} />
-              <Button type="button" variant="success">
-                <Icon.PlusSquare color="white" size={20} style={{ marginRight: "5px" }} />
-                {t("Edit Profile Picture")}
-              </Button>
-              <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
-                <Card.Title>
-                  Username
-                  <Button className="float-end" type="button" variant="outline-success">
-                    <Icon.PencilSquare color="green" size={15} />
-                  </Button>
-                </Card.Title>
-                <hr />
-                <Card.Text>
-                  <Icon.ListTask color="black" size={15} style={{ marginRight: "15px" }} />
-                  {t("Job Category")}
-                  <br />
-                  <Icon.Briefcase color="black" size={15} style={{ marginRight: "15px" }} />
-                  {t("Current Position")}
-                  <br />
-                  <Icon.Book color="black" size={15} style={{ marginRight: "15px" }} />
-                  {t("Education Level")}
-                  <br />
-                  <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "15px" }} />
-                  {t("Location")}
-                </Card.Text>
-              </Card.Body>
-            </Card>
+            <ProfileCard editable={true} />
           </Col>
           <Col sm={8} className="col">
             <br />
