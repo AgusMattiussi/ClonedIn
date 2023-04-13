@@ -6,8 +6,8 @@ import Col from "react-bootstrap/esm/Col"
 import Card from "react-bootstrap/Card"
 import Navigation from "../components/navbar"
 import CategoriesSelect from "../components/categoriesSelect"
+import ModalitySelect from "../components/modalitySelect"
 import Form from "react-bootstrap/Form"
-import Dropdown from "react-bootstrap/Dropdown"
 import Badge from "react-bootstrap/Badge"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -62,16 +62,7 @@ function DiscoverJobs() {
             </Row>
             <br />
             <Row>
-              <Dropdown>
-                <Dropdown.Toggle variant="light" id="dropdown" className="dropdown">
-                  {t("Modality")}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>{t("Home Office")}</Dropdown.Item>
-                  <Dropdown.Item>{t("On Site")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Mixed")}</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              <ModalitySelect />
             </Row>
             <br />
             <Row className="search">

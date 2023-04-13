@@ -7,8 +7,8 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Navigation from "../components/navbar"
 import CategoriesSelect from "../components/categoriesSelect"
+import EducationLevelSelect from "../components/educationLevelSelect"
 import Form from "react-bootstrap/Form"
-import Dropdown from "react-bootstrap/Dropdown"
 import defaultProfile from "../images/defaultProfilePicture.png"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -62,18 +62,7 @@ function DiscoverProfiles() {
             </Row>
             <br />
             <Row>
-              <Dropdown>
-                <Dropdown.Toggle variant="light" id="dropdown" className="dropdown">
-                  {t("Education Level")}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>{t("Primario")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Secondario")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Terciario")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Graduado")}</Dropdown.Item>
-                  <Dropdown.Item>{t("Postgrado")}</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              <EducationLevelSelect />
             </Row>
             <br />
             <Row className="search">
