@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Navigation from "../components/navbar"
 import Form from "react-bootstrap/Form"
 import Dropdown from "react-bootstrap/Dropdown"
+import Badge from 'react-bootstrap/Badge';
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import CardHeader from "react-bootstrap/esm/CardHeader"
@@ -116,49 +117,68 @@ function DiscoverJobs() {
               </div>
             </Row>
           </Col>
-          <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
+          <Col>
             <Row>
-              <h3>{t("Discover Jobs")}</h3>
+              <h3 style={{ textAlign: "left"}}>{t("Discover Jobs")}</h3>
             </Row>
-            <Row>
-              <Card className="custom-card w-100 mt-2 mr-2 ml-2">
-                    <Container>
-                      <Card className="justify-content-center mt-2 pt-2" >
-                        <CardHeader className="d-flex justify-content-between align-items-center">
-                          <div className="d-flex justify-content-start">
-                            <h5>
-                              <p>ENTERPRISE'S NAME</p>
-                              <p>| JOB POSITION</p>
-                            </h5>
-                          </div>
-                          <span className="badge badge-pill badge-success p-2 mb-2">
-                            CATEGORY
-                          </span>
+            <Row style={{ marginLeft: "5px", marginRight: "5px"}}>
+              <Card className="custom-card">
+                  <Card style={{ marginTop: "5px", marginBottom: "5px"}}>
+                      <CardHeader className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex justify-content-start">
+                          <h5>Enterprise's Name | Job Position</h5>
+                        </div>
+                        <span>
+                          <h5><Badge pill bg="success">Category</Badge></h5>
+                        </span>
                         </CardHeader>
-                          <div className="d-flex justify-content-between">
-                            <div>
+                        <br/>
+                        <Row className="d-flex align-items-start">
+                          <Col>
+                            <Row>
                               <h5>{t("Modality")}</h5>
                               <p>modalidad</p>
-                            </div>
-                            <div>
-                              <h5>{t("Salary")}</h5>
-                              <p>salary</p>
-                            </div>
-                            <div>
-                              <h5>{t("Skills")}</h5>
-                                <span className="badge badge-pill badge-success">skill</span>
-                            </div>
-                          </div>
-                          <div className="d-flex justify-content-between">
-                            <h5>DESCRIPTION</h5>
-                            <Button variant="outline-dark"  href="/jobOffer">
-                              VIEW MORE
-                            </Button>             
-                          </div>
-                            <p>description</p>
-                        </Card>
-                        </Container>
-                        </Card>
+                            </Row>
+                          </Col>
+                          <Col>
+                            <h5>{t("Salary")}</h5>
+                            <p>salary</p>
+                          </Col>
+                          <Col>
+                            <h5>Required Skills</h5>
+                            <span>
+                              <h6><Badge pill bg="success">Skill</Badge></h6>
+                            </span>
+                          </Col>
+                          <Col>
+                            <Row>
+                              <h5>
+                                <Badge bg="secondary">Contacted/Applied</Badge>
+                              </h5>
+                            </Row>
+                          </Col>
+                        </Row>     
+                        <Row>
+                          <Col>
+                              <h5>Description</h5>
+                          </Col>
+                          <Col></Col>
+                          <Col></Col>
+                          <Col>
+                              <h6>
+                                <Button variant="outline-dark"  href="/jobOffer">
+                                  View More
+                                </Button>
+                              </h6>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col style={{textAlign: "left"}}>
+                          Description goes here...
+                          </Col>
+                        </Row>
+                      </Card>
+                    </Card>
               {users.map((user) => {
                 return (
                   <div className="post-card" key={user.username}>
