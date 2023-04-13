@@ -187,7 +187,7 @@ function RegisterEnterprise() {
                           <label className="area">{t("Job Category")}</label>
                           <Form.Select
                             className="selectFrom"
-                            aria-label="Default select example"
+                            aria-label="Categories select"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                           >

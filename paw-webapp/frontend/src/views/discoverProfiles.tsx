@@ -6,6 +6,7 @@ import Col from "react-bootstrap/esm/Col"
 import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Navigation from "../components/navbar"
+import CategoriesSelect from "../components/categoriesSelect"
 import Form from "react-bootstrap/Form"
 import Dropdown from "react-bootstrap/Dropdown"
 import defaultProfile from "../images/defaultProfilePicture.png"
@@ -57,16 +58,7 @@ function DiscoverProfiles() {
               <h5>{t("Filter By")}</h5>
             </Row>
             <Row>
-              <Dropdown>
-                <Dropdown.Toggle variant="light" id="dropdown-basic" className="dropdown">
-                  {t("Category")}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>Category 1</Dropdown.Item>
-                  <Dropdown.Item>Category 2</Dropdown.Item>
-                  <Dropdown.Item>Category 3</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              <CategoriesSelect />
             </Row>
             <br />
             <Row>
@@ -85,7 +77,7 @@ function DiscoverProfiles() {
             </Row>
             <br />
             <Row className="search">
-              <h5>{t("Years of Experience")}</h5>
+              <h5>{t("Years Of Experience")}</h5>
             </Row>
             <Row className="search">
               <Form className="d-flex">
