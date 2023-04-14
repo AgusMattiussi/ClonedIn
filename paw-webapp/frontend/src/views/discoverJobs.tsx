@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card"
 import Navigation from "../components/navbar"
 import CategoriesSelect from "../components/categoriesSelect"
 import ModalitySelect from "../components/modalitySelect"
+import JobOfferCard from "../components/jobOfferCard"
 import Form from "react-bootstrap/Form"
 import Badge from "react-bootstrap/Badge"
 import { useState, useEffect } from "react"
@@ -114,67 +115,14 @@ function DiscoverJobs() {
                   boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
                 }}
               >
-                <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
-                  <CardHeader className="d-flex justify-content-between align-items-center">
-                    <div className="d-flex justify-content-start">
-                      <h5>Enterprise's Name | Job Position</h5>
-                    </div>
-                    <span>
-                      <h5>
-                        <Badge pill bg="success">
-                          Category
-                        </Badge>
-                      </h5>
-                    </span>
-                  </CardHeader>
-                  <br />
-                  <Row className="d-flex align-items-start">
-                    <Col>
-                      <Row>
-                        <h5>{t("Modality")}</h5>
-                        <p>modalidad</p>
-                      </Row>
-                    </Col>
-                    <Col>
-                      <h5>{t("Salary")}</h5>
-                      <p>salary</p>
-                    </Col>
-                    <Col>
-                      <h5>{t("Required Skills")}</h5>
-                      <span>
-                        <h6>
-                          <Badge pill bg="success">
-                            Skill
-                          </Badge>
-                        </h6>
-                      </span>
-                    </Col>
-                    <Col>
-                      <Row>
-                        <h5>
-                          <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
-                        </h5>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <h5>{t("Description")}</h5>
-                    </Col>
-                    <Col></Col>
-                    <Col></Col>
-                    <Col>
-                      <h6>
-                        <Button variant="outline-dark" href="/jobOffer">
-                          {t("View More")}
-                        </Button>
-                      </h6>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col style={{ textAlign: "left" }}>Description goes here...</Col>
-                  </Row>
-                </Card>
+                <JobOfferCard
+                  enterpriseName="Fake Enterprise"
+                  category="Finance"
+                  position="CEO"
+                  salary="100000"
+                  contacted={true}
+                />
+                <JobOfferCard category="Technology" position="CTO" description="Loren ipsum" />
               </Container>
               {/* {users.map((user) => {
                 return (
