@@ -103,5 +103,9 @@
   "Cancelled": "Cancelado",
   "View All": "Ver Todo",
 
-  "Required Skills": "Habilidades Requeridas"
+  "Required Skills": "Habilidades Requeridas",
+  "Description": "Descripción",
+  "Contacted": "Contactado",
+  "ContactedOrApplied": "Contactado/Postulado",
+  "View More": "Ver más"
 }

@@ -64,9 +64,10 @@ function DiscoverJobs() {
             <Row>
               <ModalitySelect />
             </Row>
-            <br />
-            <Row className="search">
-              <h5>{t("Salary")}</h5>
+            <Row className="search mt-2">
+              <div className="d-flex justify-content-center">
+                <h6>{t("Salary")}</h6>
+              </div>
             </Row>
             <Row className="search">
               <Form className="d-flex">
@@ -100,13 +101,20 @@ function DiscoverJobs() {
               </div>
             </Row>
           </Col>
-          <Col>
+          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
             <Row>
               <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
             </Row>
-            <Row style={{ marginLeft: "5px", marginRight: "5px" }}>
-              <Card className="custom-card">
-                <Card style={{ marginTop: "5px", marginBottom: "5px" }}>
+            <Row className="w-100">
+              <Container
+                className="mx-3 p-2 rounded-3 d-flex flex-wrap"
+                fluid
+                style={{
+                  background: "#F2F2F2",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
+                }}
+              >
+                <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
                   <CardHeader className="d-flex justify-content-between align-items-center">
                     <div className="d-flex justify-content-start">
                       <h5>Enterprise's Name | Job Position</h5>
@@ -132,7 +140,7 @@ function DiscoverJobs() {
                       <p>salary</p>
                     </Col>
                     <Col>
-                      <h5>Required Skills</h5>
+                      <h5>{t("Required Skills")}</h5>
                       <span>
                         <h6>
                           <Badge pill bg="success">
@@ -144,21 +152,21 @@ function DiscoverJobs() {
                     <Col>
                       <Row>
                         <h5>
-                          <Badge bg="secondary">Contacted/Applied</Badge>
+                          <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
                         </h5>
                       </Row>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                      <h5>Description</h5>
+                      <h5>{t("Description")}</h5>
                     </Col>
                     <Col></Col>
                     <Col></Col>
                     <Col>
                       <h6>
                         <Button variant="outline-dark" href="/jobOffer">
-                          View More
+                          {t("View More")}
                         </Button>
                       </h6>
                     </Col>
@@ -167,15 +175,15 @@ function DiscoverJobs() {
                     <Col style={{ textAlign: "left" }}>Description goes here...</Col>
                   </Row>
                 </Card>
-              </Card>
-              {users.map((user) => {
+              </Container>
+              {/* {users.map((user) => {
                 return (
                   <div className="post-card" key={user.username}>
                     <h2 className="post-title">{user.username}</h2>
                     <p className="post-body">{user.self}</p>
                   </div>
                 )
-              })}
+              })} */}
             </Row>
           </Col>
         </Row>

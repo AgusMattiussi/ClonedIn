@@ -13,6 +13,7 @@ function ProfileCard({
   location,
   skills,
   editable,
+  contacted,
 }: {
   name: string
   category: string
@@ -21,6 +22,7 @@ function ProfileCard({
   location: string
   skills: string
   editable: boolean
+  contacted: boolean
 }) {
   const { t } = useTranslation()
 
@@ -42,6 +44,10 @@ function ProfileCard({
             <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
               <Icon.PencilSquare color="green" size={15} />
             </Button>
+          ) : contacted ? (
+            <Badge className="p-2" bg="secondary">
+              {t("Contacted")}
+            </Badge>
           ) : (
             <></>
           )}
@@ -109,6 +115,7 @@ ProfileCard.defaultProps = {
   location: "No especificado",
   skills: "No especificado",
   editable: false,
+  contacted: false,
 }
 
 export default ProfileCard

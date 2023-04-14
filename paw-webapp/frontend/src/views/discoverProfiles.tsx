@@ -62,9 +62,10 @@ function DiscoverProfiles() {
             <Row>
               <EducationLevelSelect />
             </Row>
-            <br />
-            <Row className="search">
-              <h5>{t("Years Of Experience")}</h5>
+            <Row className="search mt-2">
+              <div className="d-flex justify-content-center">
+                <h6>{t("Years Of Experience")}</h6>
+              </div>
             </Row>
             <Row className="search">
               <Form className="d-flex">
@@ -98,17 +99,18 @@ function DiscoverProfiles() {
               </div>
             </Row>
           </Col>
-          <Col sm={6} className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
+          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
             <Row>
               <h3>{t("Discover Profiles")}</h3>
             </Row>
             <Row>
               <Container
-                className="mx-3 p-2 rounded-3"
+                className="mx-3 p-2 rounded-3 d-flex flex-row flex-wrap"
                 fluid
                 style={{ background: "#F2F2F2", boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)" }}
               >
                 <ProfileCard category="test" position="CEO" location="CABA" />
+                <ProfileCard category="test1" contacted={true} />
               </Container>
             </Row>
             {/* <Row>
