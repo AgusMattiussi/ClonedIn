@@ -29,7 +29,7 @@ function DiscoverProfiles() {
 
   return (
     <div>
-      <Navigation />
+      <Navigation isEnterprise={true} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <Col sm={2} className="sidebar">

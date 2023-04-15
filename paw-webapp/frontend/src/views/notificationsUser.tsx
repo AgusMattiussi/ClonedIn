@@ -1,5 +1,4 @@
 import Button from "react-bootstrap/Button"
-import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
