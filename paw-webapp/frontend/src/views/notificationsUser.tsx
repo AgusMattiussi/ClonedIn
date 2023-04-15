@@ -30,46 +30,38 @@ function NotifcationsUser() {
       <Container fluid>
         <Row className="align-items-start d-flex">
           <Col sm={2} className="sidebar">
-            <Row className="search">
-              <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
-            </Row>
-            <Row>
-              <div className="d-flex flex-wrap justify-content-center mt-2">
+            <div className="d-flex flex-column justify-content-center">
+              <div className="search mx-auto">
+                <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
                 <Button variant="outline-light " className="filterbtn">
                   {t("Accepted")}
                 </Button>
               </div>
-            </Row>
-            <Row>
-              <div className="d-flex flex-wrap justify-content-center mt-2">
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
                 <Button variant="outline-light " className="filterbtn">
                   {t("Rejected")}
                 </Button>
               </div>
-            </Row>
-            <Row>
-              <div className="d-flex flex-wrap justify-content-center mt-2">
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
                 <Button variant="outline-light " className="filterbtn">
                   {t("Pending")}
                 </Button>
               </div>
-            </Row>
-            <Row>
-              <div className="d-flex flex-wrap justify-content-center mt-2">
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
                 <Button variant="outline-light " className="filterbtn">
                   {t("Cancelled")}
                 </Button>
               </div>
-            </Row>
-            <Row>
-              <div className="d-flex flex-wrap justify-content-center mt-2">
+              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
                 <Button variant="outline-light " className="filterbtn">
                   {t("View All")}
                 </Button>
               </div>
-            </Row>
+            </div>
           </Col>
-          <Col sm={6} className="align-items-start d-flex mt-2 mr-2 mb-2">
+          <Col className="align-items-start d-flex mt-2 mr-2 mb-2">
             <Row>
               <h3>{t("Job Offers")}</h3>
             </Row>
