@@ -4,9 +4,9 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Card from "react-bootstrap/Card"
+import Badge from "react-bootstrap/Badge"
 import ProfileCard from "../components/profileCard"
 import Navigation from "../components/navbar"
-import defaultProfile from "../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 
 function ProfileUser() {
@@ -39,41 +39,75 @@ function ProfileUser() {
             <Card style={{ textAlign: "left" }}>
               <Card.Body>
                 <Card.Title>
-                  <strong>{t("Experience")}</strong>
-                  <Button className="float-end" type="button" variant="success" style={{ marginLeft: "15px" }}>
-                    <Icon.PlusSquare color="white" size={15} style={{ marginRight: "5px" }} />
-                    {t("Add Experience")}
-                  </Button>
+                  <div className="d-flex flex-row justify-content-between align-items-center">
+                    <strong>{t("Experience")}</strong>
+                    <Button type="button" variant="success" style={{ width: "200px" }}>
+                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                      {t("Add Experience")}
+                    </Button>
+                  </div>
                 </Card.Title>
                 <hr />
-                Lorem ipsum
+                <div className="d-flex flex-row justify-content-between align-items-center">
+                  <h6>Enterprise Name - Job Position</h6>
+                  <Button type="button" variant="outline-danger">
+                    <Icon.Trash />
+                  </Button>
+                </div>
+                <p style={{ fontSize: "10pt" }}>
+                  {/* TODO: agregar condicionales si no especifico fecha */}
+                  Enero 2019 - Presente
+                </p>
+                <p>Description</p>
+                <hr />
               </Card.Body>
             </Card>
             <br />
             <Card style={{ textAlign: "left" }}>
               <Card.Body>
                 <Card.Title>
-                  <strong>{t("Education Level")}</strong>
-                  <Button className="float-end" type="button" variant="success" style={{ marginLeft: "5px" }}>
-                    <Icon.PlusSquare color="white" size={15} style={{ marginRight: "5px" }} />
-                    {t("Add Education")}
-                  </Button>
+                  <div className="d-flex flex-row justify-content-between align-items-center">
+                    <strong>{t("Education Level")}</strong>
+                    <Button type="button" variant="success" style={{ width: "200px" }}>
+                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                      {t("Add Education")}
+                    </Button>
+                  </div>
                 </Card.Title>
                 <hr />
-                Lorem ipsum
+                <div className="d-flex flex-row justify-content-between align-items-center">
+                  <h6>Institution Name - Degree</h6>
+                  <Button type="button" variant="outline-danger">
+                    <Icon.Trash />
+                  </Button>
+                </div>
+                <p style={{ fontSize: "10pt" }}>Marzo 2013 - Diciembre 2018</p>
+                <hr />
               </Card.Body>
             </Card>
             <br />
             <Card style={{ textAlign: "left" }}>
               <Card.Body>
                 <Card.Title>
-                  <strong>{t("Skills")}</strong>
-                  <Button className="float-end" type="button" variant="success" style={{ marginLeft: "15px" }}>
-                    <Icon.PlusSquare color="white" size={15} style={{ marginRight: "5px" }} />
-                    {t("Add Skill")}
-                  </Button>
+                  <div className="d-flex flex-row justify-content-between align-items-center">
+                    <strong>{t("Skills")}</strong>
+                    <Button type="button" variant="success" style={{ width: "200px" }}>
+                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                      {t("Add Skill")}
+                    </Button>
+                  </div>
                 </Card.Title>
                 <hr />
+                {/* View As Enterprise
+                <Badge pill bg="success" className="mx-2 p-2">
+                  skill1
+                </Badge> */}
+                <Badge pill bg="light" text="dark" className="mx-2">
+                  skill1
+                  <Button type="button" variant="outline-dark" style={{ borderStyle: "none" }}>
+                    <Icon.X />
+                  </Button>
+                </Badge>
               </Card.Body>
             </Card>
           </Col>

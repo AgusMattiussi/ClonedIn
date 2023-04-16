@@ -31,8 +31,10 @@ function ProfileCard({
       <Card.Img variant="top" src={defaultProfile} />
       {editable ? (
         <Button type="button" variant="success">
-          <Icon.PlusSquare color="white" size={20} style={{ marginRight: "5px" }} />
-          {t("Edit Profile Picture")}
+          <div className="d-flex align-items-center justify-content-center">
+            <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
+            {t("Edit Profile Picture")}
+          </div>
         </Button>
       ) : (
         <></>
@@ -89,15 +91,21 @@ function ProfileCard({
               </p>
             </div>
             <div className="d-flex justify-content-start align-items-center my-2">
-              <Badge pill bg="success" className="mx-2">
-                skill1
-              </Badge>
-              <Badge pill bg="success" className="mx-2">
-                skill2
-              </Badge>
-              <Badge pill bg="success" className="mx-2">
-                skill3
-              </Badge>
+              {editable ? (
+                <></>
+              ) : (
+                <div>
+                  <Badge pill bg="success" className="mx-2">
+                    skill1
+                  </Badge>
+                  <Badge pill bg="success" className="mx-2">
+                    skill2
+                  </Badge>
+                  <Badge pill bg="success" className="mx-2">
+                    skill3
+                  </Badge>
+                </div>
+              )}
             </div>
           </div>
         </Card.Text>
