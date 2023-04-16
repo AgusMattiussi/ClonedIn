@@ -63,7 +63,7 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
                 {t("My Applications")}
               </Nav.Link>
             </Nav>
-            <Button href="/home" variant="outline-success" style={{ color: "white" }}>
+            <Button href="/login" variant="outline-success" style={{ color: "white" }}>
               <Icon.BoxArrowRight color="white" size={25} />
               &nbsp;{t("Log Out")}
             </Button>

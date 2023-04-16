@@ -3,16 +3,13 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-import Card from "react-bootstrap/Card"
 import Navigation from "../components/navbar"
 import CategoriesSelect from "../components/categoriesSelect"
 import ModalitySelect from "../components/modalitySelect"
 import JobOfferCard from "../components/jobOfferCard"
 import Form from "react-bootstrap/Form"
-import Badge from "react-bootstrap/Badge"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import CardHeader from "react-bootstrap/esm/CardHeader"
 
 function DiscoverJobs() {
   const [users, setUsers] = useState<any[]>([])
