@@ -106,5 +106,12 @@
   "Description": "Description",
   "Contacted": "Contacted",
   "ContactedOrApplied": "Contacted/Applied",
-  "View More": "View more"
+  "View More": "View more",
+  "Date": "Date",
+  "Status": "Status",
+  "Order By": "Order by:",
+  "Date asc": "Date asc.",
+  "Date desc": "Date desc.",
+  "Accept": "Accept",
+  "Decline": "Decline"
 }

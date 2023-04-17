@@ -13,6 +13,9 @@ function JobOfferCard({
   skills,
   description,
   contacted,
+  notificationsCard,
+  date,
+  status,
 }: {
   enterpriseName: string
   category: string
@@ -22,6 +25,9 @@ function JobOfferCard({
   skills: string
   description: string
   contacted: boolean
+  notificationsCard: boolean
+  date: string
+  status: string
 }) {
   const { t } = useTranslation()
 
@@ -33,7 +39,15 @@ function JobOfferCard({
             <a href="/profileUser" style={{ textDecoration: "none" }}>
               {enterpriseName}{" "}
             </a>
-            | {position}
+            |
+            {notificationsCard ? (
+              <a href="/enterpriseJobOffer" style={{ textDecoration: "none" }}>
+                {" "}
+                {position}
+              </a>
+            ) : (
+              <> {position}</>
+            )}
           </h5>
         </div>
         <span>
@@ -68,7 +82,40 @@ function JobOfferCard({
             </Badge>
           </div>
         </div>
-        {contacted ? (
+        {notificationsCard ? (
+          <>
+            <div className="d-flex flex-column">
+              <h5>{t("Date")}</h5>
+              <p>{date}</p>
+            </div>
+            <div className="d-flex flex-column">
+              {status !== "pendiente" ? (
+                <>
+                  <h5>
+                    {t("Status")}
+                    {": "} {status}
+                  </h5>
+                </>
+              ) : (
+                <>
+                  <h5>
+                    {t("Status")}
+                    {": "}
+                  </h5>
+                  <Button variant="success" style={{ minWidth: "90px", marginBottom: "5px" }}>
+                    {t("Accept")}
+                  </Button>
+                  <Button variant="danger" style={{ minWidth: "90px" }}>
+                    {t("Decline")}
+                  </Button>
+                </>
+              )}
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        {contacted && !notificationsCard ? (
           <div className="d-flex flex-column">
             <h5>
               <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
@@ -82,11 +129,15 @@ function JobOfferCard({
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        <div>
-          <Button variant="outline-dark" href="/jobOffer">
-            {t("View More")}
-          </Button>
-        </div>
+        {notificationsCard ? (
+          <></>
+        ) : (
+          <div>
+            <Button variant="outline-dark" href="/jobOffer">
+              {t("View More")}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
         <div>
@@ -110,6 +161,9 @@ JobOfferCard.defaultProps = {
   description:
     "No especificado aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   contacted: false,
+  notificationsCard: false,
+  date: "No especificado",
+  status: "pendiente",
 }
 
 export default JobOfferCard

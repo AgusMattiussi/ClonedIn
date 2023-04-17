@@ -107,5 +107,12 @@
   "Description": "Descripción",
   "Contacted": "Contactado",
   "ContactedOrApplied": "Contactado/Postulado",
-  "View More": "Ver más"
+  "View More": "Ver más",
+  "Date": "Fecha",
+  "Status": "Estado",
+  "Order By": "Ordenar por:",
+  "Date asc": "Fecha asc.",
+  "Date desc": "Fecha desc.",
+  "Accept": "Aceptar",
+  "Decline": "Rechazar"
 }
