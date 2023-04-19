@@ -14,6 +14,7 @@ function JobOfferCard({
   description,
   contacted,
   notificationsCard,
+  applicationsCard,
   date,
   status,
 }: {
@@ -26,6 +27,7 @@ function JobOfferCard({
   description: string
   contacted: boolean
   notificationsCard: boolean
+  applicationsCard: boolean
   date: string
   status: string
 }) {
@@ -40,7 +42,7 @@ function JobOfferCard({
               {enterpriseName}{" "}
             </a>
             |
-            {notificationsCard ? (
+            {notificationsCard || applicationsCard ? (
               <a href="/enterpriseJobOffer" style={{ textDecoration: "none" }}>
                 {" "}
                 {position}
@@ -115,7 +117,37 @@ function JobOfferCard({
         ) : (
           <></>
         )}
-        {contacted && !notificationsCard ? (
+        {applicationsCard ? (
+          <>
+            <div className="d-flex flex-column">
+              <h5>{t("Date")}</h5>
+              <p>{date}</p>
+            </div>
+            <div className="d-flex flex-column">
+              {status !== "pendiente" ? (
+                <>
+                  <h5>
+                    {t("Status")}
+                    {": "} {status}
+                  </h5>
+                </>
+              ) : (
+                <>
+                  <h5>
+                    {t("Status")}
+                    {": "} {status}
+                  </h5>
+                  <Button variant="danger" style={{ minWidth: "90px" }}>
+                    {t("Cancel")}
+                  </Button>
+                </>
+              )}
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        {contacted && !(notificationsCard || applicationsCard) ? (
           <div className="d-flex flex-column">
             <h5>
               <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
@@ -129,7 +161,7 @@ function JobOfferCard({
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {notificationsCard ? (
+        {notificationsCard || applicationsCard ? (
           <></>
         ) : (
           <div>
@@ -162,6 +194,7 @@ JobOfferCard.defaultProps = {
     "No especificado aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   contacted: false,
   notificationsCard: false,
+  applicationsCard: false,
   date: "No especificado",
   status: "pendiente",
 }
