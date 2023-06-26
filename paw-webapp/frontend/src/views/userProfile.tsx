@@ -16,12 +16,11 @@ function ProfileUser() {
       <Navigation />
       <Container fluid style={{ background: "#F2F2F2", height: "800px" }}>
         <Row className="row">
-          <Col sm={3} className="col">
+          <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
             <Button variant="success" type="button">
               {t("Hide My Profile")}
             </Button>
-            <br />
             <ProfileCard editable={true} />
           </Col>
           <Col sm={8} className="col">
