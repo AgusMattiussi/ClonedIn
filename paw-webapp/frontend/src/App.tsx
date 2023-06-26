@@ -21,6 +21,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min"
+import ProfileEnterprise from "./views/enterpriseProfile"
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           {/*TODO: revisar --> distinto link para enterprise y user */}
 
           <Route path="/discoverProfiles" element={<DiscoverProfiles />} />
+          <Route path="/profileEnterprise" element={<ProfileEnterprise />} />
 
           <Route path="/profileUser" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />

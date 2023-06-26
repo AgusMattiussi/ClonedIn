@@ -15,6 +15,7 @@ function JobOfferCard({
   contacted,
   notificationsCard,
   applicationsCard,
+  enterpriseProfileCard,
   date,
   status,
 }: {
@@ -28,6 +29,7 @@ function JobOfferCard({
   contacted: boolean
   notificationsCard: boolean
   applicationsCard: boolean
+  enterpriseProfileCard: boolean
   date: string
   status: string
 }) {
@@ -37,20 +39,28 @@ function JobOfferCard({
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
-          <h5>
-            <a href="/profileUser" style={{ textDecoration: "none" }}>
-              {enterpriseName}{" "}
-            </a>
-            |
-            {notificationsCard || applicationsCard ? (
+          {enterpriseProfileCard ? (
+            <h5>
               <a href="/enterpriseJobOffer" style={{ textDecoration: "none" }}>
-                {" "}
                 {position}
               </a>
-            ) : (
-              <> {position}</>
-            )}
-          </h5>
+            </h5>
+          ) : (
+            <h5>
+              <a href="/profileUser" style={{ textDecoration: "none" }}>
+                {enterpriseName}{" "}
+              </a>
+              |
+              {notificationsCard || applicationsCard ? (
+                <a href="/enterpriseJobOffer" style={{ textDecoration: "none" }}>
+                  {" "}
+                  {position}
+                </a>
+              ) : (
+                <> {position}</>
+              )}
+            </h5>
+          )}
         </div>
         <span>
           <h5 className="pt-2">
@@ -161,7 +171,20 @@ function JobOfferCard({
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {notificationsCard || applicationsCard ? (
+        {enterpriseProfileCard ? (
+          status === "closed" ? (
+            <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
+              {t("Closed")}
+            </Badge>
+          ) : (
+            <div>
+              <Button variant="outline-dark">{t("Close Job Offer")}</Button>
+            </div>
+          )
+        ) : (
+          <></>
+        )}
+        {notificationsCard || applicationsCard || enterpriseProfileCard ? (
           <></>
         ) : (
           <div>
@@ -195,6 +218,7 @@ JobOfferCard.defaultProps = {
   contacted: false,
   notificationsCard: false,
   applicationsCard: false,
+  enterpriseProfileCard: false,
   date: "No especificado",
   status: "pendiente",
 }

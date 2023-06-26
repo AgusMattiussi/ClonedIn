@@ -69,6 +69,8 @@
   "My Job Offers": "Mis Ofertas de Trabajo",
   "My Recruits": "Mis Reclutas",
   "Interested": "Interesados",
+  "Add Job Offer": "Agregar Oferta de Trabajo",
+  "Close Job Offer": "Cerrar Propuesta",
 
   "Hide My Profile": "Ocultar Mi Perfil",
   "Edit Profile Picture": "Editar Foto de Perfil",
@@ -101,6 +103,7 @@
   "Rejected": "Rechazado",
   "Pending": "Pendiente",
   "Cancelled": "Cancelado",
+  "Closed": "Cerrada",
   "View All": "Ver Todo",
 
   "Required Skills": "Habilidades Requeridas",
