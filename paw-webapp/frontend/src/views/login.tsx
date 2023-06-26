@@ -5,9 +5,15 @@ import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
+import { useEffect } from "react"
 
 function Login() {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Login Page Title")
+  }, [])
+
   return (
     <div>
       <Header />

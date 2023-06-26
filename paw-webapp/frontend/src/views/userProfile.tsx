@@ -8,9 +8,15 @@ import Badge from "react-bootstrap/Badge"
 import ProfileCard from "../components/profileCard"
 import Navigation from "../components/navbar"
 import { useTranslation } from "react-i18next"
+import { useEffect } from "react"
 
 function ProfileUser() {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = "UserName | ClonedIn" // TODO: Add username
+  }, [])
+
   return (
     <div>
       <Navigation />

@@ -25,6 +25,10 @@ function NotifcationsUser() {
 
   const { t } = useTranslation()
 
+  useEffect(() => {
+    document.title = t("Notifications Page Title")
+  }, [])
+
   return (
     <div>
       <Navigation />

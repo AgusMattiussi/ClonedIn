@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next"
 
 function DiscoverProfiles() {
   const [users, setUsers] = useState<any[]>([])
+
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
       .then((response) => response.json())
@@ -26,6 +27,10 @@ function DiscoverProfiles() {
   }, [])
 
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Discover Profiles") + " | ClonedIn"
+  }, [])
 
   return (
     <div>
@@ -118,10 +123,10 @@ function DiscoverProfiles() {
                   boxShadow: "0 0 10px rgba(0,0,0,0.16), 0 0 4px rgba(0,0,0,0.23)",
                 }}
               >
-                <a href="/userProfile" style={{ textDecoration: "none", color: "black" }}>
+                <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
                   <ProfileCard category="test" position="CEO" location="CABA" />
                 </a>
-                <a href="/userProfile" style={{ textDecoration: "none", color: "black" }}>
+                <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
                   <ProfileCard category="test1" contacted={true} />
                 </a>
               </Container>

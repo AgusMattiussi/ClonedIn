@@ -118,5 +118,19 @@
   "Date desc": "Fecha desc.",
   "Accept": "Aceptar",
   "Decline": "Rechazar",
-  "Cancel": "Cancelar"
+  "Cancel": "Cancelar",
+
+  "Login Page Title": "Iniciar Sesión | ClonedIn",
+  "Register Page Title": "Regístrate | ClonedIn",
+  "Edit Page Title": "Edita tu perfil | ClonedIn",
+  "Education Form Page Title": "Agregar Educación | ClonedIn",
+  "Experience Form Page Title": "Agregar Experiencia | ClonedIn",
+  "Skills Form Page Title": "Agregar Aptitudes | ClonedIn",
+  "Image Form Page Title": "Agregar foto de perfil | ClonedIn",
+  "Contact Form Page Title": "Contáctate | ClonedIn",
+  "Job Offer Page Title": "Oferta Laboral | ClonedIn",
+  "My Recruits Page Title": "Mis Reclutas | ClonedIn",
+  "Interested Page Title": "Interesados | ClonedIn",
+  "Applications Page Title": "Mis Postulaciones | ClonedIn",
+  "Notifications Page Title": "Mis Ofertas de Trabajo | ClonedIn"
 }

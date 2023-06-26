@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next"
 
 function ApplicationsUser() {
   const [users, setUsers] = useState<any[]>([])
+
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
       .then((response) => response.json())
@@ -25,6 +26,10 @@ function ApplicationsUser() {
   const [orderBy, setOrderBy] = useState("")
 
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Applications Page Title")
+  }, [])
 
   return (
     <div>

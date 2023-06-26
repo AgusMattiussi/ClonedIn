@@ -3,8 +3,16 @@ import Header from "../components/header"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useTranslation } from "react-i18next"
+import { useEffect } from "react"
 
 function ContactForm() {
+  const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Contact Form Page Title")
+  }, [])
+
   return (
     <div>
       <Header />

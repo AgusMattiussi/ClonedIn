@@ -3,8 +3,16 @@ import Header from "../components/header"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 
 function EditUser() {
+  const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Edit Page Title")
+  }, [])
+
   return (
     <div>
       <Header />

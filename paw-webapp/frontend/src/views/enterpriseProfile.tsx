@@ -13,7 +13,9 @@ function ProfileEnterprise() {
   useEffect(() => {
     document.title = "EnterpriseName | ClonedIn" // TODO: Add enterprise name
   }, [])
+
   const { t } = useTranslation()
+
   return (
     <div>
       <Navigation isEnterprise={true} />

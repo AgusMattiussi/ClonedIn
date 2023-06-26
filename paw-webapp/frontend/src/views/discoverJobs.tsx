@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next"
 
 function DiscoverJobs() {
   const [users, setUsers] = useState<any[]>([])
+
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
       .then((response) => response.json())
@@ -26,6 +27,10 @@ function DiscoverJobs() {
   }, [])
 
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Discover Jobs") + " | ClonedIn"
+  }, [])
 
   return (
     <div>

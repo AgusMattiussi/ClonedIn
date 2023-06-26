@@ -104,6 +104,11 @@ function RegisterEnterprise() {
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
   const { t } = useTranslation()
+
+  useEffect(() => {
+    document.title = t("Register Page Title")
+  }, [])
+
   return (
     <div>
       <Header />
