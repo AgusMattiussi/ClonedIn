@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
 
-function ImageProfile() {
+function ImageProfileForm() {
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -55,4 +55,4 @@ function ImageProfile() {
   )
 }
 
-export default ImageProfile
+export default ImageProfileForm

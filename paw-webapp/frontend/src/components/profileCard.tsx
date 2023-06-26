@@ -30,7 +30,7 @@ function ProfileCard({
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       <Card.Img variant="top" src={defaultProfile} />
       {editable ? (
-        <Button type="button" variant="success">
+        <Button type="button" variant="success" href="/imageProfile">
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}

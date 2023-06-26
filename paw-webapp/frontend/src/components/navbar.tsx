@@ -17,13 +17,13 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
     <Navbar expand="lg" className="color-nav" variant="dark">
       {isEnterprise ? (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand href="/discoverProfiles">
+          <Navbar.Brand href="/profiles">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" href="/discoverProfiles">
+              <Nav.Link className="nav-item" href="/profiles">
                 {t("Discover Profiles")}
               </Nav.Link>
               <Nav.Link className="nav-item" href="/profileEnterprise">
@@ -44,13 +44,13 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
         </div>
       ) : (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand href="/discoverJobs">
+          <Navbar.Brand href="/jobs">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" href="/discoverJobs">
+              <Nav.Link className="nav-item" href="/jobs">
                 {t("Discover Jobs")}
               </Nav.Link>
               <Nav.Link className="nav-item" href="/profileUser">

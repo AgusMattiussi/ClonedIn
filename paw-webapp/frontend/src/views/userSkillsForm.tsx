@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
 
-function SkillsUser() {
+function SkillsForm() {
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -58,4 +58,4 @@ function SkillsUser() {
   )
 }
 
-export default SkillsUser
+export default SkillsForm

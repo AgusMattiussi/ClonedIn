@@ -40,7 +40,7 @@ function Login() {
                         </Form.Group>
                       </div>
                       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/discoverJobs" variant="success" type="submit">
+                      <Button href="/jobs" variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
                       </Button>
                       <p>{t("No account yet?")}</p>

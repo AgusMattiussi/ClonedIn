@@ -3,15 +3,15 @@ import Login from "./views/login"
 import DiscoverJobs from "./views/discoverJobs"
 import DiscoverProfiles from "./views/discoverProfiles"
 import RegisterEnterprise from "./views/enterpriseRegister"
-import EditEnterprise from "./views/enterpriseEdit"
+import EditEnterpriseForm from "./views/enterpriseEditForm"
 import ContactForm from "./views/enterpriseContactForm"
 import JobOfferEnterprise from "./views/enterpriseJobOffer"
-import ImageProfile from "./views/imageProfile"
+import ImageProfileForm from "./views/imageProfileForm"
 import RegisterUser from "./views/userRegister"
-import EditUser from "./views/userEdit"
-import SkillsUser from "./views/userSkills"
-import ExperienceUser from "./views/userExperience"
-import EducationUser from "./views/userEducation"
+import EditUserForm from "./views/userEditForm"
+import SkillsForm from "./views/userSkillsForm"
+import ExperienceForm from "./views/userExperienceForm"
+import EducationForm from "./views/userEducationForm"
 import ProfileUser from "./views/userProfile"
 import NotificationsUser from "./views/userNotifications"
 import ApplicationsUser from "./views/userApplications"
@@ -32,24 +32,24 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/registerUser" element={<RegisterUser />} />
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
-          <Route path="/discoverJobs" element={<DiscoverJobs />} />
-          <Route path="/editUser" element={<EditUser />} />
-          <Route path="/editEnterprise" element={<EditEnterprise />} />
-          <Route path="/imageProfile" element={<ImageProfile />} />
+          <Route path="/jobs" element={<DiscoverJobs />} />
+          <Route path="/editUser" element={<EditUserForm />} />
+          <Route path="/editEnterprise" element={<EditEnterpriseForm />} />
+          <Route path="/imageProfile" element={<ImageProfileForm />} />
           {/*TODO: revisar --> distinto link para enterprise y user */}
 
-          <Route path="/discoverProfiles" element={<DiscoverProfiles />} />
+          <Route path="/profiles" element={<DiscoverProfiles />} />
           <Route path="/profileEnterprise" element={<ProfileEnterprise />} />
 
           <Route path="/profileUser" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />
           <Route path="/applicationsUser" element={<ApplicationsUser />} />
 
-          <Route path="/addSkill" element={<SkillsUser />} />
-          <Route path="/addExperience" element={<ExperienceUser />} />
-          <Route path="/addEducation" element={<EducationUser />} />
-          <Route path="/contactUser" element={<ContactForm />} />
-          <Route path="/addJobOffer" element={<JobOfferEnterprise />} />
+          <Route path="/skills" element={<SkillsForm />} />
+          <Route path="/experiences" element={<ExperienceForm />} />
+          <Route path="/educations" element={<EducationForm />} />
+          <Route path="/contacts" element={<ContactForm />} />
+          <Route path="/jobOffers" element={<JobOfferEnterprise />} />
         </Routes>
       </BrowserRouter>
     </div>
