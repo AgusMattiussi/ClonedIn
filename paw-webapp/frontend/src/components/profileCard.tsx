@@ -27,7 +27,7 @@ function ProfileCard({
   const { t } = useTranslation()
 
   return (
-    <Card className="profileCard rounded-3" style={{ width: "17rem" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       <Card.Img variant="top" src={defaultProfile} />
       {editable ? (
         <Button type="button" variant="success">

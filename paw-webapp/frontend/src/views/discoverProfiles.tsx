@@ -31,7 +31,7 @@ function DiscoverProfiles() {
     <div>
       <Navigation isEnterprise={true} />
       <Container fluid>
-        <Row className="align-items-start d-flex">
+        <Row className="align-items-start d-flex vh-100">
           <Col sm={2} className="sidebar">
             <Row className="search">
               <h5 className="ml-2 mt-2">{t("Search By")}</h5>
@@ -103,14 +103,27 @@ function DiscoverProfiles() {
             <Row>
               <h3>{t("Discover Profiles")}</h3>
             </Row>
-            <Row>
+            <Row
+              className="rounded-3 d-flex flex-row flex-wrap w-auto"
+              style={{
+                marginLeft: "0px",
+                marginRight: "3px",
+              }}
+            >
               <Container
-                className="mx-3 p-2 rounded-3 d-flex flex-row flex-wrap"
+                className="p-2 rounded-3 d-flex flex-row flex-wrap w-auto justify-content-center"
                 fluid
-                style={{ background: "#F2F2F2", boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)" }}
+                style={{
+                  background: "#F2F2F2",
+                  boxShadow: "0 0 10px rgba(0,0,0,0.16), 0 0 4px rgba(0,0,0,0.23)",
+                }}
               >
-                <ProfileCard category="test" position="CEO" location="CABA" />
-                <ProfileCard category="test1" contacted={true} />
+                <a href="/userProfile" style={{ textDecoration: "none", color: "black" }}>
+                  <ProfileCard category="test" position="CEO" location="CABA" />
+                </a>
+                <a href="/userProfile" style={{ textDecoration: "none", color: "black" }}>
+                  <ProfileCard category="test1" contacted={true} />
+                </a>
               </Container>
             </Row>
             {/* <Row>
