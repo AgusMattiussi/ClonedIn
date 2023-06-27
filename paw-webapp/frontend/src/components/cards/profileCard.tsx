@@ -2,7 +2,7 @@ import * as Icon from "react-bootstrap-icons"
 import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
-import defaultProfile from "../images/defaultProfilePicture.png"
+import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 
 function ProfileCard({

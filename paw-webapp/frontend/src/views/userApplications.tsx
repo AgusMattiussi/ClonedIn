@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import JobOfferCard from "../components/jobOfferCard"
+import JobOfferCard from "../components/cards/jobOfferCard"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
