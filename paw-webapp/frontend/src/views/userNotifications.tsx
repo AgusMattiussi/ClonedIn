@@ -8,7 +8,7 @@ import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-function NotifcationsUser() {
+function NotificationsUser() {
   const [users, setUsers] = useState<any[]>([])
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -81,4 +81,4 @@ function NotifcationsUser() {
   )
 }
 
-export default NotifcationsUser
+export default NotificationsUser
