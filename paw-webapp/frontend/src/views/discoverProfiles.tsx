@@ -2,7 +2,7 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import ProfileCard from "../components/cards/profileCard"
+import ProfileUserCard from "../components/cards/profileUserCard"
 import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -54,10 +54,10 @@ function DiscoverProfiles() {
                 }}
               >
                 <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
-                  <ProfileCard category="test" position="CEO" location="CABA" />
+                  <ProfileUserCard category="test" position="CEO" location="CABA" />
                 </a>
                 <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
-                  <ProfileCard category="test1" contacted={true} />
+                  <ProfileUserCard category="test1" contacted={true} />
                 </a>
               </Container>
             </Row>

@@ -3,7 +3,7 @@ import * as Icon from "react-bootstrap-icons"
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-import ProfileCard from "../components/cards/profileCard"
+import ProfileEnterpriseCard from "../components/cards/profileEnterpriseCard"
 import JobOfferCard from "../components/cards/jobOfferCard"
 import Navigation from "../components/navbar"
 import { useTranslation } from "react-i18next"
@@ -23,7 +23,7 @@ function ProfileEnterprise() {
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
-            <ProfileCard editable={true} />
+            <ProfileEnterpriseCard editable={true} />
           </Col>
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />

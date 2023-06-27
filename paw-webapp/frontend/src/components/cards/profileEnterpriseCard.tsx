@@ -5,24 +5,24 @@ import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 
-function ProfileCard({
+function ProfileEnterpriseCard({
   name,
   category,
-  position,
-  educationLevel,
   location,
-  skills,
+  employees,
+  foundationYear,
+  website,
+  aboutUs,
   editable,
-  contacted,
 }: {
   name: string
   category: string
-  position: string
-  educationLevel: string
   location: string
-  skills: string
+  employees: string
+  foundationYear: string
+  website: string
+  aboutUs: string
   editable: boolean
-  contacted: boolean
 }) {
   const { t } = useTranslation()
 
@@ -43,13 +43,15 @@ function ProfileCard({
         <div className="d-flex justify-content-around align-items-center">
           <h5>{name}</h5>
           {editable ? (
-            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
+            <Button
+              className="float-end"
+              type="button"
+              variant="outline-success"
+              href="/editEnterprise"
+              style={{ paddingBottom: "10px" }}
+            >
               <Icon.PencilSquare color="green" size={15} />
             </Button>
-          ) : contacted ? (
-            <Badge className="p-2" bg="secondary">
-              {t("Contacted")}
-            </Badge>
           ) : (
             <></>
           )}
@@ -73,39 +75,28 @@ function ProfileCard({
               )}
             </div>
             <div className="d-flex justify-content-start my-2">
-              <Icon.Briefcase color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
+              <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Current Position")}: {position}
+                {t("Quantity of employees")}: {employees}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
-              <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
+              <Icon.CalendarEvent color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Education Level")}: {educationLevel}
+                {t("Funding Year")}: {foundationYear}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
-              <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
+              <Icon.Globe color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Location")}: {location}
+                {t("Website")}: {website}
               </p>
             </div>
-            <div className="d-flex justify-content-start align-items-center my-2">
-              {editable ? (
-                <></>
-              ) : (
-                <div>
-                  <Badge pill bg="success" className="mx-2">
-                    skill1
-                  </Badge>
-                  <Badge pill bg="success" className="mx-2">
-                    skill2
-                  </Badge>
-                  <Badge pill bg="success" className="mx-2">
-                    skill3
-                  </Badge>
-                </div>
-              )}
+            <div className="d-flex flex-column align-items-start my-2">
+              <p className="fw-bold" style={{ marginBottom: "2px" }}>
+                {t("About Us")}
+              </p>
+              <p> {aboutUs}</p>
             </div>
           </div>
         </Card.Text>
@@ -115,15 +106,15 @@ function ProfileCard({
 }
 
 //TODO: ver traduccion de valores por default
-ProfileCard.defaultProps = {
-  name: "Username",
+ProfileEnterpriseCard.defaultProps = {
+  name: "Enterprise",
   category: "No especificado",
-  position: "No",
-  educationLevel: "No especificado",
+  employees: "No especificado",
+  foundationYear: "No especificado",
   location: "No especificado",
-  skills: "No especificado",
+  website: "No especificado",
+  aboutUs: "No especificado",
   editable: false,
-  contacted: false,
 }
 
-export default ProfileCard
+export default ProfileEnterpriseCard

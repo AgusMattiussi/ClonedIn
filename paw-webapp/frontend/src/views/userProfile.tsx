@@ -5,7 +5,7 @@ import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
-import ProfileCard from "../components/cards/profileCard"
+import ProfileUserCard from "../components/cards/profileUserCard"
 import Navigation from "../components/navbar"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
@@ -27,7 +27,7 @@ function ProfileUser() {
             <Button variant="success" type="button">
               {t("Hide My Profile")}
             </Button>
-            <ProfileCard editable={true} />
+            <ProfileUserCard editable={true} />
           </Col>
           <Col sm={8} className="col">
             <br />
