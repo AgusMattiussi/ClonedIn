@@ -15,13 +15,15 @@ import EducationForm from "./views/userEducationForm"
 import ProfileUser from "./views/userProfile"
 import NotificationsUser from "./views/userNotifications"
 import ApplicationsUser from "./views/userApplications"
+import ProfileEnterprise from "./views/enterpriseProfile"
+import ContactsEnterprise from "./views/enterpriseContacts"
+import InterestedEnterprise from "./views/enterpriseInterested"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min"
-import ProfileEnterprise from "./views/enterpriseProfile"
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
 
           <Route path="/profiles" element={<DiscoverProfiles />} />
           <Route path="/profileEnterprise" element={<ProfileEnterprise />} />
+          <Route path="/contactsEnterprise" element={<ContactsEnterprise />} />
+          <Route path="/interestedEnterprise" element={<InterestedEnterprise />} />
 
           <Route path="/profileUser" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />
