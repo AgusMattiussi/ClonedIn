@@ -2,9 +2,8 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import JobOfferCard from "../components/cards/jobOfferCard"
+import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
-
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -48,14 +47,14 @@ function DiscoverJobs() {
                   boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
                 }}
               >
-                <JobOfferCard
+                <JobOfferDiscoverCard
                   enterpriseName="Fake Enterprise"
                   category="Finance"
                   position="CEO"
                   salary="100000"
                   contacted={true}
                 />
-                <JobOfferCard category="Technology" position="CTO" description="Loren ipsum" />
+                <JobOfferDiscoverCard category="Technology" position="CTO" description="Loren ipsum" />
               </Container>
               {/* {users.map((user) => {
                 return (

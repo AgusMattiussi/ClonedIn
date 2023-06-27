@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import JobOfferCard from "../components/cards/jobOfferCard"
+import JobOfferApplicationsCard from "../components/cards/jobOfferApplicationCard"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -60,22 +60,19 @@ function ApplicationsUser() {
                   maxWidth: "98%",
                 }}
               >
-                <JobOfferCard
+                <JobOfferApplicationsCard
                   enterpriseName="Fake Enterprise"
                   category="Finance"
                   position="CEO"
                   date="18/12/2022"
-                  contacted={true}
-                  applicationsCard={true}
                 />
-                <JobOfferCard
+                <JobOfferApplicationsCard
                   enterpriseName="Fake Enterprise"
                   category="Technology"
                   position="CTO"
                   description="Loren Ipsum"
                   date="9/12/2018"
                   status="Aceptada"
-                  applicationsCard={true}
                 />
               </Container>
             </Row>

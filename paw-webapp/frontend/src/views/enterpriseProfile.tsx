@@ -4,7 +4,7 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import ProfileEnterpriseCard from "../components/cards/profileEnterpriseCard"
-import JobOfferCard from "../components/cards/jobOfferCard"
+import JobOfferEnterpriseCard from "../components/cards/jobOfferEnterpriseCard"
 import Navigation from "../components/navbar"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
@@ -34,20 +34,9 @@ function ProfileEnterprise() {
               </div>
             </Button>
             <br />
-            <JobOfferCard
-              enterpriseName="Fake Enterprise"
-              category="Finance"
-              position="CEO"
-              salary="100000"
-              enterpriseProfileCard={true}
-            />
-            <JobOfferCard
-              category="Technology"
-              position="CTO"
-              description="Loren ipsum"
-              status="closed"
-              enterpriseProfileCard={true}
-            />
+
+            <JobOfferEnterpriseCard category="Finance" position="CEO" salary="100000" />
+            <JobOfferEnterpriseCard category="Technology" position="CTO" description="Loren ipsum" status="closed" />
           </Col>
         </Row>
       </Container>
