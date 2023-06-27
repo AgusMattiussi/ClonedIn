@@ -1,10 +1,10 @@
-import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import JobOfferCard from "../components/cards/jobOfferCard"
+import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -36,38 +36,7 @@ function ApplicationsUser() {
       <Navigation />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <Col sm={2} className="sidebar">
-            <div className="d-flex flex-column justify-content-center">
-              <div className="search mx-auto">
-                <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
-              </div>
-              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
-                  {t("Accepted")}
-                </Button>
-              </div>
-              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
-                  {t("Rejected")}
-                </Button>
-              </div>
-              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
-                  {t("Pending")}
-                </Button>
-              </div>
-              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
-                  {t("Cancelled")}
-                </Button>
-              </div>
-              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
-                <Button variant="outline-light " className="filterbtn">
-                  {t("View All")}
-                </Button>
-              </div>
-            </div>
-          </Col>
+          <FilterStatusSideBar />
           <Col className="d-flex flex-column my-2">
             <Row className="my-2">
               <div className="d-flex flex-row justify-content-between">
