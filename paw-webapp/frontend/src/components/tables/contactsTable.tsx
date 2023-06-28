@@ -7,7 +7,11 @@ function ContactsTable() {
   const { t } = useTranslation()
 
   return (
-    <MDBTable className="table-light" align="middle">
+    <MDBTable
+      className="table-light"
+      align="middle"
+      style={{ boxShadow: "0 0 2px rgba(0,0,0,0.16), 0 0 1px rgba(0,0,0,0.23)" }}
+    >
       <MDBTableHead>
         <tr>
           <th scope="col">{t("Job Offer")}</th>

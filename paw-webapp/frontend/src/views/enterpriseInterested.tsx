@@ -6,6 +6,7 @@ import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import InterestedTable from "../components/tables/interestedTable"
 
 function EnterpriseInterested() {
   const { t } = useTranslation()
@@ -27,7 +28,9 @@ function EnterpriseInterested() {
                 <EnterpriseSortBySelect />
               </div>
             </Row>
-            <Row></Row>
+            <Row className="m-2">
+              <InterestedTable />
+            </Row>
           </Col>
         </Row>
       </Container>
