@@ -6,6 +6,7 @@ import ProfileUserCard from "../components/cards/profileUserCard"
 import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import Pagination from "../components/pagination"
 
 function DiscoverProfiles() {
   const [users, setUsers] = useState<any[]>([])
@@ -46,7 +47,7 @@ function DiscoverProfiles() {
               }}
             >
               <Container
-                className="p-2 rounded-3 d-flex flex-row flex-wrap w-auto justify-content-center"
+                className="p-2 rounded-3 d-flex flex-wrap w-auto justify-content-center"
                 fluid
                 style={{
                   background: "#F2F2F2",
@@ -59,6 +60,7 @@ function DiscoverProfiles() {
                 <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
                   <ProfileUserCard category="test1" contacted={true} />
                 </a>
+                {/* <Pagination /> */}
               </Container>
             </Row>
             {/* <Row>

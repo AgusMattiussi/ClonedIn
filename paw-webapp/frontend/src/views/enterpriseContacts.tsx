@@ -5,6 +5,7 @@ import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
 import ContactsTable from "../components/tables/contactsTable"
+import Pagination from "../components/pagination"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -30,6 +31,7 @@ function EnterpriseContacts() {
             </Row>
             <Row className="m-2">
               <ContactsTable />
+              <Pagination />
             </Row>
           </Col>
         </Row>

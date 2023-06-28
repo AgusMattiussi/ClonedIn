@@ -136,12 +136,6 @@
   "Applications Page Title": "Mis Postulaciones | ClonedIn",
   "Notifications Page Title": "Mis Ofertas de Trabajo | ClonedIn",
 
-  "Sort By Title": "Ordenar por:",
-  "Sort By Job Offer Position": "Oferta de trabajo",
-  "Sort By Job Offer Category": "Rubro",
-  "Sort By UserName": "Nombre",
-  "Sort By Status": "Estado",
-  "Sort By DateAsc": "Fecha asc.",
-  "Sort By DateDesc": "Fecha desc.",
-  "Sort By Years Of Experience": "Años de experiencia"
+  "Index Pagination First": "Inicio",
+  "Index Pagination End": "Fin"
 }

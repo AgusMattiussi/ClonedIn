@@ -34,7 +34,7 @@ function JobOfferDiscoverCard({
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href="/profileUser" style={{ textDecoration: "none" }}>
+            <a href="/profileEnterprise" style={{ textDecoration: "none" }}>
               {enterpriseName}{" "}
             </a>
             | {position}

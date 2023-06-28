@@ -5,6 +5,7 @@ import JobOfferNotificationCard from "../components/cards/jobOfferNotificationCa
 import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import UserSortBySelect from "../components/selects/userSortBySelect"
+import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -43,7 +44,7 @@ function NotificationsUser() {
             </Row>
             <Row>
               <Container
-                className="mx-3 p-2 rounded-3 d-flex flex-wrap"
+                className="mx-3 p-2 rounded-3"
                 fluid
                 style={{
                   background: "#F2F2F2",
@@ -65,6 +66,7 @@ function NotificationsUser() {
                   date="9/12/2018"
                   status="Aceptada"
                 />
+                <Pagination />
               </Container>
             </Row>
           </Col>

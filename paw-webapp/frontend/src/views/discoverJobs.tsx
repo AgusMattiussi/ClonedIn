@@ -4,6 +4,7 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
+import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -40,7 +41,7 @@ function DiscoverJobs() {
             </Row>
             <Row className="w-100">
               <Container
-                className="mx-3 p-2 rounded-3 d-flex flex-wrap"
+                className="mx-3 p-2 rounded-3"
                 fluid
                 style={{
                   background: "#F2F2F2",
@@ -55,6 +56,7 @@ function DiscoverJobs() {
                   contacted={true}
                 />
                 <JobOfferDiscoverCard category="Technology" position="CTO" description="Loren ipsum" />
+                <Pagination />
               </Container>
               {/* {users.map((user) => {
                 return (

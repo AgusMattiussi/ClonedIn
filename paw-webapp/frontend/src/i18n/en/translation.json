@@ -132,5 +132,8 @@
   "My Recruits Page Title": "My Recruits | ClonedIn",
   "Interested Page Title": "Interested | ClonedIn",
   "Applications Page Title": "My Applications | ClonedIn",
-  "Notifications Page Title": "My Job Offers | ClonedIn"
+  "Notifications Page Title": "My Job Offers | ClonedIn",
+
+  "Index Pagination First": "First",
+  "Index Pagination End": "Last"
 }

@@ -4,9 +4,10 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
+import InterestedTable from "../components/tables/interestedTable"
+import Pagination from "../components/pagination"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import InterestedTable from "../components/tables/interestedTable"
 
 function EnterpriseInterested() {
   const { t } = useTranslation()
@@ -30,6 +31,7 @@ function EnterpriseInterested() {
             </Row>
             <Row className="m-2">
               <InterestedTable />
+              <Pagination />
             </Row>
           </Col>
         </Row>
