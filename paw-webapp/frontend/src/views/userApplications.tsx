@@ -1,10 +1,10 @@
 import Container from "react-bootstrap/esm/Container"
-import Form from "react-bootstrap/Form"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import JobOfferApplicationsCard from "../components/cards/jobOfferApplicationCard"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
+import UserSortBySelect from "../components/selects/userSortBySelect"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -23,8 +23,6 @@ function ApplicationsUser() {
       })
   }, [])
 
-  const [orderBy, setOrderBy] = useState("")
-
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -41,13 +39,7 @@ function ApplicationsUser() {
             <Row className="my-2">
               <div className="d-flex flex-row justify-content-between">
                 <h3>{t("My Applications")}</h3>
-                <div style={{ width: "200px" }}>
-                  <Form.Select value={orderBy} onChange={(e) => setOrderBy(e.target.value)}>
-                    <option value="0">{t("Order By")}</option>
-                    <option value="4">{t("Date asc")}</option>
-                    <option value="5">{t("Date desc")}</option>
-                  </Form.Select>
-                </div>
+                <UserSortBySelect />
               </div>
             </Row>
             <Row>

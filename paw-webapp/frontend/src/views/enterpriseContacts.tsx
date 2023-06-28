@@ -3,6 +3,7 @@ import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
+import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -20,7 +21,13 @@ function EnterpriseContacts() {
         <Row className="align-items-start d-flex">
           <FilterStatusSideBar />
           <Col className="d-flex flex-column my-2">
-            <Row className="my-2"></Row>
+            <Row className="my-2">
+              <div className="d-flex justify-content-between">
+                <h3 style={{ textAlign: "left" }}>{t("My Recruits")}</h3>
+                <EnterpriseSortBySelect />
+              </div>
+            </Row>
+            <Row></Row>
           </Col>
         </Row>
       </Container>
