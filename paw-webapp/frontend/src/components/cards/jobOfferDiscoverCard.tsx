@@ -37,7 +37,7 @@ function JobOfferDiscoverCard({
             <a href="/profileUser" style={{ textDecoration: "none" }}>
               {enterpriseName}{" "}
             </a>
-            |{position}
+            | {position}
           </h5>
         </div>
         <span>

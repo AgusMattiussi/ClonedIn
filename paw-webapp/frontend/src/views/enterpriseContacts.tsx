@@ -4,6 +4,7 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
+import ContactsTable from "../components/tables/contactsTable"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -27,7 +28,9 @@ function EnterpriseContacts() {
                 <EnterpriseSortBySelect />
               </div>
             </Row>
-            <Row></Row>
+            <Row className="m-2">
+              <ContactsTable />
+            </Row>
           </Col>
         </Row>
       </Container>
