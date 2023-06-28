@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
 
-function JobOfferEnterprise() {
+function JobOfferForm() {
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -80,4 +80,4 @@ function JobOfferEnterprise() {
   )
 }
 
-export default JobOfferEnterprise
+export default JobOfferForm

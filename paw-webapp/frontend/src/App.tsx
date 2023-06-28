@@ -5,7 +5,7 @@ import DiscoverProfiles from "./views/discoverProfiles"
 import RegisterEnterprise from "./views/enterpriseRegister"
 import EditEnterpriseForm from "./views/enterpriseEditForm"
 import ContactForm from "./views/enterpriseContactForm"
-import JobOfferEnterprise from "./views/enterpriseJobOffer"
+import JobOfferForm from "./views/enterpriseJobOfferForm"
 import ImageProfileForm from "./views/imageProfileForm"
 import RegisterUser from "./views/userRegister"
 import EditUserForm from "./views/userEditForm"
@@ -18,6 +18,7 @@ import ApplicationsUser from "./views/userApplications"
 import ProfileEnterprise from "./views/enterpriseProfile"
 import ContactsEnterprise from "./views/enterpriseContacts"
 import InterestedEnterprise from "./views/enterpriseInterested"
+import JobOffer from "./views/jobOffer"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 // Bootstrap CSS
@@ -45,6 +46,8 @@ function App() {
           <Route path="/contactsEnterprise" element={<ContactsEnterprise />} />
           <Route path="/interestedEnterprise" element={<InterestedEnterprise />} />
 
+          <Route path="/jobOffer" element={<JobOffer />} />
+
           <Route path="/profileUser" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />
           <Route path="/applicationsUser" element={<ApplicationsUser />} />
@@ -53,7 +56,7 @@ function App() {
           <Route path="/experiences" element={<ExperienceForm />} />
           <Route path="/educations" element={<EducationForm />} />
           <Route path="/contacts" element={<ContactForm />} />
-          <Route path="/jobOffers" element={<JobOfferEnterprise />} />
+          <Route path="/jobOffers" element={<JobOfferForm />} />
         </Routes>
       </BrowserRouter>
     </div>
