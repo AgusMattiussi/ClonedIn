@@ -126,7 +126,7 @@ function RegisterEnterprise() {
                     <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title">{t("Basic Information")}</h2>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
                           <Form.Control
                             className="input"
                             type="email"

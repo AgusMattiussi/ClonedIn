@@ -43,7 +43,7 @@ function ProfileUserCard({
         <div className="d-flex justify-content-around align-items-center">
           <h5>{name}</h5>
           {editable ? (
-            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
+            <Button className="float-end" type="button" variant="outline-success" href="/editUser" style={{ paddingBottom: "10px" }}>
               <Icon.PencilSquare color="green" size={15} />
             </Button>
           ) : contacted ? (

@@ -135,5 +135,49 @@
   "Notifications Page Title": "My Job Offers | ClonedIn",
 
   "Index Pagination First": "First",
-  "Index Pagination End": "Last"
+  "Index Pagination End": "Last",
+
+  "Edit": "Edit your profile",
+  "Fill some fields": "Make sure to fill all fields toy want to change before advancing.",
+  "Save": "Save",
+  "Image": "Upload Profile Picture",
+  "Upload": "Upload",
+
+  "Skill add": "Add skills to your profile",
+  "Skill": "Skill",
+  "Skill Ex": "*(foreign languages, time managing, etc.)",
+
+  "Education add": "Add education degrees to your profile",
+  "Institution": "Institution *",
+  "Degree": "Degree *",
+  "Comment": "Comment",
+  
+  "From": "From *",
+  "Enero": "January",
+  "Febrero": "February",
+  "Marzo": "March",
+  "Abril": "April",
+  "Mayo": "May",
+  "Junio": "June",
+  "Julio": "July",
+  "Agosto": "August",
+  "Septiembre": "September",
+  "Octubre": "October",
+  "Noviembre": "November",
+  "Diciembre": "December",
+  "Year": "YYYY",
+  "To": "To *",
+
+  "Experience add": "Add experiences to your profile",
+  "Position": "Position *",
+  "To ": "To",
+
+  "Send message": "Send message to USERNAME",
+  "Message": "Message",
+  "Job Offers ": "Job Offers *",
+  "Candidate": "We would like you as a candidate",
+  "Contact": "Contact",
+
+  "JobOffer add": "Add job offers to your enterprise",
+  "Create": "Create"
 }

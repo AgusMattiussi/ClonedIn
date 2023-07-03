@@ -28,7 +28,7 @@ function ProfileEnterprise() {
           </Col>
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button">
+            <Button variant="success" type="button" href="/jobOffers">
               <div className="d-flex align-items-center justify-content-center">
                 <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
                 {t("Add Job Offer")}

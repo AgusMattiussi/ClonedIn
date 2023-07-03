@@ -35,7 +35,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/registerUser" element={<RegisterUser />} />
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
-          <Route path="/jobs" element={<DiscoverJobs />} />
+
           <Route path="/editUser" element={<EditUserForm />} />
           <Route path="/editEnterprise" element={<EditEnterpriseForm />} />
           <Route path="/imageProfile" element={<ImageProfileForm />} />
@@ -45,18 +45,18 @@ function App() {
           <Route path="/profileEnterprise" element={<ProfileEnterprise />} />
           <Route path="/contactsEnterprise" element={<ContactsEnterprise />} />
           <Route path="/interestedEnterprise" element={<InterestedEnterprise />} />
+          <Route path="/contacts" element={<ContactForm />} />
+          <Route path="/jobOffers" element={<JobOfferForm />} />
 
           <Route path="/jobOffer" element={<JobOffer />} />
 
+          <Route path="/jobs" element={<DiscoverJobs />} />
           <Route path="/profileUser" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />
           <Route path="/applicationsUser" element={<ApplicationsUser />} />
-
           <Route path="/skills" element={<SkillsForm />} />
           <Route path="/experiences" element={<ExperienceForm />} />
           <Route path="/educations" element={<EducationForm />} />
-          <Route path="/contacts" element={<ContactForm />} />
-          <Route path="/jobOffers" element={<JobOfferForm />} />
         </Routes>
       </BrowserRouter>
     </div>

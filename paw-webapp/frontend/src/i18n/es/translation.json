@@ -137,5 +137,49 @@
   "Notifications Page Title": "Mis Ofertas de Trabajo | ClonedIn",
 
   "Index Pagination First": "Inicio",
-  "Index Pagination End": "Fin"
+  "Index Pagination End": "Fin",
+
+  "Edit": "Edita tu perfil",
+  "Fill some fields": "Asegurate de llenar todos los campos que qieras cambiar antes de avanzar",
+  "Save": "Guardar",
+  "Image": "Subi tu foto de perfil",
+  "Upload": "Subir",
+
+  "Skill add": "Agrega aptitudes a tu perfil",
+  "Skill": "Aptitud",
+  "Skill Ex": "*(idiomas extragenros, manejo del tiempo, etc.)",
+
+  "Education add": "Agrega diplomas educativos en tu perfil",
+  "Institution": "Institución *",
+  "Degree": "Diploma *",
+  "Comment": "Comentario",
+  
+  "From": "Desde *",
+  "Enero": "Enero",
+  "Febrero": "Febrero",
+  "Marzo": "Marzo",
+  "Abril": "Abril",
+  "Mayo": "Mayo",
+  "Junio": "Junio",
+  "Julio": "Julio",
+  "Agosto": "Agosto",
+  "Septiembre": "Septiembre",
+  "Octubre": "Octubre",
+  "Noviembre": "Noviembre",
+  "Diciembre": "Diciembre",
+  "Year": "AAAA",
+  "To": "Hasta *",
+
+  "Experience add": "Agrega experiencias a tu perfil",
+  "Position": "Puesto *",
+  "To ": "Hasta",
+
+  "Send message": "Contactate con USERNAME",
+  "Message": "Mensaje",
+  "Job Offers ": "Ofertas de trabajo *",
+  "Candidate": "Nos gustaria que te postules como candidato",
+  "Contact": "Contactar",
+
+  "JobOffer add": "Agrega ofertas de trabajo a tu empresa",
+  "Create": "Crear"
 }
