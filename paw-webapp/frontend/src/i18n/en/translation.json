@@ -151,7 +151,7 @@
   "Institution": "Institution *",
   "Degree": "Degree *",
   "Comment": "Comment",
-  
+
   "From": "From *",
   "Enero": "January",
   "Febrero": "February",
@@ -179,5 +179,21 @@
   "Contact": "Contact",
 
   "JobOffer add": "Add job offers to your enterprise",
-  "Create": "Create"
+  "Create": "Create",
+
+  "Modal Title": "Are you sure?",
+
+  "Application Modal Msg": "Do you really want to apply to this job offer? This action cannot be undone.",
+  "Accept Job Offer Modal Msg": "Do you really want to move forward this job offer? This action cannot be undone.",
+  "Reject Job Offer Modal Msg": "Do you really want to decline this job offer? This action cannot be undone.",
+  "Cancel Application Modal Msg": "Do you really want to cancel this application? This action cannot be undone.",
+  "Accept Application Modal Msg": "Do you really want to accept this person as a candidate? This action cannot be undone.",
+  "Reject Application Modal Msg": "Do you really want to reject this person as a candidate? This action cannot be undone.",
+  "Close JobOffer Modal Msg": "Do you really want to close this job offer? This action cannot be undone. Close a job offer means cancel the pending sended job offers and reject the pending applications.",
+  "Cancel JobOffer Modal Msg": "Do you really want to cancel this job offer? This action cannot be undone.",
+
+  "Confirm": "Confirm",
+
+  "hideProfileMsg": "When hidden, companies will not be able to see your profile.",
+  "showProfileMsg": "When shown, companies will be able to see your profile."
 }

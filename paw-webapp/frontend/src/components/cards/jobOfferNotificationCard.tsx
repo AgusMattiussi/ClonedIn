@@ -3,6 +3,8 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import CardHeader from "react-bootstrap/esm/CardHeader"
 import { useTranslation } from "react-i18next"
+import AcceptModal from "../modals/acceptModal"
+import RejectModal from "../modals/rejectModal"
 
 function JobOfferNotificationsCard({
   enterpriseName,
@@ -93,12 +95,34 @@ function JobOfferNotificationsCard({
                 {t("Status")}
                 {": "}
               </h5>
-              <Button variant="success" style={{ minWidth: "90px", marginBottom: "5px" }}>
+              <Button
+                variant="success"
+                style={{ minWidth: "90px", marginBottom: "5px" }}
+                data-bs-toggle="modal"
+                data-bs-target="#acceptModal"
+              >
                 {t("Accept")}
               </Button>
-              <Button variant="danger" style={{ minWidth: "90px" }}>
+              <AcceptModal
+                title={t("Modal Title")}
+                msg={t("Accept Job Offer Modal Msg")}
+                cancel={t("Cancel")}
+                confirm={t("Confirm")}
+              />
+              <Button
+                variant="danger"
+                style={{ minWidth: "90px" }}
+                data-bs-toggle="modal"
+                data-bs-target="#rejectModal"
+              >
                 {t("Decline")}
               </Button>
+              <RejectModal
+                title={t("Modal Title")}
+                msg={t("Reject Job Offer Modal Msg")}
+                cancel={t("Cancel")}
+                confirm={t("Confirm")}
+              />
             </>
           )}
         </div>

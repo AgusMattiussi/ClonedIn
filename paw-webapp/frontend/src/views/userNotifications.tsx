@@ -25,9 +25,7 @@ function NotificationsUser() {
 
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("Notifications Page Title")
-  }, [])
+  document.title = t("Notifications Page Title")
 
   return (
     <div>
