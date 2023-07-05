@@ -24,9 +24,25 @@ function ProfileUser() {
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button">
+            <Button
+              variant="success"
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={t("Hide Profile Msg") as string}
+            >
               {t("Hide My Profile")}
             </Button>
+            {/* TODO: add conditional to show/hide button */}
+            {/* <Button
+              variant="success"
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={t("Show Profile Msg") as string}
+            >
+              {t("Show My Profile")}
+            </Button> */}
             <ProfileUserCard editable={true} />
           </Col>
           <Col sm={8} className="col">

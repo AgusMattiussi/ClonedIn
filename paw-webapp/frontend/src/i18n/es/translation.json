@@ -73,6 +73,7 @@
   "Close Job Offer": "Cerrar Propuesta",
 
   "Hide My Profile": "Ocultar Mi Perfil",
+  "Show My Profile": "Mostrar Mi Perfil",
   "Edit Profile Picture": "Editar Foto de Perfil",
   "Experience": "Experiencia",
   "Add Experience": "Agregar Experiencia",
@@ -196,8 +197,8 @@
 
   "Confirm": "Confirmar",
 
-  "hideProfileMsg": "Al estar oculto, las empresas no podrán ver tu perfil.",
-  "showProfileMsg": "Al estar visible, las empresas no podrán ver tu perfil.",
+  "Hide Profile Msg": "Al estar oculto, las empresas no podrán ver tu perfil.",
+  "Show Profile Msg": "Al estar visible, las empresas no podrán ver tu perfil.",
 
   "Error Title Span": "Oops!",
 

@@ -73,6 +73,7 @@
   "Close Job Offer": "Close Job Offer",
 
   "Hide My Profile": "Hide My Profile",
+  "Show My Profile": "Show My Profile",
   "Edit Profile Picture": "Edit Profile Picture",
   "Experience": "Experience",
   "Add Experience": "Add Experience",
@@ -194,8 +195,8 @@
 
   "Confirm": "Confirm",
 
-  "hideProfileMsg": "When hidden, companies will not be able to see your profile.",
-  "showProfileMsg": "When shown, companies will be able to see your profile.",
+  "Hide Profile Msg": "When hidden, companies will not be able to see your profile.",
+  "Show Profile Msg": "When shown, companies will be able to see your profile.",
 
   "Error Title Span": "Oops!",
 
