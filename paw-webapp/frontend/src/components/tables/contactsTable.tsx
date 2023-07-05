@@ -2,6 +2,7 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit"
 import { Button } from "react-bootstrap"
+import CancelModal from "../modals/cancelModal"
 
 function ContactsTable() {
   const { t } = useTranslation()
@@ -57,10 +58,20 @@ function ContactsTable() {
           <td>9/7/1816</td>
           <td>Pendiente</td>
           <td>
-            <Button variant="danger" style={{ minWidth: "90px", marginBottom: "5px" }}>
+            <Button
+              variant="danger"
+              style={{ minWidth: "90px", marginBottom: "5px" }}
+              data-bs-toggle="modal"
+              data-bs-target="#cancelModal"
+            >
               {t("Cancel")}
             </Button>
-            {/* TODO: Add modal */}
+            <CancelModal
+              title={t("Modal Title")}
+              msg={t("Cancel JobOffer Modal Msg")}
+              cancel={t("Cancel")}
+              confirm={t("Confirm")}
+            />
           </td>
         </tr>
       </MDBTableBody>

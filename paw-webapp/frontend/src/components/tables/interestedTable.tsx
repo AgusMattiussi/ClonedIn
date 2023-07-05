@@ -3,6 +3,8 @@ import Badge from "react-bootstrap/Badge"
 import { useTranslation } from "react-i18next"
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit"
 import { Button } from "react-bootstrap"
+import AcceptModal from "../modals/acceptModal"
+import RejectModal from "../modals/rejectModal"
 
 function InterestedTable() {
   const { t } = useTranslation()
@@ -83,14 +85,35 @@ function InterestedTable() {
           <td>Pendiente</td>
           <td>
             <div className="d-flex flex-column">
-              <Button variant="success" style={{ minWidth: "90px", marginBottom: "5px" }}>
+              <Button
+                variant="success"
+                style={{ minWidth: "90px", marginBottom: "5px" }}
+                data-bs-toggle="modal"
+                data-bs-target="#acceptModal"
+              >
                 {t("Accept")}
               </Button>
-              <Button variant="danger" style={{ minWidth: "90px", marginBottom: "5px" }}>
+              <AcceptModal
+                title={t("Modal Title")}
+                msg={t("Accept Application Modal Msg")}
+                cancel={t("Cancel")}
+                confirm={t("Confirm")}
+              />
+              <Button
+                variant="danger"
+                style={{ minWidth: "90px", marginBottom: "5px" }}
+                data-bs-toggle="modal"
+                data-bs-target="#rejectModal"
+              >
                 {t("Decline")}
               </Button>
+              <RejectModal
+                title={t("Modal Title")}
+                msg={t("Reject Application Modal Msg")}
+                cancel={t("Cancel")}
+                confirm={t("Confirm")}
+              />
             </div>
-            {/* TODO: Add modals */}
           </td>
         </tr>
       </MDBTableBody>
