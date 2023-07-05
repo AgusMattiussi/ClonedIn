@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card"
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 
 function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
@@ -96,10 +97,9 @@ function RegisterUser() {
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    document.title = t("Register Page Title")
-  }, [])
+  document.title = t("Register Page Title")
 
   return (
     <div>
@@ -214,13 +214,13 @@ function RegisterUser() {
                       </div>
                       <p> {t("Fields required")} </p>
                       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button variant="success" type="submit">
+                      <Button onClick={() => navigate("/jobs")} variant="success" type="submit">
                         <strong>{t("Register")}</strong>
                       </Button>
                     </Form>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button href="/login" variant="outline-secondary">
+                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

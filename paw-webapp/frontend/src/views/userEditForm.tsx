@@ -3,15 +3,14 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
-import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 
 function EditUserForm() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    document.title = t("Edit Page Title")
-  }, [])
+  document.title = t("Edit Page Title")
 
   return (
     <div>
@@ -62,14 +61,13 @@ function EditUserForm() {
                         </Form.Group>
                       </div>
                       <p> {t("Fields required")}</p>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/" variant="success" type="submit">
+                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
                         <strong>{t("Save")}</strong>
                       </Button>
                     </Form>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button href="/" variant="outline-secondary">
+                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

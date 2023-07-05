@@ -4,14 +4,13 @@ import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
-import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 function JobOfferForm() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    document.title = t("Job Offer Page Title")
-  }, [])
+  document.title = t("Job Offer Page Title")
 
   return (
     <div>
@@ -31,10 +30,10 @@ function JobOfferForm() {
                       <div className="form-card">
                         <h2 className="fs-title"> {t("Job Offer")} </h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicPosition">
-                          <Form.Control className="input" placeholder= {t("Position").toString()} />
+                          <Form.Control className="input" placeholder={t("Position").toString()} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicSalary">
-                          <Form.Control className="input" placeholder= {t("Salary").toString()} />
+                          <Form.Control className="input" placeholder={t("Salary").toString()} />
                         </Form.Group>
                         <div className="d-flex mb-4">
                           <label className="area"> {t("Modality")} </label>
@@ -57,14 +56,13 @@ function JobOfferForm() {
                         </Form.Group>
                       </div>
                       <p>{t("Fields required")}</p>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/" variant="success" type="submit">
+                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
                         <strong> {t("Create")} </strong>
                       </Button>
                     </Form>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button href="/" variant="outline-secondary">
+                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

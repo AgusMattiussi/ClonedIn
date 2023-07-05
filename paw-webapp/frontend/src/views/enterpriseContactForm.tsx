@@ -4,14 +4,13 @@ import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
-import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 function ContactForm() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    document.title = t("Contact Form Page Title")
-  }, [])
+  document.title = t("Contact Form Page Title")
 
   return (
     <div>
@@ -49,7 +48,7 @@ function ContactForm() {
                     </Form>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button href="/" variant="outline-secondary">
+                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

@@ -6,15 +6,12 @@ import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
 import ContactsTable from "../components/tables/contactsTable"
 import Pagination from "../components/pagination"
-import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 function EnterpriseContacts() {
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("My Recruits Page Title")
-  }, [])
+  document.title = t("My Recruits Page Title")
 
   return (
     <div>

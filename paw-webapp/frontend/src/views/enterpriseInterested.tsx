@@ -6,15 +6,12 @@ import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
 import InterestedTable from "../components/tables/interestedTable"
 import Pagination from "../components/pagination"
-import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 function EnterpriseInterested() {
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("Interested Page Title")
-  }, [])
+  document.title = t("Interested Page Title")
 
   return (
     <div>

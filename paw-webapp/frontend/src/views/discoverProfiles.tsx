@@ -7,6 +7,7 @@ import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import Pagination from "../components/pagination"
+import { Link } from "react-router-dom"
 
 function DiscoverProfiles() {
   const [users, setUsers] = useState<any[]>([])
@@ -54,12 +55,12 @@ function DiscoverProfiles() {
                   boxShadow: "0 0 10px rgba(0,0,0,0.16), 0 0 4px rgba(0,0,0,0.23)",
                 }}
               >
-                <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
+                <Link to={`/profileUser`} style={{ textDecoration: "none", color: "black" }}>
                   <ProfileUserCard category="test" position="CEO" location="CABA" />
-                </a>
-                <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
+                </Link>
+                <Link to={`/profileUser`} style={{ textDecoration: "none", color: "black" }}>
                   <ProfileUserCard category="test1" contacted={true} />
-                </a>
+                </Link>
                 {/* <Pagination /> */}
               </Container>
             </Row>
