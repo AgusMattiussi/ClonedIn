@@ -3,6 +3,7 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import CardHeader from "react-bootstrap/esm/CardHeader"
 import { useTranslation } from "react-i18next"
+import CancelModal from "../modals/cancelModal"
 
 function JobOfferEnterpriseCard({
   category,
@@ -79,7 +80,15 @@ function JobOfferEnterpriseCard({
           </Badge>
         ) : (
           <div>
-            <Button variant="outline-dark">{t("Close Job Offer")}</Button>
+            <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#cancelModal">
+              {t("Close Job Offer")}
+            </Button>
+            <CancelModal
+              title={t("Modal Title")}
+              msg={t("Close JobOffer Modal Msg")}
+              cancel={t("Cancel")}
+              confirm={t("Confirm")}
+            />
           </div>
         )}
       </div>
