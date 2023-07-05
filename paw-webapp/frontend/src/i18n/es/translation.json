@@ -197,5 +197,16 @@
   "Confirm": "Confirmar",
 
   "hideProfileMsg": "Al estar oculto, las empresas no podrán ver tu perfil.",
-  "showProfileMsg": "Al estar visible, las empresas no podrán ver tu perfil."
+  "showProfileMsg": "Al estar visible, las empresas no podrán ver tu perfil.",
+
+  "Error Title Span": "Oops!",
+
+  "403 Title": "Prohibido.",
+  "403 Msg": "La acción que usted quiere hacer está prohibida.",
+
+  "404 Title": "Página no encontrada.",
+  "404 Msg": "La página que buscas no existe.",
+
+  "500 Title": "Error Interno en el Servidor.",
+  "500 Msg": "Hubo un problema en nuestro servidor."
 }

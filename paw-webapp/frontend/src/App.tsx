@@ -19,7 +19,9 @@ import ProfileEnterprise from "./views/enterpriseProfile"
 import ContactsEnterprise from "./views/enterpriseContacts"
 import InterestedEnterprise from "./views/enterpriseInterested"
 import JobOffer from "./views/jobOffer"
+import Error from "./views/error"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { HttpStatusCode } from "axios"
 
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -57,6 +59,7 @@ function App() {
           <Route path="/skills" element={<SkillsForm />} />
           <Route path="/experiences" element={<ExperienceForm />} />
           <Route path="/educations" element={<EducationForm />} />
+          <Route path="*" element={<Error statusCode={HttpStatusCode.NotFound} />} />
         </Routes>
       </BrowserRouter>
     </div>
