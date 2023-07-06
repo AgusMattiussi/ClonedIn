@@ -2,13 +2,14 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
-import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
+import JobOfferApplicationsCard from "../components/cards/jobOfferApplicationCard"
+import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
+import UserSortBySelect from "../components/selects/userSortBySelect"
 import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-function DiscoverJobs() {
+function ApplicationsUser() {
   const [users, setUsers] = useState<any[]>([])
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function DiscoverJobs() {
   const { t } = useTranslation()
 
   useEffect(() => {
-    document.title = t("Discover Jobs") + " | ClonedIn"
+    document.title = t("Applications Page Title")
   }, [])
 
   return (
@@ -34,38 +35,40 @@ function DiscoverJobs() {
       <Navigation />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <FilterJobsSideBar />
-          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
-            <Row>
-              <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+          <FilterStatusSideBar />
+          <Col className="d-flex flex-column my-2">
+            <Row className="my-2">
+              <div className="d-flex flex-row justify-content-between">
+                <h3>{t("My Applications")}</h3>
+                <UserSortBySelect />
+              </div>
             </Row>
-            <Row className="w-100">
+            <Row>
               <Container
                 className="mx-3 p-2 rounded-3"
                 fluid
                 style={{
                   background: "#F2F2F2",
                   boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
+                  maxWidth: "98%",
                 }}
               >
-                <JobOfferDiscoverCard
+                <JobOfferApplicationsCard
                   enterpriseName="Fake Enterprise"
                   category="Finance"
                   position="CEO"
-                  salary="100000"
-                  contacted={true}
+                  date="18/12/2022"
                 />
-                <JobOfferDiscoverCard category="Technology" position="CTO" description="Loren ipsum" />
+                <JobOfferApplicationsCard
+                  enterpriseName="Fake Enterprise"
+                  category="Technology"
+                  position="CTO"
+                  description="Loren Ipsum"
+                  date="9/12/2018"
+                  status="Aceptada"
+                />
                 <Pagination />
               </Container>
-              {/* {users.map((user) => {
-                return (
-                  <div className="post-card" key={user.username}>
-                    <h2 className="post-title">{user.username}</h2>
-                    <p className="post-body">{user.self}</p>
-                  </div>
-                )
-              })} */}
             </Row>
           </Col>
         </Row>
@@ -74,4 +77,4 @@ function DiscoverJobs() {
   )
 }
 
-export default DiscoverJobs
+export default ApplicationsUser

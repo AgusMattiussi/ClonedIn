@@ -8,6 +8,9 @@ import { useTranslation } from "react-i18next"
 
 function Login() {
   const { t } = useTranslation()
+
+  document.title = t("Login Page Title")
+
   return (
     <div>
       <Header />
@@ -30,11 +33,11 @@ function Login() {
                           <Form.Control className="input" type="password" placeholder={t("Password").toString()} />
                         </Form.Group>
                         <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label={t("Remember me").toString()} />
+                          <Form.Check type="checkbox" label={t("Remember Me").toString()} />
                         </Form.Group>
                       </div>
                       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/discoverJobs" variant="success" type="submit">
+                      <Button href="/jobs" variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
                       </Button>
                       <p>{t("No account yet?")}</p>

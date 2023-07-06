@@ -1,16 +1,16 @@
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
+import JobOfferNotificationCard from "../components/cards/jobOfferNotificationCard"
 import Navigation from "../components/navbar"
-import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
-import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
+import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
+import UserSortBySelect from "../components/selects/userSortBySelect"
 import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
-function DiscoverJobs() {
+function NotificationsUser() {
   const [users, setUsers] = useState<any[]>([])
-
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
       .then((response) => response.json())
@@ -25,47 +25,47 @@ function DiscoverJobs() {
 
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("Discover Jobs") + " | ClonedIn"
-  }, [])
+  document.title = t("Notifications Page Title")
 
   return (
     <div>
       <Navigation />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <FilterJobsSideBar />
-          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
-            <Row>
-              <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+          <FilterStatusSideBar />
+          <Col className="d-flex flex-column my-2">
+            <Row className="my-2">
+              <div className="d-flex flex-row justify-content-between">
+                <h3>{t("Job Offers")}</h3>
+                <UserSortBySelect />
+              </div>
             </Row>
-            <Row className="w-100">
+            <Row>
               <Container
                 className="mx-3 p-2 rounded-3"
                 fluid
                 style={{
                   background: "#F2F2F2",
                   boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
+                  maxWidth: "98%",
                 }}
               >
-                <JobOfferDiscoverCard
+                <JobOfferNotificationCard
                   enterpriseName="Fake Enterprise"
                   category="Finance"
                   position="CEO"
-                  salary="100000"
-                  contacted={true}
+                  date="18/12/2022"
                 />
-                <JobOfferDiscoverCard category="Technology" position="CTO" description="Loren ipsum" />
+                <JobOfferNotificationCard
+                  enterpriseName="Fake Enterprise"
+                  category="Technology"
+                  position="CTO"
+                  description="Loren Ipsum"
+                  date="9/12/2018"
+                  status="Aceptada"
+                />
                 <Pagination />
               </Container>
-              {/* {users.map((user) => {
-                return (
-                  <div className="post-card" key={user.username}>
-                    <h2 className="post-title">{user.username}</h2>
-                    <p className="post-body">{user.self}</p>
-                  </div>
-                )
-              })} */}
             </Row>
           </Col>
         </Row>
@@ -74,4 +74,4 @@ function DiscoverJobs() {
   )
 }
 
-export default DiscoverJobs
+export default NotificationsUser
