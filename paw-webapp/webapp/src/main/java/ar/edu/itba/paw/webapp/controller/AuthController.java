@@ -7,8 +7,11 @@ import ar.edu.itba.paw.webapp.auth.AuthenticationRequest;
 import ar.edu.itba.paw.webapp.auth.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthenticationService;
 import ar.edu.itba.paw.webapp.form.EnterpriseForm;
+import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -37,13 +40,13 @@ public class AuthController {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response authenticate(@RequestBody AuthenticationRequest request){
 
-        String token = service.authenticate(request).getAccessToken();
-
-        if(token != null){
-            System.out.println("\n\n\n\n TOKEN: " + token + "\n\n\n\n");
-            return Response.ok("{\n\t\"access_token\": \"" + token + "\""+"\n}").build();
+        AuthenticationResponse response = null;
+        try {
+            response = service.authenticate(request);
+        } catch (AuthenticationException e){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        return Response.status(Response.Status.FORBIDDEN).build();
+        return Response.ok(response).build();
     }
 }
