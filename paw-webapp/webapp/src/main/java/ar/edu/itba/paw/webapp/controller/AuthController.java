@@ -1,28 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.CategoryService;
-import ar.edu.itba.paw.interfaces.services.EnterpriseService;
-import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.webapp.auth.AuthenticationRequest;
-import ar.edu.itba.paw.webapp.auth.AuthenticationResponse;
+import ar.edu.itba.paw.webapp.form.AuthenticationRequest;
+import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthenticationService;
-import ar.edu.itba.paw.webapp.form.EnterpriseForm;
-import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.Optional;
 
 @Path("auth")
 @Component

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -14,18 +15,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
-@Component
+@Service
 public class AuthUserDetailsService implements UserDetailsService {
 
-    private static final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
-    public static final String USER_ROLE = "ROLE_USER";
-    public static final String ENTERPRISE_ROLE = "ROLE_ENTERPRISE";
-    private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(USER_ROLE);
-    private static final GrantedAuthority ENTERPRISE_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(ENTERPRISE_ROLE);
+    private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.USER.name());
+    private static final GrantedAuthority ENTERPRISE_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.ENTERPRISE.name());
 
     @Autowired
     private UserService us;
@@ -43,41 +42,17 @@ public class AuthUserDetailsService implements UserDetailsService {
     // Username = email
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        System.out.println("\n\n\n\n\n loadUserByUsername: " + email + "\n\n\n\n\n");
         // Puede ser usuario normal
         final Optional<User> optUser = us.findByEmail(email);
         if(optUser.isPresent()) {
-            //return defaultUserDetails(optUser.get());
             return optUser.get();
         }
         
         // Puede ser empresa. Si no, no existe el usuario
         final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user by the email " + email));
-        //return enterpriseUserDetails(enterprise);
         return enterprise;
     }
     
-    private UserDetails defaultUserDetails(User user){
-        if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()){
-            //us.changePassword(user.getEmail(), user.getPassword());
-            return loadUserByUsername(user.getEmail());
-        }
-
-        final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(USER_SIMPLE_GRANTED_AUTHORITY);
-        return new AuthUser(user.getEmail(), user.getPassword(), authorities);
-    }
-    
-    private UserDetails enterpriseUserDetails(Enterprise enterprise){
-        if(!BCRYPT_PATTERN.matcher(enterprise.getPassword()).matches()){
-            //es.changePassword(enterprise.getEmail(), enterprise.getPassword());
-            return loadUserByUsername(enterprise.getEmail());
-        }
-
-        final Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(ENTERPRISE_SIMPLE_GRANTED_AUTHORITY);
-        return new AuthUser(enterprise.getEmail(), enterprise.getPassword(), authorities);
-    }
 
     public boolean isUser(Authentication loggedUser){
         return loggedUser.getAuthorities().contains(USER_SIMPLE_GRANTED_AUTHORITY);
@@ -87,7 +62,8 @@ public class AuthUserDetailsService implements UserDetailsService {
         return loggedUser.getAuthorities().contains(ENTERPRISE_SIMPLE_GRANTED_AUTHORITY);
     }
 
-    public long getLoggerUserId(Authentication loggedUser){
+    //TODO: idFromEmail()
+    public long getLoggedUserId(Authentication loggedUser){
         if(isUser(loggedUser)) {
             User user = us.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
             return user.getId();

@@ -1,12 +1,14 @@
-package ar.edu.itba.paw.webapp.auth;
+package ar.edu.itba.paw.webapp.form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AuthenticationResponse {
   @JsonProperty("access_token")
   private String accessToken;
-  /*@JsonProperty("refresh_token")
-  private String refreshToken;*/
+  /* TODO:
+  @JsonProperty("refresh_token")
+  private String refreshToken;
+  */
 
     public AuthenticationResponse(String accessToken/*, String refreshToken*/) {
         this.accessToken = accessToken;
