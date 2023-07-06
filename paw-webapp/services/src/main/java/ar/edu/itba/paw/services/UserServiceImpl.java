@@ -20,7 +20,6 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
 

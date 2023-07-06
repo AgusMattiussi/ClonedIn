@@ -248,9 +248,22 @@
         <version>${org.hibernate.jpa.version}</version>
       </dependency>
 
+      <!-- JSON Web Tokens (JWT) -->
       <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-api</artifactId>
+        <version>${io.jsonwebtoken.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>${io.jsonwebtoken.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
         <version>${io.jsonwebtoken.version}</version>
       </dependency>
 

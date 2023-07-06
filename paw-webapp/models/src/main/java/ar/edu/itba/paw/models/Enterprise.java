@@ -1,14 +1,17 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.enums.Role;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "empresa")
-public class Enterprise {
+public class Enterprise implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
@@ -49,6 +52,9 @@ public class Enterprise {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
     private Set<Contact> contacts;
 
@@ -83,6 +89,7 @@ public class Enterprise {
         this.link = link;
         this.description = description;
         this.image = image;
+        this.role = Role.ENTERPRISE;
     }
     public Enterprise(String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this(null, name, email, password, location, category, workers, year, link, description, image);
@@ -104,8 +111,41 @@ public class Enterprise {
         return email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role.name()));
+        return authorities;
+    }
+
+    @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public String getLocation() {

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,23 +38,28 @@ public class AuthUserDetailsService implements UserDetailsService {
         this.es = es;
     }
 
+    public AuthUserDetailsService(){};
+
     // Username = email
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        System.out.println("\n\n\n\n\n loadUserByUsername: " + email + "\n\n\n\n\n");
         // Puede ser usuario normal
         final Optional<User> optUser = us.findByEmail(email);
         if(optUser.isPresent()) {
-            return defaultUserDetails(optUser.get());
+            //return defaultUserDetails(optUser.get());
+            return optUser.get();
         }
         
         // Puede ser empresa. Si no, no existe el usuario
         final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user by the email " + email));
-        return enterpriseUserDetails(enterprise);
+        //return enterpriseUserDetails(enterprise);
+        return enterprise;
     }
     
     private UserDetails defaultUserDetails(User user){
         if(!BCRYPT_PATTERN.matcher(user.getPassword()).matches()){
-            us.changePassword(user.getEmail(), user.getPassword());
+            //us.changePassword(user.getEmail(), user.getPassword());
             return loadUserByUsername(user.getEmail());
         }
 
@@ -64,7 +70,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     
     private UserDetails enterpriseUserDetails(Enterprise enterprise){
         if(!BCRYPT_PATTERN.matcher(enterprise.getPassword()).matches()){
-            es.changePassword(enterprise.getEmail(), enterprise.getPassword());
+            //es.changePassword(enterprise.getEmail(), enterprise.getPassword());
             return loadUserByUsername(enterprise.getEmail());
         }
 
