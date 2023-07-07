@@ -695,6 +695,8 @@ public class UserController {
         LOGGER.debug("A new user was registered under id: {}", user.getId());
         LOGGER.info("A new user was registered");
 
+        //TODO: Agregar auth token
+
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }

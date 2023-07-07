@@ -52,6 +52,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
+    // TODO: Esta hasheada?
     public void changePassword(String email, String password) {
         Query query = em.createQuery("UPDATE Enterprise SET password = :password WHERE email = :email");
         query.setParameter("password", password);

@@ -26,15 +26,18 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence" })
+@PropertySource("classpath:application.properties")
 @Configuration
 public class WebConfig {
 
+    @Autowired
+    private Environment env;
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
-
     @Value("classpath:category.sql")
     private Resource categorySql;
+
 
     @Bean
     public DataSource dataSource(){
@@ -42,9 +45,9 @@ public class WebConfig {
 
         ds.setDriverClass(org.postgresql.Driver.class);
 
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("admin");
+        ds.setUrl(env.getProperty("database.url"));
+        ds.setUsername(env.getProperty("database.username"));
+        ds.setPassword(env.getProperty("database.password"));
 
         return ds;
     }
@@ -84,4 +87,5 @@ public class WebConfig {
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+
 }
