@@ -18,16 +18,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -43,10 +37,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-    /*public WebAuthConfig(final JwtAuthenticationFilter jwtAuthenticationFilter, final AuthenticationProvider authenticationProvider) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationProvider = authenticationProvider;
-    }*/
 
     //TODO: ACTUALIZAR LOS URLS
     @Override
@@ -112,14 +102,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
-    private String loadRememberMeKey() {
-        try (Reader reader = new InputStreamReader(getClass().getClassLoader().getResourceAsStream("rememberme.key"))) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     //FIXME: Revisar esto
     @Override
     public void configure(final WebSecurity web) {
@@ -139,17 +121,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder);
     }
-
-    /*@Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        return new SimpleUrlAuthenticationSuccessHandler();
-    }*/
 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
