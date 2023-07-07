@@ -3,10 +3,25 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 function EditEnterpriseForm() {
+  const [categoryList, setCategoryList] = useState([])
+  const [error, setError] = useState(null)
+
+  /* Cargar lista de rubros */
+  useEffect(() => {
+    fetch("http://localhost:8080/webapp_war/categories")
+      .then((response) => response.json())
+      .then((response) => {
+        setCategoryList(response)
+        setError(null)
+      })
+      .catch(setError)
+  }, [])
+
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -53,8 +68,14 @@ function EditEnterpriseForm() {
                         <div className="d-flex mb-4">
                           <label className="area">{t("Job Category")}</label>
                           <Form.Select className="selectFrom" aria-label="Default select example">
-                            {/* TODO: agregar for con las categories pasadas de la API*/}
-                            <option value="category">Category Name</option>
+                          <option key="1" value="No-Especificado">
+                              {t("No-especificado")}
+                            </option>
+                            {categoryList.map((categoryListItem: any) => (
+                              <option key={categoryListItem.id} value={categoryListItem.name}>
+                                {t(categoryListItem.name)}
+                              </option>
+                            ))}
                           </Form.Select>
                         </div>
                         <Form.Group className="mb-3" controlId="formBasicYear">
