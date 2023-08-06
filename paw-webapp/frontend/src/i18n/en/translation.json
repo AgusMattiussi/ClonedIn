@@ -77,10 +77,14 @@
   "Edit Profile Picture": "Edit Profile Picture",
   "Experience": "Experience",
   "Add Experience": "Add Experience",
+  "Experience Not Specified": "Experience Not Specified",
   "Education": "Education",
   "Add Education": "Add Education",
+  "Education Not Specified": "Education Not Specified",
   "Skills": "Skills",
   "Add Skill": "Add Skill",
+  "Skills Not Specified": "Skills not specified",
+  "No especificado": "Not specified",
 
   "Search By": "Search by:",
   "Search Profile Placeholder": "Skill, location...",
@@ -207,5 +211,7 @@
   "404 Msg": "The page you are looking for does not exist.",
 
   "500 Title": "Internal Server Error.",
-  "500 Msg": "There was a problem in our server."
+  "500 Msg": "There was a problem in our server.",
+
+  "Loading": "Loading..."
 }

@@ -4,27 +4,18 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
+import GetUserData from "../../utils/userApi"
 
-function ProfileUserCard({
-  name,
-  category,
-  position,
-  educationLevel,
-  location,
-  skills,
-  editable,
-  contacted,
-}: {
-  name: string
-  category: string
-  position: string
-  educationLevel: string
-  location: string
-  skills: string
-  editable: boolean
-  contacted: boolean
-}) {
+function ProfileUserCard({ editable, contacted, user }: { editable: boolean; contacted: boolean; user: any }) {
   const { t } = useTranslation()
+
+  const userSkillsList = GetUserData(user.userSkills).map((skill) => {
+    return (
+      <Badge pill bg="success" className="mx-2">
+        {skill.description}
+      </Badge>
+    )
+  })
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
@@ -41,9 +32,9 @@ function ProfileUserCard({
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
-          <h5>{name}</h5>
+          <h5>{user.username}</h5>
           {editable ? (
-            <Button className="float-end" type="button" variant="outline-success" href="/editUser" style={{ paddingBottom: "10px" }}>
+            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
               <Icon.PencilSquare color="green" size={15} />
             </Button>
           ) : contacted ? (
@@ -59,53 +50,43 @@ function ProfileUserCard({
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
-              {category !== "No especificado" ? (
-                <div>
-                  {t("Job Category")}:
-                  <Badge pill bg="success" className="mx-2">
-                    {category}
+              {user.category !== "No-Especificado" ? (
+                <div className="d-flex flex-row align-items-center">
+                  {t("Category")}:
+                  <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
+                    {user.category == null ? t("No especificado") : t(user.category)}
                   </Badge>
                 </div>
               ) : (
                 <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Job Category")}: {category}
+                  {t("Category")}: {t("No especificado")}
                 </p>
               )}
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.Briefcase color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Current Position")}: {position}
+                {t("Current Position")}:{" "}
+                {user.currentPosition === "" || user.currentPosition == null
+                  ? t("No especificado")
+                  : user.currentPosition}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Education Level")}: {educationLevel}
+                {t("Education Level")}:{" "}
+                {user.education === "" || user.education == null ? t("No especificado") : user.education}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Location")}: {location}
+                {t("Location")}: {user.location === "" || user.location == null ? t("No especificado") : user.location}
               </p>
             </div>
             <div className="d-flex justify-content-start align-items-center my-2">
-              {editable ? (
-                <></>
-              ) : (
-                <div>
-                  <Badge pill bg="success" className="mx-2">
-                    skill1
-                  </Badge>
-                  <Badge pill bg="success" className="mx-2">
-                    skill2
-                  </Badge>
-                  <Badge pill bg="success" className="mx-2">
-                    skill3
-                  </Badge>
-                </div>
-              )}
+              {userSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{userSkillsList}</div>}
             </div>
           </div>
         </Card.Text>
@@ -116,12 +97,6 @@ function ProfileUserCard({
 
 //TODO: ver traduccion de valores por default
 ProfileUserCard.defaultProps = {
-  name: "Username",
-  category: "No especificado",
-  position: "No",
-  educationLevel: "No especificado",
-  location: "No especificado",
-  skills: "No especificado",
   editable: false,
   contacted: false,
 }

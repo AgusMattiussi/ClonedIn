@@ -7,10 +7,11 @@ import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import Pagination from "../components/pagination"
-import { Link } from "react-router-dom"
+import Loader from "../components/loader"
 
 function DiscoverProfiles() {
   const [users, setUsers] = useState<any[]>([])
+  const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -22,13 +23,22 @@ function DiscoverProfiles() {
       .catch((err) => {
         console.log(err.message)
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("Discover Profiles") + " | ClonedIn"
-  }, [])
+  document.title = t("Discover Profiles") + " | ClonedIn"
+
+  const usersList = users.map((user) => {
+    return (
+      <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
+        <ProfileUserCard user={user} />
+      </a>
+    )
+  })
 
   return (
     <div>
@@ -53,27 +63,19 @@ function DiscoverProfiles() {
                 style={{
                   background: "#F2F2F2",
                   boxShadow: "0 0 10px rgba(0,0,0,0.16), 0 0 4px rgba(0,0,0,0.23)",
+                  minWidth: "100vh",
                 }}
               >
-                <Link to={`/profileUser`} style={{ textDecoration: "none", color: "black" }}>
-                  <ProfileUserCard category="test" position="CEO" location="CABA" />
-                </Link>
-                <Link to={`/profileUser`} style={{ textDecoration: "none", color: "black" }}>
-                  <ProfileUserCard category="test1" contacted={true} />
-                </Link>
+                {isLoading ? (
+                  <div className="my-5">
+                    <Loader />
+                  </div>
+                ) : (
+                  usersList
+                )}
                 {/* <Pagination /> */}
               </Container>
             </Row>
-            {/* <Row>
-              {users.map((user) => {
-                return (
-                  <div className="post-card" key={user.username}>
-                    <h2 className="post-title">{user.username}</h2>
-                    <p className="post-body">{user.self}</p>
-                  </div>
-                )
-              })}
-            </Row> */}
           </Col>
         </Row>
       </Container>
