@@ -5,11 +5,26 @@ import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { login, getCurrentUser } from "../api/authService"
 
 function Login() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  //TODO: Remember me
+  //const [rememberMe, setRememberMe] = useState(false)
+
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   document.title = t("Login Page Title")
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    login(email, password)
+    console.log(getCurrentUser())
+  }
 
   return (
     <div>
@@ -24,35 +39,43 @@ function Login() {
                 </h2>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                    <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                          <Form.Control className="input" type="email" placeholder={t("Email").toString()} />
+                          <Form.Control
+                            className="input"
+                            type="email"
+                            placeholder={t("Email").toString()}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPassword">
-                          <Form.Control className="input" type="password" placeholder={t("Password").toString()} />
+                          <Form.Control
+                            className="input"
+                            type="password"
+                            placeholder={t("Password").toString()}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
                         </Form.Group>
                         <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
                           <Form.Check type="checkbox" label={t("Remember Me").toString()} />
                         </Form.Group>
                       </div>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/jobs" variant="success" type="submit">
+                      {/* TODO: Redirect to enterprise or user view*/}
+                      <Button variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
                       </Button>
                       <p>{t("No account yet?")}</p>
                     </Form>
                     <div className="row">
                       <div className="col">
-                        {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                        <Button href="/registerUser" variant="success">
+                        <Button onClick={() => navigate("/registerUser")} variant="success">
                           <Icon.Person size={40} />
                         </Button>
                         <p>{t("Register as a User")}</p>
                       </div>
                       <div className="col">
-                        {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                        <Button href="/registerEnterprise" variant="success">
+                        <Button onClick={() => navigate("/registerEnterprise")} variant="success">
                           <Icon.Building size={40} />
                         </Button>
                         <p>{t("Register as an Enterprise")}</p>
