@@ -7,7 +7,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { login, getCurrentUser } from "../api/authService"
+import { login } from "../api/authService"
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -23,7 +23,6 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     login(email, password)
-    console.log(getCurrentUser())
   }
 
   return (

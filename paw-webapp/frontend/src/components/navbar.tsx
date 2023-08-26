@@ -9,9 +9,18 @@ import "bootstrap/dist/js/bootstrap.bundle.min"
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
+import { logout } from "../api/authService"
 
 function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const handleLogOut = async (e: any) => {
+    e.preventDefault()
+    logout()
+    navigate("/login")
+  }
 
   return (
     <Navbar expand="lg" className="color-nav" variant="dark">
@@ -36,7 +45,7 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
                 {t("Interested")}
               </Nav.Link>
             </Nav>
-            <Button href="/login" variant="outline-success" style={{ color: "white" }}>
+            <Button onClick={handleLogOut} variant="outline-success" style={{ color: "white" }}>
               <Icon.BoxArrowRight color="white" size={25} />
               &nbsp;{t("Log Out")}
             </Button>
@@ -63,7 +72,7 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
                 {t("My Applications")}
               </Nav.Link>
             </Nav>
-            <Button href="/login" variant="outline-success" style={{ color: "white" }}>
+            <Button onClick={handleLogOut} variant="outline-success" style={{ color: "white" }}>
               <Icon.BoxArrowRight color="white" size={25} />
               &nbsp;{t("Log Out")}
             </Button>

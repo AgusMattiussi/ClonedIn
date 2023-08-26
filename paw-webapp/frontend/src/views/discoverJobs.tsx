@@ -5,29 +5,12 @@ import Navigation from "../components/navbar"
 import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
 import Pagination from "../components/pagination"
-import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 function DiscoverJobs() {
-  const [users, setUsers] = useState<any[]>([])
-
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setUsers(data)
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }, [])
-
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.title = t("Discover Jobs") + " | ClonedIn"
-  }, [])
+  document.title = t("Discover Jobs") + " | ClonedIn"
 
   return (
     <div>
