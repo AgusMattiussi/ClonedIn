@@ -3,6 +3,7 @@ import Header from "../components/header"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import * as Icon from "react-bootstrap-icons"
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -13,7 +14,9 @@ function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPassword, setRepeatPassword] = useState("")
+  const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
   const [name, setName] = useState("")
   const [city, setCity] = useState("")
   const [workers, setWorkers] = useState("")
@@ -38,6 +41,14 @@ function RegisterEnterprise() {
     e.preventDefault()
     registerEnterprise(email, password, repeatPassword, name, city, workers, year, link, aboutUs, category)
     navigate("/profiles")
+  }
+
+  const handlePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility)
+  }
+
+  const handleRepeatPasswordVisibility = () => {
+    setRepeatPasswordVisibility(!repeatPasswordVisibility)
   }
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
@@ -80,23 +91,37 @@ function RegisterEnterprise() {
                             onChange={(e) => setName(e.target.value)}
                           />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
                           <Form.Control
                             className="input"
-                            type="password"
+                            type={passwordVisibility ? "text" : "password"}
                             placeholder={t("Password*").toString()}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
+                          <Button
+                            className="pb-3"
+                            onClick={handlePasswordVisibility}
+                            style={{ backgroundColor: "white", color: "black", border: "none" }}
+                          >
+                            {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                          </Button>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicCheckPassword">
+                        <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
                           <Form.Control
                             className="input"
-                            type="password"
+                            type={repeatPasswordVisibility ? "text" : "password"}
                             placeholder={t("Repeat Password*").toString()}
                             value={repeatPassword}
                             onChange={(e) => setRepeatPassword(e.target.value)}
                           />
+                          <Button
+                            className="pb-3"
+                            onClick={handleRepeatPasswordVisibility}
+                            style={{ backgroundColor: "white", color: "black", border: "none" }}
+                          >
+                            {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                          </Button>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicLocation">
                           <Form.Control
@@ -106,12 +131,13 @@ function RegisterEnterprise() {
                             onChange={(e) => setCity(e.target.value)}
                           />
                         </Form.Group>
-                        <div className="d-flex mb-4">
-                          <label className="area">{t("Quantity of employees")}</label>
+                        <div className="d-flex mb-4 justify-content-between">
+                          <label className="area pt-1 mx-1">{t("Quantity of employees")}</label>
                           <Form.Select
                             className="selectFrom"
                             value={workers}
                             onChange={(e) => setWorkers(e.target.value)}
+                            style={{ width: "60%" }}
                           >
                             <option value="No-especificado"> {t("No-especificado")} </option>
                             <option value="1-10">1-10</option>
@@ -125,13 +151,14 @@ function RegisterEnterprise() {
                             <option value="10000+">10001+</option>
                           </Form.Select>
                         </div>
-                        <div className="d-flex mb-4">
-                          <label className="area">{t("Job Category")}</label>
+                        <div className="d-flex mb-4 justify-content-between">
+                          <label className="area pt-1 mx-1">{t("Job Category")}</label>
                           <Form.Select
                             className="selectFrom"
                             aria-label="Categories select"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
+                            style={{ width: "60%" }}
                           >
                             <option key="1" value="No-Especificado">
                               {t("No-especificado")}

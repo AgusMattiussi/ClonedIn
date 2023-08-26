@@ -12,6 +12,7 @@ import { login } from "../api/authService"
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordVisibility, setPasswordVisibility] = useState(false)
   //TODO: Remember me
   //const [rememberMe, setRememberMe] = useState(false)
 
@@ -23,6 +24,10 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     login(email, password)
+  }
+
+  const handlePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility)
   }
 
   return (
@@ -48,13 +53,20 @@ function Login() {
                             onChange={(e) => setEmail(e.target.value)}
                           />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
                           <Form.Control
                             className="input"
-                            type="password"
+                            type={passwordVisibility ? "text" : "password"}
                             placeholder={t("Password").toString()}
                             onChange={(e) => setPassword(e.target.value)}
                           />
+                          <Button
+                            className="pb-3"
+                            onClick={handlePasswordVisibility}
+                            style={{ backgroundColor: "white", color: "black", border: "none" }}
+                          >
+                            {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                          </Button>
                         </Form.Group>
                         <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
                           <Form.Check type="checkbox" label={t("Remember Me").toString()} />
