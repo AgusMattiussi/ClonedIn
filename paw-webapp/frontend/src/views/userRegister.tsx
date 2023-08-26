@@ -7,6 +7,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import { registerUser } from "../api/authService"
 
 function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
@@ -32,67 +33,10 @@ function RegisterUser() {
       .catch(setError)
   }, [])
 
-  /* Registra un usuario con los datos obtenidos del formulario */
-  const register = async (
-    email: string,
-    password: string,
-    repeatPassword: string,
-    name: string,
-    city: string,
-    category: string,
-    position: string,
-    description: string,
-    studiesLevel: string,
-  ) => {
-    await fetch("http://localhost:8080/webapp_war/users", {
-      method: "POST",
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        repeatPassword: repeatPassword,
-        name: name,
-        city: city,
-        position: position,
-        aboutMe: description,
-        category: category,
-        level: studiesLevel,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEmail("")
-        setPassword("")
-        setRepeatPassword("")
-        setName("")
-        setCity("")
-        setCategory("")
-        setPosition("")
-        setDescription("")
-        setStudiesLevel("")
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }
-
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    /* console.log('Registrando...');
-    console.log('JSON ENVIADO: ' + JSON.stringify({
-      email: email,
-        password: password,
-        repeatPassword: repeatPassword,
-        name: name, 
-        city: city,
-        position: position,        
-        aboutMe: description,
-        category: category, 
-        level: studiesLevel
-    })); */
-    register(email, password, repeatPassword, name, city, category, position, description, studiesLevel)
+    registerUser(email, password, repeatPassword, name, city, position, description, category, studiesLevel)
+    navigate("/jobs")
   }
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
@@ -213,8 +157,7 @@ function RegisterUser() {
                         </Form.Group>
                       </div>
                       <p> {t("Fields required")} </p>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button onClick={() => navigate("/jobs")} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Register")}</strong>
                       </Button>
                     </Form>

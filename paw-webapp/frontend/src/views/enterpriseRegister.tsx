@@ -7,6 +7,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import { registerEnterprise } from "../api/authService"
 
 function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
@@ -33,74 +34,10 @@ function RegisterEnterprise() {
       .catch(setError)
   }, [])
 
-  /* Registra una empresa con los datos obtenidos del formulario */
-  const register = async (
-    email: string,
-    password: string,
-    repeatPassword: string,
-    name: string,
-    city: string,
-    workers: string,
-    year: string,
-    link: string,
-    aboutUs: string,
-    category: string,
-  ) => {
-    await fetch("http://localhost:8080/webapp_war/enterprises", {
-      method: "POST",
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        repeatPassword: repeatPassword,
-        name: name,
-        city: city,
-        workers: workers,
-        year: year,
-        link: link,
-        aboutUs: aboutUs,
-        category: category,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEmail("")
-        setPassword("")
-        setRepeatPassword("")
-        setName("")
-        setCity("")
-        setWorkers("")
-        setYear("")
-        setLink("")
-        setAboutUs("")
-        setCategory("")
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }
-
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    console.log("Registrando...")
-    console.log(
-      "JSON ENVIADO: " +
-        JSON.stringify({
-          email: email,
-          password: password,
-          repeatPassword: repeatPassword,
-          name: name,
-          city: city,
-          workers: workers,
-          year: year,
-          link: link,
-          aboutUs: aboutUs,
-          category: category,
-        }),
-    )
-    register(email, password, repeatPassword, name, city, workers, year, link, aboutUs, category)
+    registerEnterprise(email, password, repeatPassword, name, city, workers, year, link, aboutUs, category)
+    navigate("/profiles")
   }
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
@@ -233,8 +170,7 @@ function RegisterEnterprise() {
                         </Form.Group>
                       </div>
                       <p>{t("Fields required")}</p>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button onClick={() => navigate("/profiles")} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Register")}</strong>
                       </Button>
                     </Form>

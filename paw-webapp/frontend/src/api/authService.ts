@@ -31,3 +31,43 @@ export const getAccessToken = () => {
 export const logout = () => {
   localStorage.removeItem("accessToken")
 }
+
+export const registerUser = (
+  email: string,
+  password: string,
+  repeatPassword: string,
+  name: string,
+  city: string,
+  position: string,
+  aboutMe: string,
+  category: string,
+  level: string,
+) => {
+  return api.post("/users", { email, password, repeatPassword, name, city, position, aboutMe, category, level })
+}
+
+export const registerEnterprise = (
+  email: string,
+  password: string,
+  repeatPassword: string,
+  name: string,
+  city: string,
+  workers: string,
+  year: string,
+  link: string,
+  aboutUs: string,
+  category: string,
+) => {
+  return api.post("/enterprises", {
+    email,
+    password,
+    repeatPassword,
+    name,
+    city,
+    workers,
+    year,
+    link,
+    aboutUs,
+    category,
+  })
+}
