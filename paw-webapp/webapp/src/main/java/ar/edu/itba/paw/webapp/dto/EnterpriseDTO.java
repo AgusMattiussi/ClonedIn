@@ -8,16 +8,19 @@ import java.net.URI;
 
 public class EnterpriseDTO {
 
+    public static final String ENTERPRISE_URL = "webapp_war/enterprises";
+    public static final String CATEGORY_URL = "webapp_war/categories";
+
     private long id;
     private String name;
     private String email;
     private String location;
-    //TODO: private URI category;
+    private URI category;
     private String workers;
     private int year;
     private String link;
     private String description;
-    //TODO: private URI image;
+    private URI image;
     private URI self;
 
     public static EnterpriseDTO fromEnterprise(final UriInfo uriInfo, final Enterprise enterprise) {
@@ -26,16 +29,22 @@ public class EnterpriseDTO {
         dto.name = enterprise.getName();
         dto.email = enterprise.getEmail();
         dto.location = enterprise.getLocation();
-        //TODO: dto.category = enterprise.getCategory();
         dto.workers = enterprise.getWorkers();
         dto.year = enterprise.getYear();
         dto.link = enterprise.getLink();
         dto.description = enterprise.getDescription();
-        //TODO: dto.image = enterprise.getImage();
 
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/enterprises")
+        UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(ENTERPRISE_URL)
                 .path(String.valueOf(enterprise.getId()));
-        dto.self = userUriBuilder.build();
+        dto.self = enterpriseUriBuilder.build();
+
+        dto.image = enterpriseUriBuilder.clone().path("image").build();
+
+        UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(CATEGORY_URL)
+                .path(String.valueOf(enterprise.getCategory().getId()));
+        dto.category = categoryUriBuilder.build();
 
         return dto;
     }
@@ -72,6 +81,14 @@ public class EnterpriseDTO {
         this.location = location;
     }
 
+    public URI getCategory() {
+        return category;
+    }
+
+    public void setCategory(URI category) {
+        this.category = category;
+    }
+
     public String getWorkers() {
         return workers;
     }
@@ -102,6 +119,14 @@ public class EnterpriseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public URI getImage() {
+        return image;
+    }
+
+    public void setImage(URI image) {
+        this.image = image;
     }
 
     public URI getSelf() {
