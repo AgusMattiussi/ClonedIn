@@ -19,8 +19,6 @@ public class EnterpriseDTO {
     private String description;
     //TODO: private URI image;
     private URI self;
-    //TODO: Completar con info relevante para empresa
-
 
     public static EnterpriseDTO fromEnterprise(final UriInfo uriInfo, final Enterprise enterprise) {
         final EnterpriseDTO dto = new EnterpriseDTO();

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("categories")
@@ -31,7 +32,7 @@ public class CategoryController {
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response listCategories(@QueryParam("page") @DefaultValue("1") final int page) {
         final List<CategoryDTO> categories = categoryService.getAllCategories(/*page-1, PAGE_SIZE*/).stream()
-                .map(CategoryDTO::fromCategory).collect(Collectors.toList());
+                .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
         if (categories.isEmpty()) {
             return Response.noContent().build();
@@ -42,5 +43,16 @@ public class CategoryController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces({ MediaType.APPLICATION_JSON, })
+    public Response getById(@PathParam("id") final long id) {
+        Optional<CategoryDTO> optCategory = categoryService.findById(id).map(c -> CategoryDTO.fromCategory(uriInfo, c));
+        if (!optCategory.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(optCategory.get()).build();
     }
 }
