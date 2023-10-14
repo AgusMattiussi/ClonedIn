@@ -9,6 +9,8 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { registerUser } from "../api/authService"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
@@ -56,6 +58,12 @@ function RegisterUser() {
 
   document.title = t("Register Page Title")
 
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    email: yup.string().email('Invalid email').required('Required'),
+  });
+
   return (
     <div>
       <Header />
@@ -70,7 +78,17 @@ function RegisterUser() {
                 <p> {t("Fill all fields")} </p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform" onSubmit={handleSubmit}>
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      email: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
+                    <Form className="msform" noValidate onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title">{t("Basic Information")}</h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
@@ -78,9 +96,13 @@ function RegisterUser() {
                             className="input"
                             type="email"
                             placeholder={t("Email*").toString()}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={values.email}
+                            onChange={handleChange}
+                            isInvalid={!!errors.email}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.email}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicName">
                           <Form.Control
@@ -188,6 +210,8 @@ function RegisterUser() {
                         <strong>{t("Register")}</strong>
                       </Button>
                     </Form>
+                  )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">

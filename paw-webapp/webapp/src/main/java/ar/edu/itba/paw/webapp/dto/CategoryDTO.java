@@ -7,6 +7,8 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class CategoryDTO {
+    private static final String CATEGORY_URL = "webapp_war/categories";
+
     private String name;
     private long id;
     private URI self;
@@ -16,9 +18,9 @@ public class CategoryDTO {
         dto.name = category.getName();
         dto.id = category.getId();
 
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/categories")
+        final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath(CATEGORY_URL)
                 .path(String.valueOf(category.getId()));
-        dto.self = userUriBuilder.build();
+        dto.self = categoryUriBuilder.build();
 
         return dto;
     }

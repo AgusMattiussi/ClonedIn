@@ -9,66 +9,63 @@ import java.util.Date;
 
 public class ContactDTO {
 
-    //TODO: URIs para User, enterprise y jobOffer?
+    private static final String USERS_URL = "webapp_war/users";
+    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
+    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
 
-    private String user;
-    private String enterprise;
-    private String jobOfferDesc;
-    private long jobOfferId;
+    private URI user;
+    private URI enterprise;
+    private URI jobOffer;
     private String status;
     private int filledBy;
     private String date;
-    private URI self;
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact) {
         final ContactDTO dto = new ContactDTO();
-        dto.user = contact.getUser().getName();
-        dto.enterprise = contact.getEnterprise().getName();
-        dto.jobOfferDesc = contact.getJobOffer().getDescription();
-        dto.jobOfferId = contact.getJobOffer().getId();
         dto.status = contact.getStatus();
         dto.filledBy = contact.getFilledBy();
         dto.date = contact.getDate();
 
-        //FIXME: Revisar si esta bien formado
-        final UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath("joid").path(String.valueOf(contact.getJobOffer().getId()))
-                .replacePath("uid").path(String.valueOf(contact.getUser().getId()));
-        dto.self = contactUriBuilder.build();
+        UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(USERS_URL)
+                .path(contact.getUser().getId().toString());
+        dto.user = userUriBuilder.build();
+
+        UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(ENTERPRISES_URL)
+                .path(contact.getEnterprise().getId().toString());
+        dto.enterprise = enterpriseUriBuilder.build();
+
+        UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(JOB_OFFERS_URL)
+                .path(contact.getJobOffer().getId().toString());
+        dto.jobOffer = jobOfferUriBuilder.build();
 
         return dto;
     }
 
-    public String getUser() {
+    public URI getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 
-    public String getEnterprise() {
+    public URI getEnterprise() {
         return enterprise;
     }
 
-    public void setEnterprise(String enterprise) {
+    public void setEnterprise(URI enterprise) {
         this.enterprise = enterprise;
     }
 
-    public String getJobOfferDesc() {
-        return jobOfferDesc;
+    public URI getJobOffer() {
+        return jobOffer;
     }
 
-    public void setJobOfferDesc(String jobOfferDesc) {
-        this.jobOfferDesc = jobOfferDesc;
-    }
-
-    public long getJobOfferId() {
-        return jobOfferId;
-    }
-
-    public void setJobOfferId(long jobOfferId) {
-        this.jobOfferId = jobOfferId;
+    public void setJobOffer(URI jobOffer) {
+        this.jobOffer = jobOffer;
     }
 
     public String getStatus() {
@@ -93,13 +90,5 @@ public class ContactDTO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 }
