@@ -769,10 +769,10 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        List<ApplicationDTO> applications = contactService.getContactsForUser(optUser.get(), FilledBy.USER, SortBy.ANY, page-1, PAGE_SIZE)
-                .stream().map(contact -> ApplicationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        List<ContactDTO> applications = contactService.getContactsForUser(optUser.get(), FilledBy.USER, SortBy.ANY, page-1, PAGE_SIZE)
+                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ApplicationDTO>>(applications) {})
+        return Response.ok(new GenericEntity<List<ContactDTO>>(applications) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
