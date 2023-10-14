@@ -8,20 +8,20 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ExperienceDTO {
+
+    private static final String USERS_URL = "webapp_war/users";
     
-    private User user;
+    private URI user;
     private int monthFrom;
     private int yearFrom;
-    private Integer monthTo;
-    private Integer yearTo;
+    private int monthTo;
+    private int yearTo;
     private String position;
     private String enterpriseName;
     private String description;
-    private URI self;
     
     public static ExperienceDTO fromExperience(final UriInfo uriInfo, final Experience experience) {
         final ExperienceDTO dto = new ExperienceDTO();
-        dto.user = experience.getUser();
         dto.monthFrom = experience.getMonthFrom();
         dto.yearFrom = experience.getYearFrom();
         dto.monthTo = experience.getMonthTo();
@@ -30,18 +30,19 @@ public class ExperienceDTO {
         dto.enterpriseName = experience.getEnterpriseName();
         dto.description = experience.getDescription();
 
-        //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/experiences").path(String.valueOf(experience.getId()));
-        dto.self = userUriBuilder.build();
+        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
+                .replacePath(USERS_URL)
+                .path(String.valueOf(experience.getUser().getId()));
+        dto.user = userUriBuilder.build();
 
         return dto;
     }
 
-    public User getUser() {
+    public URI getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 
@@ -61,19 +62,19 @@ public class ExperienceDTO {
         this.yearFrom = yearFrom;
     }
 
-    public Integer getMonthTo() {
+    public int getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(Integer monthTo) {
+    public void setMonthTo(int monthTo) {
         this.monthTo = monthTo;
     }
 
-    public Integer getYearTo() {
+    public int getYearTo() {
         return yearTo;
     }
 
-    public void setYearTo(Integer yearTo) {
+    public void setYearTo(int yearTo) {
         this.yearTo = yearTo;
     }
 
@@ -99,13 +100,5 @@ public class ExperienceDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 }

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
@@ -573,6 +574,8 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
     @Autowired
+    private ImageService imageService;
+    @Autowired
     private EmailService emailService;
     @Autowired
     private JobOfferService jobOfferService;
@@ -900,5 +903,32 @@ public class EnterpriseController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(optJobOffer.get()).build();
+    }
+
+    @GET
+    @Path("/{id}/image")
+    @Produces(value = {"image/webp"})
+    public Response getProfileImage(@PathParam("id") final long id) {
+        LOGGER.debug("Trying to access enterprise image");
+
+        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
+        if (!optEnterprise.isPresent()) {
+            LOGGER.error("Enterprise with ID={} not found", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Image image = optEnterprise.get().getImage();
+        if(image == null) {
+            LOGGER.error("Enterprise with ID={} has no image", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Image profileImage = imageService.getImage(image.getId()).orElseThrow(() -> {
+            LOGGER.error("Error loading image {}", image.getId());
+            return new ImageNotFoundException();
+        });
+
+        LOGGER.info("Enterprise image accessed.");
+        return Response.ok(profileImage.getBytes()).build();
     }
 }

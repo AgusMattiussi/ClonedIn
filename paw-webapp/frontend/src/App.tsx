@@ -53,7 +53,7 @@ function App() {
           <Route path="/jobOffer" element={<JobOffer />} />
 
           <Route path="/jobs" element={<DiscoverJobs />} />
-          <Route path="/profileUser" element={<ProfileUser />} />
+          <Route path="/profileUser/:id" element={<ProfileUser />} />
           <Route path="/notificationsUser" element={<NotificationsUser />} />
           <Route path="/applicationsUser" element={<ApplicationsUser />} />
           <Route path="/skills" element={<SkillsForm />} />

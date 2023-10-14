@@ -9,27 +9,29 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class UserSkillDTO {
-    private User user;
+    private static final String USER_URL = "webapp_war/users";
+
+    private URI user;
     private String description;
-    private URI self;
+
 
     public static UserSkillDTO fromSkill(final UriInfo uriInfo, final User user, final Skill skill) {
         final UserSkillDTO dto = new UserSkillDTO();
-        dto.user = user;
         dto.description = skill.getDescription();
 
-        //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/skills").path(String.valueOf(skill.getId()));
-        dto.self = userUriBuilder.build();
+        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
+                .replacePath(USER_URL)
+                .path(String.valueOf(user.getId()));
+        dto.user = userUriBuilder.build();
 
         return dto;
     }
 
-    public User getUser() {
+    public URI getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 
@@ -39,13 +41,5 @@ public class UserSkillDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 }

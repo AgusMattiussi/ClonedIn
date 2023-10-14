@@ -8,7 +8,9 @@ import java.net.URI;
 
 public class UserDTO {
 
-    //TODO: Completar con info relevante para usuarios
+    private static final String USER_URL = "webapp_war/users";
+    private static final String CATEGORY_URL = "webapp_war/categories";
+
     private long id;
     private String username;
     private String name;
@@ -38,11 +40,16 @@ public class UserDTO {
         dto.visibility = user.getVisibility();
 
         //TODO: Revisar si hace falta eliminar el webapp_war para deployar
-        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath("webapp_war/users").path(String.valueOf(user.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath(USER_URL).path(String.valueOf(user.getId()));
         dto.self = userUriBuilder.build();
-        //final UriBuilder issuesUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("issues");
-        //dto.assignedIssues = issuesUriBuilder.clone().queryParam("assignedTo", String.valueOf(user.getId())).build();
-        //dto.reportedIssues = issuesUriBuilder.clone().queryParam("reportedTo", String.valueOf(user.getId())).build();
+        dto.image = userUriBuilder.clone().path("image").build();
+        dto.experiences = userUriBuilder.clone().path("experiences").build();
+        dto.educations = userUriBuilder.clone().path("educations").build();
+        dto.skills = userUriBuilder.clone().path("skills").build();
+
+        final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
+        dto.category = categoryUriBuilder.build();
+
         return dto;
     }
 
@@ -118,7 +125,45 @@ public class UserDTO {
         this.self = self;
     }
 
+    public URI getImage() {
+        return image;
+    }
 
+    public void setImage(URI image) {
+        this.image = image;
+    }
+
+    public URI getExperiences() {
+        return experiences;
+    }
+
+    public void setExperiences(URI experiences) {
+        this.experiences = experiences;
+    }
+
+    public URI getEducations() {
+        return educations;
+    }
+
+    public void setEducations(URI educations) {
+        this.educations = educations;
+    }
+
+    public URI getSkills() {
+        return skills;
+    }
+
+    public void setSkills(URI skills) {
+        this.skills = skills;
+    }
+
+    public URI getCategory() {
+        return category;
+    }
+
+    public void setCategory(URI category) {
+        this.category = category;
+    }
 
     @Override
     public String toString() {

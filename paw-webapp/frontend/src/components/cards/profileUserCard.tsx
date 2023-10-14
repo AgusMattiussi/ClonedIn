@@ -32,7 +32,7 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
-          <h5>{user.username}</h5>
+          <h5>{user.name}</h5>
           {editable ? (
             <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
               <Icon.PencilSquare color="green" size={15} />
@@ -54,7 +54,8 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.category == null ? t("No especificado") : t(user.category)}
+                    {user.category == null ? t("No especificado") : "FIX"}
+                    {/* {user.category == null ? t("No especificado") : user.category} */}
                   </Badge>
                 </div>
               ) : (

@@ -78,9 +78,9 @@ public class JobOfferController {
     }*/
 
     //TODO: arreglar para distinguir por usuario
-    // TODO: Cambiar a BeanParam
-    /* TODO: Esta bien BigDecimal en QueryParam? Si no pedir double o similar y convertirlo */
-    /* TODO: Si la category no existe, bad request o resultado vacio? */
+    //TODO: Cambiar a BeanParam
+    //TODO: Esta bien BigDecimal en QueryParam? Si no pedir double o similar y convertirlo
+    //TODO: Si la category no existe, bad request o resultado vacio?
     // FIXME: Falla cuando minSalary o maxSalary no son numeros
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })

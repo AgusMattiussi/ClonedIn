@@ -13,6 +13,7 @@ import UserDto from "../utils/UserDto"
 import GetUserData from "../utils/userApi"
 import { monthNames } from "../utils/constants"
 import Loader from "../components/loader"
+import { useParams } from "react-router-dom"
 
 function ProfileUser() {
   const { t } = useTranslation()
@@ -21,7 +22,9 @@ function ProfileUser() {
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [isUserLoading, setUserLoading] = useState(true)
 
-  const API_URL = "http://localhost:8080/webapp_war/users/2/"
+  const { id } = useParams()
+
+  const API_URL = `http://localhost:8080/webapp_war/users/${id}/`
 
   useEffect(() => {
     fetch(API_URL)
