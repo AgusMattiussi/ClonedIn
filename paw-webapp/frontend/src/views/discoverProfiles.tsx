@@ -4,6 +4,7 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import ProfileUserCard from "../components/cards/profileUserCard"
 import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
+import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import Pagination from "../components/pagination"
@@ -34,9 +35,9 @@ function DiscoverProfiles() {
 
   const usersList = users.map((user) => {
     return (
-      <a href="/profileUser" style={{ textDecoration: "none", color: "black" }}>
+      <Link to={`/profileUser/${user.id}`} style={{ textDecoration: "none", color: "black" }}>
         <ProfileUserCard user={user} />
-      </a>
+      </Link>
     )
   })
 
