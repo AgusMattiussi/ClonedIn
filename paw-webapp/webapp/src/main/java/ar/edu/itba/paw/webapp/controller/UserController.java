@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -600,6 +601,7 @@ import java.util.stream.Collectors;
 
 @Path("users")
 @Component
+@Transactional
 public class UserController {
 
     private static final int PAGE_SIZE = 10;
@@ -695,9 +697,9 @@ public class UserController {
         LOGGER.debug("A new user was registered under id: {}", user.getId());
         LOGGER.info("A new user was registered");
 
-        //TODO: Agregar auth token
+        //TODO: Agregar auth token?
 
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
 
@@ -778,8 +780,6 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }
-
-    //TODO: Implementar GET /{id}/applications/{jobOfferId}
 
     @POST
     //@Transactional
@@ -1024,6 +1024,7 @@ public class UserController {
     //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/experiences/{expId}")
     public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+        //TODO: Cambiar a boolean?
         experienceService.deleteExperience(expId);
         return Response.noContent().build();
     }
