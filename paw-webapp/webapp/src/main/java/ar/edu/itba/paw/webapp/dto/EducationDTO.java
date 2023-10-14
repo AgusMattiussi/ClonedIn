@@ -11,8 +11,8 @@ public class EducationDTO {
     private User user;
     private int monthFrom;
     private int yearFrom;
-    private Integer monthTo;
-    private Integer yearTo;
+    private int monthTo;
+    private int yearTo;
     private String title;
     private String institutionName;
     private String description;
@@ -60,7 +60,7 @@ public class EducationDTO {
         this.yearFrom = yearFrom;
     }
 
-    public Integer getMonthTo() {
+    public int getMonthTo() {
         return monthTo;
     }
 
@@ -68,7 +68,7 @@ public class EducationDTO {
         this.monthTo = monthTo;
     }
 
-    public Integer getYearTo() {
+    public int getYearTo() {
         return yearTo;
     }
 
