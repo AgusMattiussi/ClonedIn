@@ -11,6 +11,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -42,13 +45,10 @@ public class WebConfig {
     @Bean
     public DataSource dataSource(){
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
         ds.setDriverClass(org.postgresql.Driver.class);
-
         ds.setUrl(env.getProperty("database.url"));
         ds.setUsername(env.getProperty("database.username"));
         ds.setPassword(env.getProperty("database.password"));
-
         return ds;
     }
 
@@ -81,6 +81,21 @@ public class WebConfig {
 //        properties.setProperty("format_sql", "true");
         factoryBean.setJpaProperties(properties);
         return factoryBean;
+    }
+
+    @Bean
+    public DataSourceInitializer dataSourceInitializer() {
+        DataSourceInitializer dsi = new DataSourceInitializer();
+        dsi.setDataSource(dataSource());
+        dsi.setDatabasePopulator(databasePopulator());
+        return dsi;
+    }
+
+    public DatabasePopulator databasePopulator(){
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(schemaSql);
+        populator.addScript(categorySql);
+        return populator;
     }
 
     @Bean
