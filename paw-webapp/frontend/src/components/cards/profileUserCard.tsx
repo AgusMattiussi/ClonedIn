@@ -4,7 +4,9 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
+import { useEffect, useState } from "react"
 import GetUserData from "../../utils/userApi"
+import CategoryDto from "../../utils/CategoryDto"
 
 function ProfileUserCard({ editable, contacted, user }: { editable: boolean; contacted: boolean; user: any }) {
   const { t } = useTranslation()
@@ -16,6 +18,19 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
       </Badge>
     )
   })
+
+  const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+
+  useEffect(() => {
+    fetch(user.category)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserCategory(data)
+      })
+      .catch((err) => {
+        console.log(err.message)
+      })
+  }, [])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
@@ -54,8 +69,7 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.category == null ? t("No especificado") : "FIX"}
-                    {/* {user.category == null ? t("No especificado") : user.category} */}
+                    {user.category == null ? t("No especificado") : userCategory?.name}
                   </Badge>
                 </div>
               ) : (
@@ -77,7 +91,9 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
               <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
                 {t("Education Level")}:{" "}
-                {user.education === "" || user.education == null ? t("No especificado") : user.education}
+                {user.educationLevel === "" || user.educationLevel == null
+                  ? t("No especificado")
+                  : t(user.educationLevel)}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
