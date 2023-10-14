@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.enums.Role;
+import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +20,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -30,12 +36,16 @@ import java.util.Collections;
 @ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.models", "ar.edu.itba.paw.webapp.config"})
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+    /*@Autowired
+    private AuthenticationProvider authenticationProvider;*/
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
     //TODO: ACTUALIZAR LOS URLS
@@ -46,18 +56,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().authorizeRequests()
                 // Create and Authorize
-                .antMatchers(HttpMethod.POST,"/auth/authenticate").permitAll()
+                .antMatchers("/auth/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
                 // Users
-                .antMatchers(HttpMethod.GET, "/users").permitAll() // TODO: Cambiar por Authenticated y Empresa
+                .antMatchers(HttpMethod.GET, "/users").permitAll()//.hasAuthority(Role.ENTERPRISE.name())
                 .antMatchers("/test").authenticated()
                 .antMatchers(HttpMethod.GET,
                         "/users/{id}",
                         "/users/{id}/experiences/**",
                         "/users/{id}/educations/**",
                         "/users/{id}/skills/**",
-                        "/users/{id}/image").permitAll() // TODO: Cambiar por Authenticated Y Visible
+                        "/users/{id}/image").access("@securityManager.canAccessUserProfile(authentication, #id)") // TODO: Cambiar por Authenticated Y Visible
                 .antMatchers(HttpMethod.GET,
                         "/users/{id}/applications",
                         "/users/{id}/notifications").permitAll() // TODO: Cambiar para verificar mismo usuario
@@ -80,7 +90,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,
                         "/enterprises/{id}",
                         "/enterprises/{id}/jobOffers",
-                        "/enterprises/{id}/jobOffers/{joid}").permitAll() // TODO: Cambiar por Authenticated y Usuario
+                        "/enterprises/{id}/jobOffers/{joid}").hasAuthority(Role.ENTERPRISE.name())
                 .antMatchers(HttpMethod.GET,
                         "/enterprises/{id}/contacts",
                         "/enterprises/{id}/contacts/{joid}",
@@ -92,12 +102,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Categories
                 .antMatchers(HttpMethod.GET, "/categories").permitAll()
                 // JobOffers
-                .antMatchers(HttpMethod.GET, "/jobOffers/**").permitAll() // TODO: Cambiar por Authenticated y Usuario
+                .antMatchers(HttpMethod.GET, "/jobOffers/**").hasAuthority(Role.USER.name())
                 .and().exceptionHandling()
                     .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
-                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)) // TODO: Redirigir al login?
+                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .authenticationProvider(authenticationProvider)
+                //.authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
@@ -121,14 +131,35 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder);
-    }
+
 
     @Bean
+    public UserDetailsService userDetailsService(){
+       return new AuthUserDetailsService();
+    }
+
+    /*@Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }*/
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+    }
+
+    /*@Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }*/
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
 

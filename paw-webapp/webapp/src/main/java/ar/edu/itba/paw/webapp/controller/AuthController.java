@@ -28,7 +28,7 @@ public class AuthController {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response authenticate(@RequestBody AuthenticationRequest request){
 
-        AuthenticationResponse response = null;
+        AuthenticationResponse response;
         try {
             response = service.authenticate(request);
         } catch (AuthenticationException e){

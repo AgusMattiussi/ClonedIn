@@ -52,6 +52,7 @@ public class Enterprise implements UserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    @Transient
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -92,7 +93,18 @@ public class Enterprise implements UserDetails {
         this.role = Role.ENTERPRISE;
     }
     public Enterprise(String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
-        this(null, name, email, password, location, category, workers, year, link, description, image);
+        this.id = null;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.location = location;
+        this.category = category;
+        this.workers = workers;
+        this.year = year;
+        this.link = link;
+        this.description = description;
+        this.image = image;
+        this.role = Role.ENTERPRISE;
     }
 
     /* package */ Enterprise() {
@@ -114,7 +126,7 @@ public class Enterprise implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.name()));
+        authorities.add(new SimpleGrantedAuthority(Role.ENTERPRISE.name()));
         return authorities;
     }
 
