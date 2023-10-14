@@ -8,7 +8,9 @@ import java.net.URI;
 
 public class UserDTO {
 
-    //TODO: Completar con info relevante para usuarios
+    public static final String USER_URL = "webapp_war/users";
+    public static final String CATEGORY_URL = "webapp_war/categories";
+
     private long id;
     private String username;
     private String name;
@@ -38,14 +40,14 @@ public class UserDTO {
         dto.visibility = user.getVisibility();
 
         //TODO: Revisar si hace falta eliminar el webapp_war para deployar
-        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath("webapp_war/users").path(String.valueOf(user.getId()));
+        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath(USER_URL).path(String.valueOf(user.getId()));
         dto.self = userUriBuilder.build();
         dto.image = userUriBuilder.clone().path("image").build();
         dto.experiences = userUriBuilder.clone().path("experiences").build();
         dto.educations = userUriBuilder.clone().path("educations").build();
         dto.skills = userUriBuilder.clone().path("skills").build();
 
-        final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath("webapp_war/categories").path(String.valueOf(user.getCategory().getId()));
+        final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
         dto.category = categoryUriBuilder.build();
 
         return dto;
