@@ -8,8 +8,8 @@ import java.net.URI;
 
 public class UserDTO {
 
-    public static final String USER_URL = "webapp_war/users";
-    public static final String CATEGORY_URL = "webapp_war/categories";
+    private static final String USER_URL = "webapp_war/users";
+    private static final String CATEGORY_URL = "webapp_war/categories";
 
     private long id;
     private String username;

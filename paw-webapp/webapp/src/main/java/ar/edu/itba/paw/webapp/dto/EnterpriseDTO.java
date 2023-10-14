@@ -8,8 +8,8 @@ import java.net.URI;
 
 public class EnterpriseDTO {
 
-    public static final String ENTERPRISES_URL = "webapp_war/enterprises";
-    public static final String CATEGORIES_URL = "webapp_war/categories";
+    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
+    private static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
     private String name;

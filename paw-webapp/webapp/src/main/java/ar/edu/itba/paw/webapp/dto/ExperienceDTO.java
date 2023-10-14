@@ -9,7 +9,7 @@ import java.net.URI;
 
 public class ExperienceDTO {
 
-    public static final String USERS_URL = "webapp_war/users";
+    private static final String USERS_URL = "webapp_war/users";
     
     private URI user;
     private int monthFrom;
