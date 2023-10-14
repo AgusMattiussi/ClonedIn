@@ -8,8 +8,8 @@ import java.net.URI;
 
 public class EnterpriseDTO {
 
-    public static final String ENTERPRISE_URL = "webapp_war/enterprises";
-    public static final String CATEGORY_URL = "webapp_war/categories";
+    public static final String ENTERPRISES_URL = "webapp_war/enterprises";
+    public static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
     private String name;
@@ -35,14 +35,14 @@ public class EnterpriseDTO {
         dto.description = enterprise.getDescription();
 
         UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(ENTERPRISE_URL)
+                .replacePath(ENTERPRISES_URL)
                 .path(String.valueOf(enterprise.getId()));
         dto.self = enterpriseUriBuilder.build();
 
         dto.image = enterpriseUriBuilder.clone().path("image").build();
 
         UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(CATEGORY_URL)
+                .replacePath(CATEGORIES_URL)
                 .path(String.valueOf(enterprise.getCategory().getId()));
         dto.category = categoryUriBuilder.build();
 
