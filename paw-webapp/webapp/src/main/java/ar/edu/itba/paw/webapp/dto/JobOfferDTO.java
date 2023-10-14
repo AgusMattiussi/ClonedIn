@@ -11,9 +11,9 @@ import java.net.URI;
 
 public class JobOfferDTO {
 
-    public static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
-    public static final String ENTERPRISES_URL = "webapp_war/enterprises";
-    public static final String CATEGORIES_URL = "webapp_war/categories";
+    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
+    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
+    private static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
     private URI enterprise;
