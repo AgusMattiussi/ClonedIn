@@ -93,6 +93,7 @@ function RegisterUser() {
                         <h2 className="fs-title">{t("Basic Information")}</h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
                           <Form.Control
+                            name="email"
                             className="input"
                             type="email"
                             placeholder={t("Email*").toString()}
