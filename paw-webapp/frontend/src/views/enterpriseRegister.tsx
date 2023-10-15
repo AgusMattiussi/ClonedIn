@@ -9,6 +9,8 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { registerEnterprise } from "../api/authService"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
@@ -57,6 +59,15 @@ function RegisterEnterprise() {
 
   document.title = t("Register Page Title")
 
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    email: yup.string().email('Invalid email').required('Required'),
+    name: yup.string().required('Required'),
+    pass: yup.string().required('Required'),
+    repeatPass: yup.string().oneOf([yup.ref('pass')], 'Passwords must match').required('Required')
+  });
+
   return (
     <div>
       <Header />
@@ -71,33 +82,58 @@ function RegisterEnterprise() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      email: '',
+                      name: '',
+                      pass: '',
+                      repeatPass: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
                     <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title">{t("Basic Information")}</h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
                           <Form.Control
+                            name="email"
                             className="input"
                             type="email"
                             placeholder={t("Email*").toString()}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={values.email}
+                            onChange={handleChange}
+                            isInvalid={!!errors.email}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.email}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicName">
                           <Form.Control
+                            name="name"
                             className="input"
                             placeholder={t("Enterprise Name*").toString()}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={values.name}
+                            onChange={handleChange}
+                            isInvalid={!!errors.name}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
                           <Form.Control
+                            name="pass"
                             className="input"
                             type={passwordVisibility ? "text" : "password"}
                             placeholder={t("Password*").toString()}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={values.pass}
+                            onChange={handleChange}
+                            isInvalid={!!errors.pass}
                           />
                           <Button
                             className="pb-3"
@@ -106,14 +142,19 @@ function RegisterEnterprise() {
                           >
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.pass}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
                           <Form.Control
+                            name="repeatPass"
                             className="input"
                             type={repeatPasswordVisibility ? "text" : "password"}
                             placeholder={t("Repeat Password*").toString()}
-                            value={repeatPassword}
-                            onChange={(e) => setRepeatPassword(e.target.value)}
+                            value={values.repeatPass}
+                            onChange={handleChange}
+                            isInvalid={!!errors.repeatPass}
                           />
                           <Button
                             className="pb-3"
@@ -122,6 +163,9 @@ function RegisterEnterprise() {
                           >
                             {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.repeatPass}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicLocation">
                           <Form.Control
@@ -201,6 +245,8 @@ function RegisterEnterprise() {
                         <strong>{t("Register")}</strong>
                       </Button>
                     </Form>
+                  )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">
