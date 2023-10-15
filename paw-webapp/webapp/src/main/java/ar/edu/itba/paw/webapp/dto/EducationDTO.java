@@ -8,7 +8,9 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class EducationDTO {
-    private User user;
+    private static final String USER_URL = "webapp_war/users";
+
+    private URI user;
     private int monthFrom;
     private int yearFrom;
     private int monthTo;
@@ -16,11 +18,9 @@ public class EducationDTO {
     private String title;
     private String institutionName;
     private String description;
-    private URI self;
 
     public static EducationDTO fromEducation(final UriInfo uriInfo, final Education education) {
         final EducationDTO dto = new EducationDTO();
-        dto.user = education.getUser();
         dto.monthFrom = education.getMonthFrom();
         dto.yearFrom = education.getYearFrom();
         dto.monthTo = education.getMonthTo();
@@ -30,17 +30,19 @@ public class EducationDTO {
         dto.description = education.getDescription();
 
         //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath("webapp_war/educations").path(String.valueOf(education.getId()));
-        dto.self = userUriBuilder.build();
+        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(USER_URL)
+                .path(education.getUser().getId().toString());
+        dto.user = userUriBuilder.build();
 
         return dto;
     }
 
-    public User getUser() {
+    public URI getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 
@@ -64,7 +66,7 @@ public class EducationDTO {
         return monthTo;
     }
 
-    public void setMonthTo(Integer monthTo) {
+    public void setMonthTo(int monthTo) {
         this.monthTo = monthTo;
     }
 
@@ -72,7 +74,7 @@ public class EducationDTO {
         return yearTo;
     }
 
-    public void setYearTo(Integer yearTo) {
+    public void setYearTo(int yearTo) {
         this.yearTo = yearTo;
     }
 
@@ -98,13 +100,5 @@ public class EducationDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 }
