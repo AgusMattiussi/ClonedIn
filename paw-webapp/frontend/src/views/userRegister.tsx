@@ -62,6 +62,9 @@ function RegisterUser() {
 
   const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
+    name: yup.string().required('Required'),
+    pass: yup.string().required('Required'),
+    repeatPass: yup.string().oneOf([yup.ref('pass')], 'Passwords must match').required('Required')
   });
 
   return (
@@ -82,6 +85,9 @@ function RegisterUser() {
                     validationSchema={schema}
                     initialValues={{
                       email: '',
+                      name: '',
+                      pass: '',
+                      repeatPass: '',
                     }}
                     onSubmit={values => {
                       console.log(values);
@@ -107,19 +113,26 @@ function RegisterUser() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicName">
                           <Form.Control
+                            name="name"
                             className="input"
                             placeholder={t("Name*").toString()}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={values.name}
+                            onChange={handleChange}
+                            isInvalid={!!errors.name}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
                           <Form.Control
+                            name="pass"
                             className="input"
                             type={passwordVisibility ? "text" : "password"}
                             placeholder={t("Password*").toString()}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={values.pass}
+                            onChange={handleChange}
+                            isInvalid={!!errors.pass}
                           />
                           <Button
                             className="pb-3"
@@ -128,14 +141,19 @@ function RegisterUser() {
                           >
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.pass}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
                           <Form.Control
+                            name="repeatPass"
                             className="input"
                             type={repeatPasswordVisibility ? "text" : "password"}
                             placeholder={t("Repeat Password*").toString()}
-                            value={repeatPassword}
-                            onChange={(e) => setRepeatPassword(e.target.value)}
+                            value={values.repeatPass}
+                            onChange={handleChange}
+                            isInvalid={!!errors.repeatPass}
                           />
                           <Button
                             className="pb-3"
@@ -144,6 +162,9 @@ function RegisterUser() {
                           >
                             {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.repeatPass}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicLocation">
                           <Form.Control
