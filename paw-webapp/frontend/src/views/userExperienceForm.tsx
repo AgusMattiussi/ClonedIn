@@ -5,12 +5,21 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function ExperienceForm() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
   document.title = t("Experience Form Page Title")
+
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Required'),
+    position: yup.string().required('Required'),
+  });
 
   return (
     <div>
@@ -26,14 +35,45 @@ function ExperienceForm() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      name: '',
+                      position: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
+                    <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title">{t("Experience")}</h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicEnterprise">
-                          <Form.Control className="input" placeholder={t("Enterprise Name").toString()} />
+                          <Form.Control 
+                              name="name"
+                              className="input"
+                              placeholder={t("Enterprise Name*").toString()}
+                              value={values.name}
+                              onChange={handleChange}
+                              isInvalid={!!errors.name}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPosition">
-                          <Form.Control className="input" placeholder={t("Position").toString()} />
+                          <Form.Control                           
+                              name="position"
+                              className="input"
+                              placeholder={t("Position*").toString()}
+                              value={values.position}
+                              onChange={handleChange}
+                              isInvalid={!!errors.position}
+                            />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.position}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicDescription">
                           <Form.Control className="input" placeholder={t("Description").toString()} />
@@ -94,10 +134,12 @@ function ExperienceForm() {
                       </div>
                       <p>{t("Fields required")}</p>
                       {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Save")}</strong>
                       </Button>
                     </Form>
+                    )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">

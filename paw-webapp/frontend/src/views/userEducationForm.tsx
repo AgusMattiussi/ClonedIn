@@ -5,12 +5,21 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function EducationForm() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
   document.title = t("Education Form Page Title")
+
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    institution: yup.string().required('Required'),
+    degree: yup.string().required('Required'),
+  });
 
   return (
     <div>
@@ -26,14 +35,45 @@ function EducationForm() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      institution: '',
+                      degree: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
+                    <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title"> {t("Educacion")} </h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicInstitution">
-                          <Form.Control className="input" placeholder={t("Institution").toString()} />
+                          <Form.Control                                                 
+                              name="institution"
+                              className="input"
+                              placeholder={t("Institution*").toString()}
+                              value={values.institution}
+                              onChange={handleChange}
+                              isInvalid={!!errors.institution}
+                            />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.institution}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicDegree">
-                          <Form.Control className="input" placeholder={t("Degree").toString()} />
+                          <Form.Control                                              
+                            name="degree"
+                            className="input"
+                            placeholder={t("Degree*").toString()}
+                            value={values.degree}
+                            onChange={handleChange}
+                            isInvalid={!!errors.degree}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.institution}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicComment">
                           <Form.Control className="input" placeholder={t("Comment").toString()} />
@@ -92,10 +132,12 @@ function EducationForm() {
                         </div>
                       </div>
                       <p>{t("Fields required")}</p>
-                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Save")}</strong>
                       </Button>
                     </Form>
+                    )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">
