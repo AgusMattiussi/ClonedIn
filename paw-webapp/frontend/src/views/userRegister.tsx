@@ -63,7 +63,7 @@ function RegisterUser() {
   const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
     name: yup.string().required('Required'),
-    pass: yup.string().required('Required'),
+    pass: yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.'),
     repeatPass: yup.string().oneOf([yup.ref('pass')], 'Passwords must match').required('Required')
   });
 

@@ -6,6 +6,8 @@ import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function EditEnterpriseForm() {
   const [categoryList, setCategoryList] = useState([])
@@ -22,10 +24,21 @@ function EditEnterpriseForm() {
       .catch(setError)
   }, [])
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    navigate("/profiles")
+  }
+
   const { t } = useTranslation()
   const navigate = useNavigate()
 
   document.title = t("Edit Page Title")
+
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Required'),
+  });
 
   return (
     <div>
@@ -41,11 +54,31 @@ function EditEnterpriseForm() {
                 <p>{t("Fill some fields")}.</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      name: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
+                    <Form className="msform" noValidate onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title">{t("Basic Information")}</h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicName">
-                          <Form.Control className="input" placeholder={t("Enterprise Name*").toString()} />
+                          <Form.Control
+                            name="name"
+                            className="input"
+                            placeholder={t("Name*").toString()}
+                            value={values.name}
+                            onChange={handleChange}
+                            isInvalid={!!errors.name}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicLocation">
                           <Form.Control className="input" placeholder={t("Location").toString()} />
@@ -89,10 +122,12 @@ function EditEnterpriseForm() {
                         </Form.Group>
                       </div>
                       <p>{t("Fields required")}</p>
-                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Save")}</strong>
                       </Button>
                     </Form>
+                    )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">
