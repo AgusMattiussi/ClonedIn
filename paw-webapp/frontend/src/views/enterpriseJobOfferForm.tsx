@@ -6,6 +6,8 @@ import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import * as formik from 'formik';
+import * as yup from 'yup';
 
 function JobOfferForm() {
   const [categoryList, setCategoryList] = useState([])
@@ -27,6 +29,12 @@ function JobOfferForm() {
 
   document.title = t("Job Offer Page Title")
 
+  const { Formik } = formik;
+
+  const schema = yup.object().shape({
+    position: yup.string().required('Required'),
+  });
+
   return (
     <div>
       <Navigation />
@@ -41,11 +49,31 @@ function JobOfferForm() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      position: '',
+                    }}
+                    onSubmit={values => {
+                      console.log(values);
+                    }}
+                  >
+                  {({handleSubmit, handleChange, values, touched, errors }) => (
+                    <Form className="msform" onSubmit={handleSubmit}>
                       <div className="form-card">
                         <h2 className="fs-title"> {t("Job Offer")} </h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicPosition">
-                          <Form.Control className="input" placeholder={t("Position").toString()} />
+                          <Form.Control 
+                              name="position"
+                              className="input"
+                              placeholder={t("Position*").toString()}
+                              value={values.position}
+                              onChange={handleChange}
+                              isInvalid={!!errors.position}
+                            />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.position}
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicSalary">
                           <Form.Control className="input" placeholder={t("Salary").toString()} />
@@ -77,10 +105,12 @@ function JobOfferForm() {
                         </Form.Group>
                       </div>
                       <p>{t("Fields required")}</p>
-                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong> {t("Create")} </strong>
                       </Button>
                     </Form>
+                    )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">
