@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
+import ar.edu.itba.paw.webapp.auth.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,14 +40,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private AuthUserDetailsService userDetailsService;
     /*@Autowired
-    private AuthenticationProvider authenticationProvider;*/
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    private JwtAuthenticationProvider authenticationProvider;*/
 
     //TODO: ACTUALIZAR LOS URLS
     @Override
@@ -131,36 +128,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
-
     @Bean
-    public UserDetailsService userDetailsService(){
-       return new AuthUserDetailsService();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    /*@Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }*/
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        //auth.authenticationProvider(authenticationProvider);
     }
 
-    /*@Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }*/
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+
+
 
 
 

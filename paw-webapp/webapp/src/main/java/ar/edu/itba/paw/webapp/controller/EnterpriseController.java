@@ -614,8 +614,6 @@ public class EnterpriseController {
             return
         }*/
 
-        System.out.println("\n\n\n ==== CREANDO EMPRESA ==== \n" + enterpriseForm + "\n\n\n");
-
         Optional<Category> optCategory = categoryService.findByName(enterpriseForm.getCategory());
         if (!optCategory.isPresent()) {
             //TODO: Desarrollar errores
@@ -736,8 +734,6 @@ public class EnterpriseController {
 
         if (!jobOfferForm.getSkill1().isEmpty()) {
             Skill skill1 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill1());
-            System.out.println(skill1);
-            System.out.println(jobOffer);
             jobOfferSkillService.addSkillToJobOffer(skill1, jobOffer);
         }
         if (!jobOfferForm.getSkill2().isEmpty()) {

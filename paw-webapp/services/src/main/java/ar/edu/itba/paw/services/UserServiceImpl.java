@@ -19,11 +19,13 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private final UserDao userDao;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
     private final ImageService imageService;
 
-    @Autowired
     public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final ImageService imageService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;

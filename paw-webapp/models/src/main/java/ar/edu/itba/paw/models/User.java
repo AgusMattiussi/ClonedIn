@@ -123,7 +123,6 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        System.out.println("\n\n\n\n Pidiendo password:\t" + password + "\n\n\n\n");
         return password;
     }
 

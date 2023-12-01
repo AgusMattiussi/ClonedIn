@@ -27,7 +27,6 @@ public class JwtHelper {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
-        System.out.println("\n\n\n\n PASSWORD: " + userDetails.getPassword() + "\n\n\n\n\n");
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
