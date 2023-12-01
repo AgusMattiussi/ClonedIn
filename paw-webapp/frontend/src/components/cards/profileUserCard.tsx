@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
-import GetUserData from "../../utils/userApi"
+import GetUserData from "../../api/userApi"
 import CategoryDto from "../../utils/CategoryDto"
 
 function ProfileUserCard({ editable, contacted, user }: { editable: boolean; contacted: boolean; user: any }) {

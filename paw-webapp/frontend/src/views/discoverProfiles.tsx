@@ -7,27 +7,29 @@ import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
 import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import Pagination from "../components/pagination"
 import Loader from "../components/loader"
+import { useRequestApi } from "../api/apiRequest"
+// import Pagination from "../components/pagination"
 
 function DiscoverProfiles() {
-  const [users, setUsers] = useState<any[]>([])
+  const { loading, apiRequest } = useRequestApi()
   const [isLoading, setLoading] = useState(true)
+  const [users, setUsers] = useState<any[]>([])
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setUsers(data)
+    const fetchUsers = async () => {
+      const response = await apiRequest({
+        url: "/users",
+        method: "GET",
       })
-      .catch((err) => {
-        console.log(err.message)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
+      setUsers(response.data)
+      setLoading(false)
+      setError(null)
+    }
+
+    fetchUsers()
+  }, [apiRequest])
 
   const { t } = useTranslation()
 

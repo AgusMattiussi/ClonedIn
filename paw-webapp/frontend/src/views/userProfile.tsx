@@ -7,40 +7,42 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import ProfileUserCard from "../components/cards/profileUserCard"
 import Navigation from "../components/navbar"
+import Loader from "../components/loader"
+import UserDto from "../utils/UserDto"
+import GetUserData from "../api/userApi"
+import { monthNames, BASE_URL } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
-import UserDto from "../utils/UserDto"
-import GetUserData from "../utils/userApi"
-import { monthNames } from "../utils/constants"
-import Loader from "../components/loader"
 import { useParams } from "react-router-dom"
+import { useRequestApi } from "../api/apiRequest"
 
 function ProfileUser() {
-  const { t } = useTranslation()
-
   //TODO: Fix this to show specific user info
-  const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const { loading, apiRequest } = useRequestApi()
   const [isUserLoading, setUserLoading] = useState(true)
+  const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const [error, setError] = useState(null)
 
+  const { t } = useTranslation()
   const { id } = useParams()
 
-  const API_URL = `http://localhost:8080/webapp_war/users/${id}/`
+  const USER_API_URL = BASE_URL + `/users/${id}/`
 
   useEffect(() => {
-    fetch(API_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data)
+    const fetchUser = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}/`,
+        method: "GET",
       })
-      .catch((err) => {
-        console.log(err.message)
-      })
-      .finally(() => {
-        setUserLoading(false)
-      })
-  }, [])
+      setUser(response.data)
+      setUserLoading(false)
+      setError(null)
+    }
 
-  const userSkillsList = GetUserData(API_URL + "skills").map((skill) => {
+    fetchUser()
+  }, [apiRequest, id])
+
+  const userSkillsList = GetUserData(USER_API_URL + "skills").map((skill) => {
     return (
       <Badge pill bg="light" text="dark" className="mx-2">
         {skill.description}
@@ -51,7 +53,7 @@ function ProfileUser() {
     )
   })
 
-  const userEducationsList = GetUserData(API_URL + "educations").map((education) => {
+  const userEducationsList = GetUserData(USER_API_URL + "educations").map((education) => {
     return (
       <>
         <div className="d-flex flex-row justify-content-between align-items-center">
@@ -74,7 +76,7 @@ function ProfileUser() {
     )
   })
 
-  const userExperienceList = GetUserData(API_URL + "experiences").map((experience) => {
+  const userExperienceList = GetUserData(USER_API_URL + "experiences").map((experience) => {
     return (
       <>
         <div className="d-flex flex-row justify-content-between align-items-center">

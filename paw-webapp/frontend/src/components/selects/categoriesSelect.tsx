@@ -4,23 +4,28 @@ import "bootstrap/dist/js/bootstrap.bundle.min"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
 import { useState, useEffect } from "react"
+import { useRequestApi } from "../../api/apiRequest"
 
 function CategoriesSelect() {
   const { t } = useTranslation()
 
+  const { loading, apiRequest } = useRequestApi()
   const [categoryList, setCategoryList] = useState([])
   const [category, setCategory] = useState("")
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/categories")
-      .then((response) => response.json())
-      .then((response) => {
-        setCategoryList(response)
-        setError(null)
+    const fetchCategories = async () => {
+      const response = await apiRequest({
+        url: "/categories",
+        method: "GET",
       })
-      .catch(setError)
-  }, [])
+      setCategoryList(response.data)
+      setError(null)
+    }
+
+    fetchCategories()
+  }, [apiRequest])
 
   return (
     <div>
