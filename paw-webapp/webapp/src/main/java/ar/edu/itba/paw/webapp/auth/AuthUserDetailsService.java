@@ -13,10 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
-@Service
+@Component
 public class AuthUserDetailsService implements UserDetailsService {
 
     private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.USER.name());
@@ -33,7 +34,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         this.es = es;
     }
 
-    public AuthUserDetailsService(){};
+    //public AuthUserDetailsService(){};
 
     // Username = email
     @Override

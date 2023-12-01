@@ -33,7 +33,7 @@ public class JwtHelper {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS512) // Eventualmente actualizar a SHA-3
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 

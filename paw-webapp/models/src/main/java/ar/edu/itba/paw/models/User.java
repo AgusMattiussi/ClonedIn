@@ -55,6 +55,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Experience> experiences;
 
@@ -66,9 +70,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Contact> contacts;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
         this.id = id;
@@ -87,7 +88,18 @@ public class User implements UserDetails {
 
     public User(String email, String password, String name, String location, Category category, String currentPosition,
                 String description, String education, int visibility, Image image) {
-        this(null, email, password, name, location, category, currentPosition, description, education, visibility, image);
+        this.id = null;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.location = location;
+        this.category = category;
+        this.currentPosition = currentPosition;
+        this.description = description;
+        this.education = education;
+        this.visibility = visibility;
+        this.image = image;
+        this.role = Role.USER;
     }
 
     /* package */ User() {
@@ -105,7 +117,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.name()));
+        authorities.add(new SimpleGrantedAuthority(Role.USER.name()));
         return authorities;
     }
 

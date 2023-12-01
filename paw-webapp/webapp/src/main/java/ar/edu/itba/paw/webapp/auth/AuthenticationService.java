@@ -5,8 +5,10 @@ import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,14 +17,12 @@ public class AuthenticationService {
     @Autowired
     private JwtHelper jwtHelper;
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager ;
     @Autowired
     private AuthUserDetailsService authUserDetailsService;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException{
-        System.out.println("\n\n\n\n\n REQUEST: " + request.getEmail() + ", " + request.getPassword() + "\n\n\n\n\n\n");
-
-        authenticationManager.authenticate(
+        Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
