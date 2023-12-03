@@ -60,11 +60,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users").permitAll()//.hasAuthority(Role.ENTERPRISE.name())
                 .antMatchers("/test").authenticated()
                 .antMatchers(HttpMethod.GET,
+                        "/test/{id}",
                         "/users/{id}",
                         "/users/{id}/experiences/**",
                         "/users/{id}/educations/**",
                         "/users/{id}/skills/**",
-                        "/users/{id}/image").access("@securityManager.canAccessUserProfile(authentication, #id)") // TODO: Cambiar por Authenticated Y Visible
+                        "/users/{id}/image").authenticated() // TODO: Cambiar por Authenticated Y Visible
                 .antMatchers(HttpMethod.GET,
                         "/users/{id}/applications",
                         "/users/{id}/notifications").permitAll() // TODO: Cambiar para verificar mismo usuario

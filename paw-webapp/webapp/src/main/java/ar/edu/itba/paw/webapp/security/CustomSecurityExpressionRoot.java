@@ -11,30 +11,36 @@ import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
+
+public class CustomSecurityExpressionRoot extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
     private UserService userService;
     private EnterpriseService enterpriseService;
 
-    public CustomMethodSecurityExpressionRoot(Authentication authentication) {
+    public CustomSecurityExpressionRoot(Authentication authentication) {
         super(authentication);
     }
 
 
-    private boolean canAccessProfile(long loggedUserID, long profileID) {
-        if(loggedUserID != profileID)
+    private boolean canAccessProfile(long requesterID, long profileID) {
+        if(requesterID != profileID)
             throw new UserIsNotProfileOwnerException();
         return true;
     }
 
-    public boolean canAccessUserProfile(Authentication loggedUser, long profileID) {
-        Long userID = userService.getIdForEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+    public boolean canAccessUserProfile(UserDetails userDetails, long profileID) {
+        System.out.println("\n\n\n\n Chequeando acceso");
+        System.out.println("Requester: " + userDetails.getUsername());
+        System.out.println("ProfileID: " + profileID);
+        System.out.println("\n\n\n\n");
+        Long userID = userService.getIdForEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         return canAccessProfile(userID, profileID);
     }
 
-    public boolean canAccessEnterpriseProfile(Authentication loggedEnterprise, long profileID) {
-        Long enterpriseID = enterpriseService.getIdForEmail(loggedEnterprise.getName()).orElseThrow(UserNotFoundException::new);
+    public boolean canAccessEnterpriseProfile(Authentication requester, long profileID) {
+        Long enterpriseID = enterpriseService.getIdForEmail(requester.getName()).orElseThrow(UserNotFoundException::new);
         return canAccessProfile(enterpriseID, profileID);
     }
 
