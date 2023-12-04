@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
@@ -22,7 +23,11 @@ import javax.ws.rs.GET;
 @Component
 public class JobOfferController {
 
+    private static final int JOB_OFFERS_PER_PAGE = 3;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
 
     @Autowired
     private CategoryService categoryService;
@@ -34,8 +39,6 @@ public class JobOfferController {
 
     @Context
     private UriInfo uriInfo;
-
-    private static final int JOB_OFFERS_PER_PAGE = 3;
 
     /*//TODO: arreglar para distinguir por usuario
     @GET
@@ -84,6 +87,7 @@ public class JobOfferController {
     // FIXME: Falla cuando minSalary o maxSalary no son numeros
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize("hasAuthority('USER')")
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") final int page,
                                  @QueryParam("category") final String categoryName,
                                  @QueryParam("minSalary") final BigDecimal minSalary,
@@ -118,6 +122,7 @@ public class JobOfferController {
     @GET
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
     public Response getById(@PathParam("id") final long id) {
         Optional<JobOfferDTO> maybeJob = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job));
         if (!maybeJob.isPresent()) {
