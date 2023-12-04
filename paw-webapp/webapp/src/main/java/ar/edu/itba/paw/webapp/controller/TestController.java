@@ -16,6 +16,9 @@ import javax.ws.rs.core.Response;
 @Component
 public class TestController {
 
+    private static final String TEST_AUTH = "@securityValidator.isUserProfileOwner(#id)";
+
+
     @GET
     public Response sayHello(){
         return Response.ok("Hello from secured endpoint xdd").build();
@@ -23,7 +26,7 @@ public class TestController {
 
     @GET
     @Path("/{id}")
-    @PreAuthorize("@securityValidator.canAccessUserProfile(#id)")
+    @PreAuthorize(TEST_AUTH)
     public Response sayHello1(@PathParam("id") final long id){
         return Response.ok("Hello user " + id).build();
     }

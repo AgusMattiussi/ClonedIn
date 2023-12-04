@@ -28,26 +28,26 @@ public class SecurityValidator {
         return null;
     }
 
-    private boolean canAccessProfile(long requesterID, long profileID) {
+    private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
             throw new UserIsNotProfileOwnerException();
         return true;
     }
 
-    public boolean canAccessUserProfile(long profileID) {
+    public boolean isUserProfileOwner(long profileID) {
         String email = getAuthEmail();
         if(email == null)
             return false;
         Long userID = userService.getIdForEmail(email).orElseThrow(UserNotFoundException::new);
-        return canAccessProfile(userID, profileID);
+        return isProfileOwner(userID, profileID);
     }
 
-    public boolean canAccessEnterpriseProfile(long profileID) {
+    public boolean isEnterpriseProfileOwner(long profileID) {
         String email = getAuthEmail();
         if(email == null)
             return false;
         Long enterpriseID = enterpriseService.getIdForEmail(email).orElseThrow(UserNotFoundException::new);
-        return canAccessProfile(enterpriseID, profileID);
+        return isProfileOwner(enterpriseID, profileID);
     }
 
     public boolean isUserVisible(long userID){

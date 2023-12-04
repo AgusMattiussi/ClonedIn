@@ -57,7 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
                 // Users
-                .antMatchers(HttpMethod.GET, "/users").permitAll()//.hasAuthority(Role.ENTERPRISE.name())
+                .antMatchers(HttpMethod.GET, "/users").authenticated()//.hasAuthority(Role.ENTERPRISE.name())
                 .antMatchers("/test").authenticated()
                 .antMatchers(HttpMethod.GET,
                         "/test/{id}",
@@ -68,22 +68,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/users/{id}/image").authenticated() // TODO: Cambiar por Authenticated Y Visible
                 .antMatchers(HttpMethod.GET,
                         "/users/{id}/applications",
-                        "/users/{id}/notifications").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/users/{id}/notifications").authenticated() // TODO: Cambiar para verificar mismo usuario
                 .antMatchers(HttpMethod.POST,
                         "/users/{id}/applications",
                         "/users/{id}/experiences",
                         "/users/{id}/educations",
-                        "/users/{id}/skills").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/users/{id}/skills").authenticated() // TODO: Cambiar para verificar mismo usuario
                 .antMatchers(HttpMethod.PUT,
                         "/users/{id}/applications/{jobOfferId}",
                         "/users/{id}/notifications/{jobOfferId}",
                         "/users/{id}/profile",
                         "/{id}/visibility",
-                        "/users/{id}/image").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/users/{id}/image").authenticated() // TODO: Cambiar para verificar mismo usuario
                 .antMatchers(HttpMethod.DELETE,
                         "/users/{id}/experiences/{expId}",
                         "/users/{id}/educations/{educationId}",
-                        "/users/{id}/skills/{skillId}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/users/{id}/skills/{skillId}").authenticated() // TODO: Cambiar para verificar mismo usuario
                 // Enterprises
                 .antMatchers(HttpMethod.GET,
                         "/enterprises/{id}",
@@ -92,13 +92,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,
                         "/enterprises/{id}/contacts",
                         "/enterprises/{id}/contacts/{joid}",
-                        "/enterprises/{id}/contacts/{joid}/{uid}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/enterprises/{id}/contacts/{joid}/{uid}").authenticated() // TODO: Cambiar para verificar mismo usuario
                 .antMatchers(HttpMethod.POST,
                         "/enterprises/{id}/jobOffers",
-                        "/enterprises/{id}/contacts").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.PUT, "/enterprises/{id}/jobOffers/{joid}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                        "/enterprises/{id}/contacts").authenticated() // TODO: Cambiar para verificar mismo usuario
+                .antMatchers(HttpMethod.PUT, "/enterprises/{id}/jobOffers/{joid}").authenticated() // TODO: Cambiar para verificar mismo usuario
                 // Categories
-                .antMatchers(HttpMethod.GET, "/categories").permitAll()
+                .antMatchers(HttpMethod.GET, "/categories").authenticated()
                 // JobOffers
                 .antMatchers(HttpMethod.GET, "/jobOffers/**").hasAuthority(Role.USER.name())
                 .and().exceptionHandling()
