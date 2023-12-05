@@ -18,16 +18,17 @@ public class AuthenticationService {
     private JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager ;
-    @Autowired
-    private AuthUserDetailsService authUserDetailsService;
+    /*@Autowired
+    private AuthUserDetailsService authUserDetailsService;*/
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException{
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        UserDetails user = authUserDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtHelper.generateToken(user);
+        // Si quisieramos agregar al JWT info adicional del usuario:
+        //  UserDetails user = authUserDetailsService.loadUserByUsername(request.getEmail());
+        String jwt = jwtHelper.generateToken(request.getEmail());
 
         return new AuthenticationResponse(jwt);
     }
