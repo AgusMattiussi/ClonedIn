@@ -22,7 +22,7 @@ public class AuthenticationService {
     private AuthUserDetailsService authUserDetailsService;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException{
-        Authentication auth = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
