@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -569,6 +570,9 @@ public class EnterpriseController {
     private static final int CONTACTS_PER_PAGE = 10;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
+    private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
+    private static final String PROFILE_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id)";
+
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -642,6 +646,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON,})
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getById(@PathParam("id") final long id) {
         Optional<EnterpriseDTO> maybeEnterprise = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e));
         if (!maybeEnterprise.isPresent()) {
@@ -650,16 +655,10 @@ public class EnterpriseController {
         return Response.ok(maybeEnterprise.get()).build();
     }
 
-    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-        authToken.setDetails(new WebAuthenticationDetails(request));
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
     //TODO: Agregar orden y filtros
     @GET
     @Path("/{id}/jobOffers")
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getJobOffers(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
         if (!optEnterprise.isPresent()) {
@@ -681,6 +680,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/jobOffers/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getJobOfferById(@PathParam("id") final long id, @PathParam("joid") final long joid) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
         if (!optEnterprise.isPresent()) {
@@ -699,6 +699,7 @@ public class EnterpriseController {
     @Path("/{id}/jobOffers/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
     @Transactional
+    @PreAuthorize(PROFILE_OWNER)
     public Response closeJobOffer(@PathParam("id") final long id, @PathParam("joid") final long joid) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
         if (!optEnterprise.isPresent()) {
@@ -719,6 +720,7 @@ public class EnterpriseController {
     @Path("/{id}/jobOffers")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     @Transactional
+    @PreAuthorize(PROFILE_OWNER)
     public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm/*, final BindingResult errors*/) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
         if (!optEnterprise.isPresent()) {
@@ -763,6 +765,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/contacts")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") final int page,
                                     @QueryParam("status") final String status,
@@ -806,6 +809,7 @@ public class EnterpriseController {
     @Path("/{id}/contacts")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     //@Transactional
+    @PreAuthorize(PROFILE_OWNER)
     public Response contactUser(@PathParam("id") final long id, @Valid final ContactForm contactForm, @QueryParam("uid") final long userId){
 
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
@@ -849,6 +853,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/contacts/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(PROFILE_OWNER)
     public Response getJobOfferContacts(@PathParam("id") final long id, @PathParam("joid") final long jobOfferId,
                                     @QueryParam("page") @DefaultValue("1") final int page,
                                     @QueryParam("filledBy") final int filledBy) {
@@ -886,6 +891,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/contacts/{joid}/{uid}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(PROFILE_OWNER)
     public Response getContactById(@PathParam("id") final long id, @PathParam("joid") final long jobOfferId,
                                     @PathParam("uid") final long userId) {
         Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
@@ -904,6 +910,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/image")
     @Produces(value = {"image/webp"})
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") final long id) {
         LOGGER.debug("Trying to access enterprise image");
 

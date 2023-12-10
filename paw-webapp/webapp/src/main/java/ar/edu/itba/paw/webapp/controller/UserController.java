@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -608,6 +609,10 @@ public class UserController {
     private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+    private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
+    private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
+
+
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -656,6 +661,7 @@ public class UserController {
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize("hasAuthority('ENTERPRISE')")
     public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
         final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
@@ -743,9 +749,11 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
     }*/
 
+
     @GET
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getById(@PathParam("id") final long id) {
         Optional<UserDTO> maybeUser = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u));
         if (!maybeUser.isPresent()) {
@@ -764,6 +772,7 @@ public class UserController {
     //TODO: Agregar orden y filtros
     @GET
     @Path("/{id}/applications")
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getApplications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -783,9 +792,9 @@ public class UserController {
 
     @POST
     //@Transactional
-    //@PreAuthorize("hasRole('ROLE_USER')")
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @PreAuthorize(PROFILE_OWNER)
     public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("jobOfferId") final long jobOfferId){
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -820,8 +829,8 @@ public class UserController {
     }
 
     @PUT
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/applications/{jobOfferId}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response cancelApplication(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -845,9 +854,9 @@ public class UserController {
     }
 
     @PUT
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/notifications/{jobOfferId}")
-    public Response statusJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId, @QueryParam("newStatus") final String NewStatus) {
+    @PreAuthorize(PROFILE_OWNER)
+    public Response updateJobOfferStatus(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId, @QueryParam("newStatus") final String NewStatus) {
 
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -876,35 +885,12 @@ public class UserController {
 
     }
 
-    // TODO: metodo ambiguo con el accept -> diferenciar path con queryParam
-/*    @PUT
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
-    @Path("/{id}/notifications/{jobOfferId}")
-    public Response rejectJobOffer(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
 
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if(!optJobOffer.isPresent()){
-            LOGGER.error("Job offer with ID={} not found", jobOfferId);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        // TODO: Otra opcion seria devolver la nueva application (201: CREATED)
-        //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
-
-        return Response.ok().build();
-    }*/
 
     // TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
     @GET
     @Path("/{id}/notifications")
+    @PreAuthorize(PROFILE_OWNER)
     public Response getNotifications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -925,6 +911,7 @@ public class UserController {
     @GET
     @Path("/{id}/experiences")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperiences(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -946,6 +933,7 @@ public class UserController {
     @GET
     @Path("/{id}/experiences/{expId}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -961,9 +949,9 @@ public class UserController {
     }
 
     @POST
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/experiences")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @PreAuthorize(PROFILE_OWNER)
     public Response addExperience(@PathParam("id") final long id, @Valid final ExperienceForm experienceForm /*, final BindingResult errors*/){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1021,8 +1009,8 @@ public class UserController {
     }
 
     @DELETE
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/experiences/{expId}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
         //TODO: Cambiar a boolean?
         experienceService.deleteExperience(expId);
@@ -1032,6 +1020,7 @@ public class UserController {
     @GET
     @Path("/{id}/educations")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getEducations(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1053,6 +1042,7 @@ public class UserController {
     @GET
     @Path("/{id}/educations/{educationId}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1068,9 +1058,9 @@ public class UserController {
     }
 
     @POST
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/educations")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @PreAuthorize(PROFILE_OWNER)
     public Response addEducation(@PathParam("id") final long id, @Valid final EducationForm educationForm /*, final BindingResult errors*/){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1105,15 +1095,17 @@ public class UserController {
     }
 
     @DELETE
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/educations/{educationId}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
     }
+
     @GET
     @Path("/{id}/skills")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getSkills(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1135,6 +1127,7 @@ public class UserController {
     @GET
     @Path("/{id}/skills/{skillId}")
     @Produces({ MediaType.APPLICATION_JSON, })
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getSkillById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1150,9 +1143,9 @@ public class UserController {
     }
 
     @POST
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/skills")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @PreAuthorize(PROFILE_OWNER)
     public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm /*, final BindingResult errors*/){
         Optional<User> optUser = us.findById(id);
         if(!optUser.isPresent()){
@@ -1178,16 +1171,16 @@ public class UserController {
     }
 
     @DELETE
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId) AND isExperienceOwner(#userId, #experienceId)")
     @Path("/{id}/skills/{skillId}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
         userSkillService.deleteSkillFromUser(id, skillId);
         return Response.noContent().build();
     }
 
     @PUT
-    //@PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/profile")
+    @PreAuthorize(PROFILE_OWNER)
     public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
         /*if (errors.hasErrors()) {
             return formEditUser(loggedUser, editUserForm, userId);
@@ -1206,8 +1199,8 @@ public class UserController {
     }
 
     @PUT
-    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/visibility")
+    @PreAuthorize(PROFILE_OWNER)
     public Response hideUserProfile(@PathParam("id") final long id) {
         Optional<User> optUser = us.findById(id);
         if (!optUser.isPresent()) {
@@ -1225,8 +1218,8 @@ public class UserController {
     }
 
     @PUT
-    // @PreAuthorize("hasRole('ROLE_USER') AND canAccessUserProfile(#loggedUser, #userId)")
     @Path("/{id}/image")
+    @PreAuthorize(PROFILE_OWNER)
     public Response uploadImage(@PathParam("id") final long id, @Valid final ImageForm imageForm /* , final BindingResult errors */) throws IOException {
         /*if (errors.hasErrors()) {
             return formImage(loggedUser, imageForm, userId);
@@ -1241,6 +1234,7 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @Produces(value = {"image/webp"})
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") final long id) {
         LOGGER.debug("Trying to access profile image");
 
@@ -1261,11 +1255,4 @@ public class UserController {
         return Response.ok(profileImage.getBytes()).build();
     }
 
-    /** Autologin **/
-    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-        authToken.setDetails(new WebAuthenticationDetails(request));
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
-@Component
+@Service
 public class AuthUserDetailsService implements UserDetailsService {
 
     private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.USER.name());

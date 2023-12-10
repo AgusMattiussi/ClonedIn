@@ -24,6 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,8 +35,8 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.models", "ar.edu.itba.paw.webapp.config"})
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security"})
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -54,52 +55,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 // Create and Authorize
                 .antMatchers("/auth/authenticate").permitAll()
+                .antMatchers("/test/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
-                // Users
-                .antMatchers(HttpMethod.GET, "/users").permitAll()//.hasAuthority(Role.ENTERPRISE.name())
-                .antMatchers("/test").authenticated()
-                .antMatchers(HttpMethod.GET,
-                        "/users/{id}",
-                        "/users/{id}/experiences/**",
-                        "/users/{id}/educations/**",
-                        "/users/{id}/skills/**",
-                        "/users/{id}/image").access("@securityManager.canAccessUserProfile(authentication, #id)") // TODO: Cambiar por Authenticated Y Visible
-                .antMatchers(HttpMethod.GET,
-                        "/users/{id}/applications",
-                        "/users/{id}/notifications").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.POST,
-                        "/users/{id}/applications",
-                        "/users/{id}/experiences",
-                        "/users/{id}/educations",
-                        "/users/{id}/skills").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.PUT,
-                        "/users/{id}/applications/{jobOfferId}",
-                        "/users/{id}/notifications/{jobOfferId}",
-                        "/users/{id}/profile",
-                        "/{id}/visibility",
-                        "/users/{id}/image").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.DELETE,
-                        "/users/{id}/experiences/{expId}",
-                        "/users/{id}/educations/{educationId}",
-                        "/users/{id}/skills/{skillId}").permitAll() // TODO: Cambiar para verificar mismo usuario
-                // Enterprises
-                .antMatchers(HttpMethod.GET,
-                        "/enterprises/{id}",
-                        "/enterprises/{id}/jobOffers",
-                        "/enterprises/{id}/jobOffers/{joid}").hasAuthority(Role.ENTERPRISE.name())
-                .antMatchers(HttpMethod.GET,
-                        "/enterprises/{id}/contacts",
-                        "/enterprises/{id}/contacts/{joid}",
-                        "/enterprises/{id}/contacts/{joid}/{uid}").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.POST,
-                        "/enterprises/{id}/jobOffers",
-                        "/enterprises/{id}/contacts").permitAll() // TODO: Cambiar para verificar mismo usuario
-                .antMatchers(HttpMethod.PUT, "/enterprises/{id}/jobOffers/{joid}").permitAll() // TODO: Cambiar para verificar mismo usuario
+                // Users and Enterprises
+                .antMatchers("/users", "/users/**").authenticated()
+                .antMatchers("/enterprises", "/enterprises/**").authenticated()
                 // Categories
-                .antMatchers(HttpMethod.GET, "/categories").permitAll()
+                .antMatchers("/categories").authenticated()
                 // JobOffers
-                .antMatchers(HttpMethod.GET, "/jobOffers/**").hasAuthority(Role.USER.name())
+                .antMatchers("/jobOffers/**").authenticated()
                 .and().exceptionHandling()
                     .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
                     .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
