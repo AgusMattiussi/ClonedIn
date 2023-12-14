@@ -46,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else if(authHeader.startsWith(AUTH_HEADER_BASIC)) {
                 String email = basicAuthentication(authHeader, request);
                 response.addHeader("access-token", jwtHelper.generateAccessToken(email));
+
             }
         }
         filterChain.doFilter(request, response);

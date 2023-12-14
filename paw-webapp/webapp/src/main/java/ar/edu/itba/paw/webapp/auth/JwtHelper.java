@@ -27,6 +27,7 @@ public class JwtHelper {
     private String JWT_SECRET;
 
     private static final String TOKEN_TYPE_CLAIM = "token-type";
+    private static final String IP_CLAIM = "ip";
 
 
 
@@ -42,27 +43,27 @@ public class JwtHelper {
 
 
     public String generateAccessToken(String email){
-        return generateToken(email, JwtType.ACCESS_TOKEN, ACCESS_EXPIRATION_TIME_MILLIS);
-    }
-
-    public String generateRefreshToken(String email){
-        return generateToken(email, JwtType.REFRESH_TOKEN, REFRESH_EXPIRATION_TIME_MILLIS);
-    }
-
-    private String generateToken(String email, JwtType type, int expirationTimeMillis){
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(TOKEN_TYPE_CLAIM, type.toString());
-
         return Jwts
                 .builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis))
-                .addClaims(extraClaims)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME_MILLIS))
+                .claim(TOKEN_TYPE_CLAIM, JwtType.ACCESS_TOKEN.toString())
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
+    public String generateRefreshToken(String email, String ip){
+        return Jwts
+                .builder()
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME_MILLIS))
+                .claim(TOKEN_TYPE_CLAIM, JwtType.REFRESH_TOKEN.toString())
+                .claim(IP_CLAIM, ip)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
@@ -89,6 +90,10 @@ public class JwtHelper {
     public JwtType extractTokenType(String token) {
         String typeAsString  = extractClaim(token, claims -> claims.get(TOKEN_TYPE_CLAIM, String.class));
         return JwtType.fromString(typeAsString);
+    }
+
+    public String extractIp(String token) {
+        return extractClaim(token, claims -> claims.get(IP_CLAIM, String.class));
     }
 
     private Claims extractAllClaims(String token){
