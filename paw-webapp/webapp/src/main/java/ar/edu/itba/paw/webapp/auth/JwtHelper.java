@@ -42,10 +42,10 @@ public class JwtHelper {
     }*/
 
 
-    public String generateAccessToken(String email){
+    public String generateAccessToken(UserDetails userDetails){
         return Jwts
                 .builder()
-                .setSubject(email)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME_MILLIS))
                 .claim(TOKEN_TYPE_CLAIM, JwtType.ACCESS_TOKEN.toString())
@@ -53,10 +53,10 @@ public class JwtHelper {
                 .compact();
     }
 
-    public String generateRefreshToken(String email, String ip){
+    public String generateRefreshToken(UserDetails userDetails, String ip){
         return Jwts
                 .builder()
-                .setSubject(email)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME_MILLIS))
                 .claim(TOKEN_TYPE_CLAIM, JwtType.REFRESH_TOKEN.toString())

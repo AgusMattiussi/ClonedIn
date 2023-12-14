@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private final UserDetailsService userDetailsService;
 
+
     public JwtAuthenticationFilter(JwtHelper jwtHelper, AuthUserDetailsService userDetailsService) {
         this.jwtHelper = jwtHelper;
         this.userDetailsService = userDetailsService;
@@ -45,7 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 jwtAuthentication(authHeader, request);
             } else if(authHeader.startsWith(AUTH_HEADER_BASIC)) {
                 String email = basicAuthentication(authHeader, request);
-                response.addHeader("access-token", jwtHelper.generateAccessToken(email));
+
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+
+                response.addHeader("access-token", jwtHelper.generateAccessToken(userDetails));
 
             }
         }

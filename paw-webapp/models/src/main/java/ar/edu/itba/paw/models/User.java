@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuario")
-public class User implements UserDetails {
+public class User implements CustomUserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
@@ -106,6 +106,12 @@ public class User implements UserDetails {
     // Just for Hibernate, we love you!
     }
 
+    @Override
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
     public Long getId() {
         return id;
     }

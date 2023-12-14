@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ public class AuthenticationService {
     private JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager ;
+    @Autowired
+    private UserDetailsService userDetailsService;
     /*@Autowired
     private AuthUserDetailsService authUserDetailsService;*/
 
@@ -27,8 +30,8 @@ public class AuthenticationService {
         );
 
         // Si quisieramos agregar al JWT info adicional del usuario:
-        //  UserDetails user = authUserDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtHelper.generateAccessToken(request.getEmail());
+        UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
+        String jwt = jwtHelper.generateAccessToken(user);
 
         return new AuthenticationResponse(jwt);
     }
