@@ -1,11 +1,7 @@
 import { useState } from "react"
-
 import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios"
-import { Buffer } from "buffer"
 import { useNavigate } from "react-router-dom"
-
 import { BASE_URL, AUTHORIZATION_HEADER } from "../utils/constants"
-
 import { useSharedAuth } from "./auth"
 
 export interface BasicCredentials {
@@ -26,7 +22,7 @@ export interface ApiRequestInput {
 export const useRequestApi = () => {
   const [loading, setLoading] = useState(false)
 
-  const { getAuthToken, setAuthToken } = useSharedAuth()
+  const { getAccessToken, setAccessToken } = useSharedAuth()
 
   const navigate = useNavigate()
 
@@ -36,13 +32,13 @@ export const useRequestApi = () => {
   })
 
   async function apiRequest(input: ApiRequestInput): Promise<AxiosResponse> {
-    const authToken = getAuthToken()
+    const accessToken = getAccessToken()
 
-    const { url, method, body, requiresAuth, credentials } = input
-    let { headers } = input
+    const { url, method, requiresAuth, credentials } = input
+    let { headers, body } = input
 
     if (requiresAuth) {
-      if (!authToken && !credentials) {
+      if (!accessToken && !credentials) {
         navigate("/login", {
           state: { from: window.location.pathname.substring(13) },
         })
@@ -51,19 +47,19 @@ export const useRequestApi = () => {
     }
 
     if (credentials) {
-      const encodedBasic = Buffer.from(`${credentials?.username}:${credentials?.password}`).toString("base64")
-      headers = {
-        Authorization: `Basic ${encodedBasic}`,
-        ...headers,
+      body = {
+        email: credentials?.username,
+        password: credentials?.password,
       }
-    } else if (authToken) {
+    } else if (accessToken) {
       headers = {
-        Authorization: `${authToken}`,
+        Authorization: `Bearer ${accessToken.replace(/"/g, "")}`,
         ...headers,
       }
     }
 
     setLoading(true)
+
     try {
       const response = await api({
         url,
@@ -75,9 +71,10 @@ export const useRequestApi = () => {
         params: input.queryParams,
       })
 
-      if (response.headers[AUTHORIZATION_HEADER]) {
-        setAuthToken(response.headers[AUTHORIZATION_HEADER])
+      if (response.data.accessToken) {
+        setAccessToken(response.data.accessToken)
       }
+
       return response
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -89,8 +86,9 @@ export const useRequestApi = () => {
           if (credentials) {
             return axiosError.response as AxiosResponse // Login
           }
-          if (authToken) {
-            setAuthToken(null)
+
+          if (accessToken) {
+            setAccessToken(null)
           }
 
           if (headers) {
@@ -107,7 +105,7 @@ export const useRequestApi = () => {
         }
 
         if (response?.headers[AUTHORIZATION_HEADER]) {
-          setAuthToken(response.headers[AUTHORIZATION_HEADER])
+          setAccessToken(response.headers[AUTHORIZATION_HEADER])
         }
 
         if (axiosError.response) {

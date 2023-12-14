@@ -8,10 +8,6 @@ import { UserRole } from "../utils/constants"
 export interface UserInfo {
   sub: string
   exp: number
-  username: string
-  email: string
-  role: UserRole
-  points: number
 }
 
 const useAuth = () => {
@@ -23,26 +19,26 @@ const useAuth = () => {
     return null
   })
 
-  const getAuthToken = () => {
-    return localStorage.getItem("authToken")
+  const getAccessToken = () => {
+    return localStorage.getItem("accessToken")
   }
 
-  const setAuthToken = (token: string | null) => {
+  const setAccessToken = (token: string | null) => {
     if (token) {
-      localStorage.setItem("authToken", token)
-      setUserInfo(jwtDecode(token.split(" ")[1]))
+      localStorage.setItem("accessToken", JSON.stringify(token))
+      setUserInfo(jwtDecode(token))
     } else {
-      localStorage.removeItem("authToken")
+      localStorage.removeItem("accessToken")
     }
   }
 
   const callLogout = () => {
-    setAuthToken(null)
+    setAccessToken(null)
   }
 
   return {
-    getAuthToken,
-    setAuthToken,
+    getAccessToken,
+    setAccessToken,
     userInfo,
     callLogout,
   }

@@ -10,7 +10,6 @@ import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { logout } from "../api/authService"
 
 function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
   const { t } = useTranslation()
@@ -18,7 +17,6 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
 
   const handleLogOut = async (e: any) => {
     e.preventDefault()
-    logout()
     navigate("/login")
   }
 

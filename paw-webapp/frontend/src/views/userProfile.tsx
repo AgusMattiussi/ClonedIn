@@ -39,7 +39,9 @@ function ProfileUser() {
       setError(null)
     }
 
-    fetchUser()
+    if (user === undefined) {
+      fetchUser()
+    }
   }, [apiRequest, id])
 
   const userSkillsList = GetUserData(USER_API_URL + "skills").map((skill) => {

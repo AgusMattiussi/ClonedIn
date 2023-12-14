@@ -24,7 +24,9 @@ function CategoriesSelect() {
       setError(null)
     }
 
-    fetchCategories()
+    if (categoryList.length === 0) {
+      fetchCategories()
+    }
   }, [apiRequest])
 
   return (
