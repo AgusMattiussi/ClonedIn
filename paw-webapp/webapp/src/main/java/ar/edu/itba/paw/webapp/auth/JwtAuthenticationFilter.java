@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 jwtAuthentication(authHeader, request);
             } else if(authHeader.startsWith(AUTH_HEADER_BASIC)) {
                 String email = basicAuthentication(authHeader, request);
-                response.addHeader("access-token", jwtHelper.generateToken(email));
+                response.addHeader("access-token", jwtHelper.generateAccessToken(email));
             }
         }
         filterChain.doFilter(request, response);

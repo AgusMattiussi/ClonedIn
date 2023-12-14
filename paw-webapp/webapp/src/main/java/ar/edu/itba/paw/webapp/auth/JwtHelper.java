@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.models.enums.JwtType;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -18,13 +20,17 @@ import java.util.function.Function;
 public class JwtHelper {
 
     @Value("${jwt.expiration}")
-    private int EXPIRATION_TIME_MILLIS; // 15 minutos
+    private int ACCESS_EXPIRATION_TIME_MILLIS;
+    @Value("${jwt.refresh-token.expiration}")
+    private int REFRESH_EXPIRATION_TIME_MILLIS;
     @Value("${jwt.secret-key}")
     private String JWT_SECRET;
 
+    private static final String TOKEN_TYPE_CLAIM = "token-type";
 
 
-    public String generateToken(UserDetails userDetails){
+
+    /*public String generateToken(UserDetails userDetails){
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())
@@ -32,14 +38,27 @@ public class JwtHelper {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
+    }*/
+
+
+    public String generateAccessToken(String email){
+        return generateToken(email, JwtType.ACCESS_TOKEN, ACCESS_EXPIRATION_TIME_MILLIS);
     }
 
-    public String generateToken(String email){
+    public String generateRefreshToken(String email){
+        return generateToken(email, JwtType.REFRESH_TOKEN, REFRESH_EXPIRATION_TIME_MILLIS);
+    }
+
+    private String generateToken(String email, JwtType type, int expirationTimeMillis){
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put(TOKEN_TYPE_CLAIM, type.toString());
+
         return Jwts
                 .builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis))
+                .addClaims(extraClaims)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -63,8 +82,13 @@ public class JwtHelper {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private Date extractExpiration(String token){
+    public Date extractExpiration(String token){
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public JwtType extractTokenType(String token) {
+        String typeAsString  = extractClaim(token, claims -> claims.get(TOKEN_TYPE_CLAIM, String.class));
+        return JwtType.fromString(typeAsString);
     }
 
     private Claims extractAllClaims(String token){

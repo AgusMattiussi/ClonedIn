@@ -28,7 +28,7 @@ public class AuthenticationService {
 
         // Si quisieramos agregar al JWT info adicional del usuario:
         //  UserDetails user = authUserDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtHelper.generateToken(request.getEmail());
+        String jwt = jwtHelper.generateAccessToken(request.getEmail());
 
         return new AuthenticationResponse(jwt);
     }
