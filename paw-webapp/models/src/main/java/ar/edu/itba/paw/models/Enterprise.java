@@ -52,9 +52,9 @@ public class Enterprise implements CustomUserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    @Transient
+    /*@Transient
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role;*/
 
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
     private Set<Contact> contacts;
@@ -90,7 +90,6 @@ public class Enterprise implements CustomUserDetails {
         this.link = link;
         this.description = description;
         this.image = image;
-        this.role = Role.ENTERPRISE;
     }
     public Enterprise(String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this.id = null;
@@ -104,7 +103,6 @@ public class Enterprise implements CustomUserDetails {
         this.link = link;
         this.description = description;
         this.image = image;
-        this.role = Role.ENTERPRISE;
     }
 
     /* package */ Enterprise() {
@@ -113,7 +111,7 @@ public class Enterprise implements CustomUserDetails {
 
     @Override
     public Role getRole() {
-        return role;
+        return Role.ENTERPRISE;
     }
 
     @Override

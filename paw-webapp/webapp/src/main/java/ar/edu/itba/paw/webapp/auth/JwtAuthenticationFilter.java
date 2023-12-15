@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.models.enums.AuthType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,8 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else if(authHeader.startsWith(AUTH_HEADER_BASIC)) {
                 String email = basicAuthentication(authHeader, request);
 
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-
+                CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
                 response.addHeader("access-token", jwtHelper.generateAccessToken(userDetails));
 
             }

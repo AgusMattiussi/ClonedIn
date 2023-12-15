@@ -1,12 +1,11 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.models.enums.JwtType;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.glassfish.jersey.internal.inject.Custom;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,15 +18,18 @@ import java.util.function.Function;
 @Component
 public class JwtHelper {
 
+
     @Value("${jwt.expiration}")
-    private int ACCESS_EXPIRATION_TIME_MILLIS;
+    private long ACCESS_EXPIRATION_TIME_MILLIS;
     @Value("${jwt.refresh-token.expiration}")
-    private int REFRESH_EXPIRATION_TIME_MILLIS;
+    private long REFRESH_EXPIRATION_TIME_MILLIS;
     @Value("${jwt.secret-key}")
     private String JWT_SECRET;
 
     private static final String TOKEN_TYPE_CLAIM = "token-type";
     private static final String IP_CLAIM = "ip";
+    private static final String ROLE_CLAIM = "role";
+    private static final String ID_CLAIM = "id";
 
 
 
@@ -42,27 +44,27 @@ public class JwtHelper {
     }*/
 
 
-    public String generateAccessToken(UserDetails userDetails){
-        return Jwts
-                .builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME_MILLIS))
-                .claim(TOKEN_TYPE_CLAIM, JwtType.ACCESS_TOKEN.toString())
-                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
+    public String generateAccessToken(CustomUserDetails userDetails){
+        return generateTokenBuilder(userDetails, ACCESS_EXPIRATION_TIME_MILLIS, JwtType.ACCESS_TOKEN)
                 .compact();
     }
 
-    public String generateRefreshToken(UserDetails userDetails, String ip){
+    public String generateRefreshToken(CustomUserDetails userDetails, String ip){
+        return generateTokenBuilder(userDetails, REFRESH_EXPIRATION_TIME_MILLIS, JwtType.REFRESH_TOKEN)
+                .claim(IP_CLAIM, ip)
+                .compact();
+    }
+
+    private JwtBuilder generateTokenBuilder(CustomUserDetails userDetails, long expirationTimeMillis, JwtType tokenType){
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME_MILLIS))
-                .claim(TOKEN_TYPE_CLAIM, JwtType.REFRESH_TOKEN.toString())
-                .claim(IP_CLAIM, ip)
-                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis))
+                .claim(TOKEN_TYPE_CLAIM, tokenType.toString())
+                .claim(ROLE_CLAIM, userDetails.getRole().name())
+                .claim(ID_CLAIM, userDetails.getId())
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){

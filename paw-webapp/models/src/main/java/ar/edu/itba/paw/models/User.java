@@ -55,9 +55,9 @@ public class User implements CustomUserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    @Transient
+    /*@Transient
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role;*/
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Experience> experiences;
@@ -83,7 +83,6 @@ public class User implements CustomUserDetails {
         this.education = education;
         this.visibility = visibility;
         this.image = image;
-        this.role = Role.USER;
     }
 
     public User(String email, String password, String name, String location, Category category, String currentPosition,
@@ -99,7 +98,6 @@ public class User implements CustomUserDetails {
         this.education = education;
         this.visibility = visibility;
         this.image = image;
-        this.role = Role.USER;
     }
 
     /* package */ User() {
@@ -108,7 +106,7 @@ public class User implements CustomUserDetails {
 
     @Override
     public Role getRole() {
-        return role;
+        return Role.USER;
     }
 
     @Override

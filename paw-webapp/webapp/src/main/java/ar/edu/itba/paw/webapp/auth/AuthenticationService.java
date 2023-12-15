@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.webapp.form.AuthenticationRequest;
 import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        // Si quisieramos agregar al JWT info adicional del usuario:
-        UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getEmail());
         String jwt = jwtHelper.generateAccessToken(user);
 
         return new AuthenticationResponse(jwt);
