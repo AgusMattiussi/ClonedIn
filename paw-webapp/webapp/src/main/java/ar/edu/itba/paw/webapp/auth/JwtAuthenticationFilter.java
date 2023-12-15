@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void jwtAuthentication(String authHeader, HttpServletRequest request){
         String jwt = authHeader.substring(7); // "Bearer ".length()
         String email = jwtHelper.extractUsername(jwt);
-        if (!jwtHelper.isTokenExpired(jwt)) {
+        if (!jwtHelper.isAccessTokenValid(jwt)) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,

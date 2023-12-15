@@ -6,6 +6,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.glassfish.jersey.internal.inject.Custom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,10 +29,13 @@ public class JwtHelper {
     @Value("${jwt.secret-key}")
     private String JWT_SECRET;
 
+    private static final String ISSUER = "ClonedIn";
     private static final String TOKEN_TYPE_CLAIM = "token-type";
     private static final String IP_CLAIM = "ip";
     private static final String ROLE_CLAIM = "role";
     private static final String ID_CLAIM = "id";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelper.class);
 
     /*public String generateToken(UserDetails userDetails){
         return Jwts
@@ -59,6 +64,7 @@ public class JwtHelper {
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuer(ISSUER)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis))
                 .claim(TOKEN_TYPE_CLAIM, tokenType.toString())
                 .claim(ROLE_CLAIM, userDetails.getRole().name())
@@ -66,12 +72,29 @@ public class JwtHelper {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isAccessTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(userDetails.getUsername()) &&
+                !isTokenExpired(token) &&
+                extractTokenType(token) == JwtType.ACCESS_TOKEN;
     }
 
-    public boolean isTokenExpired(String token) {
+    public boolean isAccessTokenValid(String token){
+        return !isTokenExpired(token) &&
+                extractTokenType(token) == JwtType.ACCESS_TOKEN;
+    }
+
+
+    public boolean isRefreshTokenValid(String token, String userIp){
+        String tokenIp = extractIp(token);
+        if(!tokenIp.equals(userIp)) {
+            LOGGER.warn("An user with IP='{}' tried to use a refresh token with IP='{}'. Token may have been stolen.", tokenIp, userIp);
+            throw new SecurityException(String.format("Refresh token IP (%s) does not match the requester IP (%s). Token may have been stolen.", tokenIp, userIp));
+        }
+        return extractTokenType(token) == JwtType.REFRESH_TOKEN && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

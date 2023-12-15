@@ -46,6 +46,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 // Create and Authorize
                 .antMatchers("/auth/access-token").authenticated()
+                .antMatchers("/auth/refresh-token").permitAll()
                 .antMatchers("/test/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()

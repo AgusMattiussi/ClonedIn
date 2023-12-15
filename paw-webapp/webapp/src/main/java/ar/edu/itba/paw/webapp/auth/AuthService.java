@@ -1,27 +1,19 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.models.CustomUserDetails;
-import ar.edu.itba.paw.webapp.form.AuthenticationRequest;
-import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.ws.rs.core.NewCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
 @Service
-public class AuthenticationService {
+public class AuthService {
 
     @Value("${jwt.refresh-token.expiration}")
     private long REFRESH_EXPIRATION_TIME_MILLIS;
@@ -32,19 +24,8 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager ;
     @Autowired
     private UserDetailsService userDetailsService;
-    /*@Autowired
-    private AuthUserDetailsService authUserDetailsService;*/
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws AuthenticationException{
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
 
-        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtHelper.generateAccessToken(user);
-
-        return new AuthenticationResponse(jwt);
-    }
 
     public String generateAccessToken(CustomUserDetails userDetails){
         return jwtHelper.generateAccessToken(userDetails);
@@ -71,5 +52,13 @@ public class AuthenticationService {
         String[] splitCredentials = credentials.split(":", 2);
 
         return splitCredentials[0];
+    }
+
+    public boolean isRefreshTokenValid(String token, String ip){
+        return jwtHelper.isRefreshTokenValid(token, ip);
+    }
+
+    public String getUsernameFromToken(String token){
+        return jwtHelper.extractUsername(token);
     }
 }
