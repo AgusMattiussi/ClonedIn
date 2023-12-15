@@ -62,7 +62,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users", "/users/**").authenticated()
                 .antMatchers("/enterprises", "/enterprises/**").authenticated()
                 // Categories
-                .antMatchers("/categories").authenticated()
+                .antMatchers("/categories").permitAll()
                 // JobOffers
                 .antMatchers("/jobOffers/**").authenticated()
                 .and().exceptionHandling()

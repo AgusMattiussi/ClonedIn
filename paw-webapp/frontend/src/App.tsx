@@ -44,9 +44,9 @@ function App() {
           {/*TODO: revisar --> distinto link para enterprise y user */}
 
           <Route path="/profiles" element={<DiscoverProfiles />} />
-          <Route path="/profileEnterprise" element={<ProfileEnterprise />} />
-          <Route path="/contactsEnterprise" element={<ContactsEnterprise />} />
-          <Route path="/interestedEnterprise" element={<InterestedEnterprise />} />
+          <Route path="/profileEnterprise/:id" element={<ProfileEnterprise />} />
+          <Route path="/contactsEnterprise/:id" element={<ContactsEnterprise />} />
+          <Route path="/interestedEnterprise/:id" element={<InterestedEnterprise />} />
           <Route path="/contacts" element={<ContactForm />} />
           <Route path="/jobOffers" element={<JobOfferForm />} />
 
@@ -54,8 +54,8 @@ function App() {
 
           <Route path="/jobs" element={<DiscoverJobs />} />
           <Route path="/profileUser/:id" element={<ProfileUser />} />
-          <Route path="/notificationsUser" element={<NotificationsUser />} />
-          <Route path="/applicationsUser" element={<ApplicationsUser />} />
+          <Route path="/notificationsUser/:id" element={<NotificationsUser />} />
+          <Route path="/applicationsUser/:id" element={<ApplicationsUser />} />
           <Route path="/skills" element={<SkillsForm />} />
           <Route path="/experiences" element={<ExperienceForm />} />
           <Route path="/educations" element={<EducationForm />} />
