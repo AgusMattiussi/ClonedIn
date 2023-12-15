@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Buffer } from "buffer"
 import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios"
 import { useNavigate } from "react-router-dom"
 import { BASE_URL, AUTHORIZATION_HEADER } from "../utils/constants"
@@ -47,9 +48,10 @@ export const useRequestApi = () => {
     }
 
     if (credentials) {
-      body = {
-        email: credentials?.username,
-        password: credentials?.password,
+      const encodedBasic = Buffer.from(`${credentials?.username}:${credentials?.password}`).toString("base64")
+      headers = {
+        Authorization: `Basic ${encodedBasic}`,
+        ...headers,
       }
     } else if (accessToken) {
       headers = {
