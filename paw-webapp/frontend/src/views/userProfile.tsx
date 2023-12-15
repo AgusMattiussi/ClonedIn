@@ -9,7 +9,7 @@ import ProfileUserCard from "../components/cards/profileUserCard"
 import Navigation from "../components/navbar"
 import Loader from "../components/loader"
 import UserDto from "../utils/UserDto"
-import GetUserData from "../api/userApi"
+// import GetUserData from "../api/userApi"
 import { monthNames, BASE_URL } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
@@ -21,7 +21,10 @@ function ProfileUser() {
   const { loading, apiRequest } = useRequestApi()
   const [isUserLoading, setUserLoading] = useState(true)
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
-  const [error, setError] = useState(null)
+
+  const [skillsData, setSkillsData] = useState<any[]>([])
+  const [educationsData, setEducationsData] = useState<any[]>([])
+  const [experiencesData, setExperiencesData] = useState<any[]>([])
 
   const { t } = useTranslation()
   const { id } = useParams()
@@ -31,20 +34,47 @@ function ProfileUser() {
   useEffect(() => {
     const fetchUser = async () => {
       const response = await apiRequest({
-        url: `/users/${id}/`,
+        url: `/users/${id}`,
         method: "GET",
       })
       setUser(response.data)
       setUserLoading(false)
-      setError(null)
     }
 
-    if (user === undefined) {
+    const fetchSkills = async () => {
+      const response = await apiRequest({
+        url: USER_API_URL + "skills",
+        method: "GET",
+      })
+      setSkillsData(response.data)
+    }
+
+    const fetchEducations = async () => {
+      const response = await apiRequest({
+        url: USER_API_URL + "educations",
+        method: "GET",
+      })
+      setEducationsData(response.data)
+    }
+
+    const fetchExperiences = async () => {
+      const response = await apiRequest({
+        url: USER_API_URL + "experiences",
+        method: "GET",
+      })
+      setExperiencesData(response.data)
+    }
+
+    if (isUserLoading === true) {
+      console.log("fetching user")
       fetchUser()
+      fetchExperiences()
+      fetchEducations()
+      fetchSkills()
     }
   }, [apiRequest, id])
 
-  const userSkillsList = GetUserData(USER_API_URL + "skills").map((skill) => {
+  const userSkillsList = skillsData.map((skill) => {
     return (
       <Badge pill bg="light" text="dark" className="mx-2">
         {skill.description}
@@ -55,7 +85,7 @@ function ProfileUser() {
     )
   })
 
-  const userEducationsList = GetUserData(USER_API_URL + "educations").map((education) => {
+  const userEducationsList = educationsData.map((education) => {
     return (
       <>
         <div className="d-flex flex-row justify-content-between align-items-center">
@@ -78,7 +108,7 @@ function ProfileUser() {
     )
   })
 
-  const userExperienceList = GetUserData(USER_API_URL + "experiences").map((experience) => {
+  const userExperienceList = experiencesData.map((experience) => {
     return (
       <>
         <div className="d-flex flex-row justify-content-between align-items-center">
