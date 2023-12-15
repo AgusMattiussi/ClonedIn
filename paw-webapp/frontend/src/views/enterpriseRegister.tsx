@@ -8,18 +8,15 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { registerEnterprise } from "../api/authService"
-import * as formik from 'formik';
-import * as yup from 'yup';
+import { useRegisterEnterprise, useLogin } from "../api/authService"
+import { useRequestApi } from "../api/apiRequest"
+import * as formik from "formik"
+import * as yup from "yup"
 
 function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [passwordVisibility, setPasswordVisibility] = useState(false)
-  const [repeatPassword, setRepeatPassword] = useState("")
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [name, setName] = useState("")
   const [city, setCity] = useState("")
   const [workers, setWorkers] = useState("")
   const [year, setYear] = useState("")
@@ -28,20 +25,28 @@ function RegisterEnterprise() {
   const [category, setCategory] = useState("")
   const [error, setError] = useState(null)
 
-  /* Cargar lista de rubros */
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/categories")
-      .then((response) => response.json())
-      .then((response) => {
-        setCategoryList(response)
-        setError(null)
-      })
-      .catch(setError)
-  }, [])
+  const { loading, apiRequest } = useRequestApi()
+  const { registerHandler } = useRegisterEnterprise()
+  const { loginHandler } = useLogin()
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    registerEnterprise(email, password, repeatPassword, name, city, workers, year, link, aboutUs, category)
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiRequest({
+        url: "/categories",
+        method: "GET",
+      })
+      setCategoryList(response.data)
+      setError(null)
+    }
+
+    if (categoryList.length === 0) {
+      fetchCategories()
+    }
+  }, [apiRequest])
+
+  const handleRegister = async (e: any) => {
+    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, year, link, aboutUs, category)
+    await loginHandler(e.email, e.pass)
     navigate("/profiles")
   }
 
@@ -59,14 +64,17 @@ function RegisterEnterprise() {
 
   document.title = t("Register Page Title")
 
-  const { Formik } = formik;
+  const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email('Invalid email').required('Required'),
-    name: yup.string().required('Required'),
-    pass: yup.string().required('Required').min(8, 'Password is too short - should be 8 chars minimum.'),
-    repeatPass: yup.string().oneOf([yup.ref('pass')], 'Passwords must match').required('Required')
-  });
+    email: yup.string().email("Invalid email").required("Required"),
+    name: yup.string().required("Required"),
+    pass: yup.string().required("Required").min(8, "Password is too short - should be 8 chars minimum."),
+    repeatPass: yup
+      .string()
+      .oneOf([yup.ref("pass")], "Passwords must match")
+      .required("Required"),
+  })
 
   return (
     <div>
@@ -82,170 +90,162 @@ function RegisterEnterprise() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                  <Formik
-                    validationSchema={schema}
-                    initialValues={{
-                      email: '',
-                      name: '',
-                      pass: '',
-                      repeatPass: '',
-                    }}
-                    onSubmit={values => {
-                      console.log(values);
-                    }}
-                  >
-                  {({handleSubmit, handleChange, values, touched, errors }) => (
-                    <Form className="msform" onSubmit={handleSubmit}>
-                      <div className="form-card">
-                        <h2 className="fs-title">{t("Basic Information")}</h2>
-                        <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
-                          <Form.Control
-                            name="email"
-                            className="input"
-                            type="email"
-                            placeholder={t("Email*").toString()}
-                            value={values.email}
-                            onChange={handleChange}
-                            isInvalid={!!errors.email}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.email}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicName">
-                          <Form.Control
-                            name="name"
-                            className="input"
-                            placeholder={t("Enterprise Name*").toString()}
-                            value={values.name}
-                            onChange={handleChange}
-                            isInvalid={!!errors.name}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.name}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
-                          <Form.Control
-                            name="pass"
-                            className="input"
-                            type={passwordVisibility ? "text" : "password"}
-                            placeholder={t("Password*").toString()}
-                            value={values.pass}
-                            onChange={handleChange}
-                            isInvalid={!!errors.pass}
-                          />
-                          <Button
-                            className="pb-3"
-                            onClick={handlePasswordVisibility}
-                            style={{ backgroundColor: "white", color: "black", border: "none" }}
-                          >
-                            {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                    <Formik
+                      validationSchema={schema}
+                      initialValues={{
+                        email: "",
+                        name: "",
+                        pass: "",
+                        repeatPass: "",
+                      }}
+                      onSubmit={(values) => {
+                        handleRegister(values)
+                      }}
+                    >
+                      {({ handleSubmit, handleChange, values, touched, errors }) => (
+                        <Form className="msform" onSubmit={handleSubmit}>
+                          <div className="form-card">
+                            <h2 className="fs-title">{t("Basic Information")}</h2>
+                            <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
+                              <Form.Control
+                                name="email"
+                                className="input"
+                                type="email"
+                                placeholder={t("Email*").toString()}
+                                value={values.email}
+                                onChange={handleChange}
+                                isInvalid={!!errors.email}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicName">
+                              <Form.Control
+                                name="name"
+                                className="input"
+                                placeholder={t("Enterprise Name*").toString()}
+                                value={values.name}
+                                onChange={handleChange}
+                                isInvalid={!!errors.name}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
+                              <Form.Control
+                                name="pass"
+                                className="input"
+                                type={passwordVisibility ? "text" : "password"}
+                                placeholder={t("Password*").toString()}
+                                value={values.pass}
+                                onChange={handleChange}
+                                isInvalid={!!errors.pass}
+                              />
+                              <Button
+                                className="pb-3"
+                                onClick={handlePasswordVisibility}
+                                style={{ backgroundColor: "white", color: "black", border: "none" }}
+                              >
+                                {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                              </Button>
+                              <Form.Control.Feedback type="invalid">{errors.pass}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
+                              <Form.Control
+                                name="repeatPass"
+                                className="input"
+                                type={repeatPasswordVisibility ? "text" : "password"}
+                                placeholder={t("Repeat Password*").toString()}
+                                value={values.repeatPass}
+                                onChange={handleChange}
+                                isInvalid={!!errors.repeatPass}
+                              />
+                              <Button
+                                className="pb-3"
+                                onClick={handleRepeatPasswordVisibility}
+                                style={{ backgroundColor: "white", color: "black", border: "none" }}
+                              >
+                                {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
+                              </Button>
+                              <Form.Control.Feedback type="invalid">{errors.repeatPass}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicLocation">
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Location").toString()}
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                              />
+                            </Form.Group>
+                            <div className="d-flex mb-4 justify-content-between">
+                              <label className="area pt-1 mx-1">{t("Quantity of employees")}</label>
+                              <Form.Select
+                                className="selectFrom"
+                                value={workers}
+                                onChange={(e) => setWorkers(e.target.value)}
+                                style={{ width: "60%" }}
+                              >
+                                <option value="No-especificado"> {t("No-especificado")} </option>
+                                <option value="1-10">1-10</option>
+                                <option value="11-50">11-50</option>
+                                <option value="51-100">51-100</option>
+                                <option value="101-200">101-200</option>
+                                <option value="201-500">201-500</option>
+                                <option value="501-1000">501-1000</option>
+                                <option value="1001-5000">1001-5000</option>
+                                <option value="5001-10000">5001-10000</option>
+                                <option value="10000+">10001+</option>
+                              </Form.Select>
+                            </div>
+                            <div className="d-flex mb-4 justify-content-between">
+                              <label className="area pt-1 mx-1">{t("Job Category")}</label>
+                              <Form.Select
+                                className="selectFrom"
+                                aria-label="Categories select"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                style={{ width: "60%" }}
+                              >
+                                <option key="1" value="No-Especificado">
+                                  {t("No-especificado")}
+                                </option>
+                                {categoryList.map((categoryListItem: any) => (
+                                  <option key={categoryListItem.id} value={categoryListItem.name}>
+                                    {t(categoryListItem.name)}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            </div>
+                            <Form.Group className="mb-3" controlId="formBasicYear">
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Founding Year").toString()}
+                                value={year}
+                                onChange={(e) => setYear(e.target.value)}
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicWebsite">
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Website").toString()}
+                                value={link}
+                                onChange={(e) => setLink(e.target.value)}
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                              <Form.Control
+                                placeholder={t("About Us").toString()}
+                                as="textarea"
+                                rows={3}
+                                value={aboutUs}
+                                onChange={(e) => setAboutUs(e.target.value)}
+                              />
+                            </Form.Group>
+                          </div>
+                          <p>{t("Fields required")}</p>
+                          <Button variant="success" type="submit">
+                            <strong>{t("Register")}</strong>
                           </Button>
-                          <Form.Control.Feedback type="invalid">
-                            {errors.pass}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
-                          <Form.Control
-                            name="repeatPass"
-                            className="input"
-                            type={repeatPasswordVisibility ? "text" : "password"}
-                            placeholder={t("Repeat Password*").toString()}
-                            value={values.repeatPass}
-                            onChange={handleChange}
-                            isInvalid={!!errors.repeatPass}
-                          />
-                          <Button
-                            className="pb-3"
-                            onClick={handleRepeatPasswordVisibility}
-                            style={{ backgroundColor: "white", color: "black", border: "none" }}
-                          >
-                            {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
-                          </Button>
-                          <Form.Control.Feedback type="invalid">
-                            {errors.repeatPass}
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicLocation">
-                          <Form.Control
-                            className="input"
-                            placeholder={t("Location").toString()}
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                          />
-                        </Form.Group>
-                        <div className="d-flex mb-4 justify-content-between">
-                          <label className="area pt-1 mx-1">{t("Quantity of employees")}</label>
-                          <Form.Select
-                            className="selectFrom"
-                            value={workers}
-                            onChange={(e) => setWorkers(e.target.value)}
-                            style={{ width: "60%" }}
-                          >
-                            <option value="No-especificado"> {t("No-especificado")} </option>
-                            <option value="1-10">1-10</option>
-                            <option value="11-50">11-50</option>
-                            <option value="51-100">51-100</option>
-                            <option value="101-200">101-200</option>
-                            <option value="201-500">201-500</option>
-                            <option value="501-1000">501-1000</option>
-                            <option value="1001-5000">1001-5000</option>
-                            <option value="5001-10000">5001-10000</option>
-                            <option value="10000+">10001+</option>
-                          </Form.Select>
-                        </div>
-                        <div className="d-flex mb-4 justify-content-between">
-                          <label className="area pt-1 mx-1">{t("Job Category")}</label>
-                          <Form.Select
-                            className="selectFrom"
-                            aria-label="Categories select"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            style={{ width: "60%" }}
-                          >
-                            <option key="1" value="No-Especificado">
-                              {t("No-especificado")}
-                            </option>
-                            {categoryList.map((categoryListItem: any) => (
-                              <option key={categoryListItem.id} value={categoryListItem.name}>
-                                {t(categoryListItem.name)}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </div>
-                        <Form.Group className="mb-3" controlId="formBasicYear">
-                          <Form.Control
-                            className="input"
-                            placeholder={t("Founding Year").toString()}
-                            value={year}
-                            onChange={(e) => setYear(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicWebsite">
-                          <Form.Control
-                            className="input"
-                            placeholder={t("Website").toString()}
-                            value={link}
-                            onChange={(e) => setLink(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                          <Form.Control
-                            placeholder={t("About Us").toString()}
-                            as="textarea"
-                            rows={3}
-                            value={aboutUs}
-                            onChange={(e) => setAboutUs(e.target.value)}
-                          />
-                        </Form.Group>
-                      </div>
-                      <p>{t("Fields required")}</p>
-                      <Button variant="success" type="submit">
-                        <strong>{t("Register")}</strong>
-                      </Button>
-                    </Form>
-                  )}
+                        </Form>
+                      )}
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">

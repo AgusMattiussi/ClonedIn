@@ -1,9 +1,6 @@
 import { HttpStatusCode } from "axios"
 import { useRequestApi } from "./apiRequest"
 
-//TODO: remove
-import api from "./api"
-
 export function useLogin() {
   const { loading, apiRequest } = useRequestApi()
 
@@ -23,44 +20,74 @@ export function useLogin() {
   return { loading, loginHandler }
 }
 
-//TODO: mover a userApi
-export const registerUser = (
-  email: string,
-  password: string,
-  repeatPassword: string,
-  name: string,
-  city: string,
-  position: string,
-  aboutMe: string,
-  category: string,
-  level: string,
-) => {
-  return api.post("/users", { email, password, repeatPassword, name, city, position, aboutMe, category, level })
+export function useRegisterUser() {
+  const { loading, apiRequest } = useRequestApi()
+
+  async function registerHandler(
+    email: string,
+    password: string,
+    repeatPassword: string,
+    name: string,
+    city: string,
+    position: string,
+    aboutMe: string,
+    category: string,
+    level: string,
+  ) {
+    const response = await apiRequest({
+      url: "/users",
+      method: "POST",
+      body: {
+        email,
+        password,
+        repeatPassword,
+        name,
+        city,
+        position,
+        aboutMe,
+        category,
+        level,
+      },
+    })
+    return response.status !== HttpStatusCode.BadRequest
+  }
+
+  return { loading, registerHandler }
 }
 
-//TODO: mover a enterpriseApi
-export const registerEnterprise = (
-  email: string,
-  password: string,
-  repeatPassword: string,
-  name: string,
-  city: string,
-  workers: string,
-  year: string,
-  link: string,
-  aboutUs: string,
-  category: string,
-) => {
-  return api.post("/enterprises", {
-    email,
-    password,
-    repeatPassword,
-    name,
-    city,
-    workers,
-    year,
-    link,
-    aboutUs,
-    category,
-  })
+export function useRegisterEnterprise() {
+  const { loading, apiRequest } = useRequestApi()
+
+  async function registerHandler(
+    email: string,
+    password: string,
+    repeatPassword: string,
+    name: string,
+    city: string,
+    workers: string,
+    year: string,
+    link: string,
+    aboutUs: string,
+    category: string,
+  ) {
+    const response = await apiRequest({
+      url: "/enterprises",
+      method: "POST",
+      body: {
+        email,
+        password,
+        repeatPassword,
+        name,
+        city,
+        workers,
+        year,
+        link,
+        aboutUs,
+        category,
+      },
+    })
+    return response.status !== HttpStatusCode.BadRequest
+  }
+
+  return { loading, registerHandler }
 }
