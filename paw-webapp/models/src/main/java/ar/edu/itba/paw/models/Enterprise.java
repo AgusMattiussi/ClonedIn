@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "empresa")
-public class Enterprise implements UserDetails {
+public class Enterprise implements CustomUserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
@@ -52,9 +52,9 @@ public class Enterprise implements UserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    @Transient
+    /*@Transient
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role;*/
 
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
     private Set<Contact> contacts;
@@ -90,7 +90,6 @@ public class Enterprise implements UserDetails {
         this.link = link;
         this.description = description;
         this.image = image;
-        this.role = Role.ENTERPRISE;
     }
     public Enterprise(String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this.id = null;
@@ -104,13 +103,18 @@ public class Enterprise implements UserDetails {
         this.link = link;
         this.description = description;
         this.image = image;
-        this.role = Role.ENTERPRISE;
     }
 
     /* package */ Enterprise() {
         // Just for Hibernate, we love you!
     }
 
+    @Override
+    public Role getRole() {
+        return Role.ENTERPRISE;
+    }
+
+    @Override
     public Long getId() {
         return id;
     }

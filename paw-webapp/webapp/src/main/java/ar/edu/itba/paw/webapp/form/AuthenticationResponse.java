@@ -5,19 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthenticationResponse {
   @JsonProperty("access_token")
   private String accessToken;
-  /* TODO:
-  @JsonProperty("refresh_token")
-  private String refreshToken;
-  */
 
-    public AuthenticationResponse(String accessToken/*, String refreshToken*/) {
-        this.accessToken = accessToken;
-        //this.refreshToken = refreshToken;
-    }
+  public AuthenticationResponse(String accessToken/*, String refreshToken*/) {
+     this.accessToken = accessToken;
+  }
 
-    public AuthenticationResponse() {}
+  public AuthenticationResponse() {
 
-    public String getAccessToken() {
+  }
+
+  public String getAccessToken() {
         return accessToken;
     }
 

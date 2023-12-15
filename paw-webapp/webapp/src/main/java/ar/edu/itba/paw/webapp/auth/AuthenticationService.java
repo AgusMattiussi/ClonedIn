@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.webapp.form.AuthenticationRequest;
 import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ public class AuthenticationService {
     private JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager ;
+    @Autowired
+    private UserDetailsService userDetailsService;
     /*@Autowired
     private AuthUserDetailsService authUserDetailsService;*/
 
@@ -26,9 +30,8 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        // Si quisieramos agregar al JWT info adicional del usuario:
-        //  UserDetails user = authUserDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtHelper.generateToken(request.getEmail());
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getEmail());
+        String jwt = jwtHelper.generateAccessToken(user);
 
         return new AuthenticationResponse(jwt);
     }

@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuario")
-public class User implements UserDetails {
+public class User implements CustomUserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
@@ -55,9 +55,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    @Transient
+    /*@Transient
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role;*/
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Experience> experiences;
@@ -83,7 +83,6 @@ public class User implements UserDetails {
         this.education = education;
         this.visibility = visibility;
         this.image = image;
-        this.role = Role.USER;
     }
 
     public User(String email, String password, String name, String location, Category category, String currentPosition,
@@ -99,13 +98,18 @@ public class User implements UserDetails {
         this.education = education;
         this.visibility = visibility;
         this.image = image;
-        this.role = Role.USER;
     }
 
     /* package */ User() {
     // Just for Hibernate, we love you!
     }
 
+    @Override
+    public Role getRole() {
+        return Role.USER;
+    }
+
+    @Override
     public Long getId() {
         return id;
     }
