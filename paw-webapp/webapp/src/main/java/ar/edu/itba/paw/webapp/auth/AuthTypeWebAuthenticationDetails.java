@@ -17,4 +17,5 @@ public class AuthTypeWebAuthenticationDetails extends WebAuthenticationDetails {
     public AuthType getAuthType() {
         return authType;
     }
+
 }

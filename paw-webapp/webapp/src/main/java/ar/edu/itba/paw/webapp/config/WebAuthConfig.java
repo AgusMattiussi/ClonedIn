@@ -1,30 +1,22 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.models.Enterprise;
-import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
-import ar.edu.itba.paw.webapp.auth.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,8 +35,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private AuthUserDetailsService userDetailsService;
-    /*@Autowired
-    private JwtAuthenticationProvider authenticationProvider;*/
+
 
     //TODO: ACTUALIZAR LOS URLS
     @Override
@@ -54,7 +45,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().authorizeRequests()
                 // Create and Authorize
-                .antMatchers("/auth/authenticate").permitAll()
+                .antMatchers("/auth/access-token").authenticated()
                 .antMatchers("/test/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
@@ -68,9 +59,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                     .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
                     .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                .and()
                 //.authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
 
