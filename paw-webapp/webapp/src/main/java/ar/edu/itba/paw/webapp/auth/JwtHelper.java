@@ -6,7 +6,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.glassfish.jersey.internal.inject.Custom;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.security.Key;
@@ -17,7 +19,6 @@ import java.util.function.Function;
 
 @Component
 public class JwtHelper {
-
 
     @Value("${jwt.expiration}")
     private long ACCESS_EXPIRATION_TIME_MILLIS;
@@ -30,8 +31,6 @@ public class JwtHelper {
     private static final String IP_CLAIM = "ip";
     private static final String ROLE_CLAIM = "role";
     private static final String ID_CLAIM = "id";
-
-
 
     /*public String generateToken(UserDetails userDetails){
         return Jwts
@@ -72,7 +71,7 @@ public class JwtHelper {
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

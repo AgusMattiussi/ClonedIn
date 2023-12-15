@@ -18,25 +18,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Component
 public class AuthController {
 
-    @Autowired
-    private AuthenticationService service;
+    private static final String AUTH_HEADER_BASIC = "Basic ";
 
-    public AuthController(final AuthenticationService service) {
-        this.service = service;
+
+    @Autowired
+    private AuthenticationService authService;
+
+    public AuthController(final AuthenticationService authService) {
+        this.authService = authService;
     }
 
     @POST
-    @Path("/authenticate")
+    @Path("/access-token")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    public Response authenticate(@RequestBody AuthenticationRequest request){
-
-        AuthenticationResponse response;
-        try {
-            response = service.authenticate(request);
-        } catch (AuthenticationException e){
+    public Response authenticate(@Context HttpServletRequest request){
+        // Authenticate the user using the HttpBasic credentials provided
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(authHeader == null ||  !authHeader.startsWith(AUTH_HEADER_BASIC)) {
+            // TODO: Devolver un mejor error
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+        String accessToken = authService.generateAccessToken(authHeader);
 
-        return Response.ok(response).build();
+        return Response.ok(new AuthenticationResponse(accessToken)).build();
     }
 }

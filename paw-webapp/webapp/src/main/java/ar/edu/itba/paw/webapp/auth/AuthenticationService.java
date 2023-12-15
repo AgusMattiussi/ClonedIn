@@ -13,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Service
 public class AuthenticationService {
 
@@ -34,5 +37,20 @@ public class AuthenticationService {
         String jwt = jwtHelper.generateAccessToken(user);
 
         return new AuthenticationResponse(jwt);
+    }
+
+    public String generateAccessToken(String basicHeader){
+        String username = getUsernameFromBasicHeader(basicHeader);
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+        return jwtHelper.generateAccessToken(user);
+    }
+
+    private String getUsernameFromBasicHeader(String basicHeader){
+        String basic = basicHeader.substring(6); // "Basic ".length()
+
+        String credentials = new String(Base64.getDecoder().decode(basic), StandardCharsets.UTF_8);
+        String[] splitCredentials = credentials.split(":", 2);
+
+        return splitCredentials[0];
     }
 }

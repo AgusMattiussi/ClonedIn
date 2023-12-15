@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.models.enums.AuthType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,35 +25,32 @@ import java.util.Base64;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final String AUTH_HEADER = "Authorization";
     private static final String AUTH_HEADER_BEARER = "Bearer ";
     private static final String AUTH_HEADER_BASIC = "Basic ";
 
     @Autowired
-    private final JwtHelper jwtHelper;
+    private JwtHelper jwtHelper;
     @Autowired
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private AuthenticationManager authenticationManager ;
 
 
     public JwtAuthenticationFilter(JwtHelper jwtHelper, AuthUserDetailsService userDetailsService) {
         this.jwtHelper = jwtHelper;
         this.userDetailsService = userDetailsService;
-
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(AUTH_HEADER);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(authHeader != null && SecurityContextHolder.getContext().getAuthentication() == null){
             if(authHeader.startsWith(AUTH_HEADER_BEARER)) {
                 jwtAuthentication(authHeader, request);
             } else if(authHeader.startsWith(AUTH_HEADER_BASIC)) {
-                String email = basicAuthentication(authHeader, request);
-
-                CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
-                response.addHeader("access-token", jwtHelper.generateAccessToken(userDetails));
-
+                basicAuthentication(authHeader, request);
             }
         }
         filterChain.doFilter(request, response);
@@ -59,21 +59,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void jwtAuthentication(String authHeader, HttpServletRequest request){
         String jwt = authHeader.substring(7); // "Bearer ".length()
-        String userEmail = jwtHelper.extractUsername(jwt);
-        if (userEmail != null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        String email = jwtHelper.extractUsername(jwt);
+        if (!jwtHelper.isTokenExpired(jwt)) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
-            if (jwtHelper.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new AuthTypeWebAuthenticationDetails(request, AuthType.JWT_ACCESS_TOKEN));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                    null, userDetails.getAuthorities());
+            authToken.setDetails(new AuthTypeWebAuthenticationDetails(request, AuthType.JWT_ACCESS_TOKEN));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         }
     }
 
 
-    private String basicAuthentication(String authHeader, HttpServletRequest request){
+    private void basicAuthentication(String authHeader, HttpServletRequest request){
         String basic = authHeader.substring(6); // "Basic ".length()
 
         String credentials = new String(Base64.getDecoder().decode(basic), StandardCharsets.UTF_8);
@@ -85,7 +83,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
         authToken.setDetails(new AuthTypeWebAuthenticationDetails(request, AuthType.BASIC));
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        return email;
     }
 }
