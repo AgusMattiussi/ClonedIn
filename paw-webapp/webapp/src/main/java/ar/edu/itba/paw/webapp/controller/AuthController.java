@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.webapp.form.AuthenticationRequest;
 import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServlet;
@@ -23,6 +25,8 @@ public class AuthController {
 
     @Autowired
     private AuthenticationService authService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     public AuthController(final AuthenticationService authService) {
         this.authService = authService;
@@ -38,8 +42,15 @@ public class AuthController {
             // TODO: Devolver un mejor error
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        String accessToken = authService.generateAccessToken(authHeader);
 
-        return Response.ok(new AuthenticationResponse(accessToken)).build();
+        String username = authService.getUsernameFromBasicHeader(authHeader);
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+
+        String accessToken = authService.generateAccessToken(user);
+        NewCookie refreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
+
+        return Response.ok(new AuthenticationResponse(accessToken))
+                .cookie(refreshTokenCookie)
+                .build();
     }
 }
