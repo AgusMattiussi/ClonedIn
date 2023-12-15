@@ -5,32 +5,46 @@ import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
-import GetUserData from "../../api/userApi"
+import { useRequestApi } from "../../api/apiRequest"
 import CategoryDto from "../../utils/CategoryDto"
+// import GetUserData from "../../api/userApi"
 
 function ProfileUserCard({ editable, contacted, user }: { editable: boolean; contacted: boolean; user: any }) {
   const { t } = useTranslation()
+  const { loading, apiRequest } = useRequestApi()
+  const [skillsData, setSkillsData] = useState<any[]>([])
+  const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
 
-  const userSkillsList = GetUserData(user.userSkills).map((skill) => {
+  useEffect(() => {
+    const fetchSkills = async () => {
+      const response = await apiRequest({
+        url: user.skills,
+        method: "GET",
+      })
+      setSkillsData(response.data)
+    }
+
+    const fetchCategory = async () => {
+      const response = await apiRequest({
+        url: user.category,
+        method: "GET",
+      })
+      setUserCategory(response.data)
+    }
+
+    if (skillsData.length === 0) {
+      fetchSkills()
+      fetchCategory()
+    }
+  }, [apiRequest])
+
+  const userSkillsList = skillsData.map((skill) => {
     return (
       <Badge pill bg="success" className="mx-2">
         {skill.description}
       </Badge>
     )
   })
-
-  const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
-
-  useEffect(() => {
-    fetch(user.category)
-      .then((response) => response.json())
-      .then((data) => {
-        setUserCategory(data)
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }, [])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>

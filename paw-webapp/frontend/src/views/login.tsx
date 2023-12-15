@@ -7,14 +7,19 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { login } from "../api/authService"
-import * as formik from 'formik';
-import * as yup from 'yup';
+import { useLogin } from "../api/authService"
+import * as formik from "formik"
+import * as yup from "yup"
+import { useSharedAuth } from "../api/auth"
+import { UserRole } from "../utils/constants"
 
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordVisibility, setPasswordVisibility] = useState(false)
+  const { loading, loginHandler } = useLogin()
+  const { userInfo } = useSharedAuth()
+
   //TODO: Remember me
   //const [rememberMe, setRememberMe] = useState(false)
 
@@ -23,13 +28,20 @@ function Login() {
 
   document.title = t("Login Page Title")
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault()
-    login(email, password)
-  }
-
   const handlePasswordVisibility = () => {
     setPasswordVisibility(!passwordVisibility)
+  }
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    const logged = await loginHandler(email, password)
+    if (logged) {
+      if (userInfo?.role === UserRole.USER) navigate("/jobs")
+      else navigate("/profiles")
+    } else {
+      console.log("Not logged in")
+      //TODO: Show errors in the form
+    }
   }
 
   return (
@@ -74,7 +86,6 @@ function Login() {
                           <Form.Check type="checkbox" label={t("Remember Me").toString()} />
                         </Form.Group>
                       </div>
-                      {/* TODO: Redirect to enterprise or user view*/}
                       <Button variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
                       </Button>

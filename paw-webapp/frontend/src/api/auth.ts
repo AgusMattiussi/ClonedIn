@@ -8,43 +8,42 @@ import { UserRole } from "../utils/constants"
 export interface UserInfo {
   sub: string
   exp: number
-  username: string
-  email: string
   role: UserRole
-  points: number
+  id: string
 }
 
 const useAuth = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(() => {
-    const token = localStorage.getItem("authToken")?.split(" ")[1]
+    const token = localStorage.getItem("accessToken")
     if (token) {
       return jwtDecode(token)
     }
     return null
   })
 
-  const getAuthToken = () => {
-    return localStorage.getItem("authToken")
+  const getAccessToken = () => {
+    return localStorage.getItem("accessToken")
   }
 
-  const setAuthToken = (token: string | null) => {
+  const setAccessToken = (token: string | null) => {
     if (token) {
-      localStorage.setItem("authToken", token)
-      setUserInfo(jwtDecode(token.split(" ")[1]))
+      localStorage.setItem("accessToken", JSON.stringify(token))
+      setUserInfo(jwtDecode(token))
+      console.log(jwtDecode(token))
     } else {
-      localStorage.removeItem("authToken")
+      localStorage.removeItem("accessToken")
     }
   }
 
-  const callLogout = () => {
-    setAuthToken(null)
+  const handleLogout = () => {
+    setAccessToken(null)
   }
 
   return {
-    getAuthToken,
-    setAuthToken,
+    getAccessToken,
+    setAccessToken,
     userInfo,
-    callLogout,
+    handleLogout,
   }
 }
 
