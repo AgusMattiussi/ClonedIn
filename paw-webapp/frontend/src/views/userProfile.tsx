@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useRequestApi } from "../api/apiRequest"
+import { useSharedAuth } from "../api/auth"
 
 function ProfileUser() {
   //TODO: Fix this to show specific user info
@@ -28,6 +29,7 @@ function ProfileUser() {
 
   const { t } = useTranslation()
   const { id } = useParams()
+  const { userInfo } = useSharedAuth()
 
   const USER_API_URL = BASE_URL + `/users/${id}/`
 
@@ -135,7 +137,7 @@ function ProfileUser() {
 
   return (
     <div>
-      <Navigation />
+      <Navigation role={userInfo?.role} />
       <Container fluid style={{ background: "#F2F2F2", height: "100%", paddingBottom: "10px" }}>
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">

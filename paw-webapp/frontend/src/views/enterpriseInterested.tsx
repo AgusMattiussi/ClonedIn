@@ -7,15 +7,17 @@ import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect
 import InterestedTable from "../components/tables/interestedTable"
 import Pagination from "../components/pagination"
 import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
 
 function EnterpriseInterested() {
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
 
   document.title = t("Interested Page Title")
 
   return (
     <div>
-      <Navigation isEnterprise={true} />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <FilterStatusSideBar />

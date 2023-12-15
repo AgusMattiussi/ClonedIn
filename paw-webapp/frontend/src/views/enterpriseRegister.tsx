@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useRegisterEnterprise, useLogin } from "../api/authService"
 import { useRequestApi } from "../api/apiRequest"
+import { useSharedAuth } from "../api/auth"
 import * as formik from "formik"
 import * as yup from "yup"
 
@@ -28,6 +29,7 @@ function RegisterEnterprise() {
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterEnterprise()
   const { loginHandler } = useLogin()
+  const { userInfo } = useSharedAuth()
 
   useEffect(() => {
     const fetchCategories = async () => {

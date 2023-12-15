@@ -7,15 +7,17 @@ import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect
 import ContactsTable from "../components/tables/contactsTable"
 import Pagination from "../components/pagination"
 import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
 
 function EnterpriseContacts() {
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
 
   document.title = t("My Recruits Page Title")
 
   return (
     <div>
-      <Navigation isEnterprise={true} />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <FilterStatusSideBar />

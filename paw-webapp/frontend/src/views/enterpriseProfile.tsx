@@ -9,8 +9,10 @@ import Navigation from "../components/navbar"
 import Pagination from "../components/pagination"
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
-
+import { useSharedAuth } from "../api/auth"
 function ProfileEnterprise() {
+  const { userInfo } = useSharedAuth()
+
   useEffect(() => {
     document.title = "EnterpriseName | ClonedIn" // TODO: Add enterprise name
   }, [])
@@ -19,7 +21,7 @@ function ProfileEnterprise() {
 
   return (
     <div>
-      <Navigation isEnterprise={true} />
+      <Navigation role={userInfo?.role} />
       <Container fluid style={{ background: "#F2F2F2", height: "800px" }}>
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">

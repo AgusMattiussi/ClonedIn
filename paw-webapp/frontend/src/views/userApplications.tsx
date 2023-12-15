@@ -8,9 +8,11 @@ import UserSortBySelect from "../components/selects/userSortBySelect"
 import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
 
 function ApplicationsUser() {
   const [users, setUsers] = useState<any[]>([])
+  const { userInfo } = useSharedAuth()
 
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
@@ -32,7 +34,7 @@ function ApplicationsUser() {
 
   return (
     <div>
-      <Navigation />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <FilterStatusSideBar />

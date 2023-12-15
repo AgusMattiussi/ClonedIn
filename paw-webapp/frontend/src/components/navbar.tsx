@@ -11,8 +11,9 @@ import Nav from "react-bootstrap/Nav"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { UserRole } from "../utils/constants"
 
-function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
+function Navigation({ role }: { role: UserRole }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { userInfo, handleLogout } = useSharedAuth()
@@ -25,7 +26,7 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
 
   return (
     <Navbar expand="lg" className="color-nav" variant="dark">
-      {isEnterprise ? (
+      {role === "ENTERPRISE" ? (
         <div className="m-1 w-100 d-flex px-3">
           <Navbar.Brand onClick={() => navigate("/profiles")}>
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
@@ -85,7 +86,7 @@ function Navigation({ isEnterprise }: { isEnterprise: boolean }) {
 }
 
 Navigation.defaultProps = {
-  isEnterprise: false,
+  role: "USER",
 }
 
 export default Navigation

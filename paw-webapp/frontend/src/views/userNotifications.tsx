@@ -8,9 +8,12 @@ import UserSortBySelect from "../components/selects/userSortBySelect"
 import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
 
 function NotificationsUser() {
   const [users, setUsers] = useState<any[]>([])
+  const { userInfo } = useSharedAuth()
+
   useEffect(() => {
     fetch("http://localhost:8080/webapp_war/users")
       .then((response) => response.json())
@@ -29,7 +32,7 @@ function NotificationsUser() {
 
   return (
     <div>
-      <Navigation />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <FilterStatusSideBar />

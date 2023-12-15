@@ -9,6 +9,8 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import Loader from "../components/loader"
 import { useRequestApi } from "../api/apiRequest"
+import { useSharedAuth } from "../api/auth"
+
 // import Pagination from "../components/pagination"
 
 function DiscoverProfiles() {
@@ -16,6 +18,7 @@ function DiscoverProfiles() {
   const [isLoading, setLoading] = useState(true)
   const [users, setUsers] = useState<any[]>([])
   const [error, setError] = useState(null)
+  const { userInfo } = useSharedAuth()
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -37,7 +40,7 @@ function DiscoverProfiles() {
 
   const usersList = users.map((user) => {
     return (
-      <Link to={`/profileUser/${user.id}`} style={{ textDecoration: "none", color: "black" }}>
+      <Link to={`/profileUser/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
         <ProfileUserCard user={user} />
       </Link>
     )
@@ -45,7 +48,7 @@ function DiscoverProfiles() {
 
   return (
     <div>
-      <Navigation isEnterprise={true} />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex vh-100">
           <FilterProfilesSideBar />

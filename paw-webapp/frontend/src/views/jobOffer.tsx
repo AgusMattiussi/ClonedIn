@@ -2,15 +2,18 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import JobOfferEnterpriseCard from "../components/cards/jobOfferEnterpriseCard"
 import { useEffect } from "react"
+import { useSharedAuth } from "../api/auth"
 
 function JobOffer() {
+  const { userInfo } = useSharedAuth()
+
   useEffect(() => {
     document.title = "JobOffer | ClonedIn" // TODO: Add job offer name
   }, [])
 
   return (
     <div>
-      <Navigation isEnterprise={true} />
+      <Navigation role={userInfo?.role} />
       <Container
         className="p-2 rounded-3 d-flex flex-wrap w-auto justify-content-center"
         fluid

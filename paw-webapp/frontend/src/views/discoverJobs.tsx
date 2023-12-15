@@ -6,15 +6,17 @@ import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
 import Pagination from "../components/pagination"
 import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
 
 function DiscoverJobs() {
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
 
   document.title = t("Discover Jobs") + " | ClonedIn"
 
   return (
     <div>
-      <Navigation />
+      <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
           <FilterJobsSideBar />

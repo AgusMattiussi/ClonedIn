@@ -5,16 +5,18 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
+import { useSharedAuth } from "../api/auth"
 
 function SkillsForm() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { userInfo } = useSharedAuth()
 
   document.title = t("Skills Form Page Title")
 
   return (
     <div>
-      <Navigation />
+      <Navigation role={userInfo?.role} />
       <div className="d-flex justify-content-between mt-2">
         <Container>
           <div className="row justify-content-center mt-0">
