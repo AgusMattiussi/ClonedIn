@@ -18,6 +18,7 @@ public class EducationDTO {
     private String title;
     private String institutionName;
     private String description;
+    private Long id;
 
     public static EducationDTO fromEducation(final UriInfo uriInfo, final Education education) {
         final EducationDTO dto = new EducationDTO();
@@ -28,6 +29,7 @@ public class EducationDTO {
         dto.title = education.getTitle();
         dto.institutionName = education.getInstitutionName();
         dto.description = education.getDescription();
+        dto.id = education.getId();
 
         //FIXME: Corregir para que tenga sentido
         final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
@@ -100,5 +102,13 @@ public class EducationDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

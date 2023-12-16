@@ -9,28 +9,33 @@ import ProfileUserCard from "../components/cards/profileUserCard"
 import Navigation from "../components/navbar"
 import Loader from "../components/loader"
 import UserDto from "../utils/UserDto"
-import { monthNames, BASE_URL } from "../utils/constants"
+import { monthNames } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
+import { HttpStatusCode } from "axios"
 
 function ProfileUser() {
   const { loading, apiRequest } = useRequestApi()
-  const [isUserLoading, setUserLoading] = useState(true)
+
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const [isUserLoading, setUserLoading] = useState(true)
 
   const [skillsData, setSkillsData] = useState<any[]>([])
+  const [skillsLoading, setSkillsLoading] = useState(true)
+
   const [educationsData, setEducationsData] = useState<any[]>([])
+  const [educationsLoading, setEducationsLoading] = useState(true)
+
   const [experiencesData, setExperiencesData] = useState<any[]>([])
+  const [experiencesLoading, setExperiencesLoading] = useState(true)
 
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
   const navigate = useNavigate()
-
-  const USER_API_URL = BASE_URL + `/users/${id}/`
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,41 +54,88 @@ function ProfileUser() {
 
     const fetchSkills = async () => {
       const response = await apiRequest({
-        url: USER_API_URL + "skills",
+        url: `/users/${id}/skills`,
         method: "GET",
       })
       setSkillsData(response.data)
+      setSkillsLoading(false)
     }
 
     const fetchEducations = async () => {
       const response = await apiRequest({
-        url: USER_API_URL + "educations",
+        url: `/users/${id}/educations`,
         method: "GET",
       })
       setEducationsData(response.data)
+      setEducationsLoading(false)
     }
 
     const fetchExperiences = async () => {
       const response = await apiRequest({
-        url: USER_API_URL + "experiences",
+        url: `/users/${id}/experiences`,
         method: "GET",
       })
       setExperiencesData(response.data)
+      setExperiencesLoading(false)
     }
 
     if (isUserLoading === true) {
       fetchUser()
+    }
+    if (experiencesLoading === true) {
       fetchExperiences()
+    }
+    if (educationsLoading === true) {
       fetchEducations()
+    }
+    if (skillsLoading === true) {
       fetchSkills()
     }
   }, [apiRequest, id])
 
-  const userSkillsList = skillsData.map((skill, index) => {
+  const handleDelete = async (object: string, object_id: number) => {
+    let response
+    switch (object) {
+      case "skill":
+        response = await apiRequest({
+          url: `/users/${id}/skills/${object_id}`,
+          method: "DELETE",
+        })
+        if (response.status === HttpStatusCode.NoContent) {
+          setSkillsLoading(true)
+        }
+        break
+      case "education":
+        response = await apiRequest({
+          url: `/users/${id}/educations/${object_id}`,
+          method: "DELETE",
+        })
+        if (response.status === HttpStatusCode.NoContent) {
+          setEducationsLoading(true)
+        }
+        break
+      case "experience":
+        response = await apiRequest({
+          url: `/users/${id}/experiences/${object_id}`,
+          method: "DELETE",
+        })
+        if (response.status === HttpStatusCode.NoContent) {
+          setExperiencesLoading(true)
+        }
+        break
+    }
+  }
+
+  const userSkillsList = skillsData.map((skill) => {
     return (
-      <Badge pill bg="light" text="dark" className="mx-2" key={index}>
+      <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
         {skill.description}
-        <Button type="button" variant="outline-dark" style={{ borderStyle: "none" }}>
+        <Button
+          type="button"
+          variant="outline-dark"
+          style={{ borderStyle: "none" }}
+          onClick={() => handleDelete("skill", skill.id)}
+        >
           <Icon.X />
         </Button>
       </Badge>
@@ -97,7 +149,7 @@ function ProfileUser() {
           <h6>
             {education.institutionName} - {education.title}
           </h6>
-          <Button type="button" variant="outline-danger">
+          <Button type="button" variant="outline-danger" onClick={() => handleDelete("education", education.id)}>
             <Icon.Trash />
           </Button>
         </div>
@@ -120,7 +172,7 @@ function ProfileUser() {
           <h6>
             {experience.enterpriseName} - {experience.position}
           </h6>
-          <Button type="button" variant="outline-danger">
+          <Button type="button" variant="outline-danger" onClick={() => handleDelete("experience", experience.id)}>
             <Icon.Trash />
           </Button>
         </div>
