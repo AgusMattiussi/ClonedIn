@@ -663,8 +663,19 @@ public class UserController {
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize("hasAuthority('ENTERPRISE')")
-    public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
-        final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE)
+    public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page,
+                              @QueryParam("categoryName") @DefaultValue("") final String categoryName,
+                              @QueryParam("educationLevel") @DefaultValue("") final String educationLevel,
+                              @QueryParam("searchTerm") @DefaultValue("") final String searchTerm,
+                              @QueryParam("minExpYears") final int minExpYears,
+                              @QueryParam("maxExpYears") final int maxExpYears,
+                              @QueryParam("location") @DefaultValue("") final String location,
+                              @QueryParam("skillDescription") @DefaultValue("") final String skillDescription) {
+
+        Category category = categoryService.findByName(categoryName).orElse(null);
+
+        final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
+                                     location, skillDescription, page, USERS_PER_PAGE)
                 .stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
         if (allUsers.isEmpty()) {
@@ -673,8 +684,6 @@ public class UserController {
 
         final long userCount = us.getVisibleUsersCount();
         long maxPages = userCount/USERS_PER_PAGE + 1;
-
-        //TODO: AGREGAR FILTROS
 
         return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
