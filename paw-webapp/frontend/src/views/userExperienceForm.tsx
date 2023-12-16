@@ -3,25 +3,60 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
 
 function ExperienceForm() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { id } = useParams()
   const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
   document.title = t("Experience Form Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().required("Required"),
+    company: yup.string().required("Required"),
     position: yup.string().required("Required"),
+    //TODO: agregar validaciones para las fechas
   })
+  const [description, setDescription] = useState("")
+  const [monthFrom, setMonthFrom] = useState("")
+  const [yearFrom, setYearFrom] = useState("")
+  const [monthTo, setMonthTo] = useState("")
+  const [yearTo, setYearTo] = useState("")
+
+  const handlePost = async (e: any) => {
+    const company = e.company
+    const job = e.position
+    const jobDesc = description
+    const response = await apiRequest({
+      url: `/users/${id}/experiences`,
+      method: "POST",
+      body: {
+        company,
+        job,
+        jobDesc,
+        monthFrom,
+        yearFrom,
+        monthTo,
+        yearTo,
+      },
+    })
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/profileUser/${id}`)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -40,11 +75,11 @@ function ExperienceForm() {
                     <Formik
                       validationSchema={schema}
                       initialValues={{
-                        name: "",
+                        company: "",
                         position: "",
                       }}
                       onSubmit={(values) => {
-                        console.log(values)
+                        handlePost(values)
                       }}
                     >
                       {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -53,14 +88,14 @@ function ExperienceForm() {
                             <h2 className="fs-title">{t("Experience")}</h2>
                             <Form.Group className="mb-3 mt-3" controlId="formBasicEnterprise">
                               <Form.Control
-                                name="name"
+                                name="company"
                                 className="input"
                                 placeholder={t("Enterprise Name*").toString()}
-                                value={values.name}
+                                value={values.company}
                                 onChange={handleChange}
-                                isInvalid={!!errors.name}
+                                isInvalid={!!errors.company}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.company}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPosition">
                               <Form.Control
@@ -74,15 +109,29 @@ function ExperienceForm() {
                               <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicDescription">
-                              <Form.Control className="input" placeholder={t("Description").toString()} />
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Description").toString()}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                              />
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <div className="row ml-4">
-                                <div className="col-sm-4">
+                                <div
+                                  className="col-sm-4"
+                                  style={{
+                                    minWidth: "80px",
+                                  }}
+                                >
                                   <label>{t("From")}</label>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Select className="selectFrom">
+                                  <Form.Select
+                                    className="selectFrom"
+                                    value={monthFrom}
+                                    onChange={(e) => setMonthFrom(e.target.value)}
+                                  >
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
                                     <option value="Marzo"> {t("Marzo")} </option>
@@ -98,17 +147,31 @@ function ExperienceForm() {
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Control className="input" placeholder="YYYY" />
+                                  <Form.Control
+                                    className="input"
+                                    placeholder={t("Year").toString()}
+                                    value={yearFrom}
+                                    onChange={(e) => setYearFrom(e.target.value)}
+                                  />
                                 </div>
                               </div>
                             </div>
                             <div className="d-flex mb-4">
                               <div className="row ml-4">
-                                <div className="col-sm-4">
+                                <div
+                                  className="col-sm-4"
+                                  style={{
+                                    minWidth: "80px",
+                                  }}
+                                >
                                   <label>{t("To ")}</label>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Select className="selectTo">
+                                  <Form.Select
+                                    className="selectTo"
+                                    value={monthTo}
+                                    onChange={(e) => setMonthTo(e.target.value)}
+                                  >
                                     <option value="No-Especificado"> {t("No-especificado")} </option>
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
@@ -125,13 +188,17 @@ function ExperienceForm() {
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Control className="input" placeholder="YYYY" />
+                                  <Form.Control
+                                    className="input"
+                                    placeholder={t("Year").toString()}
+                                    value={yearTo}
+                                    onChange={(e) => setYearTo(e.target.value)}
+                                  />
                                 </div>
                               </div>
                             </div>
                           </div>
                           <p>{t("Fields required")}</p>
-                          {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
                           <Button variant="success" type="submit">
                             <strong>{t("Save")}</strong>
                           </Button>
@@ -140,7 +207,7 @@ function ExperienceForm() {
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
+                        <Button onClick={() => navigate(`/profileUser/${id}`)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>
