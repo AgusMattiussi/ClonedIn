@@ -195,7 +195,7 @@ function EducationForm() {
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
+                        <Button onClick={() => navigate(`/profileUser/${id}`)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>
