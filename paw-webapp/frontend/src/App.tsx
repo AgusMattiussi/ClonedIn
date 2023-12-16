@@ -59,6 +59,8 @@ function App() {
           <Route path="/skills" element={<SkillsForm />} />
           <Route path="/experiences" element={<ExperienceForm />} />
           <Route path="/educations" element={<EducationForm />} />
+          <Route path="/401" element={<Error statusCode={HttpStatusCode.Unauthorized} />} />
+          <Route path="/403" element={<Error statusCode={HttpStatusCode.Forbidden} />} />
           <Route path="*" element={<Error statusCode={HttpStatusCode.NotFound} />} />
         </Routes>
       </BrowserRouter>

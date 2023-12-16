@@ -9,16 +9,14 @@ import ProfileUserCard from "../components/cards/profileUserCard"
 import Navigation from "../components/navbar"
 import Loader from "../components/loader"
 import UserDto from "../utils/UserDto"
-// import GetUserData from "../api/userApi"
 import { monthNames, BASE_URL } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
 
 function ProfileUser() {
-  //TODO: Fix this to show specific user info
   const { loading, apiRequest } = useRequestApi()
   const [isUserLoading, setUserLoading] = useState(true)
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
@@ -30,6 +28,7 @@ function ProfileUser() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
 
   const USER_API_URL = BASE_URL + `/users/${id}/`
 
@@ -39,6 +38,11 @@ function ProfileUser() {
         url: `/users/${id}`,
         method: "GET",
       })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
       setUser(response.data)
       setUserLoading(false)
     }
@@ -68,7 +72,6 @@ function ProfileUser() {
     }
 
     if (isUserLoading === true) {
-      console.log("fetching user")
       fetchUser()
       fetchExperiences()
       fetchEducations()
@@ -76,9 +79,9 @@ function ProfileUser() {
     }
   }, [apiRequest, id])
 
-  const userSkillsList = skillsData.map((skill) => {
+  const userSkillsList = skillsData.map((skill, index) => {
     return (
-      <Badge pill bg="light" text="dark" className="mx-2">
+      <Badge pill bg="light" text="dark" className="mx-2" key={index}>
         {skill.description}
         <Button type="button" variant="outline-dark" style={{ borderStyle: "none" }}>
           <Icon.X />
@@ -150,7 +153,7 @@ function ProfileUser() {
                 <Loader />
               </div>
             ) : (
-              <ProfileUserCard editable={true} user={user} />
+              <ProfileUserCard editable={true} user={user} inProfileView={true} />
             )}
           </Col>
           <Col sm={8} className="col">

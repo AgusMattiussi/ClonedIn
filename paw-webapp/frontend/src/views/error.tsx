@@ -2,16 +2,23 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { Button } from "react-bootstrap"
 import { HttpStatusCode } from "axios"
+import { useSharedAuth } from "../api/auth"
 
 function Error(props: any) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { userInfo } = useSharedAuth()
 
   let errorCode = ""
   let title = ""
   let message = ""
 
   switch (props.statusCode) {
+    case HttpStatusCode.Unauthorized:
+      errorCode = "401"
+      title = t("401 Title")
+      message = t("401 Msg")
+      break
     case HttpStatusCode.Forbidden:
       errorCode = "403"
       title = t("403 Title")
@@ -39,9 +46,19 @@ function Error(props: any) {
           <span className="text-danger">{t("Error Title Span")}</span> {title}
         </p>
         <p className="lead">{message}</p>
-        <Button onClick={() => navigate(-1)} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
-          {t("Return")}
-        </Button>
+        {userInfo?.role === "USER" ? (
+          <Button onClick={() => navigate("/jobs")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
+            {t("Return")}
+          </Button>
+        ) : (
+          <Button
+            onClick={() => navigate("/profiles")}
+            className="btn btn-primary"
+            style={{ backgroundColor: "#04704C" }}
+          >
+            {t("Return")}
+          </Button>
+        )}
       </div>
     </div>
   )

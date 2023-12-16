@@ -9,7 +9,17 @@ import { useRequestApi } from "../../api/apiRequest"
 import CategoryDto from "../../utils/CategoryDto"
 // import GetUserData from "../../api/userApi"
 
-function ProfileUserCard({ editable, contacted, user }: { editable: boolean; contacted: boolean; user: any }) {
+function ProfileUserCard({
+  editable,
+  contacted,
+  user,
+  inProfileView,
+}: {
+  editable: boolean
+  contacted: boolean
+  user: any
+  inProfileView: boolean
+}) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
   const [skillsData, setSkillsData] = useState<any[]>([])
@@ -38,9 +48,9 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
     }
   }, [apiRequest])
 
-  const userSkillsList = skillsData.map((skill) => {
+  const userSkillsList = skillsData.map((skill, index) => {
     return (
-      <Badge pill bg="success" className="mx-2">
+      <Badge key={index} pill bg="success" className="mx-2">
         {skill.description}
       </Badge>
     )
@@ -116,9 +126,13 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
                 {t("Location")}: {user.location === "" || user.location == null ? t("No especificado") : user.location}
               </p>
             </div>
-            <div className="d-flex justify-content-start align-items-center my-2">
-              {userSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{userSkillsList}</div>}
-            </div>
+            {inProfileView ? (
+              <></>
+            ) : (
+              <div className="d-flex justify-content-start align-items-center my-2">
+                {userSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{userSkillsList}</div>}
+              </div>
+            )}
           </div>
         </Card.Text>
       </Card.Body>
@@ -126,10 +140,10 @@ function ProfileUserCard({ editable, contacted, user }: { editable: boolean; con
   )
 }
 
-//TODO: ver traduccion de valores por default
 ProfileUserCard.defaultProps = {
   editable: false,
   contacted: false,
+  inProfileView: false,
 }
 
 export default ProfileUserCard
