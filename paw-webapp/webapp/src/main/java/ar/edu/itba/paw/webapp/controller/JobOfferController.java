@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,21 +97,17 @@ public class JobOfferController {
                                  @QueryParam("query") @DefaultValue("") final String searchTerm) {
 
         Category category = null;
-        if(categoryName != null){
-            Optional<Category> optCategory = categoryService.findByName(categoryName);
-            if(optCategory.isPresent()){
-                category = optCategory.get();
-            } else {
-                LOGGER.error("Category '{}' not found in JobOfferList()", categoryName);
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
+        if(categoryName != null && !categoryName.isEmpty()) {
+            category = categoryService.findByName(categoryName).orElseThrow(()
+                    -> new CategoryNotFoundException(String.format("Category '%s' not found or does not exist", categoryName)));
         }
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
         long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
 
         final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalary,
-                maxSalary, page - 1, JOB_OFFERS_PER_PAGE).stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job)).collect(Collectors.toList());
+                maxSalary, page - 1, JOB_OFFERS_PER_PAGE).stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
+                .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
@@ -124,10 +121,8 @@ public class JobOfferController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
     public Response getById(@PathParam("id") final long id) {
-        Optional<JobOfferDTO> maybeJob = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job));
-        if (!maybeJob.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(maybeJob.get()).build();
+        JobOfferDTO jobOffer = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
+                .orElseThrow(() -> new NotFoundException(String.format("JobOffer with id '%d' not found or does not exist", id)));
+        return Response.ok(jobOffer).build();
     }
 }

@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class UserIsNotProfileOwnerExceptionMapper implements ExceptionMapper<UserIsNotProfileOwnerException> {
 
-    private static final String MESSAGE = "Current user is not profile owner";
+    private static final String MESSAGE = "Current user is not the profile owner";
 
     @Override
     public Response toResponse(UserIsNotProfileOwnerException e) {

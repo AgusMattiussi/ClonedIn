@@ -28,6 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Optional<Category> findByName(String name) {
+        if(name == null || name.isEmpty())
+            return Optional.empty();
         return categoryDao.findByName(name);
     }
 
