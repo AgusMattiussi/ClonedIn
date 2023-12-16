@@ -607,6 +607,7 @@ public class UserController {
 
     private static final int PAGE_SIZE = 10;
     private static final int JOB_OFFERS_PER_PAGE = 3;
+    private static final int USERS_PER_PAGE = 8;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
@@ -670,8 +671,8 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final long jobOffersCount = us.getUsersCount();
-        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
+        final long userCount = us.getVisibleUsersCount();
+        long maxPages = userCount/USERS_PER_PAGE + 1;
 
         //TODO: AGREGAR FILTROS
 
@@ -679,7 +680,7 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
     }
 
     @POST
