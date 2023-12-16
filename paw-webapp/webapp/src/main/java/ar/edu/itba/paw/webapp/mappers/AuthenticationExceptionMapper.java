@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.mappers;
 import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import org.springframework.security.core.AuthenticationException;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

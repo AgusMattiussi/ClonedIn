@@ -670,8 +670,8 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        /*final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
-        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;*/
+        final long jobOffersCount = us.getUsersCount();
+        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
 
         //TODO: AGREGAR FILTROS
 

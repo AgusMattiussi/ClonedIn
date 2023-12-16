@@ -319,4 +319,10 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("userID", userID);
         query.executeUpdate();
     }
+
+    @Override
+    public long getVisibleUsersCount() {
+        Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.visibility = :visible");
+        return (Long) query.getSingleResult();
+    }
 }

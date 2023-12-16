@@ -58,4 +58,5 @@ public interface UserDao {
     
     void updateUserProfileImage(long userId, Image image);
 
+    long getVisibleUsersCount();
 }
