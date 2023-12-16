@@ -29,7 +29,7 @@ const useAuth = () => {
     if (token) {
       localStorage.setItem("accessToken", JSON.stringify(token))
       setUserInfo(jwtDecode(token))
-      console.log(jwtDecode(token))
+      // console.log(jwtDecode(token))
     } else {
       localStorage.removeItem("accessToken")
     }

@@ -11,8 +11,8 @@ export enum UserRole {
   ENTERPRISE = "ENTERPRISE",
 }
 
-export const AUTHORIZATION_HEADER = "authorization"
-export const REFRESH_HEADER = "x-refresh"
+export const AUTHORIZATION_HEADER = "x-access-token"
+export const REFRESH_HEADER = "x-refresh-token"
 
 export const monthNames = [
   "No-especificado",

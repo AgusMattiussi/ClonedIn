@@ -78,7 +78,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         cors.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // React Frontend
         cors.setAllowedMethods(Collections.singletonList("*"));
         cors.setAllowedHeaders(Collections.singletonList("*"));
-        cors.setExposedHeaders(Arrays.asList("Authorization", "X-Refresh", "Location", "Link", "X-Total-Pages"));
+        cors.setExposedHeaders(Arrays.asList("Authorization", "X-Refresh", "Location", "Link", "X-Total-Pages", "X-Access-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cors);
         return source;

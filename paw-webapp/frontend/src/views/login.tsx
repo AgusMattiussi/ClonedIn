@@ -37,8 +37,13 @@ function Login() {
     const logged = await loginHandler(email, password)
     if (logged) {
       console.log("Logged in")
-      if (userInfo?.role === UserRole.USER) navigate("/jobs")
-      else navigate("/profiles")
+      if (userInfo?.role === UserRole.USER) {
+        console.log(userInfo?.role)
+        navigate("/jobs")
+      } else {
+        console.log(userInfo?.role)
+        navigate("/profiles")
+      }
     } else {
       console.log("Not logged in")
       //TODO: Show errors in the form

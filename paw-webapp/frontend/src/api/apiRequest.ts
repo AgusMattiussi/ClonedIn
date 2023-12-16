@@ -73,8 +73,8 @@ export const useRequestApi = () => {
         params: input.queryParams,
       })
 
-      if (response.data.accessToken) {
-        setAccessToken(response.data.accessToken)
+      if (response.headers[AUTHORIZATION_HEADER]) {
+        setAccessToken(response.headers[AUTHORIZATION_HEADER])
       }
 
       return response
