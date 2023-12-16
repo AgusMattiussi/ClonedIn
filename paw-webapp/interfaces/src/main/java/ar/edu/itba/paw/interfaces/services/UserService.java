@@ -27,6 +27,8 @@ public interface UserService {
 
     long getUsersCount();
 
+    long getVisibleUsersCount();
+
     long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription);
 
     long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears);
