@@ -1184,7 +1184,7 @@ public class UserController {
     }
 
     @PUT
-    @Path("/{id}/profile")
+    @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
     public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
         /*if (errors.hasErrors()) {

@@ -5,34 +5,20 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
 
 function EditUserForm() {
-  const [categoryList, setCategoryList] = useState([])
-  const [error, setError] = useState(null)
-  const { userInfo } = useSharedAuth()
-
-  /* Cargar lista de rubros */
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/categories")
-      .then((response) => response.json())
-      .then((response) => {
-        setCategoryList(response)
-        setError(null)
-      })
-      .catch(setError)
-  }, [])
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    navigate("/profiles")
-  }
-
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const [categoryList, setCategoryList] = useState([])
+  const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
   document.title = t("Edit Page Title")
 
@@ -41,6 +27,47 @@ function EditUserForm() {
   const schema = yup.object().shape({
     name: yup.string().required("Required"),
   })
+  const [location, setLocation] = useState("")
+  const [position, setPosition] = useState("")
+  const [category, setCategory] = useState("")
+  const [level, setLevel] = useState("")
+  const [aboutMe, setAboutMe] = useState("")
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiRequest({
+        url: "/categories",
+        method: "GET",
+      })
+      setCategoryList(response.data)
+    }
+
+    if (categoryList.length === 0) {
+      fetchCategories()
+    }
+  }, [apiRequest])
+
+  const handlePost = async (e: any) => {
+    const name = e.name
+    const response = await apiRequest({
+      url: `/users/${id}`,
+      method: "PUT",
+      body: {
+        name,
+        location,
+        position,
+        aboutMe,
+        category,
+        level,
+      },
+    })
+    console.log(response)
+    if (response.status === HttpStatusCode.NoContent) {
+      navigate(`/profileUser/${id}`)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -62,7 +89,7 @@ function EditUserForm() {
                         name: "",
                       }}
                       onSubmit={(values) => {
-                        console.log(values)
+                        handlePost(values)
                       }}
                     >
                       {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -81,14 +108,36 @@ function EditUserForm() {
                               <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
-                              <Form.Control className="input" placeholder={t("Location").toString()} />
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Location").toString()}
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                              />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPosition">
-                              <Form.Control className="input" placeholder={t("Current Position").toString()} />
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Current Position").toString()}
+                                value={position}
+                                onChange={(e) => setPosition(e.target.value)}
+                              />
                             </Form.Group>
                             <div className="d-flex mb-4">
-                              <label className="area">{t("Education Level")}</label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <label
+                                className="area"
+                                style={{
+                                  width: "100px",
+                                }}
+                              >
+                                {t("Education Level")}
+                              </label>
+                              <Form.Select
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={level}
+                                onChange={(e) => setLevel(e.target.value)}
+                              >
                                 <option value="No-especificado">{t("No-especificado")}</option>
                                 <option value="Primario">{t("Primario")}</option>
                                 <option value="Secundario">{t("Secundario")}</option>
@@ -98,8 +147,20 @@ function EditUserForm() {
                               </Form.Select>
                             </div>
                             <div className="d-flex mb-4">
-                              <label className="area">{t("Job Category")}</label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <label
+                                className="area"
+                                style={{
+                                  width: "100px",
+                                }}
+                              >
+                                {t("Job Category")}
+                              </label>
+                              <Form.Select
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                              >
                                 <option key="1" value="No-Especificado">
                                   {t("No-especificado")}
                                 </option>
@@ -111,7 +172,13 @@ function EditUserForm() {
                               </Form.Select>
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                              <Form.Control placeholder={t("About Me").toString()} as="textarea" rows={3} />
+                              <Form.Control
+                                placeholder={t("About Me").toString()}
+                                as="textarea"
+                                rows={3}
+                                value={aboutMe}
+                                onChange={(e) => setAboutMe(e.target.value)}
+                              />
                             </Form.Group>
                           </div>
                           <p> {t("Fields required")}</p>

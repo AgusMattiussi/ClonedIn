@@ -38,7 +38,7 @@ function App() {
           <Route path="/registerUser" element={<RegisterUser />} />
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
 
-          <Route path="/editUser" element={<EditUserForm />} />
+          <Route path="/editUser/:id" element={<EditUserForm />} />
           <Route path="/editEnterprise" element={<EditEnterpriseForm />} />
           <Route path="/imageProfile" element={<ImageProfileForm />} />
           {/*TODO: revisar --> distinto link para enterprise y user */}

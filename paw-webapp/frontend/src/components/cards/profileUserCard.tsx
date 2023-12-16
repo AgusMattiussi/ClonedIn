@@ -4,10 +4,10 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useRequestApi } from "../../api/apiRequest"
 import CategoryDto from "../../utils/CategoryDto"
-// import GetUserData from "../../api/userApi"
 
 function ProfileUserCard({
   editable,
@@ -20,6 +20,7 @@ function ProfileUserCard({
   user: any
   inProfileView: boolean
 }) {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
   const [skillsData, setSkillsData] = useState<any[]>([])
@@ -73,7 +74,13 @@ function ProfileUserCard({
         <div className="d-flex justify-content-around align-items-center">
           <h5>{user.name}</h5>
           {editable ? (
-            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
+            <Button
+              className="float-end"
+              type="button"
+              variant="outline-success"
+              style={{ paddingBottom: "10px" }}
+              onClick={() => navigate(`/editUser/${user.id}`)}
+            >
               <Icon.PencilSquare color="green" size={15} />
             </Button>
           ) : contacted ? (
