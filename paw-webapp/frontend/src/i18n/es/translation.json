@@ -155,8 +155,8 @@
   "Skill Ex": "*(idiomas extranjeros, manejo del tiempo, etc.)",
 
   "Education add": "Agrega diplomas educativos en tu perfil",
-  "Institution": "Institución *",
-  "Degree": "Diploma *",
+  "Institution*": "Institución*",
+  "Degree*": "Diploma*",
   "Comment": "Comentario",
 
   "From": "Desde *",
