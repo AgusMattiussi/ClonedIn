@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,8 @@ public class CategoryController {
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, })
     public Response getById(@PathParam("id") final long id) {
-        Optional<CategoryDTO> optCategory = categoryService.findById(id).map(c -> CategoryDTO.fromCategory(uriInfo, c));
-        if (!optCategory.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optCategory.get()).build();
+        CategoryDTO categoryDTO = categoryService.findById(id).map(c -> CategoryDTO.fromCategory(uriInfo, c))
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+        return Response.ok(categoryDTO).build();
     }
 }

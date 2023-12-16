@@ -58,8 +58,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // JobOffers
                 .antMatchers("/jobOffers/**").authenticated()
                 .and().exceptionHandling()
-                    .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
-                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+//                    .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
+//                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                 //.authenticationProvider(authenticationProvider)
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
