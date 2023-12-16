@@ -3,25 +3,59 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
 
 function EducationForm() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { id } = useParams()
   const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
   document.title = t("Education Form Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    institution: yup.string().required("Required"),
+    college: yup.string().required("Required"),
     degree: yup.string().required("Required"),
+    //TODO: agregar validaciones para las fechas
   })
+  const [comment, setComment] = useState("")
+  const [monthFrom, setMonthFrom] = useState("")
+  const [yearFrom, setYearFrom] = useState("")
+  const [monthTo, setMonthTo] = useState("")
+  const [yearTo, setYearTo] = useState("")
+
+  const handlePost = async (e: any) => {
+    const college = e.college
+    const degree = e.degree
+    const response = await apiRequest({
+      url: `/users/${id}/educations`,
+      method: "POST",
+      body: {
+        college,
+        degree,
+        comment,
+        monthFrom,
+        yearFrom,
+        monthTo,
+        yearTo,
+      },
+    })
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/profileUser/${id}`)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -40,11 +74,11 @@ function EducationForm() {
                     <Formik
                       validationSchema={schema}
                       initialValues={{
-                        institution: "",
+                        college: "",
                         degree: "",
                       }}
                       onSubmit={(values) => {
-                        console.log(values)
+                        handlePost(values)
                       }}
                     >
                       {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -53,14 +87,14 @@ function EducationForm() {
                             <h2 className="fs-title"> {t("Educacion")} </h2>
                             <Form.Group className="mb-3 mt-3" controlId="formBasicInstitution">
                               <Form.Control
-                                name="institution"
+                                name="college"
                                 className="input"
                                 placeholder={t("Institution*").toString()}
-                                value={values.institution}
+                                value={values.college}
                                 onChange={handleChange}
-                                isInvalid={!!errors.institution}
+                                isInvalid={!!errors.college}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.institution}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.college}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicDegree">
                               <Form.Control
@@ -71,10 +105,15 @@ function EducationForm() {
                                 onChange={handleChange}
                                 isInvalid={!!errors.degree}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.institution}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.degree}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicComment">
-                              <Form.Control className="input" placeholder={t("Comment").toString()} />
+                              <Form.Control
+                                className="input"
+                                placeholder={t("Comment").toString()}
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                              />
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <div className="row ml-4">
@@ -82,7 +121,11 @@ function EducationForm() {
                                   <label>{t("From")}</label>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Select className="selectFrom">
+                                  <Form.Select
+                                    className="selectFrom"
+                                    value={monthFrom}
+                                    onChange={(e) => setMonthFrom(e.target.value)}
+                                  >
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
                                     <option value="Marzo"> {t("Marzo")} </option>
@@ -98,7 +141,12 @@ function EducationForm() {
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Control className="input" placeholder={t("Year").toString()} />
+                                  <Form.Control
+                                    className="input"
+                                    placeholder={t("Year").toString()}
+                                    value={yearFrom}
+                                    onChange={(e) => setYearFrom(e.target.value)}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -108,7 +156,11 @@ function EducationForm() {
                                   <label>{t("To")}</label>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Select className="selectTo">
+                                  <Form.Select
+                                    className="selectTo"
+                                    value={monthTo}
+                                    onChange={(e) => setMonthTo(e.target.value)}
+                                  >
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
                                     <option value="Marzo"> {t("Marzo")} </option>
@@ -124,7 +176,12 @@ function EducationForm() {
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
-                                  <Form.Control className="input" placeholder={t("Year").toString()} />
+                                  <Form.Control
+                                    className="input"
+                                    placeholder={t("Year").toString()}
+                                    value={yearTo}
+                                    onChange={(e) => setYearTo(e.target.value)}
+                                  />
                                 </div>
                               </div>
                             </div>

@@ -153,8 +153,8 @@
   "Skill Ex": "*(foreign languages, time managing, etc.)",
 
   "Education add": "Add education degrees to your profile",
-  "Institution": "Institution *",
-  "Degree": "Degree *",
+  "Institution*": "Institution*",
+  "Degree*": "Degree*",
   "Comment": "Comment",
 
   "From": "From *",
