@@ -204,6 +204,9 @@
 
   "Error Title Span": "Oops!",
 
+  "401 Title": "Unauthorized.",
+  "401 Msg": "You are unauthorized to do this access.",
+
   "403 Title": "Forbidden.",
   "403 Msg": "The action you are attempting is forbidden.",
 

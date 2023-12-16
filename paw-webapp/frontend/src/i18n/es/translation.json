@@ -206,6 +206,9 @@
 
   "Error Title Span": "Oops!",
 
+  "401 Title": "No autorizado.",
+  "401 Msg": "No está autorizado a realizar la acción que desea.",
+
   "403 Title": "Prohibido.",
   "403 Msg": "La acción que usted quiere hacer está prohibida.",
 
