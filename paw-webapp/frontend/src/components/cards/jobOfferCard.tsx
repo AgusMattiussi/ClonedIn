@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import CategoryDto from "../../utils/CategoryDto"
 import EnterpriseDto from "../../utils/EnterpriseDto"
 
-function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any }) {
+function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
@@ -57,6 +57,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
 
   return (
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
+      {" "}
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
@@ -116,7 +117,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
       <div className="d-flex align-items-start flex-wrap px-3">
         <div>
           <p style={{ textAlign: "left", wordBreak: "break-all" }}>
-            {job.description.length > 200 ? job.description.substring(0, 200) + "..." : job.description}
+            {job.description}
           </p>
         </div>
       </div>
@@ -124,8 +125,8 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
   )
 }
 
-JobOfferDiscoverCard.defaultProps = {
+JobOfferCard.defaultProps = {
   contacted: false,
 }
 
-export default JobOfferDiscoverCard
+export default JobOfferCard

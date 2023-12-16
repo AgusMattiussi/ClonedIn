@@ -11,7 +11,7 @@ function Header() {
     <>
       <Navbar className="custom-header">
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand href="/">
+          <Navbar.Brand href="/login">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
         </div>

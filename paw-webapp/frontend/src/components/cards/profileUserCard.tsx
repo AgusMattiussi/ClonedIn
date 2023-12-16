@@ -73,7 +73,7 @@ function ProfileUserCard({
         <div className="d-flex justify-content-around align-items-center">
           <h5>{user.name}</h5>
           {editable ? (
-            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }}>
+            <Button className="float-end" type="button" variant="outline-success" style={{ paddingBottom: "10px" }} href={`/editUser/${user.id}`}>
               <Icon.PencilSquare color="green" size={15} />
             </Button>
           ) : contacted ? (
@@ -93,12 +93,12 @@ function ProfileUserCard({
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.category == null ? t("No especificado") : userCategory?.name}
+                    {user.category == null ? t("No-especificado") : userCategory?.name}
                   </Badge>
                 </div>
               ) : (
                 <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Category")}: {t("No especificado")}
+                  {t("Category")}: {t("No-especificado")}
                 </p>
               )}
             </div>
@@ -107,7 +107,7 @@ function ProfileUserCard({
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
                 {t("Current Position")}:{" "}
                 {user.currentPosition === "" || user.currentPosition == null
-                  ? t("No especificado")
+                  ? t("No-especificado")
                   : user.currentPosition}
               </p>
             </div>
