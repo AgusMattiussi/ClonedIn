@@ -3,11 +3,13 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.Skill;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
 
 public class JobOfferDTO {
 
@@ -23,6 +25,7 @@ public class JobOfferDTO {
     private double salary;
     private String modality;
     private String available;
+    private List<String> skills;
     private URI self;
 
     public static JobOfferDTO fromJobOffer(final UriInfo uriInfo, final JobOffer jobOffer) {
@@ -32,6 +35,10 @@ public class JobOfferDTO {
         dto.description = jobOffer.getDescription();
         dto.salary = jobOffer.getSalary().doubleValue();
         dto.modality = jobOffer.getModality();
+
+
+        List<Skill> jobOfferSkills = jobOffer.getSkills();
+        dto.skills = jobOfferSkills.stream().map(Skill::getDescription).collect(java.util.stream.Collectors.toList());
 
         final UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
                 .replacePath(JOB_OFFERS_URL)
@@ -113,6 +120,14 @@ public class JobOfferDTO {
 
     public void setAvailable(String available) {
         this.available = available;
+    }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
     }
 
     public URI getSelf() {
