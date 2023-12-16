@@ -181,7 +181,12 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Experience")}</strong>
-                    <Button type="button" variant="success" href="/experiences" style={{ width: "200px" }}>
+                    <Button
+                      type="button"
+                      variant="success"
+                      onClick={() => navigate(`/experiences/${id}`)}
+                      style={{ width: "200px" }}
+                    >
                       <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
                       {t("Add Experience")}
                     </Button>
@@ -201,7 +206,12 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Education Level")}</strong>
-                    <Button type="button" variant="success" href="/educations" style={{ width: "200px" }}>
+                    <Button
+                      type="button"
+                      variant="success"
+                      onClick={() => navigate(`/educations/${id}`)}
+                      style={{ width: "200px" }}
+                    >
                       <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
                       {t("Add Education")}
                     </Button>
@@ -221,7 +231,12 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Skills")}</strong>
-                    <Button type="button" variant="success" href="/skills" style={{ width: "200px" }}>
+                    <Button
+                      type="button"
+                      variant="success"
+                      onClick={() => navigate(`/skills/${id}`)}
+                      style={{ width: "200px" }}
+                    >
                       <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
                       {t("Add Skill")}
                     </Button>
