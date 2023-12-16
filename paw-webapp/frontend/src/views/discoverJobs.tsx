@@ -4,15 +4,43 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import FilterJobsSideBar from "../components/sidebars/filterJobsSideBar"
-import Pagination from "../components/pagination"
+import { useState, useEffect } from "react"
+import { useRequestApi } from "../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
+import Pagination from "../components/pagination"
+import Loader from "../components/loader"
 
 function DiscoverJobs() {
+  const { loading, apiRequest } = useRequestApi()
+  const [isLoading, setLoading] = useState(true)
+  const [jobs, setJobs] = useState<any[]>([])
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const response = await apiRequest({
+        url: "/jobOffers",
+        method: "GET",
+      })
+      setJobs(response.data)
+      setLoading(false)
+      setError(null)
+    }
+
+    fetchJobs()
+  }, [apiRequest])
+
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
 
   document.title = t("Discover Jobs") + " | ClonedIn"
+
+  const jobsList = jobs.map((job) => {
+    return (
+        <JobOfferDiscoverCard job={job} />
+    )
+  })
 
   return (
     <div>
@@ -33,24 +61,15 @@ function DiscoverJobs() {
                   boxShadow: "0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)",
                 }}
               >
-                <JobOfferDiscoverCard
-                  enterpriseName="Fake Enterprise"
-                  category="Finance"
-                  position="CEO"
-                  salary="100000"
-                  contacted={true}
-                />
-                <JobOfferDiscoverCard category="Technology" position="CTO" description="Loren ipsum" />
+                {isLoading ? (
+                  <div className="my-5">
+                    <Loader />
+                  </div>
+                ) : (
+                  jobsList
+                )}
                 <Pagination />
               </Container>
-              {/* {users.map((user) => {
-                return (
-                  <div className="post-card" key={user.username}>
-                    <h2 className="post-title">{user.username}</h2>
-                    <p className="post-body">{user.self}</p>
-                  </div>
-                )
-              })} */}
             </Row>
           </Col>
         </Row>

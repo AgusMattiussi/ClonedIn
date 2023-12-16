@@ -39,18 +39,18 @@ function App() {
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
 
           <Route path="/editUser/:id" element={<EditUserForm />} />
-          <Route path="/editEnterprise" element={<EditEnterpriseForm />} />
-          <Route path="/imageProfile" element={<ImageProfileForm />} />
+          <Route path="/editEnterprise/:id" element={<EditEnterpriseForm />} />
+          <Route path="/imageProfile/:id" element={<ImageProfileForm />} />
           {/*TODO: revisar --> distinto link para enterprise y user */}
 
           <Route path="/profiles" element={<DiscoverProfiles />} />
           <Route path="/profileEnterprise/:id" element={<ProfileEnterprise />} />
           <Route path="/contactsEnterprise/:id" element={<ContactsEnterprise />} />
           <Route path="/interestedEnterprise/:id" element={<InterestedEnterprise />} />
-          <Route path="/contacts" element={<ContactForm />} />
+          <Route path="/contact/:id" element={<ContactForm />} />
           <Route path="/jobOffers" element={<JobOfferForm />} />
 
-          <Route path="/jobOffer" element={<JobOffer />} />
+          <Route path="/jobOffer/:id" element={<JobOffer />} />
 
           <Route path="/jobs" element={<DiscoverJobs />} />
           <Route path="/profileUser/:id" element={<ProfileUser />} />

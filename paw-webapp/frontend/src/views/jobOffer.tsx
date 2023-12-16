@@ -1,15 +1,38 @@
 import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
-import JobOfferEnterpriseCard from "../components/cards/jobOfferEnterpriseCard"
-import { useEffect } from "react"
+import JobOfferCard from "../components/cards/jobOfferCard"
+import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import JobOfferDto from "../utils/JobOfferDto"
+import { useNavigate, useParams } from "react-router-dom"
+import { BASE_URL } from "../utils/constants"
 
 function JobOffer() {
+  const { loading, apiRequest } = useRequestApi()
+  const [job, setJob] = useState<JobOfferDto | undefined>({} as JobOfferDto)
+
+  const { id } = useParams()
   const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
+
+  const USER_API_URL = BASE_URL + `/jobOffer/${id}/`
 
   useEffect(() => {
-    document.title = "JobOffer | ClonedIn" // TODO: Add job offer name
-  }, [])
+    const fetchJob = async () => {
+      const response = await apiRequest({
+        url: `/jobOffers/${id}`,
+        method: "GET",
+      })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
+      setJob(response.data)
+    }
+      fetchJob()
+  }, [apiRequest, id])
 
   return (
     <div>
@@ -20,7 +43,7 @@ function JobOffer() {
         style={{ background: "#F2F2F2" }}
       >
         <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>
-          <JobOfferEnterpriseCard category="Finance" position="CEO" salary="100000" status="closed" />
+          <JobOfferCard job={job} />
         </div>
       </Container>
     </div>
