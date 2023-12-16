@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.ws.rs.core.NewCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -17,6 +18,7 @@ public class AuthService {
 
     @Value("${jwt.refresh-token.expiration}")
     private long REFRESH_EXPIRATION_TIME_MILLIS;
+    private static final String REFRESH_TOKEN_COOKIE_NAME = "ClonedInRefreshToken";
 
     @Autowired
     private JwtHelper jwtHelper;
@@ -40,8 +42,7 @@ public class AuthService {
         Date expiry = jwtHelper.extractExpiration(refreshToken);
 
         // TODO: Actualizar path y domain
-        // String name, String value, String path, String domain, int version, String comment, int maxAge, Date expiry, boolean secure, boolean httpOnly
-        return new NewCookie("ClonedInRefreshToken", refreshToken, "webapp_war/auth", "localhost", 1,
+        return new NewCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, "webapp_war/auth", "localhost", 1,
                 null, (int) REFRESH_EXPIRATION_TIME_MILLIS/1000, expiry, false, true);
     }
 

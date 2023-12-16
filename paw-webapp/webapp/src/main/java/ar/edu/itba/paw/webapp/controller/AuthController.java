@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.CustomUserDetails;
+import ar.edu.itba.paw.webapp.dto.SimpleMessageDTO;
 import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthService;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ public class AuthController {
 
     private static final String AUTH_HEADER_BASIC = "Basic ";
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    private static final String ACCESS_TOKEN_HEADER = "X-Access-Token";
+    private static final String CHECK_HEADER_MESSAGE = "Check '" + ACCESS_TOKEN_HEADER + "' header for the access token.";
 
 
     @Autowired
@@ -38,20 +41,14 @@ public class AuthController {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response authenticate(@Context HttpServletRequest request){
         // Authenticate the user using the HttpBasic credentials provided
+        // Should not allow Bearer authentication, since it may lead to a security breach
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(authHeader == null ||  !authHeader.startsWith(AUTH_HEADER_BASIC)) {
             // TODO: Devolver un mejor error
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        String username = authService.getUsernameFromBasicHeader(authHeader);
-        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
-
-        String accessToken = authService.generateAccessToken(user);
-        NewCookie refreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
-
-        return Response.ok(new AuthenticationResponse(accessToken))
-                .cookie(refreshTokenCookie)
+        return Response.ok(new SimpleMessageDTO(CHECK_HEADER_MESSAGE))
                 .build();
     }
 
@@ -80,7 +77,8 @@ public class AuthController {
         String newAccessToken = authService.generateAccessToken(user);
         NewCookie newRefreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
 
-        return Response.ok(new AuthenticationResponse(newAccessToken))
+        return Response.ok(new SimpleMessageDTO(CHECK_HEADER_MESSAGE))
+                .header("X-Access-Token", newAccessToken)
                 .cookie(newRefreshTokenCookie)
                 .build();
     }
