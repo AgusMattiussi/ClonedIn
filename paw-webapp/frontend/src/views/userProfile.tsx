@@ -72,7 +72,6 @@ function ProfileUser() {
     }
 
     if (isUserLoading === true) {
-      console.log("fetching user")
       fetchUser()
       fetchExperiences()
       fetchEducations()
@@ -80,9 +79,9 @@ function ProfileUser() {
     }
   }, [apiRequest, id])
 
-  const userSkillsList = skillsData.map((skill) => {
+  const userSkillsList = skillsData.map((skill, index) => {
     return (
-      <Badge pill bg="light" text="dark" className="mx-2">
+      <Badge pill bg="light" text="dark" className="mx-2" key={index}>
         {skill.description}
         <Button type="button" variant="outline-dark" style={{ borderStyle: "none" }}>
           <Icon.X />
@@ -154,7 +153,7 @@ function ProfileUser() {
                 <Loader />
               </div>
             ) : (
-              <ProfileUserCard editable={true} user={user} />
+              <ProfileUserCard editable={true} user={user} inProfileView={true} />
             )}
           </Col>
           <Col sm={8} className="col">
