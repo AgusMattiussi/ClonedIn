@@ -663,11 +663,15 @@ public class UserController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize("hasAuthority('ENTERPRISE')")
     public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page) {
-        final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE).stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
+        final List<UserDTO> allUsers = us.getVisibleUsers(page-1, PAGE_SIZE)
+                .stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
         if (allUsers.isEmpty()) {
             return Response.noContent().build();
         }
+
+        /*final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
+        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;*/
 
         //TODO: AGREGAR FILTROS
 

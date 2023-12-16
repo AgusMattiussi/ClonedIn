@@ -102,12 +102,17 @@ public class JobOfferController {
                     -> new CategoryNotFoundException(String.format("Category '%s' not found or does not exist", categoryName)));
         }
 
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
-        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
-
         final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalary,
                 maxSalary, page - 1, JOB_OFFERS_PER_PAGE).stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
                 .collect(Collectors.toList());
+
+        if (jobOfferList.isEmpty()) {
+            return Response.noContent().build();
+        }
+
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
+        long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
+
 
         return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
