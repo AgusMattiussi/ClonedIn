@@ -126,6 +126,16 @@ function ProfileUser() {
     }
   }
 
+  const handleVisibility = async () => {
+    const response = await apiRequest({
+      url: `/users/${id}/visibility`,
+      method: "PUT",
+    })
+    if (response.status === HttpStatusCode.Ok) {
+      setUserLoading(true)
+    }
+  }
+
   const userSkillsList = skillsData.map((skill) => {
     return (
       <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
@@ -197,8 +207,8 @@ function ProfileUser() {
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button">
-              {t("Hide My Profile")}
+            <Button variant="success" type="button" onClick={() => handleVisibility()}>
+              {user?.visibility === 1 ? t("Hide My Profile") : t("Show My Profile")}
             </Button>
             {isUserLoading ? (
               <div className="my-5">
