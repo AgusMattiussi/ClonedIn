@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
 import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(jobOfferId));
+        Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(() -> new EnterpriseNotFoundException(email));
         return enterprise.isJobOfferOwner(jobOfferId);
     }
 
@@ -69,7 +70,7 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(experienceID));
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return user.hasExperience(experienceID);
     }
 }
