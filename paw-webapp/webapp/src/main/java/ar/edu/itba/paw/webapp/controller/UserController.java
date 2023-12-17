@@ -613,6 +613,7 @@ public class UserController {
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
     private static final String ENTERPRISE_OR_EXPERIENCE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId))";
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
+    private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
 
 
     @Autowired
@@ -902,11 +903,10 @@ public class UserController {
 
     @DELETE
     @Path("/{id}/experiences/{expId}")
-    @PreAuthorize(PROFILE_OWNER)
+    @PreAuthorize(EXPERIENCE_OWNER)
     public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
-        //TODO: Cambiar a boolean?
         experienceService.deleteExperience(expId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @GET
