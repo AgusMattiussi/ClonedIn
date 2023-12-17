@@ -32,6 +32,9 @@ public enum Month {
     }
 
     public static Month fromNumber(int number) {
+        if(number < 1 || number > 12)
+            return null;
+
         for (Month month : Month.values()) {
             if (month.number == number) {
                 return month;

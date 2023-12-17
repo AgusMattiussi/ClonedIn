@@ -26,15 +26,6 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
-        if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)
-            throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
-
-        if(monthTo != null && yearTo != null) {
-            if (!DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo))
-                throw new InvalidParameterException("La fecha" + monthFrom + "/" + yearFrom +
-                        " - " + monthTo + "/" + yearTo + " es incorrecta");
-        }
-
         final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);
         return experience;

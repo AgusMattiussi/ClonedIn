@@ -953,31 +953,12 @@ public class UserController {
     @Path("/{id}/educations")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     @PreAuthorize(PROFILE_OWNER)
-    public Response addEducation(@PathParam("id") final long id, @Valid final EducationForm educationForm /*, final BindingResult errors*/){
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response addEducation(@PathParam("id") final long id, @Valid final EducationForm educationForm){
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        //TODO: Eliminar esta logica del controller
-        /*
-        boolean isYearValid = DateHelper.isIntervalValid(educationForm.getYearFrom(), educationForm.getYearTo());
-        boolean isMonthValid = DateHelper.isIntervalValid(DateHelper.monthToNumber(educationForm.getMonthFrom()), DateHelper.monthToNumber(educationForm.getMonthTo()));
-
-        if (errors.hasErrors() || !isYearValid || !isMonthValid) {
-            if(!isYearValid)
-                errors.rejectValue("yearTo", "InvalidDate", "End date cannot be before initial date");
-            else if (!isMonthValid)
-                errors.rejectValue("monthTo", "InvalidDate", "End date cannot be before initial date");
-            LOGGER.warn("Education form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        */
-
-        Education education = educationService.add(optUser.get(), DateHelper.monthToNumber(educationForm.getMonthFrom()), Integer.parseInt(educationForm.getYearFrom()),
-                DateHelper.monthToNumber(educationForm.getMonthTo()), Integer.parseInt(educationForm.getYearTo()), educationForm.getDegree(),
-                educationForm.getCollege(), educationForm.getComment());
+        Education education = educationService.add(user, educationForm.getMonthFrom(), educationForm.getYearFrom(),
+                educationForm.getMonthTo(), educationForm.getYearTo(), educationForm.getDegree(), educationForm.getCollege(),
+                educationForm.getComment());
 
         LOGGER.debug("A new education was registered under id: {}", education.getId());
         LOGGER.info("A new education was registered");

@@ -9,8 +9,6 @@ public class ExperienceForm {
 
     private static final int MIN_YEAR = 1900;
     private static final int MAX_YEAR = 2100;
-    private static final int MIN_MONTH = 1;
-    private static final int MAX_MONTH = 12;
 
     @NotEmpty
     @Size(max=50)
