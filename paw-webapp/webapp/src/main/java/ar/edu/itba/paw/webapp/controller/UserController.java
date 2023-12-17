@@ -662,6 +662,17 @@ public class UserController {
         this.imageService = imageService;
     }
 
+    private Response.ResponseBuilder responseWithPaginationLinks(Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
+        if(currentPage > 1)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
+        if(currentPage < maxPages)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
+
+        return responseBuilder
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last");
+    }
+
     @GET
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize("hasAuthority('ENTERPRISE')")
@@ -677,7 +688,7 @@ public class UserController {
         Category category = categoryService.findByName(categoryName).orElse(null);
 
         final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription, page, USERS_PER_PAGE)
+                                     location, skillDescription, page-1, USERS_PER_PAGE)
                 .stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
         if (allUsers.isEmpty()) {
@@ -688,30 +699,8 @@ public class UserController {
                                      location, skillDescription);
         long maxPages = userCount/USERS_PER_PAGE + 1;
 
-        return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last")
-                .build();
-        //return okResponseWithLinks(allUsers, page, maxPages);
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages).build();
     }
-
-
-
-    /*private <T> Response okResponseWithLinks(List<T> elements, int currentPage, long maxPages) {
-        Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<T>>(elements) {});
-
-        if(currentPage > 1)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
-        if(currentPage < maxPages)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
-
-        return responseBuilder
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last")
-                .build();
-    }*/
 
 
     @POST
@@ -770,11 +759,7 @@ public class UserController {
         long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status);
         long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
-        return Response.ok(new GenericEntity<List<ContactDTO>>(applications) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages).build();
     }
 
     @POST
