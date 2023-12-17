@@ -615,6 +615,7 @@ public class UserController {
     private static final String ENTERPRISE_OR_EDUCATION_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId))";
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
     private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
+    private static final String EDUCATION_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId)";
 
 
     @Autowired
@@ -964,7 +965,7 @@ public class UserController {
 
     @DELETE
     @Path("/{id}/educations/{edId}")
-    @PreAuthorize(PROFILE_OWNER)
+    @PreAuthorize(EDUCATION_OWNER)
     public Response deleteEducationById(@PathParam("id") final long id, @PathParam("edId") final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
