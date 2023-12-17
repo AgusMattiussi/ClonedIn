@@ -741,15 +741,14 @@ public class UserController {
     public Response getApplications(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") final int page,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
-                                    @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy,
                                     @QueryParam("status") final String status) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<ContactDTO> applications = contactService.getContactsForUser(user, filledBy, status, sortBy, page-1,
+        List<ContactDTO> applications = contactService.getContactsForUser(user, FilledBy.USER, status, sortBy, page-1,
                         APPLICATIONS_PER_PAGE).stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        long applicationsCount = contactService.getContactsCountForUser(id, filledBy, status);
+        long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status);
         long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
         return Response.ok(new GenericEntity<List<ContactDTO>>(applications) {})
@@ -814,7 +813,7 @@ public class UserController {
 
         if(newStatus != JobOfferStatus.ACCEPTED && newStatus != JobOfferStatus.DECLINED)
             throw new JobOfferStatusException(newStatus, jobOfferId, id);
-        
+
         if (newStatus == JobOfferStatus.ACCEPTED && !contactService.acceptJobOffer(user, jobOffer))
             throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, id);
         else if (newStatus == JobOfferStatus.DECLINED && !contactService.rejectJobOffer(user, jobOffer))

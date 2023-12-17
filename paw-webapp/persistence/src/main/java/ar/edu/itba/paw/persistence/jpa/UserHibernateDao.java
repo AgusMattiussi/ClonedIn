@@ -331,7 +331,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public long getVisibleUsersCount() {
-        Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.visibility = :visible");
+        Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.visibility = 1");
         return (Long) query.getSingleResult();
     }
 }
