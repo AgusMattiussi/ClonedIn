@@ -15,6 +15,7 @@ public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplica
     @Override
     public Response toResponse(WebApplicationException e) {
         ErrorDTO errorDTO = new ErrorDTO(WebApplicationException.class, MESSAGE, e.getMessage());
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorDTO).build();
+        int statusCode = e.getResponse().getStatus();
+        return Response.status(Response.Status.fromStatusCode(statusCode)).entity(errorDTO).build();
     }
 }

@@ -765,13 +765,10 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("jobOfferId") final long jobOfferId){
 
-        User user = us.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
-                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
         long enterpriseId = jobOffer.getEnterpriseID();
-        Enterprise enterprise = enterpriseService.findById(enterpriseId)
-                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 
 
         if(contactService.alreadyContacted(id, jobOfferId)) {
@@ -793,13 +790,11 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response cancelApplication(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
 
-        User user = us.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
-                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
 
         if(!contactService.cancelJobOffer(user, jobOffer))
-            throw new CannotCancelJobOfferException(id, jobOfferId);
+            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, id);
 
         //TODO: EMAIL
         //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
@@ -811,33 +806,21 @@ public class UserController {
     @PUT
     @Path("/{id}/notifications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response updateJobOfferStatus(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId, @QueryParam("newStatus") final String NewStatus) {
+    public Response updateJobOfferStatus(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId,
+                                         @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
 
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if(!optJobOffer.isPresent()){
-            LOGGER.error("Job offer with ID={} not found", jobOfferId);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        if (NewStatus.compareTo("aceptado") == 0) {
-            if(!contactService.acceptJobOffer(optUser.get(), optJobOffer.get()))
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
-            //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
-        }
-        else if (NewStatus.compareTo("rechazado") == 0) {
-            if(!contactService.rejectJobOffer(optUser.get(), optJobOffer.get()))
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
-            //emailService.sendRejectJobOfferEmail(optEnterprise.get(), optUser.get().getName(), optUser.get().getEmail(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
-        }
+        if(newStatus != JobOfferStatus.ACCEPTED && newStatus != JobOfferStatus.DECLINED)
+            throw new JobOfferStatusException(newStatus, jobOfferId, id);
+        
+        if (newStatus == JobOfferStatus.ACCEPTED && !contactService.acceptJobOffer(user, jobOffer))
+            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, id);
+        else if (newStatus == JobOfferStatus.DECLINED && !contactService.rejectJobOffer(user, jobOffer))
+            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, id);
+
         return Response.ok().build();
-
     }
 
 
