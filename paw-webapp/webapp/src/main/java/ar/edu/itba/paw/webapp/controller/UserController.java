@@ -6,9 +6,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.enums.Visibility;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
-import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -762,37 +760,28 @@ public class UserController {
     }
 
     @POST
-    //@Transactional
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     @PreAuthorize(PROFILE_OWNER)
     public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("jobOfferId") final long jobOfferId){
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if(!optJobOffer.isPresent()){
-            LOGGER.error("Job offer with ID={} not found", jobOfferId);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        User user = us.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
+                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        long enterpriseId = jobOffer.getEnterpriseID();
+        Enterprise enterprise = enterpriseService.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 
-        long enterpriseId = optJobOffer.get().getEnterpriseID();
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(enterpriseId);
-        if(!optEnterprise.isPresent()){
-            LOGGER.error("Enterprise with ID={} not found", enterpriseId);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
-        //long userId = optUser.get().getId();
         if(contactService.alreadyContacted(id, jobOfferId)) {
             LOGGER.error("User with ID={} has already applied to job offer with ID={}", id, jobOfferId);
-            return Response.status(Response.Status.CONFLICT).build();
+            throw new AlreadyAppliedException(id, jobOfferId);
         }
 
-        contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.USER);
+        contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
+
+        // TODO: EMAIL
         //emailService.sendApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
