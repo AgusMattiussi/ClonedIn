@@ -853,21 +853,22 @@ public class UserController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperiences(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
-        List<ExperienceDTO> experiences = experienceService.findByUser(optUser.get())
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        List<ExperienceDTO> experiences = experienceService.findByUser(user)
                 .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
 
-        //TODO: Generar links con sentido
-        return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
+        if(experiences.isEmpty())
+            return Response.noContent().build();
+
+        //TODO: Generar links
+        /*return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();*/
+        return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}).build();
     }
 
     @GET
