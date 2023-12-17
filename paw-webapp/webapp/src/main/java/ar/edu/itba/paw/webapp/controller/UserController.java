@@ -792,25 +792,20 @@ public class UserController {
     @Path("/{id}/applications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
     public Response cancelApplication(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if(!optJobOffer.isPresent()){
-            LOGGER.error("Job offer with ID={} not found", jobOfferId);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        User user = us.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
+                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
 
-        if(!contactService.cancelJobOffer(optUser.get(), optJobOffer.get()))
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        if(!contactService.cancelJobOffer(user, jobOffer))
+            throw new CannotCancelJobOfferException(id, jobOfferId);
 
-        //TODO: Otra opcion seria devolver la nueva application (201: CREATED)
+        //TODO: EMAIL
         //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
 
-        return Response.ok(optJobOffer.get()).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
+        return Response.ok(uri).build();
     }
 
     @PUT
