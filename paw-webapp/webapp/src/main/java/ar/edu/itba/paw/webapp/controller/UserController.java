@@ -612,7 +612,10 @@ public class UserController {
 
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
     private static final String ENTERPRISE_OR_EXPERIENCE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId))";
+    private static final String ENTERPRISE_OR_EDUCATION_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId))";
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
+    private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
+    private static final String EDUCATION_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId)";
 
 
     @Autowired
@@ -837,13 +840,13 @@ public class UserController {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<NotificationDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
-                .stream().map(contact -> NotificationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        List<ContactDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
+                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
         long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
         long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {}), page, maxPages).build();
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages).build();
     }
 
     @GET
@@ -902,51 +905,44 @@ public class UserController {
 
     @DELETE
     @Path("/{id}/experiences/{expId}")
-    @PreAuthorize(PROFILE_OWNER)
+    @PreAuthorize(EXPERIENCE_OWNER)
     public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
-        //TODO: Cambiar a boolean?
         experienceService.deleteExperience(expId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @GET
     @Path("/{id}/educations")
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getEducations(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response getEducations(@PathParam("id") final long id,
+                                  @QueryParam("page") @DefaultValue("1") final int page) {
 
-        List<EducationDTO> educations = educationService.findByUser(optUser.get())
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        List<EducationDTO> educations = educationService.findByUser(user)
                 .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
-        //TODO: Generar links con sentido
-        return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
+        //TODO: Generar links
+        /*return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();*/
+        return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}).build();
     }
 
     @GET
-    @Path("/{id}/educations/{educationId}")
+    @Path("/{id}/educations/{edId}")
     @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    @PreAuthorize(ENTERPRISE_OR_EDUCATION_OWNER)
+    public Response getEducationById(@PathParam("id") final long id,
+                                     @PathParam("edId") final long educationId) {
 
-        Optional<EducationDTO> optEducation = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed));
-        if (!optEducation.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optEducation.get()).build();
+        EducationDTO educationDTO = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
+                .orElseThrow(() -> new EducationNotFoundException(educationId));
+
+        return Response.ok(educationDTO).build();
     }
 
     @POST
@@ -968,9 +964,9 @@ public class UserController {
     }
 
     @DELETE
-    @Path("/{id}/educations/{educationId}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+    @Path("/{id}/educations/{edId}")
+    @PreAuthorize(EDUCATION_OWNER)
+    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("edId") final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
     }
