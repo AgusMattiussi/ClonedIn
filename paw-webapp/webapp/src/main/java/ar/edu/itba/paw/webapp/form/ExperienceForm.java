@@ -1,11 +1,17 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class ExperienceForm {
+
+    private static final int MIN_YEAR = 1900;
+    private static final int MAX_YEAR = 2100;
+    private static final int MIN_MONTH = 1;
+    private static final int MAX_MONTH = 12;
+
     @NotEmpty
     @Size(max=50)
     private String company;
@@ -18,18 +24,19 @@ public class ExperienceForm {
     @Size(max=600)
     private String jobDesc;
 
-    @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})")
-    private String yearFrom;
+    @NotNull
+    @Min(MIN_YEAR)
+    @Max(MAX_YEAR)
+    private Integer yearFrom;
 
     @NotEmpty
-    private String monthFrom;
+    private Month monthFrom;
 
-    @Pattern(regexp = "((19|20)([0-9]{2}))?")
-    private String yearTo;
+    @Min(MIN_YEAR)
+    @Max(MAX_YEAR)
+    private Integer yearTo;
 
-    @NotEmpty
-    private String monthTo;
+    private Month monthTo;
 
     public String getCompany() {
         return company;
@@ -55,35 +62,35 @@ public class ExperienceForm {
         this.jobDesc = jobDesc;
     }
 
-    public String getMonthFrom() {
+    public Month getMonthFrom() {
         return monthFrom;
     }
 
-    public void setMonthFrom(String monthFrom) {
+    public void setMonthFrom(Month monthFrom) {
         this.monthFrom = monthFrom;
     }
 
-    public String getMonthTo() {
+    public Month getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(String monthTo) {
+    public void setMonthTo(Month monthTo) {
         this.monthTo = monthTo;
     }
 
-    public String getYearFrom() {
+    public Integer getYearFrom() {
         return yearFrom;
     }
 
-    public void setYearFrom(String yearFrom) {
+    public void setYearFrom(Integer yearFrom) {
         this.yearFrom = yearFrom;
     }
 
-    public String getYearTo() {
+    public Integer getYearTo() {
         return yearTo;
     }
 
-    public void setYearTo(String yearTo) {
+    public void setYearTo(Integer yearTo) {
         this.yearTo = yearTo;
     }
 }
