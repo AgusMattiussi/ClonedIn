@@ -90,9 +90,9 @@ public class JobOfferController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize("hasAuthority('USER')")
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") final int page,
-                                 @QueryParam("category") final String categoryName,
-                                 @QueryParam("minSalary") final BigDecimal minSalary,
-                                 @QueryParam("maxSalary") final BigDecimal maxSalary,
+                                 @QueryParam("categoryName") @DefaultValue("") final String categoryName,
+                                 @QueryParam("minSalary") @DefaultValue("0") final BigDecimal minSalary,
+                                 @QueryParam("maxSalary") @DefaultValue("10000000") final BigDecimal maxSalary,
                                  @QueryParam("modality") @DefaultValue("") final String modality,
                                  @QueryParam("query") @DefaultValue("") final String searchTerm) {
 

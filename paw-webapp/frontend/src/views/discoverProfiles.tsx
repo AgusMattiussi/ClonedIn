@@ -6,13 +6,13 @@ import ProfileUserCard from "../components/cards/profileUserCard"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
+import Loader from "../components/loader"
+import Pagination from "../components/pagination"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import Loader from "../components/loader"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
-import Pagination from "../components/pagination"
 import { HttpStatusCode } from "axios"
 
 function DiscoverProfiles() {
@@ -35,8 +35,6 @@ function DiscoverProfiles() {
   const [minExpYears, setMinExpYears] = useState("")
   const [maxExpYears, setMaxExpYears] = useState("")
 
-  const [queryParams, setQueryParams] = useSearchParams()
-
   document.title = t("Discover Profiles") + " | ClonedIn"
 
   const fetchUsers = async (
@@ -53,6 +51,7 @@ function DiscoverProfiles() {
     if (minExpYears) queryParams.minExpYears = minExpYears
     if (maxExpYears) queryParams.maxExpYears = maxExpYears
 
+    //TODO: revisar por que con esto no anda
     // setQueryParams(queryParams)
 
     const response = await apiRequest({
