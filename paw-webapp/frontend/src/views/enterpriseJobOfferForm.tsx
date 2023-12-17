@@ -5,29 +5,20 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import * as formik from "formik"
 import * as yup from "yup"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 
 function JobOfferForm() {
-  const [categoryList, setCategoryList] = useState([])
-  const [error, setError] = useState(null)
-  const { userInfo } = useSharedAuth()
-
-  /* Cargar lista de rubros */
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/categories")
-      .then((response) => response.json())
-      .then((response) => {
-        setCategoryList(response)
-        setError(null)
-      })
-      .catch(setError)
-  }, [])
-
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
+  const [categoryList, setCategoryList] = useState([])
 
   document.title = t("Job Offer Page Title")
 
@@ -36,6 +27,46 @@ function JobOfferForm() {
   const schema = yup.object().shape({
     position: yup.string().required("Required"),
   })
+  const [category, setCategory] = useState("")
+  const [description, setDescription] = useState("")
+  const [salary, setSalary] = useState("")
+  const [modality, setModality] = useState("")
+  const [skills, setSkills] = useState("")
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiRequest({
+        url: "/categories",
+        method: "GET",
+      })
+      setCategoryList(response.data)
+    }
+
+    if (categoryList.length === 0) {
+      fetchCategories()
+    }
+  }, [apiRequest])
+
+  const handlePost = async (e: any) => {
+    const position = e.position
+    const response = await apiRequest({
+      url: `/enterprises/${id}/jobOffers`,
+      method: "POST",
+      body: {
+        category,
+        position,
+        description,
+        salary,
+        modality,
+        skills,
+      },
+    })
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/profileEnterprise/${id}`)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -76,11 +107,21 @@ function JobOfferForm() {
                               <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicSalary">
-                              <Form.Control className="input" placeholder={t("Salary").toString()} />
+                              <Form.Control
+                               className="input" 
+                               placeholder={t("Salary").toString()} 
+                               value={salary}
+                               onChange={(e) => setSalary(e.target.value)}
+                              />
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <label className="area"> {t("Modality")} </label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <Form.Select
+                               className="selectFrom" 
+                               aria-label="Default select example"
+                               value={modality}
+                               onChange={(e) => setModality(e.target.value)}
+                              >
                                 <option value="Remoto">{t("Home Office")}</option>
                                 <option value="Presencial">{t("On site")}</option>
                                 <option value="Mixto">{t("Mixed")}</option>
@@ -89,7 +130,12 @@ function JobOfferForm() {
                             {/* TODO: agregar HABILIDADES REQUERIDAS CON EL INPUT DE +*/}
                             <div className="d-flex mb-4">
                               <label className="area">{t("Job Category")}</label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <Form.Select
+                               className="selectFrom" 
+                               aria-label="Default select example"
+                               value={category}
+                               onChange={(e) => setCategory(e.target.value)}
+                              >
                                 <option key="1" value="No-Especificado">
                                   {t("No-especificado")}
                                 </option>
@@ -101,7 +147,13 @@ function JobOfferForm() {
                               </Form.Select>
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                              <Form.Control placeholder={t("Description").toString()} as="textarea" rows={3} />
+                              <Form.Control
+                               placeholder={t("Description").toString()} 
+                               as="textarea" 
+                               rows={3}
+                               value={description}
+                               onChange={(e) => setDescription(e.target.value)}
+                              />
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>

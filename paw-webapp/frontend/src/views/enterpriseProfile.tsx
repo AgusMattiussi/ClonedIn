@@ -14,12 +14,15 @@ import { useRequestApi } from "../api/apiRequest"
 import EnterpriseDto from "../utils/EnterpriseDto"
 import { useNavigate, useParams } from "react-router-dom"
 import { BASE_URL } from "../utils/constants"
-import JobOfferDto from "../utils/JobOfferDto"
 
 function ProfileEnterprise() {
   const { loading, apiRequest } = useRequestApi()
+
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
+  const [isEnterpriseLoading, setEnterpriseLoading] = useState(true)
+
   const [jobs, setJobs] = useState<any[]>([])
+  const [jobsLoading, setJobsLoading] = useState(true)
 
   const { t } = useTranslation()
   const { id } = useParams()
@@ -40,6 +43,7 @@ function ProfileEnterprise() {
       }
 
       setEnterprise(response.data)
+      setEnterpriseLoading(false)
     }
 
     const fetchJobs = async () => {
@@ -48,18 +52,24 @@ function ProfileEnterprise() {
         method: "GET",
       })
       setJobs(response.data)
+      setJobsLoading(false)
     }
-
+    if (isEnterpriseLoading === true) {
       fetchEnterprise()
+    }
+    if(jobsLoading === true) {
       fetchJobs()
+    } 
 
   }, [apiRequest, id])
 
-  const enterprisesJobs = jobs.map((job, index) => {
+  const enterprisesJobs = jobs.map((job) => {
     return (
-      <JobOfferEnterpriseCard job={job} key={index}/>
+      <JobOfferEnterpriseCard job={job} key={job.id}/>
     )
   })
+
+  document.title = enterprise?.name + " | ClonedIn"
 
   return (
     <div>
@@ -72,7 +82,7 @@ function ProfileEnterprise() {
           </Col>
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button" href="/jobOffers">
+            <Button variant="success" type="button" href={`/jobOffers/${id}`}>
               <div className="d-flex align-items-center justify-content-center">
                 <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
                 {t("Add Job Offer")}
