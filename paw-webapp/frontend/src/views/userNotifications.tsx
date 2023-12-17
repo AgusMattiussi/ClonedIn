@@ -1,7 +1,6 @@
 import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
-import JobOfferNotificationCard from "../components/cards/jobOfferNotificationCard"
 import Navigation from "../components/navbar"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import UserSortBySelect from "../components/selects/userSortBySelect"
@@ -9,26 +8,63 @@ import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import UserDto from "../utils/UserDto"
+import { useNavigate, useParams } from "react-router-dom"
+import Loader from "../components/loader"
+import JobOfferUserCard from "../components/cards/jobOfferUserCard"
 
 function NotificationsUser() {
-  const [users, setUsers] = useState<any[]>([])
-  const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setUsers(data)
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }, [])
+  const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const [isUserLoading, setUserLoading] = useState(true)
+
+  const [notifications, setNotifications] = useState<any[]>([])
+  const [notificationsLoading, setNotificationsLoading] = useState(true)
 
   const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
 
-  document.title = t("Notifications Page Title")
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}`,
+        method: "GET",
+      })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
+      setUser(response.data)
+      setUserLoading(false)
+    }
+
+    const fetchNotifications = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}/notifications`,
+        method: "GET",
+      })
+      setNotifications(response.data)
+      setNotificationsLoading(false)
+    }
+    if (isUserLoading === true) {
+      fetchUser()
+    }
+    if(notificationsLoading === true) {
+      fetchNotifications()
+    } 
+
+  }, [apiRequest, id])
+
+  const userNotifications = notifications.map((notification, index) => {
+    return (
+      <JobOfferUserCard job={notification} key={index}/>
+    )
+  })
 
   return (
     <div>
@@ -53,20 +89,17 @@ function NotificationsUser() {
                   maxWidth: "98%",
                 }}
               >
-                <JobOfferNotificationCard
-                  enterpriseName="Fake Enterprise"
-                  category="Finance"
-                  position="CEO"
-                  date="18/12/2022"
-                />
-                <JobOfferNotificationCard
-                  enterpriseName="Fake Enterprise"
-                  category="Technology"
-                  position="CTO"
-                  description="Loren Ipsum"
-                  date="9/12/2018"
-                  status="Aceptada"
-                />
+                {notificationsLoading ? (
+                  <div className="my-5">
+                    <Loader />
+                  </div>
+                ) : userNotifications.length === 0 ? (
+                  <div className="my-5 w-100">
+                    <h5>{t("No job offers found")}</h5>
+                  </div>
+                ) : (
+                  userNotifications
+                )}
                 <Pagination />
               </Container>
             </Row>

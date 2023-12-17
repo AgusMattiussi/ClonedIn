@@ -2,35 +2,69 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import JobOfferApplicationsCard from "../components/cards/jobOfferApplicationCard"
 import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
 import UserSortBySelect from "../components/selects/userSortBySelect"
 import Pagination from "../components/pagination"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import UserDto from "../utils/UserDto"
+import { useNavigate, useParams } from "react-router-dom"
+import Loader from "../components/loader"
+import JobOfferUserCard from "../components/cards/jobOfferUserCard"
 
 function ApplicationsUser() {
-  const [users, setUsers] = useState<any[]>([])
-  const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setUsers(data)
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-  }, [])
+  const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const [isUserLoading, setUserLoading] = useState(true)
+
+  const [applications, setApplications] = useState<any[]>([])
+  const [applicationsLoading, setApplicationsLoading] = useState(true)
 
   const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    document.title = t("Applications Page Title")
-  }, [])
+    const fetchUser = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}`,
+        method: "GET",
+      })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
+      setUser(response.data)
+      setUserLoading(false)
+    }
+
+    const fetchAplications = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}/applications`,
+        method: "GET",
+      })
+      setApplications(response.data)
+      setApplicationsLoading(false)
+    }
+    if (isUserLoading === true) {
+      fetchUser()
+    }
+    if(applicationsLoading === true) {
+      fetchAplications()
+    } 
+
+  }, [apiRequest, id])
+
+  const userApplications = applications.map((application, index) => {
+    return (
+      <JobOfferUserCard job={application} key={index}/>
+    )
+  })
 
   return (
     <div>
@@ -55,20 +89,18 @@ function ApplicationsUser() {
                   maxWidth: "98%",
                 }}
               >
-                <JobOfferApplicationsCard
-                  enterpriseName="Fake Enterprise"
-                  category="Finance"
-                  position="CEO"
-                  date="18/12/2022"
-                />
-                <JobOfferApplicationsCard
-                  enterpriseName="Fake Enterprise"
-                  category="Technology"
-                  position="CTO"
-                  description="Loren Ipsum"
-                  date="9/12/2018"
-                  status="Aceptada"
-                />
+                {applicationsLoading ? (
+                  <div className="my-5">
+                    <Loader />
+                  </div>
+                ) : userApplications.length === 0 ? (
+                  <div className="my-5 w-100">
+                    <h5>{t("No job offers found")}</h5>
+                  </div>
+                ) : (
+                  userApplications
+                )}
+                
                 <Pagination />
               </Container>
             </Row>
