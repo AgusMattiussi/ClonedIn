@@ -684,15 +684,34 @@ public class UserController {
             return Response.noContent().build();
         }
 
-        final long userCount = us.getVisibleUsersCount();
+        final long userCount = us.getUsersCountByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
+                                     location, skillDescription);
         long maxPages = userCount/USERS_PER_PAGE + 1;
 
         return Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last")
+                .build();
+        //return okResponseWithLinks(allUsers, page, maxPages);
     }
+
+
+
+    /*private <T> Response okResponseWithLinks(List<T> elements, int currentPage, long maxPages) {
+        Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<T>>(elements) {});
+
+        if(currentPage > 1)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
+        if(currentPage < maxPages)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
+
+        return responseBuilder
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last")
+                .build();
+    }*/
 
 
     @POST
@@ -828,14 +847,15 @@ public class UserController {
     @GET
     @Path("/{id}/notifications")
     @PreAuthorize(PROFILE_OWNER)
-    public Response getNotifications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response getNotifications(@PathParam("id") final long id,
+                                     @QueryParam("page") @DefaultValue("1") final int page,
+                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                     @QueryParam("status") final String status) {
 
-        List<NotificationDTO> notifications = contactService.getContactsForUser(optUser.get(), FilledBy.ENTERPRISE, SortBy.ANY, page-1, PAGE_SIZE)
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+
+        List<NotificationDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
                 .stream().map(contact -> NotificationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {})

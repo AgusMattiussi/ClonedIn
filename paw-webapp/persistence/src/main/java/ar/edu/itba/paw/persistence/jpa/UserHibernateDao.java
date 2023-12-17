@@ -125,11 +125,11 @@ public class UserHibernateDao implements UserDao {
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder,Category category, String location, String educationLevel, String skillDescription){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
-        if(!location.isEmpty())
+        if(location != null && !location.isEmpty())
             queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
-        if(!educationLevel.isEmpty())
+        if(educationLevel != null && !educationLevel.isEmpty())
             queryStringBuilder.append(" AND u.education = :education");
-        if(!skillDescription.isEmpty())
+        if(skillDescription != null && !skillDescription.isEmpty())
             queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
     }
 
@@ -137,13 +137,13 @@ public class UserHibernateDao implements UserDao {
                                              String location, String skillDescription, Integer minExpYears, Integer maxExpYears){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
-        if(!educationLevel.isEmpty())
+        if(educationLevel != null && !educationLevel.isEmpty())
             queryStringBuilder.append(" AND u.education = :education");
-        if(!location.isEmpty())
+        if(location != null && !location.isEmpty())
             queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
-        if(!skillDescription.isEmpty())
+        if(skillDescription != null && !skillDescription.isEmpty())
             queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
-        if(!term.isEmpty()) {
+        if(term != null && !term.isEmpty()) {
             queryStringBuilder.append(" AND (EXISTS (SELECT usk1 FROM UserSkill usk1 JOIN usk1.skill sk1 WHERE usk1.user = u ")
                     .append("AND LOWER(sk1.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')")
                     .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
@@ -164,11 +164,11 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
-        if(!location.isEmpty())
+        if(location != null && !location.isEmpty())
             query.setParameter("location", location);
-        if(!educationLevel.isEmpty())
+        if(educationLevel != null && !educationLevel.isEmpty())
             query.setParameter("education", educationLevel);
-        if(!skillDescription.isEmpty())
+        if(skillDescription != null && !skillDescription.isEmpty())
             query.setParameter("skillDescription", skillDescription);
     }
 
@@ -177,13 +177,13 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
-        if(!educationLevel.isEmpty())
+        if(educationLevel != null && !educationLevel.isEmpty())
             query.setParameter("education", educationLevel);
-        if(!term.isEmpty())
+        if(term != null && !term.isEmpty())
             query.setParameter("term", term);
-        if(!location.isEmpty())
+        if(location != null && !location.isEmpty())
             query.setParameter("location", location);
-        if(!skillDescription.isEmpty())
+        if(skillDescription != null && !skillDescription.isEmpty())
             query.setParameter("skillDescription", skillDescription);
         if(minExpYears != null)
             query.setParameter("minExpYears", Long.valueOf(minExpYears));
