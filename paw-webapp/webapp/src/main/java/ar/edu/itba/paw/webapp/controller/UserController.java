@@ -996,17 +996,15 @@ public class UserController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getSkillById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
 
-        Optional<UserSkillDTO> optSkill = skillService.findById(skillId).map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s));
-        if (!optSkill.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optSkill.get()).build();
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        if(!user.hasSkill(skillId))
+            throw new IllegalArgumentException(String.format("User with ID=%d does not have skill with ID=%d", id, skillId));
+
+        UserSkillDTO skillDTO = skillService.findById(skillId).map(s -> UserSkillDTO.fromSkill(uriInfo, user, s))
+                .orElseThrow(() -> new SkillNotFoundException(skillId));
+
+        return Response.ok(skillDTO).build();
     }
 
     @POST
