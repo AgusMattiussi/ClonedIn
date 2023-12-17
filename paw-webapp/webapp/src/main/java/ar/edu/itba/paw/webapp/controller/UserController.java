@@ -863,7 +863,7 @@ public class UserController {
         if(experiences.isEmpty())
             return Response.noContent().build();
 
-        //TODO: Generar links
+        //TODO: Generar links (paginar)
         /*return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
@@ -923,7 +923,7 @@ public class UserController {
         List<EducationDTO> educations = educationService.findByUser(user)
                 .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
-        //TODO: Generar links
+        //TODO: Generar links (paginar)
         /*return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
@@ -975,22 +975,20 @@ public class UserController {
     @Path("/{id}/skills")
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getSkills(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response getSkills(@PathParam("id") final long id,
+                              @QueryParam("page") @DefaultValue("1") final int page) {
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<UserSkillDTO> skills = userSkillService.getSkillsForUser(optUser.get())
-                .stream().map(s -> UserSkillDTO.fromSkill(uriInfo, optUser.get(), s)).collect(Collectors.toList());
+        List<UserSkillDTO> skills = userSkillService.getSkillsForUser(user)
+                .stream().map(s -> UserSkillDTO.fromSkill(uriInfo, user, s)).collect(Collectors.toList());
 
-        //TODO: Generar links con sentido
-        return Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {})
+        //TODO: Generar links (paginar)
+        /*return Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();*/
+        return Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {}).build();
     }
 
     @GET
