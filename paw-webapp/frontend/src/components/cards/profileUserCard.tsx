@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useRequestApi } from "../../api/apiRequest"
+import { useSharedAuth } from "../../api/auth"
 import CategoryDto from "../../utils/CategoryDto"
 
 function ProfileUserCard({
@@ -22,6 +23,7 @@ function ProfileUserCard({
 }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
 
   const [skillsData, setSkillsData] = useState<any[]>([])
@@ -55,7 +57,6 @@ function ProfileUserCard({
     if (categoryLoading === true) {
       fetchCategory()
     }
-    
   }, [apiRequest])
 
   const userSkillsList = skillsData.map((skill, index) => {
@@ -67,22 +68,22 @@ function ProfileUserCard({
   })
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "10rem" }}>
       <Card.Img variant="top" src={defaultProfile} />
-      {editable ? (
+      {userInfo?.role === "ENTERPRISE" ? (
+        <></>
+      ) : (
         <Button type="button" variant="success" href="/imageProfile">
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}
           </div>
         </Button>
-      ) : (
-        <></>
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
           <h5>{user.name}</h5>
-          {editable ? (
+          {userInfo?.role === "USER" ? (
             <Button
               className="float-end"
               type="button"
