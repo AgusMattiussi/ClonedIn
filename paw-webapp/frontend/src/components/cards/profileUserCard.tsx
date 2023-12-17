@@ -23,8 +23,12 @@ function ProfileUserCard({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
+
   const [skillsData, setSkillsData] = useState<any[]>([])
+  const [skillsLoading, setSkillsLoading] = useState(true)
+
   const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [categoryLoading, setCategoryLoading] = useState(true)
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -33,6 +37,7 @@ function ProfileUserCard({
         method: "GET",
       })
       setSkillsData(response.data)
+      setSkillsLoading(false)
     }
 
     const fetchCategory = async () => {
@@ -41,12 +46,16 @@ function ProfileUserCard({
         method: "GET",
       })
       setUserCategory(response.data)
+      setCategoryLoading(false)
     }
 
-    if (skillsData.length === 0) {
+    if (skillsLoading === true) {
       fetchSkills()
+    }
+    if (categoryLoading === true) {
       fetchCategory()
     }
+    
   }, [apiRequest])
 
   const userSkillsList = skillsData.map((skill, index) => {

@@ -295,7 +295,7 @@ function ProfileUser() {
                   </div>
                 </Card.Title>
                 <hr />
-                {/* View As Enterprise
+                {/* TODO: View As Enterprise
                 <Badge pill bg="success" className="mx-2 p-2">
                   skill1
                 </Badge> */}

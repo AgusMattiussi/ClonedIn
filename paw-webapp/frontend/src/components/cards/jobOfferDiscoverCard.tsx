@@ -11,8 +11,12 @@ import EnterpriseDto from "../../utils/EnterpriseDto"
 function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any }) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
+
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
+  const [enterpriseLoading, setEnterpriseLoading] = useState(true)
+
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [categoryLoading, setCategoryLoading] = useState(true)
 
   useEffect(() => {
     const fetchEnterprise = async () => {
@@ -21,6 +25,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         method: "GET",
       })
       setJobEnterprise(response.data)
+      setEnterpriseLoading(false)
     }
 
     const fetchCategory = async () => {
@@ -29,10 +34,15 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         method: "GET",
       })
       setJobCategory(response.data)
+      setCategoryLoading(false)
+    }
+    if (enterpriseLoading === true) {
+      fetchEnterprise()
+    }
+    if (categoryLoading === true) {
+      fetchCategory()
     }
 
-      fetchEnterprise()
-      fetchCategory()
   }, [apiRequest])
 
   return (
@@ -70,7 +80,9 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills.List}</div>}
+            <Badge pill bg="success" className="mx-2">
+              {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills}</div>}
+            </Badge>
           </div>
         </div>
         {contacted ? (
