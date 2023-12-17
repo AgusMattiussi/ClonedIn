@@ -11,12 +11,12 @@ import { useSharedAuth } from "../api/auth"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
 import { useNavigate } from "react-router-dom"
+import { HttpStatusCode } from "axios"
 
 function DiscoverJobs() {
   const { loading, apiRequest } = useRequestApi()
   const [isLoading, setLoading] = useState(true)
   const [jobs, setJobs] = useState<any[]>([])
-  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,9 +30,13 @@ function DiscoverJobs() {
         navigate("/403")
       }
 
-      setJobs(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setJobs([])
+      } else {
+        setJobs(response.data)
+      }
+
       setLoading(false)
-      setError(null)
     }
     if (isLoading === true) {
       fetchJobs()
@@ -45,9 +49,7 @@ function DiscoverJobs() {
   document.title = t("Discover Jobs") + " | ClonedIn"
 
   const jobsList = jobs.map((job) => {
-    return (
-        <JobOfferDiscoverCard job={job} key={job.id}/>
-    )
+    return <JobOfferDiscoverCard job={job} key={job.id} />
   })
 
   return (
@@ -72,6 +74,10 @@ function DiscoverJobs() {
                 {isLoading ? (
                   <div className="my-5">
                     <Loader />
+                  </div>
+                ) : jobsList.length === 0 ? (
+                  <div className="my-5 w-100">
+                    <h5>{t("No job offers found")}</h5>
                   </div>
                 ) : (
                   jobsList

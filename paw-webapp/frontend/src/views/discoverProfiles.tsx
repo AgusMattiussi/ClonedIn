@@ -11,6 +11,7 @@ import Loader from "../components/loader"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
 import Pagination from "../components/pagination"
+import { HttpStatusCode } from "axios"
 
 function DiscoverProfiles() {
   const { loading, apiRequest } = useRequestApi()
@@ -30,7 +31,12 @@ function DiscoverProfiles() {
         navigate("/403")
       }
 
-      setUsers(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setUsers([])
+      } else {
+        setUsers(response.data)
+      }
+
       setLoading(false)
     }
     if (isLoading === true) {
@@ -82,6 +88,10 @@ function DiscoverProfiles() {
                 {isLoading ? (
                   <div className="my-5">
                     <Loader />
+                  </div>
+                ) : users.length === 0 ? (
+                  <div className="my-5 w-100">
+                    <h5>{t("No users found")}</h5>
                   </div>
                 ) : (
                   usersList

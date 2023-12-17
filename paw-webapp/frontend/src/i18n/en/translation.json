@@ -218,5 +218,7 @@
   "500 Title": "Internal Server Error.",
   "500 Msg": "There was a problem in our server.",
 
-  "Loading": "Loading..."
+  "Loading": "Loading...",
+  "No users found": "No users found",
+  "No job offers found": "No job offers found"
 }

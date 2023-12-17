@@ -220,5 +220,7 @@
   "500 Title": "Error Interno en el Servidor.",
   "500 Msg": "Hubo un problema en nuestro servidor.",
 
-  "Loading": "Cargando..."
+  "Loading": "Cargando...",
+  "No users found": "No se encontraron perfiles",
+  "No job offers found": "No se encontraron ofertas de trabajo"
 }
