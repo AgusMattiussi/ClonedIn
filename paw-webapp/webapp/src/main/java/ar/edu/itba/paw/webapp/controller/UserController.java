@@ -838,13 +838,13 @@ public class UserController {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<NotificationDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
-                .stream().map(contact -> NotificationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        List<ContactDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
+                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
         long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
         long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {}), page, maxPages).build();
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages).build();
     }
 
     @GET
