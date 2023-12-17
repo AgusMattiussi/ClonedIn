@@ -12,6 +12,8 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
 
+  const [skillsData, setSkillsData] = useState<any[]>([])
+
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [enterpriseLoading, setEnterpriseLoading] = useState(true)
 
@@ -25,6 +27,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         method: "GET",
       })
       setJobEnterprise(response.data)
+      setSkillsData(job.skills)
       setEnterpriseLoading(false)
     }
 
@@ -42,8 +45,15 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
     if (categoryLoading === true) {
       fetchCategory()
     }
-
   }, [apiRequest])
+
+  const jobOfferSkillsList = skillsData.map((skill, index) => {
+    return (
+      <Badge key={index} pill bg="success" className="mx-1">
+        {skill}
+      </Badge>
+    )
+  })
 
   return (
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
@@ -80,9 +90,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            <Badge pill bg="success" className="mx-2">
-              {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills}</div>}
-            </Badge>
+            {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
           </div>
         </div>
         {contacted ? (
