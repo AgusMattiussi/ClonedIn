@@ -53,7 +53,7 @@ function DiscoverProfiles() {
     if (minExpYears) queryParams.minExpYears = minExpYears
     if (maxExpYears) queryParams.maxExpYears = maxExpYears
 
-    setQueryParams(queryParams)
+    // setQueryParams(queryParams)
 
     const response = await apiRequest({
       url: "/users",
