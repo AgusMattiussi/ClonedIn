@@ -1060,20 +1060,18 @@ public class UserController {
     @PUT
     @Path("/{id}/visibility")
     @PreAuthorize(PROFILE_OWNER)
-    public Response hideUserProfile(@PathParam("id") final long id) {
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response updateVisibility(@PathParam("id") final long id,
+                                     @QueryParam("visibility") final Visibility visibility) {
 
-        if (optUser.get().getVisibility() == Visibility.VISIBLE.getValue()) {
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        if (visibility == Visibility.INVISIBLE)
             us.hideUserProfile(id);
-        } else {
+        else
             us.showUserProfile(id);
-        }
 
-        return Response.ok().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @PUT
