@@ -612,6 +612,7 @@ public class UserController {
 
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
     private static final String ENTERPRISE_OR_EXPERIENCE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId))";
+    private static final String ENTERPRISE_OR_EDUCATION_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId))";
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
     private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
 
@@ -931,21 +932,16 @@ public class UserController {
     }
 
     @GET
-    @Path("/{id}/educations/{educationId}")
+    @Path("/{id}/educations/{edId}")
     @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    @PreAuthorize(ENTERPRISE_OR_EDUCATION_OWNER)
+    public Response getEducationById(@PathParam("id") final long id,
+                                     @PathParam("edId") final long educationId) {
 
-        Optional<EducationDTO> optEducation = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed));
-        if (!optEducation.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optEducation.get()).build();
+        EducationDTO educationDTO = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
+                .orElseThrow(() -> new EducationNotFoundException(educationId));
+
+        return Response.ok(educationDTO).build();
     }
 
     @POST
@@ -967,9 +963,9 @@ public class UserController {
     }
 
     @DELETE
-    @Path("/{id}/educations/{educationId}")
+    @Path("/{id}/educations/{edId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("educationId") final long educationId) {
+    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("edId") final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
     }

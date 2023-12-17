@@ -73,4 +73,12 @@ public class SecurityValidator {
         User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return user.hasExperience(experienceID);
     }
+
+    public boolean isEducationOwner(long educationID){
+        String email = getAuthEmail();
+        if(email == null)
+            return false;
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        return user.hasEducation(educationID);
+    }
 }
