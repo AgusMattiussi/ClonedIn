@@ -25,10 +25,6 @@ public class EducationHibernateDao implements EducationDao {
 
     @Override
     public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
-        if(!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
-            throw new InvalidParameterException("La fecha" + monthFrom+ "/" + yearFrom +
-                    " - " + monthTo + "/" + yearTo +  " es incorrecta");
-
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);
         return education;
