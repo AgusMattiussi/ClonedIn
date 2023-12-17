@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -1011,22 +1012,14 @@ public class UserController {
     @Path("/{id}/skills")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     @PreAuthorize(PROFILE_OWNER)
-    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm /*, final BindingResult errors*/){
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
+    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm){
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
-        /*if (errors.hasErrors() || userSkillService.alreadyExists(skill, user)) {
-            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
-            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return formSkill(loggedUser, skillForm, userId);
-        }*/
+        if(userSkillService.alreadyExists(skill, user))
+            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", id, skillForm.getSkill()));
 
-        userSkillService.addSkillToUser(skill, optUser.get());
+        userSkillService.addSkillToUser(skill, user);
 
         LOGGER.debug("A new skill was registered under id: {}", skill.getId());
         LOGGER.info("A new skill was registered");
