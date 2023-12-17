@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
@@ -1033,27 +1034,27 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
         userSkillService.deleteSkillFromUser(id, skillId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @PUT
     @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
-        /*if (errors.hasErrors()) {
-            return formEditUser(loggedUser, editUserForm, userId);
-        }*/
+    public Response editUser( @PathParam("id") final long id, @Valid final EditUserForm editUserForm) {
 
-        Optional<Category> optCategory = categoryService.findByName(editUserForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        Category category = null;
+
+        String formCategory = editUserForm.getCategory();
+        if(formCategory != null && !formCategory.isEmpty()) {
+            category = categoryService.findByName(editUserForm.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(editUserForm.getCategory()));
         }
 
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), optCategory.get(), editUserForm.getLevel());
+                editUserForm.getPosition(), category, editUserForm.getLevel());
 
-        return Response.noContent().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @PUT
