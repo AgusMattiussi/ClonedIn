@@ -609,6 +609,7 @@ public class UserController {
     private static final int PAGE_SIZE = 10;
     private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final int APPLICATIONS_PER_PAGE = 3;
+    private static final int NOTIFICATIONS_PER_PAGE = APPLICATIONS_PER_PAGE;
     private static final int USERS_PER_PAGE = 8;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -749,14 +750,14 @@ public class UserController {
     public Response getApplications(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") final int page,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
-                                    @QueryParam("status") final String status) {
+                                    @QueryParam("status") final JobOfferStatus status) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<ContactDTO> applications = contactService.getContactsForUser(user, FilledBy.USER, status, sortBy, page-1,
+        List<ContactDTO> applications = contactService.getContactsForUser(user, FilledBy.USER, status.getStatus(), sortBy, page-1,
                         APPLICATIONS_PER_PAGE).stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status);
+        long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status.getStatus());
         long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
         return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages).build();
@@ -766,7 +767,8 @@ public class UserController {
     @Path("/{id}/applications")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     @PreAuthorize(PROFILE_OWNER)
-    public Response applyToJobOffer(@PathParam("id") final long id, @QueryParam("jobOfferId") final long jobOfferId){
+    public Response applyToJobOffer(@PathParam("id") final long id,
+                                    @QueryParam("jobOfferId") final long jobOfferId){
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
@@ -827,8 +829,6 @@ public class UserController {
     }
 
 
-
-    // TODO: REVISAR METODO Y COMO SERIA AGREGAR EL FILTRO POR STATUS
     @GET
     @Path("/{id}/notifications")
     @PreAuthorize(PROFILE_OWNER)
@@ -839,15 +839,13 @@ public class UserController {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-
         List<NotificationDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
                 .stream().map(contact -> NotificationDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+        long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
+        long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
+
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<NotificationDTO>>(notifications) {}), page, maxPages).build();
     }
 
     @GET
