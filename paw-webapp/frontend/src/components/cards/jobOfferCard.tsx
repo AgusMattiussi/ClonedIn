@@ -3,26 +3,46 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import CardHeader from "react-bootstrap/esm/CardHeader"
 import { useTranslation } from "react-i18next"
-import CancelModal from "../modals/cancelModal"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import EnterpriseDto from "../../utils/EnterpriseDto"
 import CategoryDto from "../../utils/CategoryDto"
+import EnterpriseDto from "../../utils/EnterpriseDto"
 
-function JobOfferEnterpriseCard({ status, contacted, job }: { status: any, contacted: boolean; job: any }) {
+function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
+
+  const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
+  const [enterpriseLoading, setEnterpriseLoading] = useState(true)
+
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [categoryLoading, setCategoryLoading] = useState(true)
 
   useEffect(() => {
+    const fetchEnterprise = async () => {
+      const response = await apiRequest({
+        url: job.enterprise,
+        method: "GET",
+      })
+      setJobEnterprise(response.data)
+      setEnterpriseLoading(false)
+    }
+
     const fetchCategory = async () => {
       const response = await apiRequest({
         url: job.category,
         method: "GET",
       })
       setJobCategory(response.data)
+      setCategoryLoading(false)
     }
+    if (enterpriseLoading === true) {
+      fetchEnterprise()
+    }
+    if (categoryLoading === true) {
       fetchCategory()
+    }
+
   }, [apiRequest])
 
   return (
@@ -31,9 +51,10 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any, conta
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-          <a href={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
-              {job.position}
+            <a href={`/profileEnterprise/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
+              {jobEnterprise?.name}{" "}
             </a>
+            | {job.position}
           </h5>
         </div>
         <span>
@@ -53,43 +74,42 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any, conta
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>
           <p>
-            {job.salary === "No especificado" ? "" : "$"}
+            {job.salary === "No-Especificado" ? "" : "$"}
             {job.salary}
           </p>
         </div>
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skillsList}</div>}
+            <Badge pill bg="success" className="mx-2">
+              {/* {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills}</div>} */}
+            </Badge>
           </div>
         </div>
+        {contacted ? (
+          <div className="d-flex flex-column">
+            <h5>
+              <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
+            </h5>
+          </div>
+        ) : (
+          <div className="d-flex flex-column"></div>
+        )}
       </div>
       <div className="d-flex justify-content-between px-3">
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {status === "closed" ? (
-          <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
-            {t("Closed")}
-          </Badge>
-        ) : (
-          <div>
-            <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#cancelModal">
-              {t("Close Job Offer")}
-            </Button>
-            <CancelModal
-              title={t("Modal Title")}
-              msg={t("Close JobOffer Modal Msg")}
-              cancel={t("Cancel")}
-              confirm={t("Confirm")}
-            />
-          </div>
-        )}
+        <div>
+          <Button variant="outline-dark" href={`/jobOffer/${job.id}`}>
+            {t("View More")}
+          </Button>
+        </div>
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
         <div>
           <p style={{ textAlign: "left", wordBreak: "break-all" }}>
-            {job.description.length > 200 ? job.description.substring(0, 200) + "..." : job.description}
+            {job.description}
           </p>
         </div>
       </div>
@@ -97,9 +117,8 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any, conta
   )
 }
 
-JobOfferEnterpriseCard.defaultProps = {
+JobOfferCard.defaultProps = {
   contacted: false,
-  status: "closed",
 }
 
-export default JobOfferEnterpriseCard
+export default JobOfferCard

@@ -2,7 +2,7 @@
   "Welcome to ClonedIN!": "Bienvenidos a ClonedIn!",
   "Email": "Email",
   "Password": "Contraseña",
-  "Remember Me": "recuerdame",
+  "Remember me": "recuerdame",
   "Log In": "Iniciar sesión",
   "No account yet?": "¿Aún no tenes cuenta? Elegí tu tipo de usuario para registrarte",
   "Register as a User": "Registrarse como usuario",
@@ -220,5 +220,7 @@
   "500 Title": "Error Interno en el Servidor.",
   "500 Msg": "Hubo un problema en nuestro servidor.",
 
-  "Loading": "Cargando..."
+  "Loading": "Cargando...",
+  "No users found": "No se encontraron perfiles",
+  "No job offers found": "No se encontraron ofertas de trabajo"
 }

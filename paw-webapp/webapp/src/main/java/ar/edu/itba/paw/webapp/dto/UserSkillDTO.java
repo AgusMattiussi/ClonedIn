@@ -13,11 +13,13 @@ public class UserSkillDTO {
 
     private URI user;
     private String description;
+    private Long id;
 
 
     public static UserSkillDTO fromSkill(final UriInfo uriInfo, final User user, final Skill skill) {
         final UserSkillDTO dto = new UserSkillDTO();
         dto.description = skill.getDescription();
+        dto.id = skill.getId();
 
         final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
                 .replacePath(USER_URL)
@@ -41,5 +43,13 @@ public class UserSkillDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

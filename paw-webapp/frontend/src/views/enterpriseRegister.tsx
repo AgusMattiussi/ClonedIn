@@ -219,7 +219,7 @@ function RegisterEnterprise() {
                             <Form.Group className="mb-3" controlId="formBasicYear">
                               <Form.Control
                                 className="input"
-                                placeholder={t("Founding Year").toString()}
+                                placeholder={t("Funding Year").toString()}
                                 value={year}
                                 onChange={(e) => setYear(e.target.value)}
                               />

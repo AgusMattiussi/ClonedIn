@@ -4,21 +4,21 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import ProfileUserCard from "../components/cards/profileUserCard"
 import FilterProfilesSideBar from "../components/sidebars/filterProfilesSideBar"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import Loader from "../components/loader"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
-
-// import Pagination from "../components/pagination"
+import Pagination from "../components/pagination"
+import { HttpStatusCode } from "axios"
 
 function DiscoverProfiles() {
   const { loading, apiRequest } = useRequestApi()
   const [isLoading, setLoading] = useState(true)
   const [users, setUsers] = useState<any[]>([])
-  const [error, setError] = useState(null)
   const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,18 +26,31 @@ function DiscoverProfiles() {
         url: "/users",
         method: "GET",
       })
-      setUsers(response.data)
-      setLoading(false)
-      setError(null)
-    }
 
-    fetchUsers()
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
+      if (response.status === HttpStatusCode.NoContent) {
+        setUsers([])
+      } else {
+        setUsers(response.data)
+      }
+
+      setLoading(false)
+    }
+    if (isLoading === true) {
+      fetchUsers()
+    }
   }, [apiRequest])
 
   const { t } = useTranslation()
 
   document.title = t("Discover Profiles") + " | ClonedIn"
 
+  //TODO: problema con el map
+  //TODO: ordenamiento
+  //TODO: filtros
   const usersList = users.map((user) => {
     return (
       <Link to={`/profileUser/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
@@ -76,10 +89,14 @@ function DiscoverProfiles() {
                   <div className="my-5">
                     <Loader />
                   </div>
+                ) : users.length === 0 ? (
+                  <div className="my-5 w-100">
+                    <h5>{t("No users found")}</h5>
+                  </div>
                 ) : (
                   usersList
                 )}
-                {/* <Pagination /> */}
+                <Pagination />
               </Container>
             </Row>
           </Col>

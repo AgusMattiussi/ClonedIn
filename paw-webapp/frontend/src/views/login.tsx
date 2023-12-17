@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button"
 import * as Icon from "react-bootstrap-icons"
 import Header from "../components/header"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
@@ -89,7 +89,7 @@ function Login() {
                           </Button>
                         </Form.Group>
                         <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label={t("Remember Me").toString()} />
+                          <Form.Check type="checkbox" label={t("Remember me").toString()} />
                         </Form.Group>
                       </div>
                       <Button variant="success" type="submit">

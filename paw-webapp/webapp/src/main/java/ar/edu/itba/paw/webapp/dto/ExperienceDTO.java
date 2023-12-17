@@ -19,6 +19,7 @@ public class ExperienceDTO {
     private String position;
     private String enterpriseName;
     private String description;
+    private Long id;
     
     public static ExperienceDTO fromExperience(final UriInfo uriInfo, final Experience experience) {
         final ExperienceDTO dto = new ExperienceDTO();
@@ -29,6 +30,7 @@ public class ExperienceDTO {
         dto.position = experience.getPosition();
         dto.enterpriseName = experience.getEnterpriseName();
         dto.description = experience.getDescription();
+        dto.id = experience.getId();
 
         final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
                 .replacePath(USERS_URL)
@@ -100,5 +102,13 @@ public class ExperienceDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        	return id;
+    }
+
+    public void setId(Long id) {
+        	this.id = id;
     }
 }

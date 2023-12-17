@@ -3,28 +3,28 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
+import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
+import { useEffect, useState } from "react"
+import CategoryDto from "../../utils/CategoryDto"
 
-function ProfileEnterpriseCard({
-  name,
-  category,
-  location,
-  employees,
-  foundationYear,
-  website,
-  aboutUs,
-  editable,
-}: {
-  name: string
-  category: string
-  location: string
-  employees: string
-  foundationYear: string
-  website: string
-  aboutUs: string
-  editable: boolean
-}) {
+function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; enterprise: any }) {
   const { t } = useTranslation()
+  const { loading, apiRequest } = useRequestApi()
+  const [enterpriseCategory, setEnterpriseCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const response = await apiRequest({
+        url: enterprise.category,
+        method: "GET",
+      })
+      setEnterpriseCategory(response.data)
+    }
+    
+    if (enterpriseCategory === null) {
+      fetchCategory()
+    }
+  }, [apiRequest])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
@@ -41,13 +41,13 @@ function ProfileEnterpriseCard({
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
-          <h5>{name}</h5>
+          <h5>{enterprise.name}</h5>
           {editable ? (
             <Button
               className="float-end"
               type="button"
               variant="outline-success"
-              href="/editEnterprise"
+              href={`/editEnterprise/${enterprise.id}`}
               style={{ paddingBottom: "10px" }}
             >
               <Icon.PencilSquare color="green" size={15} />
@@ -61,42 +61,42 @@ function ProfileEnterpriseCard({
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
-              {category !== "No especificado" ? (
+              {enterprise.category !== "No-Especificado" ? (
                 <div>
                   {t("Job Category")}:
                   <Badge pill bg="success" className="mx-2">
-                    {category}
+                  {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
                   </Badge>
                 </div>
               ) : (
                 <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Job Category")}: {category}
+                  {t("Job Category")}: {t("No-especificado")}
                 </p>
               )}
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Quantity of employees")}: {employees}
+                {t("Quantity of employees")}: {enterprise.workers}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.CalendarEvent color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Funding Year")}: {foundationYear}
+                {t("Funding Year")}: {enterprise.year}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.Globe color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Website")}: {website}
+                {t("Website")}: {enterprise.link}
               </p>
             </div>
             <div className="d-flex flex-column align-items-start my-2">
               <p className="fw-bold" style={{ marginBottom: "2px" }}>
                 {t("About Us")}
               </p>
-              <p> {aboutUs}</p>
+              <p> {enterprise.description}</p>
             </div>
           </div>
         </Card.Text>
@@ -105,15 +105,7 @@ function ProfileEnterpriseCard({
   )
 }
 
-//TODO: ver traduccion de valores por default
 ProfileEnterpriseCard.defaultProps = {
-  name: "Enterprise",
-  category: "No especificado",
-  employees: "No especificado",
-  foundationYear: "No especificado",
-  location: "No especificado",
-  website: "No especificado",
-  aboutUs: "No especificado",
   editable: false,
 }
 

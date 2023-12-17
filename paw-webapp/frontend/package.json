@@ -58,5 +58,10 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.6",
     "@types/react-router-dom": "^5.3.3"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }
