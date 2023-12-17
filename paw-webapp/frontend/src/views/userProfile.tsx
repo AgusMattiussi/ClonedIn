@@ -44,10 +44,9 @@ function ProfileUser() {
         method: "GET",
       })
 
-      if (response.status === 500) {
+      if (response.status === 500 || response.status === 403) {
         navigate("/403")
       }
-
       setUser(response.data)
       setUserLoading(false)
     }
@@ -57,6 +56,9 @@ function ProfileUser() {
         url: `/users/${id}/skills`,
         method: "GET",
       })
+      if (response.status === 403) {
+        navigate("/403")
+      }
       setSkillsData(response.data)
       setSkillsLoading(false)
     }
@@ -66,6 +68,9 @@ function ProfileUser() {
         url: `/users/${id}/educations`,
         method: "GET",
       })
+      if (response.status === 403) {
+        navigate("/403")
+      }
       setEducationsData(response.data)
       setEducationsLoading(false)
     }
@@ -75,6 +80,9 @@ function ProfileUser() {
         url: `/users/${id}/experiences`,
         method: "GET",
       })
+      if (response.status === 403) {
+        navigate("/403")
+      }
       setExperiencesData(response.data)
       setExperiencesLoading(false)
     }
@@ -138,17 +146,25 @@ function ProfileUser() {
 
   const userSkillsList = skillsData.map((skill) => {
     return (
-      <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
-        {skill.description}
-        <Button
-          type="button"
-          variant="outline-dark"
-          style={{ borderStyle: "none" }}
-          onClick={() => handleDelete("skill", skill.id)}
-        >
-          <Icon.X />
-        </Button>
-      </Badge>
+      <>
+        {userInfo?.role === "ENTERPRISE" ? (
+          <Badge pill bg="success" text="light" className="mx-2 p-2" key={skill.id}>
+            {skill.description}
+          </Badge>
+        ) : (
+          <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
+            {skill.description}
+            <Button
+              type="button"
+              variant="outline-dark"
+              style={{ borderStyle: "none" }}
+              onClick={() => handleDelete("skill", skill.id)}
+            >
+              <Icon.X />
+            </Button>
+          </Badge>
+        )}
+      </>
     )
   })
 
@@ -159,9 +175,13 @@ function ProfileUser() {
           <h6>
             {education.institutionName} - {education.title}
           </h6>
-          <Button type="button" variant="outline-danger" onClick={() => handleDelete("education", education.id)}>
-            <Icon.Trash />
-          </Button>
+          {userInfo?.role === "ENTERPRISE" ? (
+            <></>
+          ) : (
+            <Button type="button" variant="outline-danger" onClick={() => handleDelete("education", education.id)}>
+              <Icon.Trash />
+            </Button>
+          )}
         </div>
         <p style={{ fontSize: "10pt" }}>
           {/* TODO: agregar condicionales si no especifico fecha */}
@@ -182,9 +202,13 @@ function ProfileUser() {
           <h6>
             {experience.enterpriseName} - {experience.position}
           </h6>
-          <Button type="button" variant="outline-danger" onClick={() => handleDelete("experience", experience.id)}>
-            <Icon.Trash />
-          </Button>
+          {userInfo?.role === "ENTERPRISE" ? (
+            <></>
+          ) : (
+            <Button type="button" variant="outline-danger" onClick={() => handleDelete("experience", experience.id)}>
+              <Icon.Trash />
+            </Button>
+          )}
         </div>
         <p style={{ fontSize: "10pt" }}>
           {/* TODO: agregar condicionales si no especifico fecha */}
@@ -207,9 +231,13 @@ function ProfileUser() {
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button" onClick={() => handleVisibility()}>
-              {user?.visibility === 1 ? t("Hide My Profile") : t("Show My Profile")}
-            </Button>
+            {userInfo?.role === "ENTERPRISE" ? (
+              <></>
+            ) : (
+              <Button variant="success" type="button" onClick={() => handleVisibility()}>
+                {user?.visibility === 1 ? t("Hide My Profile") : t("Show My Profile")}
+              </Button>
+            )}
             {isUserLoading ? (
               <div className="my-5">
                 <Loader />
@@ -243,15 +271,19 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Experience")}</strong>
-                    <Button
-                      type="button"
-                      variant="success"
-                      onClick={() => navigate(`/experiences/${id}`)}
-                      style={{ width: "200px" }}
-                    >
-                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
-                      {t("Add Experience")}
-                    </Button>
+                    {userInfo?.role === "ENTERPRISE" ? (
+                      <></>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="success"
+                        onClick={() => navigate(`/experiences/${id}`)}
+                        style={{ width: "200px" }}
+                      >
+                        <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                        {t("Add Experience")}
+                      </Button>
+                    )}
                   </div>
                 </Card.Title>
                 <hr />
@@ -268,15 +300,19 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Education Level")}</strong>
-                    <Button
-                      type="button"
-                      variant="success"
-                      onClick={() => navigate(`/educations/${id}`)}
-                      style={{ width: "200px" }}
-                    >
-                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
-                      {t("Add Education")}
-                    </Button>
+                    {userInfo?.role === "ENTERPRISE" ? (
+                      <></>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="success"
+                        onClick={() => navigate(`/educations/${id}`)}
+                        style={{ width: "200px" }}
+                      >
+                        <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                        {t("Add Education")}
+                      </Button>
+                    )}
                   </div>
                 </Card.Title>
                 <hr />
@@ -293,15 +329,19 @@ function ProfileUser() {
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
                     <strong>{t("Skills")}</strong>
-                    <Button
-                      type="button"
-                      variant="success"
-                      onClick={() => navigate(`/skills/${id}`)}
-                      style={{ width: "200px" }}
-                    >
-                      <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
-                      {t("Add Skill")}
-                    </Button>
+                    {userInfo?.role === "ENTERPRISE" ? (
+                      <></>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="success"
+                        onClick={() => navigate(`/skills/${id}`)}
+                        style={{ width: "200px" }}
+                      >
+                        <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
+                        {t("Add Skill")}
+                      </Button>
+                    )}
                   </div>
                 </Card.Title>
                 <hr />

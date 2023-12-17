@@ -682,8 +682,8 @@ public class UserController {
                               @QueryParam("categoryName") @DefaultValue("") final String categoryName,
                               @QueryParam("educationLevel") @DefaultValue("") final String educationLevel,
                               @QueryParam("searchTerm") @DefaultValue("") final String searchTerm,
-                              @QueryParam("minExpYears") final int minExpYears,
-                              @QueryParam("maxExpYears") final int maxExpYears,
+                              @QueryParam("minExpYears") @DefaultValue("0") final int minExpYears,
+                              @QueryParam("maxExpYears") @DefaultValue("100") final int maxExpYears,
                               @QueryParam("location") @DefaultValue("") final String location,
                               @QueryParam("skillDescription") @DefaultValue("") final String skillDescription) {
 
