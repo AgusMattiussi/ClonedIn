@@ -5,34 +5,20 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import * as formik from "formik"
 import * as yup from "yup"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 
 function EditEnterpriseForm() {
-  const [categoryList, setCategoryList] = useState([])
-  const [error, setError] = useState(null)
-  const { userInfo } = useSharedAuth()
-
-  /* Cargar lista de rubros */
-  useEffect(() => {
-    fetch("http://localhost:8080/webapp_war/categories")
-      .then((response) => response.json())
-      .then((response) => {
-        setCategoryList(response)
-        setError(null)
-      })
-      .catch(setError)
-  }, [])
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    navigate("/profiles")
-  }
-
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const [categoryList, setCategoryList] = useState([])
+  const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
 
   document.title = t("Edit Page Title")
 
@@ -41,6 +27,49 @@ function EditEnterpriseForm() {
   const schema = yup.object().shape({
     name: yup.string().required("Required"),
   })
+  const [location, setLocation] = useState("")
+  const [workers, setWorkers] = useState("")
+  const [category, setCategory] = useState("")
+  const [link, setLink] = useState("")
+  const [year, setYear] = useState("")
+  const [description, setDescription] = useState("")
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiRequest({
+        url: "/categories",
+        method: "GET",
+      })
+      setCategoryList(response.data)
+    }
+
+    if (categoryList.length === 0) {
+      fetchCategories()
+    }
+  }, [apiRequest])
+
+  const handlePost = async (e: any) => {
+    const name = e.name
+    const response = await apiRequest({
+      url: `/enterprises/${id}`,
+      method: "PUT",
+      body: {
+        name,
+        location,
+        category,
+        workers,
+        year,
+        link,
+        description,        
+      },
+    })
+    console.log(response)
+    if (response.status === HttpStatusCode.NoContent) {
+      navigate(`/profileEnterprise/${id}`)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -62,7 +91,7 @@ function EditEnterpriseForm() {
                         name: "",
                       }}
                       onSubmit={(values) => {
-                        console.log(values)
+                        handlePost(values)
                       }}
                     >
                       {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -81,11 +110,25 @@ function EditEnterpriseForm() {
                               <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
-                              <Form.Control className="input" placeholder={t("Location").toString()} />
+                              <Form.Control
+                                className="input" 
+                                placeholder={t("Location").toString()} 
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                              />
                             </Form.Group>
                             <div className="d-flex mb-4">
-                              <label className="area">{t("Quantity of employees")}</label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <label className="area" 
+                                style={{
+                                  width: "100px",
+                                }}
+                                >{t("Quantity of employees")}</label>
+                              <Form.Select 
+                                className="selectFrom" 
+                                aria-label="Default select example"
+                                value={workers}
+                                onChange={(e) => setWorkers(e.target.value)}
+                              >
                                 <option value="No-especificado">{t("No-especificado")}</option>
                                 <option value="1-10">1-10</option>
                                 <option value="11-50">11-50</option>
@@ -99,8 +142,17 @@ function EditEnterpriseForm() {
                               </Form.Select>
                             </div>
                             <div className="d-flex mb-4">
-                              <label className="area">{t("Job Category")}</label>
-                              <Form.Select className="selectFrom" aria-label="Default select example">
+                              <label className="area"
+                                style={{
+                                  width: "100px",
+                                }}
+                              >{t("Job Category")}</label>
+                              <Form.Select
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                              >
                                 <option key="1" value="No-Especificado">
                                   {t("No-especificado")}
                                 </option>
@@ -112,13 +164,29 @@ function EditEnterpriseForm() {
                               </Form.Select>
                             </div>
                             <Form.Group className="mb-3" controlId="formBasicYear">
-                              <Form.Control className="input" placeholder={t("Funding Year").toString()} />
+                              <Form.Control
+                               className="input"
+                               placeholder={t("Funding Year").toString()}
+                               value={year}
+                               onChange={(e) => setYear(e.target.value)}
+                              />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
-                              <Form.Control className="input" placeholder={t("Website").toString()} />
+                              <Form.Control
+                               className="input" 
+                               placeholder={t("Website").toString()}
+                               value={link}
+                               onChange={(e) => setLink(e.target.value)}
+                              />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                              <Form.Control placeholder={t("About Us").toString()} as="textarea" rows={3} />
+                              <Form.Control
+                               placeholder={t("About Us").toString()} 
+                               as="textarea" 
+                               rows={3} 
+                               value={description}
+                               onChange={(e) => setDescription(e.target.value)}
+                              />
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>

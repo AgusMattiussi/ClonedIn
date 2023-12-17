@@ -33,7 +33,6 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {/*TODO: cada link tine que ser unico => agregar el id de cada usuario al path*/}
           <Route path="/login" element={<Login />} />
           <Route path="/registerUser" element={<RegisterUser />} />
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
@@ -48,7 +47,7 @@ function App() {
           <Route path="/contactsEnterprise/:id" element={<ContactsEnterprise />} />
           <Route path="/interestedEnterprise/:id" element={<InterestedEnterprise />} />
           <Route path="/contact/:id" element={<ContactForm />} />
-          <Route path="/jobOffers" element={<JobOfferForm />} />
+          <Route path="/jobOffers/:id" element={<JobOfferForm />} />
 
           <Route path="/jobOffer/:id" element={<JobOffer />} />
 
