@@ -11,9 +11,12 @@ import EnterpriseDto from "../../utils/EnterpriseDto"
 function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
+
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
-  const [skillsData, setSkillsData] = useState<any[]>([])
+  const [enterpriseLoading, setEnterpriseLoading] = useState(true)
+
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [categoryLoading, setCategoryLoading] = useState(true)
 
   useEffect(() => {
     const fetchEnterprise = async () => {
@@ -22,10 +25,7 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
         method: "GET",
       })
       setJobEnterprise(response.data)
-    }
-
-    const fetchSkills = async () => {
-      setSkillsData(job.skills)
+      setEnterpriseLoading(false)
     }
 
     const fetchCategory = async () => {
@@ -34,22 +34,16 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
         method: "GET",
       })
       setJobCategory(response.data)
+      setCategoryLoading(false)
     }
-
-    if (skillsData.length === 0) {
+    if (enterpriseLoading === true) {
       fetchEnterprise()
-      fetchSkills()
+    }
+    if (categoryLoading === true) {
       fetchCategory()
     }
-  }, [apiRequest])
 
-  // const jobSkillsList = job.skills.map((skill:string) => {
-  //   return (
-  //     <Badge pill bg="success" className="mx-2">
-  //       {skill}
-  //     </Badge>
-  //   )
-  // })
+  }, [apiRequest])
 
   return (
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
@@ -87,7 +81,9 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            {/* {jobSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobSkillsList}</div>} */}
+            <Badge pill bg="success" className="mx-2">
+              {/* {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills}</div>} */}
+            </Badge>
           </div>
         </div>
         {contacted ? (

@@ -10,12 +10,14 @@ import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
+import { useNavigate } from "react-router-dom"
 
 function DiscoverJobs() {
   const { loading, apiRequest } = useRequestApi()
   const [isLoading, setLoading] = useState(true)
   const [jobs, setJobs] = useState<any[]>([])
   const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -23,12 +25,18 @@ function DiscoverJobs() {
         url: "/jobOffers",
         method: "GET",
       })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
       setJobs(response.data)
       setLoading(false)
       setError(null)
     }
-
-    fetchJobs()
+    if (isLoading === true) {
+      fetchJobs()
+    }
   }, [apiRequest])
 
   const { t } = useTranslation()
@@ -38,7 +46,7 @@ function DiscoverJobs() {
 
   const jobsList = jobs.map((job) => {
     return (
-        <JobOfferDiscoverCard job={job} />
+        <JobOfferDiscoverCard job={job} key={job.id}/>
     )
   })
 

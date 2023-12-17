@@ -89,7 +89,7 @@ function Login() {
                           </Button>
                         </Form.Group>
                         <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label={t("Remember Me").toString()} />
+                          <Form.Check type="checkbox" label={t("Remember me").toString()} />
                         </Form.Group>
                       </div>
                       <Button variant="success" type="submit">
