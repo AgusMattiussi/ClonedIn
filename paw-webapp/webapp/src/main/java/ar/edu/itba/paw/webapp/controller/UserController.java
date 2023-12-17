@@ -28,6 +28,7 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1077,15 +1078,18 @@ public class UserController {
     @PUT
     @Path("/{id}/image")
     @PreAuthorize(PROFILE_OWNER)
-    public Response uploadImage(@PathParam("id") final long id, @Valid final ImageForm imageForm /* , final BindingResult errors */) throws IOException {
-        /*if (errors.hasErrors()) {
-            return formImage(loggedUser, imageForm, userId);
-        }*/
+    public Response uploadImage(@PathParam("id") final long id,
+                                @Valid final ImageForm imageForm) {
 
-        Image image = imageService.uploadImage(imageForm.getImage().getBytes());
-        us.updateProfileImage(id, image);
+        try {
+            Image image = imageService.uploadImage(imageForm.getImage().getBytes());
+            us.updateProfileImage(id, image);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid image");
+        }
 
-        return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @GET
