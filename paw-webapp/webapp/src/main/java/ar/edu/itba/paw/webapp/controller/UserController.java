@@ -614,6 +614,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
+    private static final String ENTERPRISE_OR_EXPERIENCE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or (@securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId))";
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
 
 
@@ -874,19 +875,13 @@ public class UserController {
     @GET
     @Path("/{id}/experiences/{expId}")
     @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
     public Response getExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
 
-        Optional<ExperienceDTO> optExperience = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp));
-        if (!optExperience.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optExperience.get()).build();
+        ExperienceDTO experienceDTO = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp))
+                .orElseThrow(() -> new ExperienceNotFoundException(expId));
+
+        return Response.ok(experienceDTO).build();
     }
 
     @POST
