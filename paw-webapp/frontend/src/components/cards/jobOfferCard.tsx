@@ -24,13 +24,9 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
       setJobEnterprise(response.data)
     }
 
-    // const fetchSkills = async () => {
-    //   const response = await apiRequest({
-    //     url: job.skills,
-    //     method: "GET",
-    //   })
-    //   setSkillsData(response.data)
-    // }
+    const fetchSkills = async () => {
+      setSkillsData(job.skills)
+    }
 
     const fetchCategory = async () => {
       const response = await apiRequest({
@@ -40,17 +36,17 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
       setJobCategory(response.data)
     }
 
-    //if (skillsData.length === 0) {
+    if (skillsData.length === 0) {
       fetchEnterprise()
-      //fetchSkills()
+      fetchSkills()
       fetchCategory()
-    //}
+    }
   }, [apiRequest])
 
-  // const jobSkillsList = skillsData.map((skill) => {
+  // const jobSkillsList = job.skills.map((skill:string) => {
   //   return (
   //     <Badge pill bg="success" className="mx-2">
-  //       {skill.description}
+  //       {skill}
   //     </Badge>
   //   )
   // })
@@ -91,7 +87,7 @@ function JobOfferCard({ contacted, job }: { contacted: boolean; job: any }) {
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            {/*{jobSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobSkillsList}</div>}*/}
+            {/* {jobSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobSkillsList}</div>} */}
           </div>
         </div>
         {contacted ? (

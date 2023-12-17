@@ -8,16 +8,58 @@ import JobOfferEnterpriseCard from "../components/cards/jobOfferEnterpriseCard"
 import Navigation from "../components/navbar"
 import Pagination from "../components/pagination"
 import { useTranslation } from "react-i18next"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-function ProfileEnterprise() {
-  const { userInfo } = useSharedAuth()
+import { useRequestApi } from "../api/apiRequest"
+import EnterpriseDto from "../utils/EnterpriseDto"
+import { useNavigate, useParams } from "react-router-dom"
+import { BASE_URL } from "../utils/constants"
+import JobOfferDto from "../utils/JobOfferDto"
 
-  useEffect(() => {
-    document.title = "EnterpriseName | ClonedIn" // TODO: Add enterprise name
-  }, [])
+function ProfileEnterprise() {
+  const { loading, apiRequest } = useRequestApi()
+  const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
+  const [jobs, setJobs] = useState<any[]>([])
 
   const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+  const navigate = useNavigate()
+
+  const API_URL = BASE_URL + `/enterprises/${id}/`
+
+  useEffect(() => {
+    const fetchEnterprise = async () => {
+      const response = await apiRequest({
+        url: `/enterprises/${id}/`,
+        method: "GET",
+      })
+
+      if (response.status === 500) {
+        navigate("/403")
+      }
+
+      setEnterprise(response.data)
+    }
+
+    const fetchJobs = async () => {
+      const response = await apiRequest({
+        url: API_URL + "jobOffers",
+        method: "GET",
+      })
+      setJobs(response.data)
+    }
+
+      fetchEnterprise()
+      fetchJobs()
+
+  }, [apiRequest, id])
+
+  const enterprisesJobs = jobs.map((job, index) => {
+    return (
+      <JobOfferEnterpriseCard job={job} key={index}/>
+    )
+  })
 
   return (
     <div>
@@ -26,7 +68,7 @@ function ProfileEnterprise() {
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
             <br />
-            <ProfileEnterpriseCard editable={true} />
+            <ProfileEnterpriseCard enterprise={enterprise} editable={true}/>
           </Col>
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />
@@ -37,9 +79,11 @@ function ProfileEnterprise() {
               </div>
             </Button>
             <br />
-
-            <JobOfferEnterpriseCard category="Finance" position="CEO" salary="100000" />
-            <JobOfferEnterpriseCard category="Technology" position="CTO" description="Loren ipsum" status="closed" />
+              {enterprisesJobs.length > 0 ? (
+                  <div>{enterprisesJobs}</div>
+                ) : (
+                  <div style={{ fontWeight: "bold" }}>{"There are no job Offers"}</div>
+                )}
             <Pagination />
           </Col>
         </Row>
