@@ -38,7 +38,7 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        Long userID = userService.getIdForEmail(email).orElseThrow(UserNotFoundException::new);
+        Long userID = userService.getIdForEmail(email).orElseThrow(() -> new UserNotFoundException(profileID));
         return isProfileOwner(userID, profileID);
     }
 
@@ -46,12 +46,12 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        Long enterpriseID = enterpriseService.getIdForEmail(email).orElseThrow(UserNotFoundException::new);
+        Long enterpriseID = enterpriseService.getIdForEmail(email).orElseThrow(() -> new UserNotFoundException(profileID));
         return isProfileOwner(enterpriseID, profileID);
     }
 
     public boolean isUserVisible(long userID){
-        User user = userService.findById(userID).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         if(user.getVisibility() != Visibility.VISIBLE.getValue())
             throw new HiddenProfileException();
         return true;
@@ -61,7 +61,7 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(jobOfferId));
         return enterprise.isJobOfferOwner(jobOfferId);
     }
 
@@ -69,7 +69,7 @@ public class SecurityValidator {
         String email = getAuthEmail();
         if(email == null)
             return false;
-        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(experienceID));
         return user.hasExperience(experienceID);
     }
 }

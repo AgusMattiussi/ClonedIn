@@ -62,10 +62,10 @@ public class AuthUserDetailsService implements UserDetailsService {
     //TODO: idFromEmail()
     public long getLoggedUserId(Authentication loggedUser){
         if(isUser(loggedUser)) {
-            User user = us.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            User user = us.findByEmail(loggedUser.getName()).orElseThrow(() -> new UserNotFoundException(loggedUser.getName()));
             return user.getId();
         } else {
-            Enterprise enterprise = es.findByEmail(loggedUser.getName()).orElseThrow(UserNotFoundException::new);
+            Enterprise enterprise = es.findByEmail(loggedUser.getName()).orElseThrow(() -> new UserNotFoundException(loggedUser.getName()));
             return enterprise.getId();
         }
     }

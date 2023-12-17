@@ -47,7 +47,7 @@ public class Contact {
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = status;
-        this.filledBy = filledBy.getFilledBy();
+        this.filledBy = filledBy.getValue();
         this.date = date;
     }
 
@@ -60,7 +60,7 @@ public class Contact {
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
         this.status = JobOfferStatus.PENDING.getStatus();
-        this.filledBy = filledBy.getFilledBy();
+        this.filledBy = filledBy.getValue();
         this.date = date;
     }
 

@@ -72,6 +72,6 @@ public interface ContactDao {
 
     long getContactsCountForUser(User user);
 
-    long getContactsCountForUser(long userID, FilledBy filledBy);
+    long getContactsCountForUser(long userID, FilledBy filledBy, String status);
 
 }

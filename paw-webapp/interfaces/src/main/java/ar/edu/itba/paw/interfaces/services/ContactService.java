@@ -69,7 +69,7 @@ public interface ContactService {
     long getContactsCountForEnterprise(long enterpriseID);
     long getContactsCountForEnterprise(Enterprise enterprise);
 
-    long getContactsCountForUser(long userID, FilledBy filledBy);
+    long getContactsCountForUser(long userID, FilledBy filledBy, String status);
 
     long getContactsCountForUser(User user);
 

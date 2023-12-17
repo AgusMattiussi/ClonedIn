@@ -3,9 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.helpers.DateHelper;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -607,6 +610,7 @@ public class UserController {
 
     private static final int PAGE_SIZE = 10;
     private static final int JOB_OFFERS_PER_PAGE = 3;
+    private static final int APPLICATIONS_PER_PAGE = 3;
     private static final int USERS_PER_PAGE = 8;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -692,76 +696,26 @@ public class UserController {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
     }
 
+
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response createUser (@Valid final UserForm userForm /*, final BindingResult errors, HttpServletRequest request*/) {
-        //TODO: Desarrollar errores del formulario como "reenvio la pagina"
-        /*if (errors.hasErrors()) {
-            LOGGER.warn("User register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return;
-        }*/
+    public Response createUser (@Valid final UserForm userForm) {
+        Category category = categoryService.findByName(userForm.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(userForm.getCategory()));
 
-        Optional<Category> optCategory = categoryService.findByName(userForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
+                category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
 
-        final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(), optCategory.get(),
-                userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
-
-        //TODO: revisar uso de mail y autologeado
+        //TODO: Mail
         //emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
         //authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
 
         LOGGER.debug("A new user was registered under id: {}", user.getId());
         LOGGER.info("A new user was registered");
 
-        //TODO: Agregar auth token?
-
         final URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
-
-    //FIXME: Pasarlo a JobOfferController?
-    /*@GET
-    @Produces({ MediaType.APPLICATION_JSON, })
-    public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
-                             final ContactOrderForm contactOrderForm*//*, HttpServletRequest request*//*) {
-
-        Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        long categoryID;
-        try {
-            categoryID = Long.parseLong(filterForm.getCategory());
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid CategoryID {} in 'home'", filterForm.getCategory());
-            categoryID = 0;
-        }
-
-        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
-        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
-        Category category = categoryService.findById(categoryID).orElse(null);
-        String modality = filterForm.getModality();
-        String searchTerm = filterForm.getTerm();
-        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
-        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
-
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalaryBigDec, maxSalaryBigDec);
-
-        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalaryBigDec,
-                maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE).stream().map(u -> JobOfferDTO.fromJobOffer(uriInfo,u)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
-    }*/
 
 
     @GET
@@ -769,39 +723,42 @@ public class UserController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getById(@PathParam("id") final long id) {
-        Optional<UserDTO> maybeUser = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u));
-        if (!maybeUser.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(maybeUser.get()).build();
+        UserDTO user = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u))
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return Response.ok(user).build();
     }
 
-    /*@DELETE
+    /* TODO:
+    @DELETE
     @Path("/{id}")
     public Response deleteById(@PathParam("id") final long id) {
         //us.deleteById(id);
         return Response.noContent().build();
     }*/
 
-    //TODO: Agregar orden y filtros
+
     @GET
     @Path("/{id}/applications")
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getApplications(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page){
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    @PreAuthorize(PROFILE_OWNER)
+    public Response getApplications(@PathParam("id") final long id,
+                                    @QueryParam("page") @DefaultValue("1") final int page,
+                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                    @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy,
+                                    @QueryParam("status") final String status) {
 
-        List<ContactDTO> applications = contactService.getContactsForUser(optUser.get(), FilledBy.USER, SortBy.ANY, page-1, PAGE_SIZE)
-                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        List<ContactDTO> applications = contactService.getContactsForUser(user, filledBy, status, sortBy, page-1,
+                        APPLICATIONS_PER_PAGE).stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+
+        long applicationsCount = contactService.getContactsCountForUser(id, filledBy, status);
+        long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
         return Response.ok(new GenericEntity<List<ContactDTO>>(applications) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
     }
 
     @POST

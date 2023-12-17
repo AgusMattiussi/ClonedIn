@@ -52,7 +52,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user", Enterprise.class);
         else {
             query = em.createQuery("SELECT c.enterprise FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Enterprise.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("user", user);
@@ -67,7 +67,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise", User.class);
         else {
             query = em.createQuery("SELECT c.user FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", User.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
 
@@ -83,7 +83,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
 
@@ -105,7 +105,7 @@ public class ContactHibernateDao implements ContactDao {
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
             else
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("user", user);
@@ -121,7 +121,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("user", user);
@@ -134,11 +134,13 @@ public class ContactHibernateDao implements ContactDao {
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
-        if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
-        || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
-            queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
-        } else {
-            queryBuilder.append(" AND c.status = :status");
+        if(status != null && !status.isEmpty()){
+            if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy == FilledBy.ENTERPRISE
+            || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy == FilledBy.USER) {
+                queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
+            } else {
+                queryBuilder.append(" AND c.status = :status");
+            }
         }
 
         switch (sortBy){
@@ -153,10 +155,13 @@ public class ContactHibernateDao implements ContactDao {
 
     private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, String status){
         query.setParameter("user", user);
-        query.setParameter("status", status);
+
+        if(status != null && !status.isEmpty()){
+            query.setParameter("status", status);
+        }
 
         if(!filledBy.equals(FilledBy.ANY)) {
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
     }
 
@@ -182,7 +187,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("enterprise", enterprise);
@@ -208,7 +213,7 @@ public class ContactHibernateDao implements ContactDao {
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
             else
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("enterprise", enterprise);
@@ -225,7 +230,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.status = :status AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("enterprise", enterprise);
@@ -276,7 +281,7 @@ public class ContactHibernateDao implements ContactDao {
         query.setParameter("status", status);
 
         if(!filledBy.equals(FilledBy.ANY)) {
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
     }
 
@@ -302,7 +307,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("jobOffer", jobOffer);
@@ -317,7 +322,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("jobOffer", jobOffer);
@@ -333,7 +338,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
         query.setParameter("user", user);
         query.setParameter("enterprise", enterprise);
@@ -348,7 +353,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("user", user);
@@ -366,7 +371,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("jobOffer", jobOffer);
@@ -382,7 +387,7 @@ public class ContactHibernateDao implements ContactDao {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise", Contact.class);
         else {
             query = em.createQuery("SELECT c FROM Contact c WHERE c.jobOffer = :jobOffer AND c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
-            query.setParameter("filledBy", filledBy.getFilledBy());
+            query.setParameter("filledBy", filledBy.getValue());
         }
 
         query.setParameter("jobOffer", jobOffer);
@@ -406,7 +411,7 @@ public class ContactHibernateDao implements ContactDao {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("userID", userID);
         query.setParameter("enterpriseID", enterpriseID);
-        query.setParameter("filledBy", FilledBy.ENTERPRISE.getFilledBy());
+        query.setParameter("filledBy", FilledBy.ENTERPRISE.getValue());
 
         return ((BigInteger) query.getSingleResult()).longValue() > 0;
     }
@@ -482,7 +487,7 @@ public class ContactHibernateDao implements ContactDao {
     public long getContactsCountForEnterprise(long enterpriseID) {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("enterpriseID", enterpriseID);
-        query.setParameter("filledBy", FilledBy.ENTERPRISE.getFilledBy());
+        query.setParameter("filledBy", FilledBy.ENTERPRISE.getValue());
         return ((BigInteger) query.getSingleResult()).longValue();
     }
 
@@ -494,10 +499,11 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForUser(long userID, FilledBy filledBy) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND creadoPor = :filledBy");
+    public long getContactsCountForUser(long userID, FilledBy filledBy, String status) {
+        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND creadoPor = :filledBy AND estado = :status");
         query.setParameter("userID", userID);
-        query.setParameter("filledBy", filledBy.getFilledBy());
+        query.setParameter("filledBy", filledBy.getValue());
+        query.setParameter("status", status);
 
         return ((BigInteger) query.getSingleResult()).longValue();
     }
