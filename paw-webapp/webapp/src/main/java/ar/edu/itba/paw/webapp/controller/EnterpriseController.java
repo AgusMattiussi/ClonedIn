@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
@@ -694,17 +695,10 @@ public class EnterpriseController {
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getJobOfferById(@PathParam("id") final long id, @PathParam("joid") final long joid) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<JobOfferDTO> optJobOffer = jobOfferService.findById(joid).map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo,jobOffer));
-        if (!optJobOffer.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optJobOffer.get()).build();
+        // TODO: Deberiamos permitir que se devuelvan solo las Active?
+        JobOfferDTO jobOffer = jobOfferService.findById(joid).map(jo -> JobOfferDTO.fromJobOffer(uriInfo,jo))
+                .orElseThrow(() -> new JobOfferNotFoundException(joid));
+        return Response.ok(jobOffer).build();
     }
 
     @PUT
