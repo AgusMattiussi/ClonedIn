@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.webapp.validators.StringDiff;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -26,7 +27,7 @@ public class JobOfferForm {
     private String category;
 
     @NotEmpty
-    private String mode;
+    private JobOfferModality modality;
 
     @Size(max=50)
     private String skill1;
@@ -105,11 +106,11 @@ public class JobOfferForm {
         this.category = category;
     }
 
-    public String getMode() {
-        return mode;
+    public JobOfferModality getModality() {
+        return modality;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    public void setModality(JobOfferModality modality) {
+        this.modality = modality;
     }
 }

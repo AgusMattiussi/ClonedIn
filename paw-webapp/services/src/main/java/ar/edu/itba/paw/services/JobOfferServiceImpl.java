@@ -2,9 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
+import ar.edu.itba.paw.interfaces.services.JobOfferSkillService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
-        return jobOfferDao.create(enterprise, category, position, description, salary, modality);
+    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
+        return jobOfferDao.create(enterprise, category, position, description, salary,
+                modality == null ? JobOfferModality.NOT_SPECIFIED.getModality() : modality.getModality());
     }
 
     @Override

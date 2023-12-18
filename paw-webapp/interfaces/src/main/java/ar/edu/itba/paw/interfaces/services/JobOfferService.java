@@ -4,6 +4,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public interface JobOfferService {
 
-    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality);
+    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality);
 
     List<JobOffer> getAllJobOffers();
 

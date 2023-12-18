@@ -579,7 +579,7 @@ public class EnterpriseController {
 
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
     private static final String PROFILE_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id)";
-    private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isJobOfferOwner(#id, #joid)";
+    private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id) AND @securityValidator.isJobOfferOwner(#joid)";
 
     @Autowired
     private CategoryService categoryService;
@@ -735,41 +735,27 @@ public class EnterpriseController {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     @Transactional
     @PreAuthorize(PROFILE_OWNER)
-    public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm/*, final BindingResult errors*/) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm) {
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
-        Optional<Category> optCategory = categoryService.findByName(jobOfferForm.getCategory());
-        if (!optCategory.isPresent()) {
-            LOGGER.error("Category '{}' not found in createJobOffer()", jobOfferForm.getCategory());
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        Category category = categoryService.findByName(jobOfferForm.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(jobOfferForm.getCategory()));
 
-        JobOffer jobOffer = jobOfferService.create(optEnterprise.get(), optCategory.get(), jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getMode());
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
+        JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(),
+                jobOfferForm.getSalary(), jobOfferForm.getModality());
 
-        if (!jobOfferForm.getSkill1().isEmpty()) {
-            Skill skill1 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill1());
-            jobOfferSkillService.addSkillToJobOffer(skill1, jobOffer);
-        }
-        if (!jobOfferForm.getSkill2().isEmpty()) {
-            Skill skill2 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill2());
-            jobOfferSkillService.addSkillToJobOffer(skill2, jobOffer);
-        }
-        if (!jobOfferForm.getSkill3().isEmpty()) {
-            Skill skill3 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill3());
-            jobOfferSkillService.addSkillToJobOffer(skill3, jobOffer);
-        }
-        if (!jobOfferForm.getSkill4().isEmpty()) {
-            Skill skill4 = skillService.findByDescriptionOrCreate(jobOfferForm.getSkill4());
-            jobOfferSkillService.addSkillToJobOffer(skill4, jobOffer);
+        List<String> skills = Arrays.asList(jobOfferForm.getSkill1(), jobOfferForm.getSkill2(), jobOfferForm.getSkill3(), jobOfferForm.getSkill4());
+        for(String skill : skills) {
+            if(skill != null && !skill.isEmpty()) {
+                Skill newSkill = skillService.findByDescriptionOrCreate(skill);
+                jobOfferSkillService.addSkillToJobOffer(newSkill, jobOffer);
+            }
         }
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
         return Response.created(uri).build();
     }
 
