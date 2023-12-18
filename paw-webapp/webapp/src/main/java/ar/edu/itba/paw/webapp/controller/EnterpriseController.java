@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
@@ -613,33 +614,24 @@ public class EnterpriseController {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    public Response createEnterprise(@Valid final EnterpriseForm enterpriseForm/*, final BindingResult errors, HttpServletRequest request*/) {
+    public Response createEnterprise(@Valid final EnterpriseForm enterpriseForm) {
 
-        //TODO: Desarrollar errores del formulario como "reenvio la pagina"
-        /*if (errors.hasErrors()) {
-            LOGGER.warn("Enterprise register form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return
-        }*/
+        String categoryName = enterpriseForm.getCategory();
+        Category category = categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
-        Optional<Category> optCategory = categoryService.findByName(enterpriseForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(),
+                enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkers(),
+                enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
 
-        Integer year = enterpriseForm.getYear().isEmpty() ? null : Integer.valueOf(enterpriseForm.getYear());
-
-        final Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(), enterpriseForm.getPassword(),
-                enterpriseForm.getCity(), optCategory.get(), enterpriseForm.getWorkers(), year, enterpriseForm.getLink(), enterpriseForm.getAboutUs());
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(enterprise.getId())).build();
-
-        //TODO: revisar uso de mail y autologeado
+        //TODO: EMAIL
         //emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
         //authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
 
         LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());
         LOGGER.info("A new enterprise was registered");
 
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(enterprise.getId())).build();
         return Response.created(uri).build();
     }
 

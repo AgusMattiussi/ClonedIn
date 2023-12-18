@@ -515,7 +515,7 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     //@Produces(value = {"image/webp"})
-    @Produces(value = {"image/webp"})
+    @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") final long id) {
 
