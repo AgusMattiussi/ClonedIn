@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
@@ -612,6 +613,17 @@ public class EnterpriseController {
         this.emailService = emailService;
     }
 
+    private Response.ResponseBuilder responseWithPaginationLinks(Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
+        if(currentPage > 1)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
+        if(currentPage < maxPages)
+            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
+
+        return responseBuilder
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
+                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last");
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response createEnterprise(@Valid final EnterpriseForm enterpriseForm) {
@@ -640,11 +652,9 @@ public class EnterpriseController {
     @Produces({MediaType.APPLICATION_JSON,})
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getById(@PathParam("id") final long id) {
-        Optional<EnterpriseDTO> maybeEnterprise = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e));
-        if (!maybeEnterprise.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(maybeEnterprise.get()).build();
+        EnterpriseDTO enterpriseDTO = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e))
+                .orElseThrow(() -> new EnterpriseNotFoundException(id));
+        return Response.ok(enterpriseDTO).build();
     }
 
     //TODO: Agregar orden y filtros
