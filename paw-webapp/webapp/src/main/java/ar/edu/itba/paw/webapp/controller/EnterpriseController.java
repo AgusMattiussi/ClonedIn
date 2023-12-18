@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.*;
-import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
-import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
-import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.helpers.SortHelper;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
@@ -569,6 +566,7 @@ import java.util.stream.Collectors;
 
 @Path("enterprises")
 @Component
+@Transactional
 public class EnterpriseController {
 
     public static final int PAGE_SIZE = 10;
@@ -731,7 +729,6 @@ public class EnterpriseController {
     @POST
     @Path("/{id}/jobOffers")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    @Transactional
     @PreAuthorize(PROFILE_OWNER)
     public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm) {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
@@ -782,45 +779,30 @@ public class EnterpriseController {
     @POST
     @Path("/{id}/contacts")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    //@Transactional
     @PreAuthorize(PROFILE_OWNER)
-    public Response contactUser(@PathParam("id") final long id, @Valid final ContactForm contactForm, @QueryParam("uid") final long userId){
+    public Response contactUser(@PathParam("id") final long id, @Valid final ContactForm contactForm){
 
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
-        if(userId <= 0) {
-            LOGGER.error("Invalid userId: {}", userId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        if(contactService.alreadyContacted(contactForm.getUserId(), contactForm.getJobOfferId()))
+            throw new AlreadyContactedException(contactForm.getUserId(), contactForm.getJobOfferId());
 
-        long jobOfferId = contactForm.getJobOfferId();
-        boolean alreadyContacted = contactService.alreadyContacted(userId, jobOfferId);
-        if(alreadyContacted)
-            return Response.status(Response.Status.CONFLICT).build();
+        JobOffer jobOffer = jobOfferService.findById(contactForm.getJobOfferId())
+                .orElseThrow(() -> new JobOfferNotFoundException(contactForm.getJobOfferId()));
 
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if(!optJobOffer.isPresent()){
-            LOGGER.error("Job Offer {} not found in contactUser()", jobOfferId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        User user = userService.findById(contactForm.getUserId())
+                .orElseThrow(() -> new UserNotFoundException(contactForm.getUserId()));
 
-        Optional<User> optUser = userService.findById(userId);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with id={} not found in contactUser()", userId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        //TODO: EMAIL
+        // emailService.sendContactEmail(optUser.get(), optEnterprise.get(), optJobOffer.get(), contactForm.getMessage(), LocaleContextHolder.getLocale());
 
-        //TODO: emailService.sendContactEmail(optUser.get(), optEnterprise.get(), optJobOffer.get(), contactForm.getMessage(), LocaleContextHolder.getLocale());
-        Contact contact = contactService.addContact(optEnterprise.get(), optUser.get(), optJobOffer.get(), FilledBy.ENTERPRISE);
+        Contact contact = contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
+
+        // TODO: Chequear si funciona este link
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getJobOffer().getId()))
                 .path(String.valueOf(contact.getUser().getId()))
                 .build();
-
         return Response.created(uri).build();
     }
 
