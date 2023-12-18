@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1011,22 +1014,14 @@ public class UserController {
     @Path("/{id}/skills")
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     @PreAuthorize(PROFILE_OWNER)
-    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm /*, final BindingResult errors*/){
-        Optional<User> optUser = us.findById(id);
-        if(!optUser.isPresent()){
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
+    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm){
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
-        /*if (errors.hasErrors() || userSkillService.alreadyExists(skill, user)) {
-            errors.rejectValue("skill", "ExistingSkillForUser", "You already have this skill for this user.");
-            LOGGER.warn("Skill form has {} errors: {}", errors.getErrorCount(), errors.getAllErrors());
-            return formSkill(loggedUser, skillForm, userId);
-        }*/
+        if(userSkillService.alreadyExists(skill, user))
+            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", id, skillForm.getSkill()));
 
-        userSkillService.addSkillToUser(skill, optUser.get());
+        userSkillService.addSkillToUser(skill, user);
 
         LOGGER.debug("A new skill was registered under id: {}", skill.getId());
         LOGGER.info("A new skill was registered");
@@ -1040,60 +1035,61 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
         userSkillService.deleteSkillFromUser(id, skillId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @PUT
     @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response editUser(@Valid final EditUserForm editUserForm, /*final BindingResult errors,*/ @PathParam("id") final long id) {
-        /*if (errors.hasErrors()) {
-            return formEditUser(loggedUser, editUserForm, userId);
-        }*/
+    public Response editUser( @PathParam("id") final long id, @Valid final EditUserForm editUserForm) {
 
-        Optional<Category> optCategory = categoryService.findByName(editUserForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        Category category = null;
+
+        String formCategory = editUserForm.getCategory();
+        if(formCategory != null && !formCategory.isEmpty()) {
+            category = categoryService.findByName(editUserForm.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(editUserForm.getCategory()));
         }
 
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), optCategory.get(), editUserForm.getLevel());
+                editUserForm.getPosition(), category, editUserForm.getLevel());
 
-        return Response.noContent().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @PUT
     @Path("/{id}/visibility")
     @PreAuthorize(PROFILE_OWNER)
-    public Response hideUserProfile(@PathParam("id") final long id) {
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response updateVisibility(@PathParam("id") final long id,
+                                     @QueryParam("visibility") final Visibility visibility) {
 
-        if (optUser.get().getVisibility() == Visibility.VISIBLE.getValue()) {
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+        if (visibility == Visibility.INVISIBLE)
             us.hideUserProfile(id);
-        } else {
+        else
             us.showUserProfile(id);
-        }
 
-        return Response.ok().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @PUT
     @Path("/{id}/image")
     @PreAuthorize(PROFILE_OWNER)
-    public Response uploadImage(@PathParam("id") final long id, @Valid final ImageForm imageForm /* , final BindingResult errors */) throws IOException {
-        /*if (errors.hasErrors()) {
-            return formImage(loggedUser, imageForm, userId);
-        }*/
+    public Response uploadImage(@PathParam("id") final long id,
+                                @Valid final ImageForm imageForm) {
 
-        Image image = imageService.uploadImage(imageForm.getImage().getBytes());
-        us.updateProfileImage(id, image);
+        try {
+            Image image = imageService.uploadImage(imageForm.getImage().getBytes());
+            us.updateProfileImage(id, image);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid image");
+        }
 
-        return Response.ok().build(); //TODO: NO SE QUE DEVOLVER
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        return Response.ok(uri).build();
     }
 
     @GET
