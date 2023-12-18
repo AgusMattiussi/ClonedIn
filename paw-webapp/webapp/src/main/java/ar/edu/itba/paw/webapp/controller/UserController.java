@@ -1064,8 +1064,6 @@ public class UserController {
     public Response updateVisibility(@PathParam("id") final long id,
                                      @QueryParam("visibility") final Visibility visibility) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
         if (visibility == Visibility.INVISIBLE)
             us.hideUserProfile(id);
         else
@@ -1097,23 +1095,13 @@ public class UserController {
     @Produces(value = {"image/webp"})
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") final long id) {
-        LOGGER.debug("Trying to access profile image");
 
-        Optional<User> optUser = us.findById(id);
-        if (!optUser.isPresent()) {
-            LOGGER.error("User with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
+        if(profileImage == null)
+            throw new ImageNotFoundException();
 
-        long imageId = optUser.get().getImage().getId();
-
-        Image profileImage = imageService.getImage(imageId).orElseThrow(() -> {
-            LOGGER.error("Error loading image {}", imageId);
-            return new ImageNotFoundException();
-        });
-
-        LOGGER.info("Profile image accessed.");
-        return Response.ok(profileImage.getBytes()).build();
+        //TODO: Chequear que esto ande
+        return Response.ok(ImageDTO.fromImage(uriInfo, profileImage)).build();
     }
 
 }
