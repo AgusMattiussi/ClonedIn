@@ -762,15 +762,19 @@ public class EnterpriseController {
                                     @QueryParam("page") @DefaultValue("1") final int page,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
+                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                    @QueryParam("userId") final Long userId,
+                                    @QueryParam("jobOfferId") final Long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
+        User user = userId != null ? userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)) : null;
+        JobOffer jobOffer = jobOfferId != null ? jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId)) : null;
 
-        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, filledBy, status.getStatus(), sortBy,
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status.getStatus(), sortBy,
                 page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
 
-        long contactCount = contactService.getContactsCountForEnterprise(enterprise, filledBy, status.getStatus());
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status.getStatus());
         long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
 
         return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages).build();
@@ -806,62 +810,6 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }
 
-    @GET
-    @Path("/{id}/contacts/{joid}")
-    @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize(PROFILE_OWNER)
-    public Response getJobOfferContacts(@PathParam("id") final long id, @PathParam("joid") final long jobOfferId,
-                                    @QueryParam("page") @DefaultValue("1") final int page,
-                                    @QueryParam("filledBy") final int filledBy) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(jobOfferId);
-        if (!optJobOffer.isPresent()) {
-            LOGGER.error("JobOffer with ID={} not found", jobOfferId);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        //Fixme: Cambiar esto, ponerlo en un helper por ej
-        FilledBy enumFilledBy;
-        if(filledBy == 0)
-            enumFilledBy = FilledBy.ENTERPRISE;
-        else if(filledBy == 1)
-            enumFilledBy = FilledBy.USER;
-        else
-            enumFilledBy = FilledBy.ANY;
-
-        List<ContactDTO> contactList = contactService.getContactsForEnterpriseAndJobOffer(optEnterprise.get(), optJobOffer.get(), enumFilledBy,
-                    page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
-    }
-
-    @GET
-    @Path("/{id}/contacts/{joid}/{uid}")
-    @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize(PROFILE_OWNER)
-    public Response getContactById(@PathParam("id") final long id, @PathParam("joid") final long jobOfferId,
-                                    @PathParam("uid") final long userId) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        Optional<ContactDTO> optJobOffer = contactService.findByPrimaryKey(userId, jobOfferId).map(c -> ContactDTO.fromContact(uriInfo,c));
-        if (!optJobOffer.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(optJobOffer.get()).build();
-    }
 
     @GET
     @Path("/{id}/image")

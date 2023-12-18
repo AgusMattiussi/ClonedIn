@@ -86,8 +86,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
-        return contactDao.getContactsForEnterprise(enterprise, filledBy, status, sortBy, page, pageSize);
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+                                           String status, SortBy sortBy, int page, int pageSize) {
+        return contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status, sortBy, page, pageSize);
     }
 
     @Override
@@ -176,8 +177,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, FilledBy filledBy, String status) {
-        return contactDao.getContactsCountForEnterprise(enterprise, filledBy, status);
+    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
+        return contactDao.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
     }
 
     @Override

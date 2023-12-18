@@ -238,7 +238,7 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
+    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, JobOffer jobOffer, User user, FilledBy filledBy, String status, SortBy sortBy){
 
         if(sortBy != null){
             switch (sortBy){
@@ -251,6 +251,14 @@ public class ContactHibernateDao implements ContactDao {
         }
 
         queryBuilder.append(" WHERE c.enterprise = :enterprise");
+
+        if(jobOffer != null){
+            queryBuilder.append(" AND c.jobOffer = :jobOffer");
+        }
+
+        if(user != null){
+            queryBuilder.append(" AND c.user = :user");
+        }
 
         if(status != null && !status.isEmpty()){
             if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
@@ -283,9 +291,18 @@ public class ContactHibernateDao implements ContactDao {
         }
     }
 
-    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, FilledBy filledBy, String status){
+    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, JobOffer jobOffer, User user,
+                                                       FilledBy filledBy, String status){
         if(enterprise != null){
             query.setParameter("enterprise", enterprise);
+        }
+
+        if(jobOffer != null){
+            query.setParameter("jobOffer", jobOffer);
+        }
+
+        if(user != null){
+            query.setParameter("user", user);
         }
 
         if(status != null && !status.isEmpty()){
@@ -298,14 +315,15 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+                                           String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append("SELECT c FROM Contact c");
 
-        getContactsForEnterpriseAppendConditions(queryBuilder, filledBy, status, sortBy);
+        getContactsForEnterpriseAppendConditions(queryBuilder, jobOffer, user, filledBy, status, sortBy);
 
         query = em.createQuery(queryBuilder.toString(), Contact.class);
-        getContactsForEnterpriseSetParameters(query, enterprise, filledBy, status);
+        getContactsForEnterpriseSetParameters(query, enterprise, jobOffer, user, filledBy, status);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -504,8 +522,14 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, FilledBy filledBy, String status) {
+    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
         StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseId");
+
+        if(jobOffer != null)
+            queryBuilder.append(" AND idOferta = :jobOfferId");
+
+        if(user != null)
+            queryBuilder.append(" AND idUsuario = :userId");
 
         if(filledBy != null && filledBy != FilledBy.ANY)
             queryBuilder.append(" AND creadoPor = :filledBy");
@@ -515,6 +539,12 @@ public class ContactHibernateDao implements ContactDao {
 
         Query query = em.createNativeQuery(queryBuilder.toString());
         query.setParameter("enterpriseId", enterprise.getId());
+
+        if(jobOffer != null)
+            query.setParameter("jobOfferId", jobOffer.getId());
+
+        if(user != null)
+            query.setParameter("userId", user.getId());
 
         if(filledBy != null && filledBy != FilledBy.ANY)
             query.setParameter("filledBy", filledBy.getValue());
