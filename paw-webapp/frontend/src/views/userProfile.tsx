@@ -135,9 +135,14 @@ function ProfileUser() {
   }
 
   const handleVisibility = async () => {
+    const queryParams: Record<string, string> = {}
+    if (user?.visibility === 1) queryParams.visibility = "invisible"
+    else queryParams.visibility = "visible"
+
     const response = await apiRequest({
       url: `/users/${id}/visibility`,
       method: "PUT",
+      queryParams: queryParams,
     })
     if (response.status === HttpStatusCode.Ok) {
       setUserLoading(true)
