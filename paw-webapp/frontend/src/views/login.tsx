@@ -20,9 +20,6 @@ function Login() {
   const { loading, loginHandler } = useLogin()
   const { userInfo } = useSharedAuth()
 
-  //TODO: Remember me
-  //const [rememberMe, setRememberMe] = useState(false)
-
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -87,9 +84,6 @@ function Login() {
                           >
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
-                        </Form.Group>
-                        <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label={t("Remember me").toString()} />
                         </Form.Group>
                       </div>
                       <Button variant="success" type="submit">
