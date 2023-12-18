@@ -3,9 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
-import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferAvailability;
-import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
@@ -759,50 +757,26 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }
 
-    //TODO: Mejorar el SortBy, deberia ser mas descriptivo
-    //TODO: Mejorar el FilledBy, deberia ser mas descriptivo
-    // https://javaee.github.io/javaee-spec/javadocs/javax/ws/rs/QueryParam.html
     @GET
     @Path("/{id}/contacts")
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") final int page,
-                                    @QueryParam("status") final String status,
-                                    @QueryParam("filledBy") final int filledBy,
-                                    @QueryParam("sortBy") final int sortBy) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
+                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
 
-        //Fixme: Cambiar esto, ponerlo en un helper por ej
-        FilledBy enumFilledBy;
-        if(filledBy == 0)
-            enumFilledBy = FilledBy.ENTERPRISE;
-        else if(filledBy == 1)
-            enumFilledBy = FilledBy.USER;
-        else
-            enumFilledBy = FilledBy.ANY;
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
-        List<ContactDTO> contactList;
-        //TODO: Cambiar el metodo en el back para no hacer esta bifurcacion solo por el status
-        if(status == null) {
-            contactList = contactService.getContactsForEnterprise(optEnterprise.get(), enumFilledBy, SortHelper.getSortBy(sortBy),
-                    page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
-        }
-        else {
-            contactList = contactService.getContactsForEnterprise(optEnterprise.get(), enumFilledBy, status, SortHelper.getSortBy(sortBy),
-                    page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
-        }
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, filledBy, status.getStatus(), sortBy,
+                page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
 
-        return Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, filledBy, status.getStatus());
+        long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
+
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages).build();
     }
 
     @POST

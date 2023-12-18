@@ -239,48 +239,60 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
-        switch (sortBy){
-            case USERNAME:
-                queryBuilder.append(" JOIN c.user u");
-                break;
-            case JOB_OFFER_POSITION:
-                queryBuilder.append(" JOIN c.jobOffer j");
+
+        if(sortBy != null){
+            switch (sortBy){
+                case USERNAME:
+                    queryBuilder.append(" JOIN c.user u");
+                    break;
+                case JOB_OFFER_POSITION:
+                    queryBuilder.append(" JOIN c.jobOffer j");
+            }
         }
 
         queryBuilder.append(" WHERE c.enterprise = :enterprise");
 
-        if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
-        || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
-            queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
-        } else {
-            queryBuilder.append(" AND c.status = :status");
+        if(status != null && !status.isEmpty()){
+            if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
+            || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
+                queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
+            } else {
+                queryBuilder.append(" AND c.status = :status");
+            }
         }
 
-        if(!filledBy.equals(FilledBy.ANY)) {
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)) {
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
-        switch (sortBy){
-            case USERNAME:
-                queryBuilder.append(" ORDER BY u.name");
-                break;
-            case JOB_OFFER_POSITION:
-                queryBuilder.append(" ORDER BY j.position");
-                break;
-            case DATE_ASC:
-                queryBuilder.append(" ORDER BY c.date ASC");
-                break;
-            case DATE_DESC:
-                queryBuilder.append(" ORDER BY c.date DESC");
-                break;
+        if(sortBy != null){
+            switch (sortBy){
+                case USERNAME:
+                    queryBuilder.append(" ORDER BY u.name");
+                    break;
+                case JOB_OFFER_POSITION:
+                    queryBuilder.append(" ORDER BY j.position");
+                    break;
+                case DATE_ASC:
+                    queryBuilder.append(" ORDER BY c.date ASC");
+                    break;
+                case DATE_DESC:
+                    queryBuilder.append(" ORDER BY c.date DESC");
+                    break;
+            }
         }
     }
 
     private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, FilledBy filledBy, String status){
-        query.setParameter("enterprise", enterprise);
-        query.setParameter("status", status);
+        if(enterprise != null){
+            query.setParameter("enterprise", enterprise);
+        }
 
-        if(!filledBy.equals(FilledBy.ANY)) {
+        if(status != null && !status.isEmpty()){
+            query.setParameter("status", status);
+        }
+
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)) {
             query.setParameter("filledBy", filledBy.getValue());
         }
     }
@@ -489,6 +501,28 @@ public class ContactHibernateDao implements ContactDao {
         query.setParameter("enterpriseID", enterpriseID);
         query.setParameter("filledBy", FilledBy.ENTERPRISE.getValue());
         return ((BigInteger) query.getSingleResult()).longValue();
+    }
+
+    @Override
+    public long getContactsCountForEnterprise(Enterprise enterprise, FilledBy filledBy, String status) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseId");
+
+        if(filledBy != null && filledBy != FilledBy.ANY)
+            queryBuilder.append(" AND creadoPor = :filledBy");
+
+        if(status != null && !status.isEmpty())
+            queryBuilder.append(" AND estado = :status");
+
+        Query query = em.createNativeQuery(queryBuilder.toString());
+        query.setParameter("enterpriseId", enterprise.getId());
+
+        if(filledBy != null && filledBy != FilledBy.ANY)
+            query.setParameter("filledBy", filledBy.getValue());
+
+        if(status != null && !status.isEmpty())
+            query.setParameter("status", status);
+
+        return ((Long) query.getSingleResult());
     }
 
     @Override

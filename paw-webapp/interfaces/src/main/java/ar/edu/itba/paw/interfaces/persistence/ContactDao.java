@@ -70,6 +70,8 @@ public interface ContactDao {
 
     long getContactsCountForEnterprise(long enterpriseID);
 
+    long getContactsCountForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
+
     long getContactsCountForUser(User user);
 
     long getContactsCountForUser(long userID, FilledBy filledBy, String status);
