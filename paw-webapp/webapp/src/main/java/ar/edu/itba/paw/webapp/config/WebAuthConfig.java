@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.CustomAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -37,7 +39,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private AuthUserDetailsService userDetailsService;
 
 
-    //TODO: ACTUALIZAR LOS URLS
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors()
@@ -58,9 +59,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // JobOffers
                 .antMatchers("/jobOffers/**").authenticated()
                 .and().exceptionHandling()
-//                    .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
-//                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                //.authenticationProvider(authenticationProvider)
+                    .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
@@ -93,6 +92,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Override
