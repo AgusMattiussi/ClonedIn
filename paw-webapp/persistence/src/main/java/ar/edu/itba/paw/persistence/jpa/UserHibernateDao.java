@@ -239,8 +239,10 @@ public class UserHibernateDao implements UserDao {
     @Override
     public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(DISTINCT u) FROM User u");
 

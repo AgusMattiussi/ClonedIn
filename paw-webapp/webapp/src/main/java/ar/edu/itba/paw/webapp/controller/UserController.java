@@ -63,7 +63,7 @@ public class UserController {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private final ImageService imageService;
+    private ImageService imageService;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
@@ -103,19 +103,20 @@ public class UserController {
     @PreAuthorize("hasAuthority('ENTERPRISE')")
     public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page,
                               @QueryParam("categoryName") @DefaultValue("") final String categoryName,
-                              @QueryParam("educationLevel") @DefaultValue("") final String educationLevel,
-                              @QueryParam("searchTerm") @DefaultValue("") final String searchTerm,
+                              @QueryParam("educationLevel") final String educationLevel,
+                              @QueryParam("searchTerm") final String searchTerm,
                               @QueryParam("minExpYears") @DefaultValue("0") final int minExpYears,
                               @QueryParam("maxExpYears") @DefaultValue("100") final int maxExpYears,
-                              @QueryParam("location") @DefaultValue("") final String location,
-                              @QueryParam("skillDescription") @DefaultValue("") final String skillDescription) {
+                              @QueryParam("location") final String location,
+                              @QueryParam("skillDescription") final String skillDescription) {
 
         Category category = categoryService.findByName(categoryName).orElse(null);
 
-        final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription, page-1, USERS_PER_PAGE)
-                .stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
+        final List<UserDTO> allUsers = us.getAllUsers().stream().map(u -> UserDTO.fromUser(uriInfo,u))
+                .collect(Collectors.toList());
 
+
+        System.out.println("\n\n\n\n\n\n\n\nallUsers: " + allUsers + "\n\n\n\n\n\n");
         if (allUsers.isEmpty()) {
             return Response.noContent().build();
         }
