@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.ImageNotFoundException;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -657,26 +659,34 @@ public class EnterpriseController {
         return Response.ok(enterpriseDTO).build();
     }
 
-    //TODO: Agregar orden y filtros
+    //TODO: Solo trae las que esten activas. Deberiamos traer todas si es el dueño del perfil?
     @GET
     @Path("/{id}/jobOffers")
     @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getJobOffers(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response getJobOffers(@PathParam("id") final long id,
+                                 @QueryParam("page") @DefaultValue("1") final int page,
+                                 @QueryParam("category") final String categoryName,
+                                 @QueryParam("modality") final JobOfferModality modality,
+                                 @QueryParam("searchTerm") final String searchTerm,
+                                 @QueryParam("position") final String position,
+                                 @QueryParam("minSalary") final double minSalary,
+                                 @QueryParam("maxSalary") final double maxSalary) {
 
-        List<JobOfferDTO> jobOffers = jobOfferService.findActiveByEnterprise(optEnterprise.get(), page - 1, PAGE_SIZE)
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
+
+        Category category = null;
+        if(categoryName != null)
+            category = categoryService.findByName(categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality.getModality(), enterprise.getName(),
+                        searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary), page - 1, PAGE_SIZE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {
-                })
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality.getModality(), enterprise.getName(),
+                        searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
+        long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
+
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages).build();
     }
 
     @GET

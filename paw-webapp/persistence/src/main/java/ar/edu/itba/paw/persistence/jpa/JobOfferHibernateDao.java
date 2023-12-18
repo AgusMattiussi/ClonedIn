@@ -115,23 +115,26 @@ public class JobOfferHibernateDao implements JobOfferDao {
         return (Long) query.getSingleResult();
     }
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String enterpriseName, String skillDescription,
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String enterpriseName, String searchTerm,
                                              String position, BigDecimal minSalary, BigDecimal maxSalary){
         if(category != null)
             queryStringBuilder.append(" AND jo.category = :category");
-        if(!modality.isEmpty())
+        if(modality != null && !modality.isEmpty())
             queryStringBuilder.append(" AND jo.modality = :modality");
         if(minSalary != null)
             queryStringBuilder.append(" AND jo.salary >= :minSalary");
         if(maxSalary != null)
             queryStringBuilder.append(" AND jo.salary <= :maxSalary");
-        if(!position.isEmpty())
+        if(position != null && !position.isEmpty())
             queryStringBuilder.append(" AND LOWER(jo.position) LIKE LOWER(CONCAT('%', :position, '%'))");
-        if(!enterpriseName.isEmpty())
+        if(enterpriseName != null && !enterpriseName.isEmpty())
             queryStringBuilder.append(" AND LOWER(e.name) LIKE LOWER(CONCAT('%', :enterpriseName, '%'))");
-        if(!skillDescription.isEmpty())
-            queryStringBuilder.append(" AND EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
-                    .append(" AND LOWER(sk.description) LIKE LOWER(:skillDescription))");
+        if(searchTerm != null && !searchTerm.isEmpty()) {
+            queryStringBuilder.append(" AND (LOWER(jo.position) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
+                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'))");
+        }
     }
 
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
@@ -151,7 +154,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
         }
     }
 
-    private void filterQuerySetParameters(Query query, Category category, String modality, String enterpriseName, String skillDescription,
+    private void filterQuerySetParameters(Query query, Category category, String modality, String enterpriseName, String searchTerm,
                                           String position, BigDecimal minSalary, BigDecimal maxSalary){
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         if(category != null)
@@ -166,8 +169,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("position", position);
         if(!enterpriseName.isEmpty())
             query.setParameter("enterpriseName", enterpriseName);
-        if(!skillDescription.isEmpty())
-            query.setParameter("skillDescription", skillDescription);
+        if(searchTerm != null && !searchTerm.isEmpty())
+            query.setParameter("term", searchTerm);
     }
 
     private void filterQuerySetParameters(Query query, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
@@ -185,7 +188,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
+    public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String searchTerm,
                                                     String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
@@ -194,10 +197,10 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         queryStringBuilder.append(" WHERE jo.available = :active");
 
-        filterQueryAppendConditions(queryStringBuilder, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
+        filterQueryAppendConditions(queryStringBuilder, category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary);
 
         TypedQuery<JobOffer> query = em.createQuery(queryStringBuilder.toString(), JobOffer.class);
-        filterQuerySetParameters(query, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
+        filterQuerySetParameters(query, category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -226,7 +229,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
 
     @Override
-    public long getActiveJobOffersCount(Category category, String modality, String enterpriseName, String skillDescription,
+    public long getActiveJobOffersCount(Category category, String modality, String enterpriseName, String searchTerm,
                                         String position, BigDecimal minSalary, BigDecimal maxSalary) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
 
@@ -235,10 +238,10 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         queryStringBuilder.append(" WHERE jo.available = :active");
 
-        filterQueryAppendConditions(queryStringBuilder, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
+        filterQueryAppendConditions(queryStringBuilder, category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary);
 
         Query query = em.createQuery(queryStringBuilder.toString());
-        filterQuerySetParameters(query, category, modality, enterpriseName, skillDescription, position, minSalary, maxSalary);
+        filterQuerySetParameters(query, category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary);
 
         return (Long) query.getSingleResult();
     }

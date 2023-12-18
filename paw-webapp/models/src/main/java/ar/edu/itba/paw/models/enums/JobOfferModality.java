@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.enums;
 
-public enum JobOfferModalities {
+public enum JobOfferModality {
     REMOTE("Remoto"),
     IN_PERSON("Presencial"),
     MIXED("Mixto"),
@@ -8,7 +8,7 @@ public enum JobOfferModalities {
 
     private String modality;
 
-    JobOfferModalities(String modality) {
+    JobOfferModality(String modality) {
         this.modality = modality;
     }
 

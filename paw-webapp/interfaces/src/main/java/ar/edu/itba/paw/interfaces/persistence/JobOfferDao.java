@@ -32,7 +32,7 @@ public interface JobOfferDao {
 
     long getActiveJobOffersCountForEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
+    List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String searchTerm,
                                              String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
 
     List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);

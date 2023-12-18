@@ -1,31 +1,23 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +38,7 @@ public class ContactHibernateDaoTest {
     public static final String EMPTY_FIELD = "-";
     public static final String NEW_JOB_OFFER_POSITION = "position";
     public static final BigDecimal NEW_JOB_OFFER_SALARY = BigDecimal.valueOf(1000);
-    public static final String NEW_JOB_OFFER_MODALITY = JobOfferModalities.NOT_SPECIFIED.getModality();
+    public static final String NEW_JOB_OFFER_MODALITY = JobOfferModality.NOT_SPECIFIED.getModality();
     public static final String NEW_OFFER_AVAILABILITY = JobOfferAvailability.ACTIVE.getStatus();
     public static final String NEW_OFFER_STATUS = JobOfferStatus.PENDING.getStatus();
     public static final FilledBy NEW_JOB_OFFER_FILLED_BY = FilledBy.ENTERPRISE;
