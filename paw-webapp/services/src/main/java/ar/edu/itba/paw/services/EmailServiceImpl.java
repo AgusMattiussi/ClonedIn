@@ -31,6 +31,7 @@ public class EmailServiceImpl implements EmailService {
     private SpringTemplateEngine templateEngine;
     @Autowired
     private MessageSource messageSource;
+
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
     private static final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";

@@ -100,7 +100,7 @@ public class EnterpriseController {
                 enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkers(),
                 enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
 
-
+        // TODO: EMAIL
         emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
 
         LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());

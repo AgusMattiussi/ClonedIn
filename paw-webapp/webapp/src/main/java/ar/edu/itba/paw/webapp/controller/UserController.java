@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +42,6 @@ public class UserController {
     private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
     private static final String EDUCATION_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId)";
 
-
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -60,16 +60,15 @@ public class UserController {
     private SkillService skillService;
     @Autowired
     private UserSkillService userSkillService;
-    //private final EmailService emailService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private final ImageService imageService;
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-
     @Context
     private UriInfo uriInfo;
-    private final ImageService imageService;
-
-    // TODO: REVISAR EL TEMA DE LOS PERMISOS DE CADA USUARIOS PARA CADA METODO
 
     @Autowired
     public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
@@ -139,8 +138,7 @@ public class UserController {
                 category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
 
         //TODO: Mail
-        //emailService.sendRegisterUserConfirmationEmail(u, LocaleContextHolder.getLocale());
-        //authWithAuthManager(request, userForm.getEmail(), userForm.getPassword());
+        emailService.sendRegisterUserConfirmationEmail(user, LocaleContextHolder.getLocale());
 
         LOGGER.debug("A new user was registered under id: {}", user.getId());
         LOGGER.info("A new user was registered");
@@ -207,9 +205,7 @@ public class UserController {
         }
 
         contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
-
-        // TODO: EMAIL
-        //emailService.sendApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.created(uri).build();
@@ -226,8 +222,7 @@ public class UserController {
         if(!contactService.cancelJobOffer(user, jobOffer))
             throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, id);
 
-        //TODO: EMAIL
-        //emailService.sendCancelApplicationEmail(optEnterprise.get(), optUser.get(), optJobOffer.get().getPosition(), LocaleContextHolder.getLocale());
+        emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok(uri).build();
