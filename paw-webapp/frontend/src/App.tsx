@@ -20,7 +20,7 @@ import ContactsEnterprise from "./views/enterpriseContacts"
 import InterestedEnterprise from "./views/enterpriseInterested"
 import JobOffer from "./views/jobOffer"
 import Error from "./views/error"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
 // Bootstrap CSS
@@ -33,6 +33,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registerUser" element={<RegisterUser />} />
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />

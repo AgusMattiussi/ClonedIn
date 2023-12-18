@@ -1,6 +1,6 @@
 import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
-import JobOfferCard from "../components/cards/jobOfferCard"
+// import JobOfferCard from "../components/cards/jobOfferCard"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
 import { useRequestApi } from "../api/apiRequest"
@@ -31,7 +31,7 @@ function JobOffer() {
 
       setJob(response.data)
     }
-      fetchJob()
+    fetchJob()
   }, [apiRequest, id])
 
   return (
@@ -42,9 +42,7 @@ function JobOffer() {
         fluid
         style={{ background: "#F2F2F2" }}
       >
-        <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>
-          <JobOfferCard job={job} />
-        </div>
+        <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>{/* <JobOfferCard job={job} /> */}</div>
       </Container>
     </div>
   )
