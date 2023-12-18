@@ -3,15 +3,18 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
+import CategoryDto from "../../utils/CategoryDto"
+import { useSharedAuth } from "../../api/auth"
 import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
-import CategoryDto from "../../utils/CategoryDto"
 
 function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; enterprise: any }) {
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
   const [enterpriseCategory, setEnterpriseCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+
   useEffect(() => {
     const fetchCategory = async () => {
       const response = await apiRequest({
@@ -20,7 +23,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
       })
       setEnterpriseCategory(response.data)
     }
-    
+
     if (enterpriseCategory === null) {
       fetchCategory()
     }
@@ -29,7 +32,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       <Card.Img variant="top" src={defaultProfile} />
-      {editable ? (
+      {userInfo?.role === "ENTERPRISE" ? (
         <Button type="button" variant="success" href="/imageProfile">
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
@@ -42,7 +45,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
           <h5>{enterprise.name}</h5>
-          {editable ? (
+          {userInfo?.role === "ENTERPRISE" ? (
             <Button
               className="float-end"
               type="button"
@@ -56,7 +59,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
             <></>
           )}
         </div>
-        {editable ? <hr /> : <></>}
+        {userInfo?.role === "ENTERPRISE" ? <hr /> : <></>}
         <Card.Text>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
@@ -65,7 +68,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
                 <div>
                   {t("Job Category")}:
                   <Badge pill bg="success" className="mx-2">
-                  {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
+                    {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
                   </Badge>
                 </div>
               ) : (
