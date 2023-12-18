@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.math.BigDecimal;
@@ -577,6 +579,7 @@ public class EnterpriseController {
 
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
     private static final String PROFILE_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id)";
+    private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isJobOfferOwner(#id, #joid)";
 
     @Autowired
     private CategoryService categoryService;
@@ -705,21 +708,26 @@ public class EnterpriseController {
     @Path("/{id}/jobOffers/{joid}")
     @Produces({ MediaType.APPLICATION_JSON, })
     @Transactional
-    @PreAuthorize(PROFILE_OWNER)
-    public Response closeJobOffer(@PathParam("id") final long id, @PathParam("joid") final long joid) {
-        Optional<Enterprise> optEnterprise = enterpriseService.findById(id);
-        if (!optEnterprise.isPresent()) {
-            LOGGER.error("Enterprise with ID={} not found", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response updateJobOfferAvailability(@PathParam("id") final long id, @PathParam("joid") final long joid,
+                                               @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
+
+        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+
+        switch (availability) {
+            case ACTIVE:
+                throw new IllegalArgumentException("Cannot update job offer availability to ACTIVE");
+            case CLOSED:
+                jobOfferService.closeJobOffer(jobOffer);
+                break;
+            case CANCELLED:
+                jobOfferService.cancelJobOffer(jobOffer);
+                break;
         }
 
-        Optional<JobOffer> optJobOffer = jobOfferService.findById(joid);
-        if (!optJobOffer.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        jobOfferService.closeJobOffer(optJobOffer.get());
-        return Response.ok(optJobOffer.get()).build();
+        //TODO: Chequear si este path funciona
+        final URI uri = uriInfo.getAbsolutePath();
+        return Response.ok(uri).build();
     }
 
     @POST
