@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -639,9 +640,8 @@ public class EnterpriseController {
                 enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkers(),
                 enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
 
-        //TODO: EMAIL
-        //emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
-        //authWithAuthManager(request, enterpriseForm.getEmail(), enterpriseForm.getPassword());
+
+        emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
 
         LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());
         LOGGER.info("A new enterprise was registered");

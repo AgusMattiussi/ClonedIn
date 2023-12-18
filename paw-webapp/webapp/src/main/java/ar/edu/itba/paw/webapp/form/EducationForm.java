@@ -18,12 +18,12 @@ public class EducationForm {
     @Size(max=50)
     private String degree;
 
-   @NotNull
+    @NotNull
     @Min(MIN_YEAR)
     @Max(MAX_YEAR)
     private Integer yearFrom;
 
-    @NotEmpty
+    @NotNull
     private Month monthFrom;
 
     @Min(MIN_YEAR)

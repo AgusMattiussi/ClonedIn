@@ -27,7 +27,7 @@ public class ExperienceForm {
     @Max(MAX_YEAR)
     private Integer yearFrom;
 
-    @NotEmpty
+    @NotNull
     private Month monthFrom;
 
     @Min(MIN_YEAR)

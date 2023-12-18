@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -7,10 +8,9 @@ public class ContactForm {
     @Size(max=100)
     private String message;
 
-    @NotEmpty
+    @Min(0)
     private long jobOfferId;
-
-    @NotEmpty
+    @Min(0)
     private long userId;
 
     public String getMessage() {
