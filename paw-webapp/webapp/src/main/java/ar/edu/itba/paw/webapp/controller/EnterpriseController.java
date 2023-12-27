@@ -200,13 +200,10 @@ public class EnterpriseController {
         JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(),
                 jobOfferForm.getSalary(), jobOfferForm.getModality());
 
-        List<String> skills = Arrays.asList(jobOfferForm.getSkill1(), jobOfferForm.getSkill2(), jobOfferForm.getSkill3(), jobOfferForm.getSkill4());
-        for(String skill : skills) {
-            if(skill != null && !skill.isEmpty()) {
-                Skill newSkill = skillService.findByDescriptionOrCreate(skill);
-                jobOfferSkillService.addSkillToJobOffer(newSkill, jobOffer);
-            }
-        }
+        //TODO: Agregar mas skills a la job offer
+        List<String> formSkills = Arrays.asList(jobOfferForm.getSkill1(), jobOfferForm.getSkill2(), jobOfferForm.getSkill3(), jobOfferForm.getSkill4());
+        List<Skill> skills = skillService.findMultipleByDescriptionOrCreate(formSkills);
+        jobOfferSkillService.addSkillToJobOffer(skills, jobOffer);
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");
@@ -214,6 +211,7 @@ public class EnterpriseController {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
         return Response.created(uri).build();
     }
+
 
     @GET
     @Path("/{id}/contacts")
@@ -258,8 +256,7 @@ public class EnterpriseController {
         User user = userService.findById(contactForm.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(contactForm.getUserId()));
 
-        //TODO: EMAIL
-        // emailService.sendContactEmail(optUser.get(), optEnterprise.get(), optJobOffer.get(), contactForm.getMessage(), LocaleContextHolder.getLocale());
+        emailService.sendContactEmail(user, enterprise, jobOffer, contactForm.getMessage(), LocaleContextHolder.getLocale());
 
         Contact contact = contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 

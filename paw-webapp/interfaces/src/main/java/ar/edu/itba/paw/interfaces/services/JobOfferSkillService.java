@@ -9,6 +9,8 @@ public interface JobOfferSkillService {
 
     void addSkillToJobOffer(Skill skill, JobOffer jobOffer);
 
+    void addSkillToJobOffer(List<Skill> skills, JobOffer jobOffer);
+
     List<JobOffer> getJobOffersWithSkill(Skill skill);
 
     List<Skill> getSkillsForJobOffer(JobOffer jobOffer);
