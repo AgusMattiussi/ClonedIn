@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
@@ -271,15 +273,14 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-    //@Produces(value = {"image/webp"})
-    @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getProfileImage(@PathParam("id") final long id) {
-        Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new ExperienceNotFoundException(id)).getImage();
+    public Response getProfileImage(@PathParam("id") final long id) throws IOException {
+        Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
         if(profileImage == null)
             throw new ImageNotFoundException();
 
-        //TODO: Chequear que esto ande
-        return Response.ok(ImageDTO.fromImage(uriInfo, profileImage)).build();
+        return Response.ok(profileImage.getBytes())
+                .type(profileImage.getMimeType())
+                .build();
     }
 }

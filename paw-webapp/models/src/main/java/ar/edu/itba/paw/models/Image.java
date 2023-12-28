@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -35,6 +38,11 @@ public class Image {
 
     public byte[] getBytes() {
         return bytes;
+    }
+
+    public String getMimeType() throws IOException {
+        ByteArrayInputStream imageBytes = new ByteArrayInputStream(bytes);
+        return URLConnection.guessContentTypeFromStream(imageBytes);
     }
 
     @Override

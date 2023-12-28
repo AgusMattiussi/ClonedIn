@@ -14,11 +14,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
+
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -490,6 +495,7 @@ public class UserController {
         return Response.ok(uri).build();
     }
 
+    // TODO: Deberiamos validar que el usuario no nos inserte cualquier tipo de archivo en la BD (solo jpg, png, etc)
     @PUT
     @Path("/{id}/image")
     @Produces({ MediaType.APPLICATION_JSON, })
@@ -508,19 +514,19 @@ public class UserController {
         return Response.ok(uri).build();
     }
 
+
     @GET
     @Path("/{id}/image")
-    //@Produces(value = {"image/webp"})
-    @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getProfileImage(@PathParam("id") final long id) {
+    public Response getProfileImage(@PathParam("id") final long id) throws IOException {
 
         Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
         if(profileImage == null)
             throw new ImageNotFoundException();
 
-        //TODO: Chequear que esto ande
-        return Response.ok(ImageDTO.fromImage(uriInfo, profileImage)).build();
+        return Response.ok(profileImage.getBytes())
+                .type(profileImage.getMimeType())
+                .build();
     }
 
 }
