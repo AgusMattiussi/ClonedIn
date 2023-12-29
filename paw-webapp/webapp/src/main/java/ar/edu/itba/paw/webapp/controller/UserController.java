@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -495,22 +500,17 @@ public class UserController {
         return Response.ok(uri).build();
     }
 
-    // TODO: Deberiamos validar que el usuario no nos inserte cualquier tipo de archivo en la BD (solo jpg, png, etc)
+
     @PUT
     @Path("/{id}/image")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @PreAuthorize(PROFILE_OWNER)
     public Response uploadImage(@PathParam("id") final long id,
-                                @Valid final ImageForm imageForm) {
+                                @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
+        Image image = imageService.uploadImage(bytes);
+        us.updateProfileImage(id, image);
 
-        try {
-            Image image = imageService.uploadImage(imageForm.getImage().getBytes());
-            us.updateProfileImage(id, image);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid image");
-        }
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok(uri).build();
     }
 

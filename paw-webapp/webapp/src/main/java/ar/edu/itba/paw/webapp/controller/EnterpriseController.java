@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
 import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.ByteArrayInputStream;
@@ -270,6 +272,18 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }
 
+    @PUT
+    @Path("/{id}/image")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA})
+    @PreAuthorize(PROFILE_OWNER)
+    public Response uploadImage(@PathParam("id") final long id,
+                                @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
+        Image image = imageService.uploadImage(bytes);
+        enterpriseService.updateProfileImage(id, image);
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().build();
+        return Response.ok(uri).build();
+    }
 
     @GET
     @Path("/{id}/image")

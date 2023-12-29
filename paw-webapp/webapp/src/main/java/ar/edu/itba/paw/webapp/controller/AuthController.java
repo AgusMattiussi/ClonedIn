@@ -36,6 +36,9 @@ public class AuthController {
         this.authService = authService;
     }
 
+
+    // This method exists as a 'No-Op' way to get an access token. However, any endpoint can
+    // be used for HTTP Basic authenticantion.
     @POST
     @Path("/access-token")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})

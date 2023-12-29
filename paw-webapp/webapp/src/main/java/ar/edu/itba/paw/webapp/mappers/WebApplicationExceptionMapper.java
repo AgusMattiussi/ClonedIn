@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-@Provider
+//@Provider
 public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplicationException> {
 
     private static final String MESSAGE = "Web Application Exception";
