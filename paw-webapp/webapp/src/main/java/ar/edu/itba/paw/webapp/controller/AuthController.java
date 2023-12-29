@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.webapp.dto.SimpleMessageDTO;
-import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -41,7 +41,7 @@ public interface UserDao {
     List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize);
 
     List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription, int page, int pageSize);;
+                                     String location, String skillDescription, int page, int pageSize);
 
     void updateName(long userID, String newName);
 
