@@ -99,7 +99,7 @@ public class ExperienceHibernateDaoTest {
 
     @Test
     public void testFindByUser() {
-        final List<Experience> experienceList = dao.findByUser(testUser);
+        final List<Experience> experienceList = dao.findByUser(testUser, 0, 3);
 
         assertNotNull(experienceList);
         assertEquals(USER_EXPERIENCE_LIST_SIZE, experienceList.size());

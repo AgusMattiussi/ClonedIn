@@ -39,8 +39,13 @@ public class ExperienceServiceImpl implements ExperienceService {
 
 
     @Override
-    public List<Experience> findByUser(User user) {
-        return experienceDao.findByUser(user);
+    public List<Experience> findByUser(User user, int page, int pageSize) {
+        return experienceDao.findByUser(user, page, pageSize);
+    }
+
+    @Override
+    public long getExperienceCountForUser(User user) {
+        return experienceDao.getExperienceCountForUser(user);
     }
 
     @Override

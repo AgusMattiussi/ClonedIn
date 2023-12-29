@@ -37,11 +37,20 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
-    public List<Experience> findByUser(User user) {
+    public List<Experience> findByUser(User user, int page, int pageSize) {
         TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user", Experience.class);
         query.setParameter("user", user);
 
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    @Override
+    public long getExperienceCountForUser(User user) {
+        Query query = em.createQuery("SELECT COUNT(e) FROM Experience e WHERE e.user = :user");
+        query.setParameter("user", user);
+
+        return (Long) query.getSingleResult();
     }
 
     @Override

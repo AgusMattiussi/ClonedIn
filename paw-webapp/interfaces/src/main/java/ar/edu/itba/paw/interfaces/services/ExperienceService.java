@@ -12,7 +12,9 @@ public interface ExperienceService {
 
     Optional<Experience> findById(long experienceId);
 
-    List<Experience> findByUser(User user);
+    List<Experience> findByUser(User user, int page, int pageSize);
+
+    long getExperienceCountForUser(User user);
 
     void deleteExperience(long experienceId);
 }

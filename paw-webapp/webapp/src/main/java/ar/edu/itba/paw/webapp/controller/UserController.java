@@ -42,6 +42,7 @@ public class UserController {
     private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final int APPLICATIONS_PER_PAGE = 3;
     private static final int NOTIFICATIONS_PER_PAGE = APPLICATIONS_PER_PAGE;
+    private static final int EXPERIENCES_PER_PAGE = 3;
     private static final int USERS_PER_PAGE = 8;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -283,30 +284,29 @@ public class UserController {
     @Path("/{id}/experiences")
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getExperiences(@PathParam("id") final long id, @QueryParam("page") @DefaultValue("1") final int page) {
+    public Response getExperiences(@PathParam("id") final long id,
+                                   @QueryParam("page") @DefaultValue("1") final int page) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<ExperienceDTO> experiences = experienceService.findByUser(user)
+        List<ExperienceDTO> experiences = experienceService.findByUser(user, page - 1, EXPERIENCES_PER_PAGE)
                 .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
 
         if(experiences.isEmpty())
             return Response.noContent().build();
 
-        //TODO: Generar links (paginar)
-        /*return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();*/
-        return Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}).build();
+        long experienceCount = experienceService.getExperienceCountForUser(user);
+        long maxPages = experienceCount/EXPERIENCES_PER_PAGE + 1;
+
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages).build();
     }
 
     @GET
     @Path("/{id}/experiences/{expId}")
     @Produces({ MediaType.APPLICATION_JSON, })
     @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
-    public Response getExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+    public Response getExperienceById(@PathParam("id") final long id,
+                                      @PathParam("expId") final long expId) {
 
         ExperienceDTO experienceDTO = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp))
                 .orElseThrow(() -> new ExperienceNotFoundException(expId));
