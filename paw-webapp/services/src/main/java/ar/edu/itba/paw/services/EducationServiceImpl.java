@@ -38,9 +38,15 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public List<Education> findByUser(User user) {
-        return educationDao.findByUser(user);
+    public List<Education> findByUser(User user, int page, int pageSize) {
+        return educationDao.findByUser(user, page, pageSize);
     }
+
+    @Override
+    public long getEducationCountForUser(User user) {
+        return educationDao.getEducationCountForUser(user);
+    }
+
 
     @Override
     public void deleteEducation(long educationId) {

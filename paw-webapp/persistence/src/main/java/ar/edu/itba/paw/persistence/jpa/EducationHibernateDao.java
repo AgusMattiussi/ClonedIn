@@ -36,11 +36,20 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
-    public List<Education> findByUser(User user) {
+    public List<Education> findByUser(User user, int page, int pageSize) {
         TypedQuery<Education> query = em.createQuery("SELECT e FROM Education e WHERE e.user = :user", Education.class);
         query.setParameter("user", user);
 
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    @Override
+    public long getEducationCountForUser(User user) {
+        Query query = em.createQuery("SELECT COUNT(e) FROM Education e WHERE e.user = :user");
+        query.setParameter("user",user);
+
+        return (Long) query.getSingleResult();
     }
 
     @Override

@@ -44,6 +44,7 @@ public class UserController {
     private static final int NOTIFICATIONS_PER_PAGE = APPLICATIONS_PER_PAGE;
     private static final int EXPERIENCES_PER_PAGE = 3;
     private static final int USERS_PER_PAGE = 8;
+    private static final int EDUCATIONS_PER_PAGE = 3;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final String ENTERPRISE_OR_PROFILE_OWNER = "(hasAuthority('ENTERPRISE') and @securityValidator.isUserVisible(#id)) or @securityValidator.isUserProfileOwner(#id)";
@@ -52,6 +53,7 @@ public class UserController {
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
     private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
     private static final String EDUCATION_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId)";
+
 
     @Autowired
     private CategoryService categoryService;
@@ -149,7 +151,6 @@ public class UserController {
         final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
                 category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
 
-        //TODO: Mail
         emailService.sendRegisterUserConfirmationEmail(user, LocaleContextHolder.getLocale());
 
         LOGGER.debug("A new user was registered under id: {}", user.getId());
@@ -350,16 +351,16 @@ public class UserController {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<EducationDTO> educations = educationService.findByUser(user)
+        List<EducationDTO> educations = educationService.findByUser(user, page, EDUCATIONS_PER_PAGE)
                 .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
-        //TODO: Generar links (paginar)
-        /*return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();*/
-        return Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}).build();
+        if(educations.isEmpty())
+            return Response.noContent().build();
+
+        long educationCount = educationService.getEducationCountForUser(user);
+        long maxPages = educationCount/EDUCATIONS_PER_PAGE + 1;
+
+        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages).build();
     }
 
     @GET

@@ -12,7 +12,9 @@ public interface EducationDao {
 
     Optional<Education> findById(long educationID);
 
-    List<Education> findByUser(User user);
+    List<Education> findByUser(User user, int page, int pageSize);
+
+    long getEducationCountForUser(User user);
 
     void deleteEducation(long educationId);
 
