@@ -132,8 +132,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateProfileImage(long enterpriseID, Image image) {
-        enterpriseDao.updateEnterpriseProfileImage(enterpriseID, image);
+    public void updateProfileImage(Enterprise enterprise, Image image) {
+        enterpriseDao.updateEnterpriseProfileImage(enterprise, image);
     }
 
     @Override

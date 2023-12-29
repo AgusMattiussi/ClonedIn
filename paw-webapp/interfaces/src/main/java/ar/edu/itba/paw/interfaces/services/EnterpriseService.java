@@ -39,7 +39,7 @@ public interface EnterpriseService {
 
     void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers);
 
-    void updateProfileImage(long enterpriseID, Image image);
+    void updateProfileImage(Enterprise enterprise, Image image);
 
     Optional<Image> getProfileImage(int imageId);
 

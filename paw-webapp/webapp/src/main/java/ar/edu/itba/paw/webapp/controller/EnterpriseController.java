@@ -278,8 +278,9 @@ public class EnterpriseController {
     @PreAuthorize(PROFILE_OWNER)
     public Response uploadImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
         Image image = imageService.uploadImage(bytes);
-        enterpriseService.updateProfileImage(id, image);
+        enterpriseService.updateProfileImage(enterprise, image);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok(uri).build();

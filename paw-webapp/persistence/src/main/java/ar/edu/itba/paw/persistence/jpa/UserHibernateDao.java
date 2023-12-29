@@ -324,11 +324,21 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateUserProfileImage(long userID, Image image) {
-        Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
+    public void updateUserProfileImage(User user, Image image) {
+        /*Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
         query.setParameter("image", image);
         query.setParameter("userID", userID);
-        query.executeUpdate();
+        query.executeUpdate();*/
+
+        Image oldImage = user.getImage();
+
+        user.setImage(image);
+        em.persist(user);
+
+        if(oldImage != null){
+            oldImage = em.merge(oldImage);
+            em.remove(oldImage);
+        }
     }
 
     @Override

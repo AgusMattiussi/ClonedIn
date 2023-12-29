@@ -192,8 +192,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfileImage(long userId, Image newImage) {
-        userDao.updateUserProfileImage(userId, newImage);
+    public void updateProfileImage(User user, Image image) {
+        userDao.updateUserProfileImage(user, image);
     }
 
     @Override

@@ -124,10 +124,20 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    public void updateEnterpriseProfileImage(long enterpriseID, Image image) {
-        Query query = em.createQuery("UPDATE Enterprise SET image = :image WHERE id = :enterpriseID");
+    public void updateEnterpriseProfileImage(Enterprise enterprise, Image image) {
+        /*Query query = em.createQuery("UPDATE Enterprise SET image = :image WHERE id = :enterpriseID");
         query.setParameter("image", image);
         query.setParameter("enterpriseID", enterpriseID);
-        query.executeUpdate();
+        query.executeUpdate();*/
+
+        Image oldImage = enterprise.getImage();
+
+        enterprise.setImage(image);
+        em.persist(enterprise);
+
+        if(oldImage != null){
+            oldImage = em.merge(oldImage);
+            em.remove(oldImage);
+        }
     }
 }

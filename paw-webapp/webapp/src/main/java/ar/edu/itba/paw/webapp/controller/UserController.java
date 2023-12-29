@@ -507,8 +507,10 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response uploadImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
+
+        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         Image image = imageService.uploadImage(bytes);
-        us.updateProfileImage(id, image);
+        us.updateProfileImage(user, image);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok(uri).build();

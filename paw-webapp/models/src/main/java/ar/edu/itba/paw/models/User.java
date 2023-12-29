@@ -187,6 +187,10 @@ public class User implements CustomUserDetails {
         return image;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public Set<Experience> getExperiences() {
         return experiences;
     }
