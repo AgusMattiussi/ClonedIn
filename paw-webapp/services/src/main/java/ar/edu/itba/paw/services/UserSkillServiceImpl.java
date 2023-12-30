@@ -40,8 +40,13 @@ public class UserSkillServiceImpl implements UserSkillService {
     }
 
     @Override
-    public List<Skill> getSkillsForUser(User user) {
-        return userSkillDao.getSkillsForUser(user);
+    public List<Skill> getSkillsForUser(User user, int page, int pageSize) {
+        return userSkillDao.getSkillsForUser(user, page, pageSize);
+    }
+
+    @Override
+    public long getSkillCountForUser(User user) {
+        return userSkillDao.getSkillCountForUser(user);
     }
 
     @Override

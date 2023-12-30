@@ -49,11 +49,20 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
 
     @Override
-    public List<Skill> getSkillsForUser(User user) {
+    public List<Skill> getSkillsForUser(User user, int page, int pageSize) {
         TypedQuery<Skill> query = em.createQuery("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user", Skill.class);
         query.setParameter("user", user);
 
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    @Override
+    public long getSkillCountForUser(User user) {
+        Query query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.user = :user");
+        query.setParameter("user", user);
+
+        return (Long) query.getSingleResult();
     }
 
 
