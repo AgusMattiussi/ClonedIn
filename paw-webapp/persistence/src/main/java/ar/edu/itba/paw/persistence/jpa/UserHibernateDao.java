@@ -101,8 +101,11 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
+
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'", User.class);
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         query.setParameter("term", term);
@@ -147,7 +150,8 @@ public class UserHibernateDao implements UserDao {
             queryStringBuilder.append(" AND (EXISTS (SELECT usk1 FROM UserSkill usk1 JOIN usk1.skill sk1 WHERE usk1.user = u ")
                     .append("AND LOWER(sk1.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')")
                     .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
-                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')");
+                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(")");
         }
         if(minExpYears != null || maxExpYears != null){
             queryStringBuilder.append(" GROUP BY u.id HAVING");
@@ -206,8 +210,11 @@ public class UserHibernateDao implements UserDao {
     @Override
     public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription, int page, int pageSize) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
 

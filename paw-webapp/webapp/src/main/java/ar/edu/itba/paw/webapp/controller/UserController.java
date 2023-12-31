@@ -4,10 +4,10 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,19 +16,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MimeType;
-import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLConnection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,6 +50,7 @@ public class UserController {
     private static final String PROFILE_OWNER = "hasAuthority('USER') AND @securityValidator.isUserProfileOwner(#id)";
     private static final String EXPERIENCE_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isExperienceOwner(#expId)";
     private static final String EDUCATION_OWNER = "hasAuthority('USER') and @securityValidator.isUserProfileOwner(#id) and @securityValidator.isEducationOwner(#edId)";
+    private static final String ENTERPRISE = "hasAuthority('ENTERPRISE')";
 
     @Autowired
     private CategoryService categoryService;
@@ -113,27 +109,26 @@ public class UserController {
     }
 
     @GET
-    @Produces({ MediaType.APPLICATION_JSON, })
-    @PreAuthorize("hasAuthority('ENTERPRISE')")
-    public Response listUsers(@QueryParam("page") @DefaultValue("1") final int page,
-                              @QueryParam("categoryName") @DefaultValue("") final String categoryName,
+    @Produces(ClonedInMediaType.USER_LIST_V1)
+    @PreAuthorize(ENTERPRISE)
+    public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                              @QueryParam("categoryName") final String categoryName,
                               @QueryParam("educationLevel") final String educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
-                              @QueryParam("minExpYears") @DefaultValue("0") final int minExpYears,
-                              @QueryParam("maxExpYears") @DefaultValue("100") final int maxExpYears,
+                              @QueryParam("minExpYears") @Min(0) final Integer minExpYears,
+                              @QueryParam("maxExpYears") @Min(0) final Integer maxExpYears,
                               @QueryParam("location") final String location,
                               @QueryParam("skillDescription") final String skillDescription) {
 
         Category category = categoryService.findByName(categoryName).orElse(null);
 
-        final List<UserDTO> allUsers = us.getAllUsers().stream().map(u -> UserDTO.fromUser(uriInfo,u))
+        final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
+                                     location, skillDescription, page-1, USERS_PER_PAGE)
+                .stream().map(u -> UserDTO.fromUser(uriInfo,u))
                 .collect(Collectors.toList());
 
-
-        System.out.println("\n\n\n\n\n\n\n\nallUsers: " + allUsers + "\n\n\n\n\n\n");
-        if (allUsers.isEmpty()) {
+        if (allUsers.isEmpty())
             return Response.noContent().build();
-        }
 
         final long userCount = us.getUsersCountByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
                                      location, skillDescription);
@@ -144,8 +139,8 @@ public class UserController {
 
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
-    public Response createUser (@Valid final UserForm userForm) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createUser (@NotNull @Valid final UserForm userForm) {
         Category category = categoryService.findByName(userForm.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(userForm.getCategory()));
 
@@ -164,13 +159,14 @@ public class UserController {
 
     @GET
     @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.USER_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getById(@PathParam("id") final long id) {
+    public Response getById(@PathParam("id") @Min(1) final long id) {
         UserDTO user = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u))
                 .orElseThrow(() -> new UserNotFoundException(id));
         return Response.ok(user).build();
     }
+
 
     /* TODO:
     @DELETE
@@ -183,10 +179,11 @@ public class UserController {
 
     @GET
     @Path("/{id}/applications")
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
     public Response getApplications(@PathParam("id") final long id,
-                                    @QueryParam("page") @DefaultValue("1") final int page,
-                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -200,12 +197,15 @@ public class UserController {
         return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages).build();
     }
 
+
     @POST
     @Path("/{id}/applications")
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response applyToJobOffer(@PathParam("id") final long id,
-                                    @QueryParam("jobOfferId") final long jobOfferId){
+    public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
+                                    @NotNull @Valid ApplyToJobOfferForm applyToJobOfferForm) {
+
+        long jobOfferId = applyToJobOfferForm.getJobOfferId();
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
@@ -225,10 +225,12 @@ public class UserController {
         return Response.created(uri).build();
     }
 
+
     @PUT
     @Path("/{id}/applications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response cancelApplication(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId) {
+    public Response cancelApplication(@PathParam("id") @Min(1) final long id,
+                                      @PathParam("jobOfferId") @Min(1) final long jobOfferId) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
@@ -239,14 +241,16 @@ public class UserController {
         emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
+
 
     @PUT
     @Path("/{id}/notifications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response updateJobOfferStatus(@PathParam("id") final long id, @PathParam("jobOfferId") final long jobOfferId,
-                                         @QueryParam("newStatus") final JobOfferStatus newStatus) {
+    public Response updateJobOfferStatus(@PathParam("id") final long id,
+                                         @PathParam("jobOfferId") final long jobOfferId,
+                                         @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
@@ -259,16 +263,18 @@ public class UserController {
         else if (newStatus == JobOfferStatus.DECLINED && !contactService.rejectJobOffer(user, jobOffer))
             throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, id);
 
-        return Response.ok().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
+        return Response.ok().location(uri).build();
     }
 
 
     @GET
     @Path("/{id}/notifications")
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
     public Response getNotifications(@PathParam("id") final long id,
-                                     @QueryParam("page") @DefaultValue("1") final int page,
-                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                      @QueryParam("status") final String status) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -284,10 +290,10 @@ public class UserController {
 
     @GET
     @Path("/{id}/experiences")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.EXPERIENCE_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperiences(@PathParam("id") final long id,
-                                   @QueryParam("page") @DefaultValue("1") final int page) {
+                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -305,10 +311,10 @@ public class UserController {
 
     @GET
     @Path("/{id}/experiences/{expId}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.EXPERIENCE_V1)
     @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
-    public Response getExperienceById(@PathParam("id") final long id,
-                                      @PathParam("expId") final long expId) {
+    public Response getExperienceById(@PathParam("id") @Min(1) final long id,
+                                      @PathParam("expId") @Min(1) final long expId) {
 
         ExperienceDTO experienceDTO = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp))
                 .orElseThrow(() -> new ExperienceNotFoundException(expId));
@@ -318,9 +324,10 @@ public class UserController {
 
     @POST
     @Path("/{id}/experiences")
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response addExperience(@PathParam("id") final long id, @Valid final ExperienceForm experienceForm){
+    public Response addExperience(@PathParam("id") final long id,
+                                  @NotNull @Valid ExperienceForm experienceForm){
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -338,17 +345,19 @@ public class UserController {
     @DELETE
     @Path("/{id}/experiences/{expId}")
     @PreAuthorize(EXPERIENCE_OWNER)
-    public Response deleteExperienceById(@PathParam("id") final long id, @PathParam("expId") final long expId) {
+    public Response deleteExperienceById(@PathParam("id") @Min(1) final long id,
+                                         @PathParam("expId") @Min(1) final long expId) {
         experienceService.deleteExperience(expId);
         return Response.ok().build();
     }
 
+
     @GET
     @Path("/{id}/educations")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.EDUCATION_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getEducations(@PathParam("id") final long id,
-                                  @QueryParam("page") @DefaultValue("1") final int page) {
+    public Response getEducations(@PathParam("id") @Min(1) final long id,
+                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -366,10 +375,10 @@ public class UserController {
 
     @GET
     @Path("/{id}/educations/{edId}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.EDUCATION_V1)
     @PreAuthorize(ENTERPRISE_OR_EDUCATION_OWNER)
-    public Response getEducationById(@PathParam("id") final long id,
-                                     @PathParam("edId") final long educationId) {
+    public Response getEducationById(@PathParam("id") @Min(1) final long id,
+                                     @PathParam("edId") @Min(1) final long educationId) {
 
         EducationDTO educationDTO = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
                 .orElseThrow(() -> new EducationNotFoundException(educationId));
@@ -379,9 +388,10 @@ public class UserController {
 
     @POST
     @Path("/{id}/educations")
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response addEducation(@PathParam("id") final long id, @Valid final EducationForm educationForm){
+    public Response addEducation(@PathParam("id") @Min(1) final long id,
+                                 @NotNull @Valid final EducationForm educationForm){
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
         Education education = educationService.add(user, educationForm.getMonthFrom(), educationForm.getYearFrom(),
@@ -398,17 +408,18 @@ public class UserController {
     @DELETE
     @Path("/{id}/educations/{edId}")
     @PreAuthorize(EDUCATION_OWNER)
-    public Response deleteEducationById(@PathParam("id") final long id, @PathParam("edId") final long educationId) {
+    public Response deleteEducationById(@PathParam("id") @Min(1) final long id,
+                                        @PathParam("edId") @Min(1) final long educationId) {
         educationService.deleteEducation(educationId);
         return Response.noContent().build();
     }
 
     @GET
     @Path("/{id}/skills")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getSkills(@PathParam("id") final long id,
-                              @QueryParam("page") @DefaultValue("1") final int page) {
+    public Response getSkills(@PathParam("id") @Min(1) final long id,
+                              @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
         List<UserSkillDTO> skills = userSkillService.getSkillsForUser(user, page - 1, SKILLS_PER_PAGE)
@@ -425,9 +436,10 @@ public class UserController {
 
     @GET
     @Path("/{id}/skills/{skillId}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.USER_SKILL_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getSkillById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+    public Response getSkillById(@PathParam("id") @Min(1) final long id,
+                                 @PathParam("skillId") @Min(1) final long skillId) {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if(!user.hasSkill(skillId))
@@ -441,9 +453,10 @@ public class UserController {
 
     @POST
     @Path("/{id}/skills")
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response addSkill(@PathParam("id") final long id, @Valid final SkillForm skillForm){
+    public Response addSkill(@PathParam("id") @Min(1) final long id,
+                             @NotNull @Valid final SkillForm skillForm){
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
@@ -462,7 +475,8 @@ public class UserController {
     @DELETE
     @Path("/{id}/skills/{skillId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response deleteSkillFromUserById(@PathParam("id") final long id, @PathParam("skillId") final long skillId) {
+    public Response deleteSkillFromUserById(@PathParam("id") @Min(1) final long id,
+                                            @PathParam("skillId") @Min(1) final long skillId) {
         userSkillService.deleteSkillFromUser(id, skillId);
         return Response.ok().build();
     }
@@ -470,7 +484,8 @@ public class UserController {
     @PUT
     @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response editUser( @PathParam("id") final long id, @Valid final EditUserForm editUserForm) {
+    public Response editUser( @PathParam("id") @Min(1) final long id,
+                              @NotNull @Valid final EditUserForm editUserForm) {
 
         Category category = null;
 
@@ -484,14 +499,14 @@ public class UserController {
                 editUserForm.getPosition(), category, editUserForm.getLevel());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
 
     @PUT
     @Path("/{id}/visibility")
     @PreAuthorize(PROFILE_OWNER)
-    public Response updateVisibility(@PathParam("id") final long id,
-                                     @QueryParam("visibility") final Visibility visibility) {
+    public Response updateVisibility(@PathParam("id") @Min(1) final long id,
+                                     @NotNull @QueryParam("visibility") final Visibility visibility) {
 
         if (visibility == Visibility.INVISIBLE)
             us.hideUserProfile(id);
@@ -499,13 +514,13 @@ public class UserController {
             us.showUserProfile(id);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
 
 
     @PUT
     @Path("/{id}/image")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PreAuthorize(PROFILE_OWNER)
     public Response uploadImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
@@ -515,14 +530,14 @@ public class UserController {
         us.updateProfileImage(user, image);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
 
 
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getProfileImage(@PathParam("id") final long id) throws IOException {
+    public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
         Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
         if(profileImage == null)

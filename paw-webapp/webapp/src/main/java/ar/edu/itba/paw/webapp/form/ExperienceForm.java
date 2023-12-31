@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 public class ExperienceForm {
@@ -64,8 +66,8 @@ public class ExperienceForm {
         return monthFrom;
     }
 
-    public void setMonthFrom(Month monthFrom) {
-        this.monthFrom = monthFrom;
+    public void setMonthFrom(String monthFrom) {
+        this.monthFrom = Month.fromString(monthFrom);
     }
 
     public Month getMonthTo() {
