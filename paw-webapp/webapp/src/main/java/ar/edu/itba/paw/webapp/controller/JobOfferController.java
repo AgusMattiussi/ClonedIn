@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.math.BigDecimal;
@@ -34,67 +37,22 @@ public class JobOfferController {
     private CategoryService categoryService;
     @Autowired
     private JobOfferService jobOfferService;
-
     @Autowired
     protected AuthenticationManager authenticationManager;
 
     @Context
     private UriInfo uriInfo;
 
-    /*//TODO: arreglar para distinguir por usuario
+    //TODO: Agregar parametro "enterprise" para sacar la logica de job offers del EnterpriseController
     @GET
-    @Produces({ MediaType.APPLICATION_JSON, })
-    public Response JobOfferList(@QueryParam("page") @DefaultValue("1") final int page, @Valid final UserFilterForm filterForm,
-                                 final ContactOrderForm contactOrderForm*//*, HttpServletRequest request*//*) {
-
-        Optional<Category> optCategory = categoryService.findByName(filterForm.getCategory());
-        if (!optCategory.isPresent()) {
-            //TODO: Desarrollar errores
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        long categoryID;
-        try {
-            categoryID = Long.parseLong(filterForm.getCategory());
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid CategoryID {} in 'home'", filterForm.getCategory());
-            categoryID = 0;
-        }
-
-        BigDecimal minSalaryBigDec = filterForm.getMinSalary();
-        BigDecimal maxSalaryBigDec = filterForm.getMaxSalary();
-        Category category = categoryService.findById(categoryID).orElse(null);
-        String modality = filterForm.getModality();
-        String searchTerm = filterForm.getTerm();
-        String minSalary = minSalaryBigDec == null ? "" : String.valueOf(minSalaryBigDec);
-        String maxSalary = maxSalaryBigDec == null ? "" : String.valueOf(maxSalaryBigDec);
-
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalaryBigDec, maxSalaryBigDec);
-
-        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalaryBigDec,
-                maxSalaryBigDec, page - 1, JOB_OFFERS_PER_PAGE).stream().map(u -> JobOfferDTO.fromJobOffer(uriInfo,u)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
-    }*/
-
-    //TODO: arreglar para distinguir por usuario
-    //TODO: Cambiar a BeanParam
-    //TODO: Esta bien BigDecimal en QueryParam? Si no pedir double o similar y convertirlo
-    //TODO: Si la category no existe, bad request o resultado vacio?
-    // FIXME: Falla cuando minSalary o maxSalary no son numeros
-    @GET
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
     @PreAuthorize("hasAuthority('USER')")
-    public Response jobOfferList(@QueryParam("page") @DefaultValue("1") final int page,
-                                 @QueryParam("categoryName") @DefaultValue("") final String categoryName,
-                                 @QueryParam("minSalary") @DefaultValue("0") final BigDecimal minSalary,
-                                 @QueryParam("maxSalary") @DefaultValue("10000000") final BigDecimal maxSalary,
-                                 @QueryParam("modality") @DefaultValue("") final String modality,
-                                 @QueryParam("query") @DefaultValue("") final String searchTerm) {
+    public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                 @QueryParam("categoryName") final String categoryName,
+                                 @QueryParam("minSalary") @Min(0) final double minSalary,
+                                 @QueryParam("maxSalary") @Min(0) final double maxSalary,
+                                 @QueryParam("modality") final JobOfferModality modality,
+                                 @QueryParam("query") final String searchTerm) {
 
         Category category = null;
         if(categoryName != null && !categoryName.isEmpty()) {
@@ -102,17 +60,17 @@ public class JobOfferController {
                     -> new CategoryNotFoundException(String.format("Category '%s' not found or does not exist", categoryName)));
         }
 
-        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm, minSalary,
-                maxSalary, page - 1, JOB_OFFERS_PER_PAGE).stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
+        final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm,
+                        BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary), page - 1, JOB_OFFERS_PER_PAGE)
+                .stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
                 .collect(Collectors.toList());
 
-        if (jobOfferList.isEmpty()) {
+        if (jobOfferList.isEmpty())
             return Response.noContent().build();
-        }
 
-        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm, minSalary, maxSalary);
+        final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm,
+                BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
         long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
-
 
         return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
@@ -123,7 +81,7 @@ public class JobOfferController {
 
     @GET
     @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.JOB_OFFER_V1)
     @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
     public Response getById(@PathParam("id") final long id) {
         JobOfferDTO jobOffer = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))

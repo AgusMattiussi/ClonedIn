@@ -40,7 +40,6 @@ public class AuthController {
     // be used for HTTP Basic authenticantion.
     @POST
     @Path("/access-token")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response authenticate(@Context HttpServletRequest request){
         // Authenticate the user using the HttpBasic credentials provided
         // Should not allow Bearer authentication, since it may lead to a security breach
@@ -56,7 +55,6 @@ public class AuthController {
 
     @POST
     @Path("/refresh-token")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response refreshToken(@Context HttpServletRequest request, @Context HttpHeaders headers){
         Cookie refreshTokenCookie = WebUtils.getCookie(request, "ClonedInRefreshToken");
         if(refreshTokenCookie == null){
@@ -80,7 +78,7 @@ public class AuthController {
         NewCookie newRefreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
 
         return Response.ok(new SimpleMessageDTO(CHECK_HEADER_MESSAGE))
-                .header("X-Access-Token", newAccessToken)
+                .header(ACCESS_TOKEN_HEADER, newAccessToken)
                 .cookie(newRefreshTokenCookie)
                 .build();
     }

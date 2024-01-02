@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -137,10 +138,10 @@ public class JobOfferHibernateDao implements JobOfferDao {
         }
     }
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
         if(category != null)
             queryStringBuilder.append(" AND jo.category = :category");
-        if(!modality.isEmpty())
+        if(modality != null)
             queryStringBuilder.append(" AND jo.modality = :modality");
         if(minSalary != null)
             queryStringBuilder.append(" AND jo.salary >= :minSalary");
@@ -173,12 +174,12 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("term", searchTerm);
     }
 
-    private void filterQuerySetParameters(Query query, Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
+    private void filterQuerySetParameters(Query query, Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
         if(category != null)
             query.setParameter("category", category);
-        if(!modality.isEmpty())
-            query.setParameter("modality", modality);
+        if(modality != null)
+            query.setParameter("modality", modality.getModality());
         if(minSalary != null)
             query.setParameter("minSalary", minSalary);
         if(maxSalary != null)
@@ -207,7 +208,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
+    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
@@ -248,7 +249,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    public long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
+    public long getActiveJobOffersCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
         if(term != null && !term.isEmpty()){
             term = term.replace("_", "\\_");
             term = term.replace("%", "\\%");

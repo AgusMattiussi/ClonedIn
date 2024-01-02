@@ -37,10 +37,10 @@ public class CategoryController {
         final List<CategoryDTO> categories = categoryService.getAllCategories(/*page-1, PAGE_SIZE*/).stream()
                 .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
-        if (categories.isEmpty()) {
+        if (categories.isEmpty())
             return Response.noContent().build();
-        }
 
+        //TODO: Paginar
         return Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {})
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
