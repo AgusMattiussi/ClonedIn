@@ -552,7 +552,7 @@ public class ContactHibernateDao implements ContactDao {
         if(status != null && !status.isEmpty())
             query.setParameter("status", status);
 
-        return ((Long) query.getSingleResult());
+        return ((BigInteger) query.getSingleResult()).longValue();
     }
 
     @Override

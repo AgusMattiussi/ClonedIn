@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
@@ -27,6 +29,8 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
+
+//TODO: Edit Enterprise
 
 @Path("enterprises")
 @Component
@@ -79,6 +83,7 @@ public class EnterpriseController {
         this.emailService = emailService;
     }
 
+    //TODO: Extraer en lugar comun
     private Response.ResponseBuilder responseWithPaginationLinks(Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
         if(currentPage > 1)
             responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
@@ -91,8 +96,8 @@ public class EnterpriseController {
     }
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    public Response createEnterprise(@Valid final EnterpriseForm enterpriseForm) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createEnterprise(@NotNull @Valid final EnterpriseForm enterpriseForm) {
 
         String categoryName = enterpriseForm.getCategory();
         Category category = categoryService.findByName(categoryName)
@@ -113,26 +118,27 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON,})
+    @Produces(ClonedInMediaType.ENTERPRISE_V1)
     @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getById(@PathParam("id") final long id) {
+    public Response getById(@PathParam("id") @Min(1) final long id) {
         EnterpriseDTO enterpriseDTO = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e))
                 .orElseThrow(() -> new EnterpriseNotFoundException(id));
         return Response.ok(enterpriseDTO).build();
     }
 
-    //TODO: Solo trae las que esten activas. Deberiamos traer todas si es el dueño del perfil?
+
     @GET
     @Path("/{id}/jobOffers")
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getJobOffers(@PathParam("id") final long id,
-                                 @QueryParam("page") @DefaultValue("1") final int page,
+    @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
+    @PreAuthorize(PROFILE_OWNER)
+    public Response getJobOffers(@PathParam("id") @Min(1) final long id,
+                                 @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("category") final String categoryName,
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam("position") final String position,
-                                 @QueryParam("minSalary") final double minSalary,
-                                 @QueryParam("maxSalary") final double maxSalary) {
+                                 @QueryParam("minSalary") @Min(0) final double minSalary,
+                                 @QueryParam("maxSalary") @Min(0) final double maxSalary) {
 
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
@@ -151,12 +157,13 @@ public class EnterpriseController {
         return responseWithPaginationLinks(Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages).build();
     }
 
+    //TODO: Mover esta logica al JobOfferController?
     @GET
     @Path("/{id}/jobOffers/{joid}")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.JOB_OFFER_V1)
     @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getJobOfferById(@PathParam("id") final long id, @PathParam("joid") final long joid) {
-        // TODO: Deberiamos permitir que se devuelvan solo las Active?
+    public Response getJobOfferById(@PathParam("id") @Min(1) final long id,
+                                    @PathParam("joid") @Min(1) final long joid) {
         JobOfferDTO jobOffer = jobOfferService.findById(joid).map(jo -> JobOfferDTO.fromJobOffer(uriInfo,jo))
                 .orElseThrow(() -> new JobOfferNotFoundException(joid));
         return Response.ok(jobOffer).build();
@@ -164,10 +171,10 @@ public class EnterpriseController {
 
     @PUT
     @Path("/{id}/jobOffers/{joid}")
-    @Produces({ MediaType.APPLICATION_JSON, })
-    @Transactional
+    @Transactional //TODO:Hace falta?
     @PreAuthorize(JOB_OFFER_OWNER)
-    public Response updateJobOfferAvailability(@PathParam("id") final long id, @PathParam("joid") final long joid,
+    public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
+                                               @PathParam("joid") @Min(1) final long joid,
                                                @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
 
         JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
@@ -185,14 +192,15 @@ public class EnterpriseController {
 
         //TODO: Chequear si este path funciona
         final URI uri = uriInfo.getAbsolutePath();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
 
     @POST
     @Path("/{id}/jobOffers")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response createJobOffer(@PathParam("id") final long id, @Valid final JobOfferForm jobOfferForm) {
+    public Response createJobOffer(@PathParam("id") @Min(1) final long id,
+                                   @Valid @NotNull final JobOfferForm jobOfferForm) {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
         Category category = categoryService.findByName(jobOfferForm.getCategory())
@@ -216,25 +224,24 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/contacts")
-    @Produces({ MediaType.APPLICATION_JSON, })
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
-    public Response getContacts(@PathParam("id") final long id,
-                                    @QueryParam("page") @DefaultValue("1") final int page,
+    public Response getContacts(@PathParam("id") @Min(1) final long id,
+                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
-                                    @QueryParam("userId") final Long userId,
-                                    @QueryParam("jobOfferId") final Long jobOfferId) {
+                                    @QueryParam("userId") @Min(1) final Long userId,
+                                    @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
         User user = userId != null ? userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)) : null;
         JobOffer jobOffer = jobOfferId != null ? jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId)) : null;
 
-        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status.getStatus(), sortBy,
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status, sortBy,
                 page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
-
-        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status.getStatus());
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
         long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
 
         return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages).build();
@@ -242,9 +249,10 @@ public class EnterpriseController {
 
     @POST
     @Path("/{id}/contacts")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
+    @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response contactUser(@PathParam("id") final long id, @Valid final ContactForm contactForm){
+    public Response contactUser(@PathParam("id") @Min(1) final long id,
+                                @Valid @NotNull final ContactForm contactForm){
 
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
@@ -273,26 +281,26 @@ public class EnterpriseController {
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @PreAuthorize(PROFILE_OWNER)
-    public Response uploadImage(@PathParam("id") final long id,
+    public Response uploadImage(@PathParam("id") @Min(1) final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
         Image image = imageService.uploadImage(bytes);
         enterpriseService.updateProfileImage(enterprise, image);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
-        return Response.ok(uri).build();
+        return Response.ok().location(uri).build();
     }
 
     @GET
     @Path("/{id}/image")
     @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getProfileImage(@PathParam("id") final long id) throws IOException {
+    public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
         if(profileImage == null)
             throw new ImageNotFoundException();
 
         return Response.ok(profileImage.getBytes())
-                .type(profileImage.getMimeType())
+                .type(profileImage.getMimeType()) // Replaces @Produces dynamically
                 .build();
     }
 }

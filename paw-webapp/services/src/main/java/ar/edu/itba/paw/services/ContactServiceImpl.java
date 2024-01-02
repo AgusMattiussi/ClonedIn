@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
+import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -87,8 +88,9 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                           String status, SortBy sortBy, int page, int pageSize) {
-        return contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status, sortBy, page, pageSize);
+                                                  JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
+        String statusValue = status != null ? status.getStatus() : null;
+        return contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, statusValue, sortBy, page, pageSize);
     }
 
     @Override
@@ -177,8 +179,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
-        return contactDao.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
+    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status) {
+        String statusValue = status != null ? status.getStatus() : null;
+        return contactDao.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, statusValue);
     }
 
     @Override
