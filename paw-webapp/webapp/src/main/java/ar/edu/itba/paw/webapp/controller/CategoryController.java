@@ -3,11 +3,13 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
@@ -30,8 +32,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GET
-    @Produces({ MediaType.APPLICATION_JSON, })
-    public Response listCategories(@QueryParam("page") @DefaultValue("1") final int page) {
+    @Produces(ClonedInMediaType.CATEGORY_LIST_V1)
+    public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
         final List<CategoryDTO> categories = categoryService.getAllCategories(/*page-1, PAGE_SIZE*/).stream()
                 .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
@@ -48,8 +50,8 @@ public class CategoryController {
 
     @GET
     @Path("/{id}")
-    @Produces({ MediaType.APPLICATION_JSON, })
-    public Response getById(@PathParam("id") final long id) {
+    @Produces(ClonedInMediaType.CATEGORY_V1)
+    public Response getById(@PathParam("id") @Min(1) final long id) {
         CategoryDTO categoryDTO = categoryService.findById(id).map(c -> CategoryDTO.fromCategory(uriInfo, c))
                 .orElseThrow(() -> new CategoryNotFoundException(id));
         return Response.ok(categoryDTO).build();
