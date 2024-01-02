@@ -30,6 +30,8 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
+
 //TODO: Edit Enterprise
 
 @Path("enterprises")
@@ -82,18 +84,7 @@ public class EnterpriseController {
         this.userService = userService;
         this.emailService = emailService;
     }
-
-    //TODO: Extraer en lugar comun
-    private Response.ResponseBuilder responseWithPaginationLinks(Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
-        if(currentPage > 1)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
-        if(currentPage < maxPages)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
-
-        return responseBuilder
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last");
-    }
+    
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -154,7 +145,7 @@ public class EnterpriseController {
                         searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
     }
 
     //TODO: Mover esta logica al JobOfferController?
@@ -244,7 +235,7 @@ public class EnterpriseController {
         long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
         long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
     }
 
     @POST
@@ -293,6 +284,7 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
+    // @Produces set dynamically
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();

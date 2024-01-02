@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
 
 @Path("categories")
 @Component
@@ -41,11 +44,8 @@ public class CategoryController {
             return Response.noContent().build();
 
         //TODO: Paginar
-        return Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 999).build(), "last").build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {}),
+                1, 999);
     }
 
     @GET

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
 
 
 @Path("users")
@@ -97,16 +100,6 @@ public class UserController {
         this.imageService = imageService;
     }
 
-    private Response.ResponseBuilder responseWithPaginationLinks(Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
-        if(currentPage > 1)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
-        if(currentPage < maxPages)
-            responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage + 1).build(), "next");
-
-        return responseBuilder
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last");
-    }
 
     @GET
     @Produces(ClonedInMediaType.USER_LIST_V1)
@@ -134,7 +127,7 @@ public class UserController {
                                      location, skillDescription);
         long maxPages = userCount/USERS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages);
     }
 
 
@@ -194,7 +187,7 @@ public class UserController {
         long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status.getStatus());
         long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages);
     }
 
 
@@ -285,7 +278,7 @@ public class UserController {
         long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
         long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
     }
 
     @GET
@@ -306,7 +299,7 @@ public class UserController {
         long experienceCount = experienceService.getExperienceCountForUser(user);
         long maxPages = experienceCount/EXPERIENCES_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages);
     }
 
     @GET
@@ -370,7 +363,7 @@ public class UserController {
         long educationCount = educationService.getEducationCountForUser(user);
         long maxPages = educationCount/EDUCATIONS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages);
     }
 
     @GET
@@ -431,7 +424,7 @@ public class UserController {
         long skillCount = userSkillService.getSkillCountForUser(user);
         long maxPages = skillCount/SKILLS_PER_PAGE + 1;
 
-        return responseWithPaginationLinks(Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {}), page, maxPages).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {}), page, maxPages);
     }
 
     @GET

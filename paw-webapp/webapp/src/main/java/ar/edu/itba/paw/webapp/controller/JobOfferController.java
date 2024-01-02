@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;
+
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
 
 @Path("jobOffers")
 @Component
@@ -72,11 +75,8 @@ public class JobOfferController {
                 BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
         long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
 
-        return Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {})
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page - 1).build(), "prev")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", page + 1).build(), "next")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
-                .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last").build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {}),
+                page, maxPages);
     }
 
     @GET
