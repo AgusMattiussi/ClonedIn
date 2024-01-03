@@ -28,6 +28,7 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPaginatio
 public class CategoryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final int CATEGORIES_BY_PAGE = 20;
 
     @Context
     private UriInfo uriInfo;
@@ -37,15 +38,17 @@ public class CategoryController {
     @GET
     @Produces(ClonedInMediaType.CATEGORY_LIST_V1)
     public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final List<CategoryDTO> categories = categoryService.getAllCategories(/*page-1, PAGE_SIZE*/).stream()
+        final List<CategoryDTO> categories = categoryService.getAllCategories(page-1, CATEGORIES_BY_PAGE).stream()
                 .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
         if (categories.isEmpty())
             return Response.noContent().build();
 
-        //TODO: Paginar
+        long categoryCount = categoryService.getCategoryCount();
+        long maxPages = categoryCount / CATEGORIES_BY_PAGE + 1;
+
         return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {}),
-                1, 999);
+                page, maxPages);
     }
 
     @GET

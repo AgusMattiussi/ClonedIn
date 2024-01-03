@@ -39,7 +39,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryDao.getAllCategories();
+    public List<Category> getAllCategories(int page, int pageSize) {
+        return categoryDao.getAllCategories(page, pageSize);
+    }
+
+    @Override
+    public long getCategoryCount() {
+        return categoryDao.getCategoryCount();
     }
 }

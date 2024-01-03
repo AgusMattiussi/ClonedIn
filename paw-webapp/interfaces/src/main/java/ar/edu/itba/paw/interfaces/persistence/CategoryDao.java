@@ -13,5 +13,7 @@ public interface CategoryDao {
 
     Optional<Category> findById(long id);
 
-    List<Category> getAllCategories();
+    List<Category> getAllCategories(int page, int pageSize);
+
+    long getCategoryCount();
 }

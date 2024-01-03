@@ -14,6 +14,7 @@ public interface CategoryService {
 
     Optional<Category> findById(long id);
 
-    // TODO: Paginar
-    List<Category> getAllCategories();
+    List<Category> getAllCategories(int page, int pageSize);
+
+    long getCategoryCount();
 }
