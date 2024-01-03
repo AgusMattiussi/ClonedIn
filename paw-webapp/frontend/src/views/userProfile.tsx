@@ -59,7 +59,11 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setSkillsData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setSkillsData([])
+      } else {
+        setSkillsData(response.data)
+      }
       setSkillsLoading(false)
     }
 
@@ -71,7 +75,11 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setEducationsData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setEducationsData([])
+      } else {
+        setEducationsData(response.data)
+      }
       setEducationsLoading(false)
     }
 
@@ -83,20 +91,24 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setExperiencesData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setExperiencesData([])
+      } else {
+        setExperiencesData(response.data)
+      }
       setExperiencesLoading(false)
     }
 
-    if (isUserLoading === true) {
+    if (isUserLoading) {
       fetchUser()
     }
-    if (experiencesLoading === true) {
+    if (experiencesLoading) {
       fetchExperiences()
     }
-    if (educationsLoading === true) {
+    if (educationsLoading) {
       fetchEducations()
     }
-    if (skillsLoading === true) {
+    if (skillsLoading) {
       fetchSkills()
     }
   }, [apiRequest, id])
