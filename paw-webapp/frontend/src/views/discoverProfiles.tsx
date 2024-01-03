@@ -236,33 +236,37 @@ function DiscoverProfiles() {
               <h3>{t("Discover Profiles")}</h3>
             </Row>
             <Row
-              className="rounded-3 d-flex flex-row flex-wrap w-auto"
+              className="rounded-3 d-flex flex-row flex-wrap w-100"
               style={{
                 marginLeft: "0px",
                 marginRight: "3px",
               }}
             >
               <Container
-                className="p-2 rounded-3 d-flex flex-wrap w-auto justify-content-center"
-                fluid
+                className="p-2 rounded-3 d-flex flex-wrap w-100 justify-content-center"
                 style={{
                   background: "#F2F2F2",
                   boxShadow: "0 0 10px rgba(0,0,0,0.16), 0 0 4px rgba(0,0,0,0.23)",
                   minWidth: "100vh",
+                  flexDirection: "column",
                 }}
               >
-                {isLoading ? (
-                  <div className="my-5">
-                    <Loader />
-                  </div>
-                ) : users.length === 0 ? (
-                  <div className="my-5 w-100">
-                    <h5>{t("No users found")}</h5>
-                  </div>
-                ) : (
-                  usersList
-                )}
-                <Pagination />
+                <div className="d-flex flex-wrap w-100 justify-content-center">
+                  {isLoading ? (
+                    <div className="my-5">
+                      <Loader />
+                    </div>
+                  ) : users.length === 0 ? (
+                    <div className="my-5 w-100">
+                      <h5>{t("No users found")}</h5>
+                    </div>
+                  ) : (
+                    usersList
+                  )}
+                </div>
+                <div className="mt-2">
+                  <Pagination />
+                </div>
               </Container>
             </Row>
           </Col>
