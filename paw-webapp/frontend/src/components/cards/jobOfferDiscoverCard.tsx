@@ -7,8 +7,10 @@ import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
 import CategoryDto from "../../utils/CategoryDto"
 import EnterpriseDto from "../../utils/EnterpriseDto"
+import { useNavigate } from "react-router-dom"
 
 function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any }) {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
 
@@ -60,7 +62,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href={`/profileEnterprise/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
+            <a href={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
               {jobEnterprise?.name}{" "}
             </a>
             | {job.position}
@@ -108,7 +110,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
           <h5>{t("Description")}</h5>
         </div>
         <div>
-          <Button variant="outline-dark" href={`/jobOffer/${job.id}`}>
+          <Button variant="outline-dark" onClick={() => navigate(`/jobOffer/${job.id}`)}>
             {t("View More")}
           </Button>
         </div>
