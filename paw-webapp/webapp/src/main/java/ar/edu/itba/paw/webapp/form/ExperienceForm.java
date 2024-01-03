@@ -30,13 +30,13 @@ public class ExperienceForm {
     private Integer yearFrom;
 
     @NotNull
-    private Month monthFrom;
+    private String monthFrom;
 
     @Min(MIN_YEAR)
     @Max(MAX_YEAR)
     private Integer yearTo;
 
-    private Month monthTo;
+    private String monthTo;
 
     public String getCompany() {
         return company;
@@ -62,19 +62,19 @@ public class ExperienceForm {
         this.jobDesc = jobDesc;
     }
 
-    public Month getMonthFrom() {
+    public String getMonthFrom() {
         return monthFrom;
     }
 
     public void setMonthFrom(String monthFrom) {
-        this.monthFrom = Month.fromString(monthFrom);
+        this.monthFrom = monthFrom;
     }
 
-    public Month getMonthTo() {
+    public String getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(Month monthTo) {
+    public void setMonthTo(String monthTo) {
         this.monthTo = monthTo;
     }
 
