@@ -257,7 +257,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
 
-        if(!term.isEmpty())
+        if(term != null && !term.isEmpty())
             queryStringBuilder.append(" JOIN jo.enterprise e");
 
         queryStringBuilder.append(" WHERE jo.available = :active");

@@ -52,8 +52,8 @@ public class JobOfferController {
     @PreAuthorize("hasAuthority('USER')")
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("categoryName") final String categoryName,
-                                 @QueryParam("minSalary") @Min(0) final double minSalary,
-                                 @QueryParam("maxSalary") @Min(0) final double maxSalary,
+                                 @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
+                                 @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary,
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam("query") final String searchTerm) {
 
@@ -64,7 +64,7 @@ public class JobOfferController {
         }
 
         final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm,
-                        BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary), page - 1, JOB_OFFERS_PER_PAGE)
+                        minSalary, maxSalary, page - 1, JOB_OFFERS_PER_PAGE)
                 .stream().map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
                 .collect(Collectors.toList());
 
@@ -72,7 +72,7 @@ public class JobOfferController {
             return Response.noContent().build();
 
         final long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, searchTerm,
-                BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
+                minSalary, maxSalary);
         long maxPages = jobOffersCount/JOB_OFFERS_PER_PAGE + 1;
 
         return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferList) {}),
