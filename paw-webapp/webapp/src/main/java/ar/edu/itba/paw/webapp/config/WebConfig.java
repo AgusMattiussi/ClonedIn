@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -76,9 +77,9 @@ public class WebConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        // Si ponen esto en prod, hay tabla!!!
-//        properties.setProperty("hibernate.show_sql", "true");
-//        properties.setProperty("format_sql", "true");
+        //FIXME: Si ponen esto en prod, hay tabla!!!
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("format_sql", "true");
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }
@@ -102,5 +103,6 @@ public class WebConfig {
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+
 
 }
