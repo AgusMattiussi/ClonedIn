@@ -29,7 +29,6 @@ public class ExperienceForm {
     @Max(MAX_YEAR)
     private Integer yearFrom;
 
-    //FIXME: Arreglar esto
     @NotNull
     private Month monthFrom;
 

@@ -24,13 +24,13 @@ public class EducationForm {
     private Integer yearFrom;
 
     @NotNull
-    private Month monthFrom;
+    private String monthFrom;
 
     @Min(MIN_YEAR)
     @Max(MAX_YEAR)
     private Integer yearTo;
 
-    private Month monthTo;
+    private String monthTo;
 
     @Size(max=200)
     private String comment;
@@ -67,14 +67,6 @@ public class EducationForm {
         this.yearFrom = yearFrom;
     }
 
-    public Month getMonthFrom() {
-        return monthFrom;
-    }
-
-    public void setMonthFrom(Month monthFrom) {
-        this.monthFrom = monthFrom;
-    }
-
     public Integer getYearTo() {
         return yearTo;
     }
@@ -83,11 +75,19 @@ public class EducationForm {
         this.yearTo = yearTo;
     }
 
-    public Month getMonthTo() {
+    public String getMonthFrom() {
+        return monthFrom;
+    }
+
+    public void setMonthFrom(String monthFrom) {
+        this.monthFrom = monthFrom;
+    }
+
+    public String getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(Month monthTo) {
+    public void setMonthTo(String monthTo) {
         this.monthTo = monthTo;
     }
 }

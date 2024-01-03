@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EducationService {
 
-    Education add(User user, Month monthFrom, Integer yearFrom, Month monthTo, Integer yearTo, String title,
+    Education add(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String title,
                   String institutionName, String description);
 
     Optional<Education> findById(long educationID);
