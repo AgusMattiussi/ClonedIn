@@ -35,30 +35,34 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/registerUser" element={<RegisterUser />} />
+
+          {/* ENTERPRISE CONTROLLER */}
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
-
-          <Route path="/editUser/:id" element={<EditUserForm />} />
           <Route path="/editEnterprise/:id" element={<EditEnterpriseForm />} />
-          <Route path="/imageProfile/:id" element={<ImageProfileForm />} />
-          {/*TODO: revisar --> distinto link para enterprise y user */}
+          <Route path="/enterprises/:id" element={<ProfileEnterprise />} />
+          <Route path="/enterprises/:id/image" element={<ImageProfileForm />} />
+          <Route path="/enterprises/:id/jobOffers" element={<JobOfferForm />} />
+          <Route path="/enterprises/:id/contacts" element={<ContactsEnterprise />} />
+          <Route path="/enterprises/:id/interested" element={<InterestedEnterprise />} />
+          <Route path="/enterprises/:id/contact" element={<ContactForm />} />
 
-          <Route path="/profiles" element={<DiscoverProfiles />} />
-          <Route path="/profileEnterprise/:id" element={<ProfileEnterprise />} />
-          <Route path="/contactsEnterprise/:id" element={<ContactsEnterprise />} />
-          <Route path="/interestedEnterprise/:id" element={<InterestedEnterprise />} />
-          <Route path="/contact/:id" element={<ContactForm />} />
-          <Route path="/jobOffers/:id" element={<JobOfferForm />} />
+          {/* JOB OFFER CONTROLLER */}
+          <Route path="/jobOffers" element={<DiscoverJobs />} />
+          <Route path="/jobOffers/:id" element={<JobOffer />} />
 
-          <Route path="/jobOffer/:id" element={<JobOffer />} />
+          {/* USER CONTROLLER */}
+          <Route path="/registerUser" element={<RegisterUser />} />
+          <Route path="/editUser/:id" element={<EditUserForm />} />
+          <Route path="/users" element={<DiscoverProfiles />} />
+          <Route path="/users/:id" element={<ProfileUser />} />
+          <Route path="/users/:id/skills" element={<SkillsForm />} />
+          <Route path="/users/:id/experiences" element={<ExperienceForm />} />
+          <Route path="/users/:id/educations" element={<EducationForm />} />
+          <Route path="/users/:id/image" element={<ImageProfileForm />} />
+          <Route path="/users/:id/notifications" element={<NotificationsUser />} />
+          <Route path="/users/:id/applications" element={<ApplicationsUser />} />
 
-          <Route path="/jobs" element={<DiscoverJobs />} />
-          <Route path="/profileUser/:id" element={<ProfileUser />} />
-          <Route path="/notificationsUser/:id" element={<NotificationsUser />} />
-          <Route path="/applicationsUser/:id" element={<ApplicationsUser />} />
-          <Route path="/skills/:id" element={<SkillsForm />} />
-          <Route path="/experiences/:id" element={<ExperienceForm />} />
-          <Route path="/educations/:id" element={<EducationForm />} />
+          {/* ERROR */}
           <Route path="/401" element={<Error statusCode={HttpStatusCode.Unauthorized} />} />
           <Route path="/403" element={<Error statusCode={HttpStatusCode.Forbidden} />} />
           <Route path="*" element={<Error statusCode={HttpStatusCode.NotFound} />} />

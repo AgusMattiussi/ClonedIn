@@ -63,7 +63,7 @@ function EditUserForm() {
     })
     console.log(response)
     if (response.status === HttpStatusCode.NoContent) {
-      navigate(`/profileUser/${id}`)
+      navigate(`/users/${id}`)
     } else {
       //TODO: manejar error
     }

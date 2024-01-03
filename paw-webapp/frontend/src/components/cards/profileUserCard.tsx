@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRequestApi } from "../../api/apiRequest"
 import { useSharedAuth } from "../../api/auth"
 import CategoryDto from "../../utils/CategoryDto"
@@ -27,37 +27,31 @@ function ProfileUserCard({
   const { loading, apiRequest } = useRequestApi()
 
   const [skillsData, setSkillsData] = useState<any[]>([])
-  const [skillsLoading, setSkillsLoading] = useState(true)
 
   const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
-  const [categoryLoading, setCategoryLoading] = useState(true)
+
+  const memorizedUser = useMemo(() => user, [user])
+  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    const fetchSkills = async () => {
-      const response = await apiRequest({
-        url: user.skills,
-        method: "GET",
-      })
-      setSkillsData(response.data)
-      setSkillsLoading(false)
-    }
+    const fetchData = async () => {
+      try {
+        if (loadingData) {
+          const [skillsResponse, categoryResponse] = await Promise.all([
+            apiRequest({ url: memorizedUser.skills, method: "GET" }),
+            apiRequest({ url: memorizedUser.category, method: "GET" }),
+          ])
 
-    const fetchCategory = async () => {
-      const response = await apiRequest({
-        url: user.category,
-        method: "GET",
-      })
-      setUserCategory(response.data)
-      setCategoryLoading(false)
+          setSkillsData(skillsResponse.data)
+          setUserCategory(categoryResponse.data)
+          setLoadingData(false)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
-
-    if (skillsLoading === true) {
-      fetchSkills()
-    }
-    if (categoryLoading === true) {
-      fetchCategory()
-    }
-  }, [apiRequest])
+    if (loadingData) fetchData()
+  }, [apiRequest, loadingData, memorizedUser])
 
   const userSkillsList = skillsData.map((skill, index) => {
     return (
@@ -73,7 +67,7 @@ function ProfileUserCard({
       {userInfo?.role === "ENTERPRISE" ? (
         <></>
       ) : (
-        <Button type="button" variant="success" href="/imageProfile">
+        <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}
@@ -102,7 +96,7 @@ function ProfileUserCard({
           )}
         </div>
         {editable ? <hr /> : <></>}
-        <Card.Text>
+        <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
@@ -151,7 +145,7 @@ function ProfileUserCard({
               </div>
             )}
           </div>
-        </Card.Text>
+        </div>
       </Card.Body>
     </Card>
   )

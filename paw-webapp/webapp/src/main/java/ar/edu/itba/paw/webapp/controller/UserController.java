@@ -354,7 +354,7 @@ public class UserController {
 
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<EducationDTO> educations = educationService.findByUser(user, page, EDUCATIONS_PER_PAGE)
+        List<EducationDTO> educations = educationService.findByUser(user, page - 1, EDUCATIONS_PER_PAGE)
                 .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
         if(educations.isEmpty())
