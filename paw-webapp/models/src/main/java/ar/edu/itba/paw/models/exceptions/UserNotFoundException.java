@@ -1,15 +1,29 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class UserNotFoundException extends RuntimeException{
+import javax.ws.rs.core.Response;
 
-    private static final String MESSAGE_WITH_ID = "The user with id %s was not found or does not exist.";
-    private static final String MESSAGE_WITH_EMAIL = "The user with email '%s' was not found or does not exist.";
+public class UserNotFoundException extends ClonedInException{
+
+    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final String SIMPLE_MESSAGE = "User not found";
+    private static final String DETAILS_WITH_ID = "The user with id %s was not found or does not exist.";
+    private static final String DETAILS_WITH_EMAIL = "The user with email '%s' was not found or does not exist.";
 
     public UserNotFoundException(long userId) {
-        super(String.format(MESSAGE_WITH_ID, userId));
+        super(String.format(DETAILS_WITH_ID, userId));
     }
 
     public UserNotFoundException(String email) {
-        super(String.format(MESSAGE_WITH_ID, email));
+        super(String.format(DETAILS_WITH_EMAIL, email));
+    }
+
+    @Override
+    public String getSimpleMessage() {
+        return SIMPLE_MESSAGE;
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
     }
 }

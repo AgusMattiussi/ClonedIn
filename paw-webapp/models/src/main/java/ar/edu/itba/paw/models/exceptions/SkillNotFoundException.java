@@ -1,10 +1,24 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class SkillNotFoundException extends RuntimeException{
+import javax.ws.rs.core.Response;
 
-    private static final String STRING_MSG = "The skill with id %d was not found or does not exist";
+public class SkillNotFoundException extends ClonedInException{
+
+    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final String SIMPLE_MESSAGE = "Skill not found";
+    private static final String DETAILS = "The skill with id %d was not found or does not exist";
 
     public SkillNotFoundException(long skillId) {
-        super(String.format(STRING_MSG, skillId));
+        super(String.format(DETAILS, skillId));
+    }
+
+    @Override
+    public String getSimpleMessage() {
+        return SIMPLE_MESSAGE;
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
     }
 }

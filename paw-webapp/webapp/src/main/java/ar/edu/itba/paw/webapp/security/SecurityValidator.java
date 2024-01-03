@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
-import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
+import ar.edu.itba.paw.models.exceptions.NotProfileOwnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +31,7 @@ public class SecurityValidator {
 
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
-            throw new UserIsNotProfileOwnerException();
+            throw new NotProfileOwnerException(requesterID);
         return true;
     }
 
