@@ -7,9 +7,11 @@ import CategoryDto from "../../utils/CategoryDto"
 import { useSharedAuth } from "../../api/auth"
 import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 
 function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; enterprise: any }) {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
@@ -33,7 +35,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       <Card.Img variant="top" src={defaultProfile} />
       {userInfo?.role === "ENTERPRISE" ? (
-        <Button type="button" variant="success" href="/imageProfile">
+        <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}
@@ -50,7 +52,7 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
               className="float-end"
               type="button"
               variant="outline-success"
-              href={`/editEnterprise/${enterprise.id}`}
+              onClick={() => navigate(`/editEnterprise/${enterprise.id}`)}
               style={{ paddingBottom: "10px" }}
             >
               <Icon.PencilSquare color="green" size={15} />

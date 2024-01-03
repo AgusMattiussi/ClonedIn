@@ -36,10 +36,10 @@ function Login() {
       console.log("Logged in")
       if (userInfo?.role === UserRole.USER) {
         console.log(userInfo?.role)
-        navigate("/jobs")
+        navigate("/jobOffers")
       } else {
         console.log(userInfo?.role)
-        navigate("/profiles")
+        navigate("/users")
       }
     } else {
       console.log("Not logged in")

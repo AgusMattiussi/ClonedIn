@@ -67,7 +67,7 @@ function ProfileUserCard({
       {userInfo?.role === "ENTERPRISE" ? (
         <></>
       ) : (
-        <Button type="button" variant="success" href="/imageProfile">
+        <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}

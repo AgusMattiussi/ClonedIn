@@ -62,7 +62,7 @@ function JobOfferForm() {
       },
     })
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/profileEnterprise/${id}`)
+      navigate(`/enterprises/${id}`)
     } else {
       //TODO: manejar error
     }
@@ -108,19 +108,19 @@ function JobOfferForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicSalary">
                               <Form.Control
-                               className="input" 
-                               placeholder={t("Salary").toString()} 
-                               value={salary}
-                               onChange={(e) => setSalary(e.target.value)}
+                                className="input"
+                                placeholder={t("Salary").toString()}
+                                value={salary}
+                                onChange={(e) => setSalary(e.target.value)}
                               />
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <label className="area"> {t("Modality")} </label>
                               <Form.Select
-                               className="selectFrom" 
-                               aria-label="Default select example"
-                               value={modality}
-                               onChange={(e) => setModality(e.target.value)}
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={modality}
+                                onChange={(e) => setModality(e.target.value)}
                               >
                                 <option value="Remoto">{t("Home Office")}</option>
                                 <option value="Presencial">{t("On site")}</option>
@@ -131,10 +131,10 @@ function JobOfferForm() {
                             <div className="d-flex mb-4">
                               <label className="area">{t("Job Category")}</label>
                               <Form.Select
-                               className="selectFrom" 
-                               aria-label="Default select example"
-                               value={category}
-                               onChange={(e) => setCategory(e.target.value)}
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
                               >
                                 <option key="1" value="No-Especificado">
                                   {t("No-especificado")}
@@ -148,11 +148,11 @@ function JobOfferForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
-                               placeholder={t("Description").toString()} 
-                               as="textarea" 
-                               rows={3}
-                               value={description}
-                               onChange={(e) => setDescription(e.target.value)}
+                                placeholder={t("Description").toString()}
+                                as="textarea"
+                                rows={3}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                               />
                             </Form.Group>
                           </div>

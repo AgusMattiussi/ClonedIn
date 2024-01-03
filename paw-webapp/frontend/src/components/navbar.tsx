@@ -28,22 +28,22 @@ function Navigation({ role }: { role: UserRole }) {
     <Navbar expand="lg" className="color-nav" variant="dark">
       {role === "ENTERPRISE" ? (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand onClick={() => navigate("/profiles")}>
+          <Navbar.Brand onClick={() => navigate("/users")}>
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" onClick={() => navigate("/profiles")}>
+              <Nav.Link className="nav-item" onClick={() => navigate("/users")}>
                 {t("Discover Profiles")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/profileEnterprise/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}`)}>
                 {t("My Job Offers")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/contactsEnterprise/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}/contacts`)}>
                 {t("My Recruits")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/interestedEnterprise/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}/interested`)}>
                 {t("Interested")}
               </Nav.Link>
             </Nav>
@@ -55,22 +55,22 @@ function Navigation({ role }: { role: UserRole }) {
         </div>
       ) : (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand onClick={() => navigate("/jobs")}>
+          <Navbar.Brand onClick={() => navigate("/jobOffers")}>
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" onClick={() => navigate("/jobs")}>
+              <Nav.Link className="nav-item" onClick={() => navigate("/jobOffers")}>
                 {t("Discover Jobs")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/profileUser/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}`)}>
                 {t("My Profile")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/notificationsUser/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}/notifications`)}>
                 {t("Job Offers")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/applicationsUser/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}/applications`)}>
                 {t("My Applications")}
               </Nav.Link>
             </Nav>

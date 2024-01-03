@@ -46,7 +46,7 @@ function RegisterUser() {
   const handleRegister = async (e: any) => {
     await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, position, description, category, studiesLevel)
     await loginHandler(e.email, e.pass)
-    navigate("/jobs")
+    navigate("/jobOffers")
   }
 
   const handlePasswordVisibility = () => {

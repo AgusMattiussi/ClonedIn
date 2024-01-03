@@ -294,7 +294,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/experiences/${id}`)}
+                        onClick={() => navigate(`experiences`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
@@ -323,7 +323,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/educations/${id}`)}
+                        onClick={() => navigate(`educations`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
@@ -352,7 +352,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/skills/${id}`)}
+                        onClick={() => navigate(`skills`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />

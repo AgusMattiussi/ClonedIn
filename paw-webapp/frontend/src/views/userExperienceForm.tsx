@@ -52,7 +52,7 @@ function ExperienceForm() {
       },
     })
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/profileUser/${id}`)
+      navigate(`/users/${id}`)
     } else {
       //TODO: manejar error
     }

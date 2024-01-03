@@ -20,7 +20,6 @@ function JobOfferUserCard({ job }: { job: any }) {
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
   const [categoryLoading, setCategoryLoading] = useState(true)
 
-
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await apiRequest({
@@ -58,7 +57,6 @@ function JobOfferUserCard({ job }: { job: any }) {
     if (categoryLoading === true) {
       fetchCategory()
     }
-    
   }, [apiRequest])
 
   return (
@@ -66,7 +64,7 @@ function JobOfferUserCard({ job }: { job: any }) {
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href={`/profileEnterprise/${enterprise?.id}`} style={{ textDecoration: "none" }}>
+            <a href={`/enterprises/${enterprise?.id}`} style={{ textDecoration: "none" }}>
               {enterprise?.name}{" "}
             </a>
             |
@@ -79,7 +77,7 @@ function JobOfferUserCard({ job }: { job: any }) {
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-            {jobCategory == null ? t("No-especificado") : jobCategory?.name}
+              {jobCategory == null ? t("No-especificado") : jobCategory?.name}
             </Badge>
           </h5>
         </span>
@@ -100,9 +98,9 @@ function JobOfferUserCard({ job }: { job: any }) {
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-          <Badge pill bg="success" className="mx-2">
-            {jobOffer?.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobOffer?.skills}</div>}
-          </Badge>
+            <Badge pill bg="success" className="mx-2">
+              {jobOffer?.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobOffer?.skills}</div>}
+            </Badge>
           </div>
         </div>
         <div className="d-flex flex-column">

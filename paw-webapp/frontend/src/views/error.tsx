@@ -47,15 +47,15 @@ function Error(props: any) {
         </p>
         <p className="lead">{message}</p>
         {userInfo?.role === "USER" ? (
-          <Button onClick={() => navigate("/jobs")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
-            {t("Return")}
-          </Button>
-        ) : (
           <Button
-            onClick={() => navigate("/profiles")}
+            onClick={() => navigate("/jobOffers")}
             className="btn btn-primary"
             style={{ backgroundColor: "#04704C" }}
           >
+            {t("Return")}
+          </Button>
+        ) : (
+          <Button onClick={() => navigate("/users")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
             {t("Return")}
           </Button>
         )}

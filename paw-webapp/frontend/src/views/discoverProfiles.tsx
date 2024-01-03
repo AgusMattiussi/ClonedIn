@@ -135,7 +135,7 @@ function DiscoverProfiles() {
   //TODO: ordenamiento
   const usersList = users.map((user) => {
     return (
-      <Link to={`/profileUser/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
+      <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
         <ProfileUserCard user={user} />
       </Link>
     )

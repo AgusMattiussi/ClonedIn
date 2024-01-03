@@ -80,7 +80,7 @@ function ProfileEnterprise() {
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />
             {userInfo?.role === "ENTERPRISE" ? (
-              <Button variant="success" type="button" href={`/jobOffers/${id}`}>
+              <Button variant="success" type="button" onClick={() => navigate(`jobOffers`)}>
                 <div className="d-flex align-items-center justify-content-center">
                   <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
                   {t("Add Job Offer")}
