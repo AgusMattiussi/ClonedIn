@@ -9,7 +9,7 @@ import * as Icon from "react-bootstrap-icons"
 import Loader from "../components/loader"
 import Pagination from "../components/pagination"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
@@ -37,41 +37,50 @@ function DiscoverProfiles() {
 
   document.title = t("Discover Profiles") + " | ClonedIn"
 
-  const fetchUsers = async (
-    categoryName: string,
-    educationLevel: string,
-    searchTerm: string,
-    minExpYears: string,
-    maxExpYears: string,
-  ) => {
-    const queryParams: Record<string, string> = {}
-    if (categoryName) queryParams.categoryName = categoryName
-    if (educationLevel) queryParams.educationLevel = educationLevel
-    if (searchTerm) queryParams.searchTerm = searchTerm
-    if (minExpYears) queryParams.minExpYears = minExpYears
-    if (maxExpYears) queryParams.maxExpYears = maxExpYears
+  const [searchParams, setSearchParams] = useSearchParams()
+  let queryParams: Record<string, string> = {}
 
-    //TODO: revisar por que con esto no anda
-    // setQueryParams(queryParams)
+  const fetchUsers = useCallback(
+    async (
+      categoryName: string,
+      educationLevel: string,
+      searchTerm: string,
+      minExpYears: string,
+      maxExpYears: string,
+    ) => {
+      setLoading(true)
 
-    const response = await apiRequest({
-      url: "/users",
-      method: "GET",
-      queryParams: queryParams,
-    })
+      if (categoryName) queryParams.categoryName = categoryName
+      if (educationLevel) queryParams.educationLevel = educationLevel
+      if (searchTerm) queryParams.searchTerm = searchTerm
+      if (minExpYears) queryParams.minExpYears = minExpYears
+      if (maxExpYears) queryParams.maxExpYears = maxExpYears
 
-    if (response.status === 500) {
-      navigate("/403")
-    }
+      try {
+        const response = await apiRequest({
+          url: "/users",
+          method: "GET",
+          queryParams: queryParams,
+        })
 
-    if (response.status === HttpStatusCode.NoContent) {
-      setUsers([])
-    } else {
-      setUsers(response.data)
-    }
+        if (response.status === 500) {
+          navigate("/403")
+        }
 
-    setLoading(false)
-  }
+        if (response.status === HttpStatusCode.NoContent) {
+          setUsers([])
+        } else {
+          setUsers(response.data)
+        }
+      } catch (error) {
+        // Handle error as needed
+        console.error("Error fetching users:", error)
+      }
+
+      setLoading(false)
+    },
+    [apiRequest, queryParams, navigate],
+  )
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -85,11 +94,25 @@ function DiscoverProfiles() {
     if (categoryList.length === 0) {
       fetchCategories()
     }
+  }, [apiRequest, categoryList.length])
 
-    if (isLoading === true) {
+  useEffect(() => {
+    if (isLoading) {
+      // setSearchParams(queryParams)
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears)
     }
-  }, [apiRequest])
+  }, [
+    apiRequest,
+    categoryName,
+    educationLevel,
+    searchTerm,
+    minExpYears,
+    maxExpYears,
+    isLoading,
+    fetchUsers,
+    setSearchParams,
+    queryParams,
+  ])
 
   const handleSearch = () => {
     console.log("Search")
