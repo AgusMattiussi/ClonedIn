@@ -1,10 +1,24 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class EducationNotFoundException extends RuntimeException {
+import javax.ws.rs.core.Response;
 
-    private static final String STRING_MSG = "The education with id %d was not found";
+public class EducationNotFoundException extends ClonedInException {
+
+    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final String SIMPLE_MESSAGE = "Education not found";
+    private static final String DETAILS = "The education with id %d was not found";
 
     public EducationNotFoundException(long educationId) {
-        super(String.format(STRING_MSG, educationId));
+        super(String.format(DETAILS, educationId));
+    }
+
+    @Override
+    public String getSimpleMessage() {
+        return SIMPLE_MESSAGE;
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
     }
 }

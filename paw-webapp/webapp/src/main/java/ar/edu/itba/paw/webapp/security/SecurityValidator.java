@@ -54,7 +54,7 @@ public class SecurityValidator {
     public boolean isUserVisible(long userID){
         User user = userService.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         if(user.getVisibility() != Visibility.VISIBLE.getValue())
-            throw new HiddenProfileException();
+            throw new HiddenProfileException(user.getName());
         return true;
     }
 

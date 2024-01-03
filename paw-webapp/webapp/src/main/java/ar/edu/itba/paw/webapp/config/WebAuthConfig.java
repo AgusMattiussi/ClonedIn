@@ -57,7 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Categories
                 .antMatchers("/categories").permitAll()
                 // JobOffers
-                .antMatchers("/jobOffers/**").authenticated()
+                .antMatchers("/jobOffers", "/jobOffers/**").authenticated()
                 .and().exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

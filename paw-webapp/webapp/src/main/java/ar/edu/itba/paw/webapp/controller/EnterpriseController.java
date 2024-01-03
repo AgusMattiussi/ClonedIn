@@ -289,7 +289,7 @@ public class EnterpriseController {
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
         if(profileImage == null)
-            throw new ImageNotFoundException();
+            throw new ImageNotFoundException(id, Role.ENTERPRISE);
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType()) // Replaces @Produces dynamically

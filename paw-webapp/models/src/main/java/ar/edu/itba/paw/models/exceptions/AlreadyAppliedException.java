@@ -1,10 +1,25 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class AlreadyAppliedException extends RuntimeException{
+import javax.ws.rs.core.Response;
 
-    private static final String MESSAGE_WITH_ID = "The user with id %s has already applied to the job offer with id %s.";
+public class AlreadyAppliedException extends ClonedInException{
+
+    private static final Response.Status STATUS = Response.Status.CONFLICT;
+    private static final String SIMPLE_MESSAGE = "Already applied";
+    private static final String DETAILS = "The user with id %s has already applied to the job offer with id %s.";
 
     public AlreadyAppliedException(long userId, long jobOfferId) {
-        super(String.format(MESSAGE_WITH_ID, userId, jobOfferId));
+        super(String.format(DETAILS, userId, jobOfferId));
     }
+
+    @Override
+    public String getSimpleMessage() {
+        return SIMPLE_MESSAGE;
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
+    }
+
 }

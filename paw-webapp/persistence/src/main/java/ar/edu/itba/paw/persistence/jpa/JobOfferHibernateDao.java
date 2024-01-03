@@ -147,7 +147,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
             queryStringBuilder.append(" AND jo.salary >= :minSalary");
         if(maxSalary != null)
             queryStringBuilder.append(" AND jo.salary <= :maxSalary");
-        if(!term.isEmpty()) {
+        if(term != null && !term.isEmpty()) {
             queryStringBuilder.append(" AND (LOWER(jo.position) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
                     .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
                     .append(" OR EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
@@ -184,7 +184,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("minSalary", minSalary);
         if(maxSalary != null)
             query.setParameter("maxSalary", maxSalary);
-        if(!term.isEmpty())
+        if(term != null && !term.isEmpty())
             query.setParameter("term", term);
     }
 
