@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.mappers;
 
 import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import javax.ws.rs.core.GenericEntity;
@@ -12,21 +13,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Provider
-public class ValidationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     private static final String MESSAGE = "Invalid parameter: %s = %s.";
             //cv.getInvalidValue().toString()
 
     @Override
     public Response toResponse (final ConstraintViolationException exception) {
+
         final List<ErrorDTO> errors = exception.getConstraintViolations().stream()
                 .map(cv -> {
-                    String propertyPathString = cv.getPropertyPath() != null ? cv.getPropertyPath().toString()
-                            .split("\\.")[1] : null; // Removes the method name from the path
+                    // skip to the last node, which is the arg name
+                    String argName = null;
+                    for (Path.Node node : cv.getPropertyPath())
+                        argName = node.getName();
+
                     String invalidValueString = cv.getInvalidValue() != null ? cv.getInvalidValue().toString() : null;
 
                     return new ErrorDTO(ConstraintViolationException.class,
-                            String.format(MESSAGE, propertyPathString, invalidValueString),
+                            String.format(MESSAGE, argName, invalidValueString),
                             cv.getMessage());
                 })
                 .collect(Collectors.toList());
