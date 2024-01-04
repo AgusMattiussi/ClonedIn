@@ -13,12 +13,10 @@ public class ContactDTO {
     private static final String ENTERPRISES_URL = "webapp_war/enterprises";
     private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
 
-    private URI user;
-    private URI enterprise;
-    private URI jobOffer;
     private String status;
     private int filledBy;
     private String date;
+    private ContactDTOLinks links;
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact) {
         final ContactDTO dto = new ContactDTO();
@@ -26,47 +24,9 @@ public class ContactDTO {
         dto.filledBy = contact.getFilledBy();
         dto.date = contact.getDate();
 
-        UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(USERS_URL)
-                .path(contact.getUser().getId().toString());
-        dto.user = userUriBuilder.build();
-
-        UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(ENTERPRISES_URL)
-                .path(contact.getEnterprise().getId().toString());
-        dto.enterprise = enterpriseUriBuilder.build();
-
-        UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(JOB_OFFERS_URL)
-                .path(contact.getJobOffer().getId().toString());
-        dto.jobOffer = jobOfferUriBuilder.build();
-
         return dto;
     }
 
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
-    }
-
-    public URI getEnterprise() {
-        return enterprise;
-    }
-
-    public void setEnterprise(URI enterprise) {
-        this.enterprise = enterprise;
-    }
-
-    public URI getJobOffer() {
-        return jobOffer;
-    }
-
-    public void setJobOffer(URI jobOffer) {
-        this.jobOffer = jobOffer;
-    }
 
     public String getStatus() {
         return status;
@@ -90,5 +50,67 @@ public class ContactDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public ContactDTOLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(ContactDTOLinks links) {
+        this.links = links;
+    }
+
+    public static class ContactDTOLinks {
+        private URI user;
+        private URI enterprise;
+        private URI jobOffer;
+
+        public ContactDTOLinks() {
+        }
+
+        public ContactDTOLinks(UriInfo uriInfo, Contact contact) {
+            UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(USERS_URL)
+                    .path(String.valueOf(contact.getUser().getId()));
+
+            UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(USERS_URL)
+                    .path(contact.getUser().getId().toString());
+            this.user = userUriBuilder.build();
+
+            UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(ENTERPRISES_URL)
+                    .path(contact.getEnterprise().getId().toString());
+            this.enterprise = enterpriseUriBuilder.build();
+
+            UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .path(contact.getJobOffer().getId().toString());
+            this.jobOffer = jobOfferUriBuilder.build();
+        }
+
+        public URI getUser() {
+            return user;
+        }
+
+        public void setUser(URI user) {
+            this.user = user;
+        }
+
+        public URI getEnterprise() {
+            return enterprise;
+        }
+
+        public void setEnterprise(URI enterprise) {
+            this.enterprise = enterprise;
+        }
+
+        public URI getJobOffer() {
+            return jobOffer;
+        }
+
+        public void setJobOffer(URI jobOffer) {
+            this.jobOffer = jobOffer;
+        }
     }
 }
