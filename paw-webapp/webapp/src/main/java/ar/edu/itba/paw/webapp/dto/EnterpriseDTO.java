@@ -6,6 +6,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+// TODO: Agregar links a las jobOffers
 public class EnterpriseDTO {
 
     private static final String ENTERPRISES_URL = "webapp_war/enterprises";
