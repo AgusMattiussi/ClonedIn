@@ -24,6 +24,8 @@ public class ContactDTO {
         dto.filledBy = contact.getFilledBy();
         dto.date = contact.getDate();
 
+        dto.links = new ContactDTOLinks(uriInfo, contact);
+
         return dto;
     }
 
