@@ -12,26 +12,19 @@ public class UserDTO {
     private static final String CATEGORY_URL = "webapp_war/categories";
 
     private long id;
-    private String username;
+    private String email;
     private String name;
     private String location;
     private String currentPosition;
     private String description;
     private String educationLevel;
     private int visibility;
-    private URI self;
-    private URI image;
-    private URI category;
-    private URI experiences;
-    private URI educations;
-    private URI skills;
-
-    //TODO: Rol?
+    private UserDTOLinks links;
 
     public static UserDTO fromUser(final UriInfo uriInfo, final User user) {
         final UserDTO dto = new UserDTO();
         dto.id = user.getId();
-        dto.username = user.getEmail();
+        dto.email = user.getEmail();
         dto.name = user.getName();
         dto.location = user.getLocation();
         dto.currentPosition = user.getCurrentPosition();
@@ -39,17 +32,7 @@ public class UserDTO {
         dto.educationLevel = user.getEducation();
         dto.visibility = user.getVisibility();
 
-        //TODO: Revisar si hace falta eliminar el webapp_war para deployar
-        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath(USER_URL).path(String.valueOf(user.getId()));
-        dto.self = userUriBuilder.build();
-        dto.image = userUriBuilder.clone().path("image").build();
-        dto.experiences = userUriBuilder.clone().path("experiences").build();
-        dto.educations = userUriBuilder.clone().path("educations").build();
-        dto.skills = userUriBuilder.clone().path("skills").build();
-
-        final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
-        dto.category = categoryUriBuilder.build();
-
+        dto.links = new UserDTOLinks(uriInfo, user);
         return dto;
     }
 
@@ -59,14 +42,6 @@ public class UserDTO {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getName() {
@@ -117,59 +92,92 @@ public class UserDTO {
         this.visibility = visibility;
     }
 
-    public URI getSelf() {
-        return self;
+    public String getEmail() {
+        return email;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public URI getImage() {
-        return image;
+    public UserDTOLinks getLinks() {
+        return links;
     }
 
-    public void setImage(URI image) {
-        this.image = image;
+    public void setLinks(UserDTOLinks links) {
+        this.links = links;
     }
 
-    public URI getExperiences() {
-        return experiences;
-    }
+    public static class UserDTOLinks {
+        private URI self;
+        private URI image;
+        private URI category;
+        private URI experiences;
+        private URI educations;
+        private URI skills;
 
-    public void setExperiences(URI experiences) {
-        this.experiences = experiences;
-    }
+        public UserDTOLinks() {
+        }
 
-    public URI getEducations() {
-        return educations;
-    }
+        public UserDTOLinks(final UriInfo uriInfo, final User user) {
+            //TODO: Revisar si hace falta eliminar el webapp_war para deployar
+            final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath(USER_URL).path(String.valueOf(user.getId()));
+            this.self = userUriBuilder.build();
+            this.image = userUriBuilder.clone().path("image").build();
+            this.experiences = userUriBuilder.clone().path("experiences").build();
+            this.educations = userUriBuilder.clone().path("educations").build();
+            this.skills = userUriBuilder.clone().path("skills").build();
 
-    public void setEducations(URI educations) {
-        this.educations = educations;
-    }
+            final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
+            this.category = categoryUriBuilder.build();
+        }
 
-    public URI getSkills() {
-        return skills;
-    }
+        public URI getSelf() {
+            return self;
+        }
 
-    public void setSkills(URI skills) {
-        this.skills = skills;
-    }
+        public void setSelf(URI self) {
+            this.self = self;
+        }
 
-    public URI getCategory() {
-        return category;
-    }
+        public URI getImage() {
+            return image;
+        }
 
-    public void setCategory(URI category) {
-        this.category = category;
-    }
+        public void setImage(URI image) {
+            this.image = image;
+        }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "username='" + username + '\'' +
-                ", self=" + self +
-                '}';
+        public URI getCategory() {
+            return category;
+        }
+
+        public void setCategory(URI category) {
+            this.category = category;
+        }
+
+        public URI getExperiences() {
+            return experiences;
+        }
+
+        public void setExperiences(URI experiences) {
+            this.experiences = experiences;
+        }
+
+        public URI getEducations() {
+            return educations;
+        }
+
+        public void setEducations(URI educations) {
+            this.educations = educations;
+        }
+
+        public URI getSkills() {
+            return skills;
+        }
+
+        public void setSkills(URI skills) {
+            this.skills = skills;
+        }
     }
 }

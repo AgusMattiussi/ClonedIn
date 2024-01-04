@@ -157,7 +157,7 @@ public class UserController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         UserDTO user = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u))
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return Response.ok(user).build();
+        return Response.ok(user).links().build();
     }
 
 
