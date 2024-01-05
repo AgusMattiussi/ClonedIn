@@ -158,6 +158,7 @@ function DiscoverProfiles() {
                   className="me-2"
                   aria-label="Search"
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
                 />
                 <div className="d-flex flex-wrap justify-content-center mt-2">
                   <Button variant="outline-light" className="filterbtn" onClick={() => handleSearch()}>
@@ -225,6 +226,7 @@ function DiscoverProfiles() {
                     className="me-2"
                     aria-label="Search"
                     onChange={(e) => setMinExpYears(e.target.value)}
+                    value={minExpYears}
                   />
                   -
                   <Form.Control
@@ -235,6 +237,7 @@ function DiscoverProfiles() {
                     className="ms-2"
                     aria-label="Search"
                     onChange={(e) => setMaxExpYears(e.target.value)}
+                    value={maxExpYears}
                   />
                 </div>
                 <br />
