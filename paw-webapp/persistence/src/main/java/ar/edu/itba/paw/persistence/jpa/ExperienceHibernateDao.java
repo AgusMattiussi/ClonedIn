@@ -38,7 +38,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public List<Experience> findByUser(User user, int page, int pageSize) {
-        TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user", Experience.class);
+        TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user ORDER BY e.yearFrom DESC, e.monthFrom DESC", Experience.class);
         query.setParameter("user", user);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);

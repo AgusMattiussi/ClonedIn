@@ -25,10 +25,13 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
-    public Education add(User user, Month monthFrom, Integer yearFrom, Month monthTo, Integer yearTo, String title, String institutionName, String description) {
-        DateHelper.validateDate(monthFrom,yearFrom, monthTo, yearTo);
+    public Education add(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String title, String institutionName, String description) {
+        Month monthFrom = Month.fromString(monthFromString);
+        Month monthTo = Month.fromString(monthToString);
 
-        return educationDao.add(user,  monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
+        DateHelper.validateDate(monthFrom, yearFrom, monthTo, yearTo);
+
+        return educationDao.add(user, monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
                 yearTo, title, institutionName, description);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,17 @@ public class CategoryHibernateDao implements CategoryDao {
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return em.createQuery("SELECT c FROM Category c WHERE c.id <> 1 ORDER BY c.name ASC", Category.class).getResultList();
+    public List<Category> getAllCategories(int page, int pageSize) {
+        TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c WHERE c.id <> 1 ORDER BY c.name ASC", Category.class);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public long getCategoryCount() {
+        Query query = em.createQuery("SELECT COUNT(c) FROM Category c WHERE c.id <> 1");
+
+        return (Long) query.getSingleResult();
     }
 }
