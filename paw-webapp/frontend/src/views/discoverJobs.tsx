@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRequestApi } from "../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
@@ -35,35 +35,43 @@ function DiscoverJobs() {
   const [minSalary, setMinSalary] = useState("")
   const [maxSalary, setMaxSalary] = useState("")
 
-  // const [queryParams, setQueryParams] = useSearchParams()
-
   document.title = t("Discover Jobs") + " | ClonedIn"
 
-  const fetchJobs = async (categoryName: string, modality: string, minSalary: string, maxSalary: string) => {
-    const queryParams: Record<string, string> = {}
-    if (categoryName) queryParams.categoryName = categoryName
-    if (modality) queryParams.modality = modality
-    if (searchTerm) queryParams.searchTerm = searchTerm
-    if (minSalary) queryParams.minSalary = minSalary
-    if (maxSalary) queryParams.maxSalary = maxSalary
+  const [searchParams, setSearchParams] = useSearchParams()
+  let queryParams: Record<string, string> = {}
 
-    const response = await apiRequest({
-      url: "/jobOffers",
-      method: "GET",
-      queryParams: queryParams,
-    })
+  const fetchJobs = useCallback(
+    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string) => {
+      setLoading(true)
+      if (categoryName) queryParams.categoryName = categoryName
+      if (modality) queryParams.modality = modality
+      if (searchTerm) queryParams.searchTerm = searchTerm
+      if (minSalary) queryParams.minSalary = minSalary
+      if (maxSalary) queryParams.maxSalary = maxSalary
 
-    if (response.status === 500) {
-      navigate("/403")
-    }
+      try {
+        const response = await apiRequest({
+          url: "/jobOffers",
+          method: "GET",
+          queryParams: queryParams,
+        })
 
-    if (response.status === HttpStatusCode.NoContent) {
-      setJobs([])
-    } else {
-      setJobs(response.data)
-    }
-    setLoading(false)
-  }
+        if (response.status === 500) {
+          navigate("/403")
+        }
+
+        if (response.status === HttpStatusCode.NoContent) {
+          setJobs([])
+        } else {
+          setJobs(response.data)
+        }
+      } catch (error) {
+        console.error("Error fetching jobs:", error)
+      }
+      setLoading(false)
+    },
+    [apiRequest, queryParams, navigate],
+  )
 
   const handleSearch = () => {
     console.log("Search")
@@ -95,11 +103,14 @@ function DiscoverJobs() {
     if (categoryList.length === 0) {
       fetchCategories()
     }
+  }, [apiRequest, categoryList.length])
 
-    if (isLoading === true) {
-      fetchJobs(categoryName, modality, minSalary, maxSalary)
+  useEffect(() => {
+    if (isLoading) {
+      // setSearchParams(queryParams)
+      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary)
     }
-  }, [apiRequest])
+  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs])
 
   const jobsList = jobs.map((job) => {
     return <JobOfferDiscoverCard job={job} key={job.id} />
@@ -122,6 +133,7 @@ function DiscoverJobs() {
                   className="me-2"
                   aria-label="Search"
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
                 />
                 <div className="d-flex flex-wrap justify-content-center mt-2">
                   <Button variant="outline-light" className="filterbtn" onClick={() => handleSearch()}>
@@ -186,6 +198,7 @@ function DiscoverJobs() {
                   className="me-2"
                   aria-label="Search"
                   onChange={(e) => setMinSalary(e.target.value)}
+                  value={minSalary}
                 />
                 -
                 <Form.Control
@@ -196,6 +209,7 @@ function DiscoverJobs() {
                   className="ms-2"
                   aria-label="Search"
                   onChange={(e) => setMaxSalary(e.target.value)}
+                  value={maxSalary}
                 />
               </div>
               <br />
