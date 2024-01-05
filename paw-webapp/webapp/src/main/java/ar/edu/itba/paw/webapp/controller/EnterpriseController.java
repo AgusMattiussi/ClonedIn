@@ -121,7 +121,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/jobOffers")
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getJobOffers(@PathParam("id") @Min(1) final long id,
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("category") final String categoryName,
@@ -134,15 +134,20 @@ public class EnterpriseController {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
         Category category = null;
-        if(categoryName != null)
+        if(categoryName != null && !categoryName.isEmpty())
             category = categoryService.findByName(categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
-        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality.getModality(), enterprise.getName(),
+        String modalityToFilter = "";
+        if(modality != null)
+            modalityToFilter = modality.getModality();
+
+        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modalityToFilter, enterprise.getName(),
                         searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary), page - 1, PAGE_SIZE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality.getModality(), enterprise.getName(),
+        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modalityToFilter, enterprise.getName(),
                         searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
+
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
         return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
@@ -284,8 +289,8 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-    // @Produces set dynamically
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
+//     @Produces set dynamically
+//    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
         if(profileImage == null)

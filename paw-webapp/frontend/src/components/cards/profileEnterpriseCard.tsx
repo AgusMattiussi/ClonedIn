@@ -8,32 +8,43 @@ import { useSharedAuth } from "../../api/auth"
 import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
-function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; enterprise: any }) {
+function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
+
+  const [loadingData, setLoadingData] = useState(true)
   const [enterpriseCategory, setEnterpriseCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [imageUrl, setImageUrl] = useState<string>("")
+
+  const memorizedEnterprise = useMemo(() => enterprise, [enterprise])
 
   useEffect(() => {
-    const fetchCategory = async () => {
-      const response = await apiRequest({
-        url: enterprise.category,
-        method: "GET",
-      })
-      setEnterpriseCategory(response.data)
-    }
+    const fetchData = async () => {
+      try {
+        if (loadingData) {
+          const [categoryResponse, imageResponse] = await Promise.all([
+            apiRequest({ url: memorizedEnterprise.category, method: "GET" }),
+            apiRequest({ url: memorizedEnterprise.image, method: "GET" }),
+          ])
 
-    if (enterpriseCategory === null) {
-      fetchCategory()
+          setEnterpriseCategory(categoryResponse.data)
+          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setLoadingData(false)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
-  }, [apiRequest])
+    if (loadingData) fetchData()
+  }, [apiRequest, loadingData, memorizedEnterprise])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
-      <Card.Img variant="top" src={defaultProfile} />
+      <Card.Img variant="top" src={imageUrl} />
       {userInfo?.role === "ENTERPRISE" ? (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
@@ -62,13 +73,13 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
           )}
         </div>
         {userInfo?.role === "ENTERPRISE" ? <hr /> : <></>}
-        <Card.Text>
+        <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
+              <div>{t("Job Category")}:</div>
               {enterprise.category !== "No-Especificado" ? (
                 <div>
-                  {t("Job Category")}:
                   <Badge pill bg="success" className="mx-2">
                     {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
                   </Badge>
@@ -104,14 +115,10 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
               <p> {enterprise.description}</p>
             </div>
           </div>
-        </Card.Text>
+        </div>
       </Card.Body>
     </Card>
   )
-}
-
-ProfileEnterpriseCard.defaultProps = {
-  editable: false,
 }
 
 export default ProfileEnterpriseCard

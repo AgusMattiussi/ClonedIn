@@ -54,6 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Users and Enterprises
                 .antMatchers("/users/*/image").permitAll()
                 .antMatchers("/users", "/users/**").authenticated()
+                .antMatchers("/enterprises/*/image").permitAll()
                 .antMatchers("/enterprises", "/enterprises/**").authenticated()
                 // Categories
                 .antMatchers("/categories").permitAll()

@@ -166,7 +166,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("minSalary", minSalary);
         if(maxSalary != null)
             query.setParameter("maxSalary", maxSalary);
-        if(!position.isEmpty())
+        if(position != null && !position.isEmpty())
             query.setParameter("position", position);
         if(!enterpriseName.isEmpty())
             query.setParameter("enterpriseName", enterpriseName);

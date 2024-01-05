@@ -47,12 +47,8 @@ function ImageProfileForm() {
         "Content-Type": "multipart/form-data",
       },
     })
-
-    if (response) {
-      navigate(-1)
-    } else {
-      //TODO: manejar error
-    }
+    //TODO: manejar error
+    navigate(-1)
   }
 
   return (
