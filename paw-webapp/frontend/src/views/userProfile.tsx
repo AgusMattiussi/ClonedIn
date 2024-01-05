@@ -163,13 +163,13 @@ function ProfileUser() {
 
   const userSkillsList = skillsData.map((skill) => {
     return (
-      <>
+      <div key={skill.id}>
         {userInfo?.role === "ENTERPRISE" ? (
-          <Badge pill bg="success" text="light" className="mx-2 p-2" key={skill.id}>
+          <Badge pill bg="success" text="light" className="mx-2 p-2">
             {skill.description}
           </Badge>
         ) : (
-          <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
+          <Badge pill bg="light" text="dark" className="mx-2">
             {skill.description}
             <Button
               type="button"
@@ -181,13 +181,13 @@ function ProfileUser() {
             </Button>
           </Badge>
         )}
-      </>
+      </div>
     )
   })
 
   const userEducationsList = educationsData.map((education) => {
     return (
-      <>
+      <div key={education.id}>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <h6>
             {education.institutionName} - {education.title}
@@ -208,13 +208,13 @@ function ProfileUser() {
         </p>
         <p>{education.description}</p>
         <hr />
-      </>
+      </div>
     )
   })
 
   const userExperienceList = experiencesData.map((experience) => {
     return (
-      <>
+      <div key={experience.id}>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <h6>
             {experience.enterpriseName} - {experience.position}
@@ -235,7 +235,7 @@ function ProfileUser() {
         </p>
         <p>{experience.description}</p>
         <hr />
-      </>
+      </div>
     )
   })
 
@@ -362,12 +362,8 @@ function ProfileUser() {
                   </div>
                 </Card.Title>
                 <hr />
-                {/* TODO: View As Enterprise
-                <Badge pill bg="success" className="mx-2 p-2">
-                  skill1
-                </Badge> */}
                 {userSkillsList.length > 0 ? (
-                  <div>{userSkillsList}</div>
+                  <div className="d-flex">{userSkillsList}</div>
                 ) : (
                   <div style={{ fontWeight: "bold" }}>{t("Skills Not Specified")}</div>
                 )}

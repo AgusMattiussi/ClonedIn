@@ -529,7 +529,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+//    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
         Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();

@@ -26,24 +26,26 @@ function ProfileUserCard({
   const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
 
-  const [skillsData, setSkillsData] = useState<any[]>([])
-
+  const [loadingData, setLoadingData] = useState(true)
   const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [skillsData, setSkillsData] = useState<any[]>([])
+  const [imageUrl, setImageUrl] = useState<string>("")
 
   const memorizedUser = useMemo(() => user, [user])
-  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (loadingData) {
-          const [skillsResponse, categoryResponse] = await Promise.all([
+          const [skillsResponse, categoryResponse, imageResponse] = await Promise.all([
             apiRequest({ url: memorizedUser.skills, method: "GET" }),
             apiRequest({ url: memorizedUser.category, method: "GET" }),
+            apiRequest({ url: memorizedUser.image, method: "GET" }),
           ])
 
           setSkillsData(skillsResponse.data)
           setUserCategory(categoryResponse.data)
+          setImageUrl(imageResponse.status === 200 ? memorizedUser.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {
@@ -63,7 +65,7 @@ function ProfileUserCard({
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "10rem" }}>
-      <Card.Img variant="top" src={defaultProfile} />
+      <Card.Img variant="top" src={imageUrl} />
       {userInfo?.role === "ENTERPRISE" ? (
         <></>
       ) : (

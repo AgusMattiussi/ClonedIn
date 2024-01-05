@@ -8,10 +8,10 @@ export default interface UserDto {
   description: string
   education: string
   visibility: number
-
   self: string
   userSkills: string
   educations: string
   experiences: string
-  //TODO: Add URIs for other resources (experiences, education, image, userSkills, contacts)
+  images: string
+  //TODO: Add URIs for other resources (contacts)
 }

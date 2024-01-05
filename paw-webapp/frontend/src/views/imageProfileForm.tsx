@@ -3,16 +3,57 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
 
 function ImageProfileForm() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const { id } = useParams()
   const { userInfo } = useSharedAuth()
+  const { loading, apiRequest } = useRequestApi()
+  const [imageFile, setImageFile] = useState(null)
 
   document.title = t("Image Form Page Title")
+
+  const handleFileChange = (e: any) => {
+    setImageFile(e.target.files[0])
+  }
+
+  const handlePut = async (e: any) => {
+    if (!imageFile) {
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("image", imageFile)
+
+    let requestUrl = ""
+    if (userInfo?.role === "ENTERPRISE") {
+      requestUrl = `/enterprises/${id}/image`
+    } else {
+      requestUrl = `/users/${id}/image`
+    }
+
+    const response = await apiRequest({
+      url: requestUrl,
+      method: "PUT",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+
+    if (response) {
+      navigate(-1)
+    } else {
+      //TODO: manejar error
+    }
+  }
 
   return (
     <div>
@@ -27,13 +68,13 @@ function ImageProfileForm() {
                 </h2>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
+                    <Form className="msform" onSubmit={handlePut}>
                       <div className="form-card">
                         <Form.Group controlId="formFile" className="mb-3">
-                          <Form.Control type="file" />
+                          <Form.Control type="file" onChange={handleFileChange} />
                         </Form.Group>
                       </div>
-                      <Button onClick={() => navigate(-1)} variant="success" type="submit">
+                      <Button variant="success" type="submit">
                         <strong>{t("Upload")}</strong>
                       </Button>
                     </Form>
