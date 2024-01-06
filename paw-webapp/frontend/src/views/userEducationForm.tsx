@@ -29,7 +29,7 @@ function EducationForm() {
     //TODO: agregar validaciones para las fechas
   })
   const [comment, setComment] = useState("")
-  const [monthFrom, setMonthFrom] = useState("")
+  const [monthFrom, setMonthFrom] = useState("Enero")
   const [yearFrom, setYearFrom] = useState("")
   const [monthTo, setMonthTo] = useState("")
   const [yearTo, setYearTo] = useState("")
@@ -50,6 +50,7 @@ function EducationForm() {
         yearTo,
       },
     })
+    console.log(response)
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${id}`)
     } else {
@@ -195,7 +196,7 @@ function EducationForm() {
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button onClick={() => navigate(`/profileUser/${id}`)} variant="outline-secondary">
+                        <Button onClick={() => navigate(`/users/${id}`)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

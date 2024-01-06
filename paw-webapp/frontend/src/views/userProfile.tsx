@@ -121,7 +121,7 @@ function ProfileUser() {
           url: `/users/${id}/skills/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.Ok) {
           setSkillsLoading(true)
         }
         break
@@ -130,7 +130,8 @@ function ProfileUser() {
           url: `/users/${id}/educations/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        console.log(response)
+        if (response.status === HttpStatusCode.Ok) {
           setEducationsLoading(true)
         }
         break
@@ -139,7 +140,7 @@ function ProfileUser() {
           url: `/users/${id}/experiences/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.Ok) {
           setExperiencesLoading(true)
         }
         break
