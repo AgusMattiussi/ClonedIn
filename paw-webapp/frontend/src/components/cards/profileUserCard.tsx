@@ -4,7 +4,7 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react"
 import { useRequestApi } from "../../api/apiRequest"
 import { useSharedAuth } from "../../api/auth"
@@ -25,6 +25,7 @@ function ProfileUserCard({
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
+  const { id } = useParams()
 
   const [loadingData, setLoadingData] = useState(true)
   const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -89,12 +90,16 @@ function ProfileUserCard({
             >
               <Icon.PencilSquare color="green" size={15} />
             </Button>
+          ) : !inProfileView ? (
+            <></>
           ) : contacted ? (
             <Badge className="p-2" bg="secondary">
               {t("Contacted")}
             </Badge>
           ) : (
-            <></>
+            <Button variant="outline-dark" onClick={() => navigate(`/enterprises/${userInfo?.id}}/contact/${id}`)}>
+              {t("Contact")}
+            </Button>
           )}
         </div>
         {editable ? <hr /> : <></>}

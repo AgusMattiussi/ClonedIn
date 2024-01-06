@@ -110,7 +110,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
           <h5>{t("Description")}</h5>
         </div>
         <div>
-          <Button variant="outline-dark" onClick={() => navigate(`/jobOffer/${job.id}`)}>
+          <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
             {t("View More")}
           </Button>
         </div>

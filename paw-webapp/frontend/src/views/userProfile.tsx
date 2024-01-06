@@ -130,7 +130,6 @@ function ProfileUser() {
           url: `/users/${id}/educations/${object_id}`,
           method: "DELETE",
         })
-        console.log(response)
         if (response.status === HttpStatusCode.Ok) {
           setEducationsLoading(true)
         }
