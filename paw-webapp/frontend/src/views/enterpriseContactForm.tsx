@@ -50,7 +50,7 @@ function ContactForm() {
 
   const handlePost = async (e: any) => {
     const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/contacts}`,
+      url: `/enterprises/${userInfo?.id}/contacts`,
       method: "PUT",
       body: {
         message,
