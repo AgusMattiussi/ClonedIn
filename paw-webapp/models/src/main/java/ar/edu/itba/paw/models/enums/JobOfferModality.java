@@ -6,7 +6,7 @@ public enum JobOfferModality {
     MIXED("Mixto"),
     NOT_SPECIFIED("No especificado");
 
-    private String modality;
+    private final String modality;
 
     JobOfferModality(String modality) {
         this.modality = modality;
@@ -14,5 +14,14 @@ public enum JobOfferModality {
 
     public String getModality() {
         return modality;
+    }
+
+    public static JobOfferModality fromString(String modality) {
+        for (JobOfferModality jobOfferModality : JobOfferModality.values()) {
+            if (jobOfferModality.modality.equalsIgnoreCase(modality)) {
+                return jobOfferModality;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Invalid JobOfferModality: '%s'", modality));
     }
 }
