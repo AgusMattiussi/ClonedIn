@@ -36,17 +36,17 @@ public class SkillController {
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final List<SkillDTO> skills = skillService.getAllSkills(/*page-1, SKILLS_BY_PAGE*/).stream()
+        final List<SkillDTO> skills = skillService.getAllSkills(page-1, SKILLS_BY_PAGE).stream()
                 .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
         if (skills.isEmpty())
             return Response.noContent().build();
 
-        //long skillCount = skillService.getSkillCount();
-        //long maxPages = skillCount / SKILLS_BY_PAGE + 1;
+        long skillCount = skillService.getSkillCount();
+        long maxPages = skillCount / SKILLS_BY_PAGE + 1;
 
         return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skills) {}),
-                page, 1);
+                page, maxPages);
     }
 
     @GET
