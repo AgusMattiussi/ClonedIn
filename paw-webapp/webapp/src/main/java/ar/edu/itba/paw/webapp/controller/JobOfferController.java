@@ -94,9 +94,13 @@ public class JobOfferController {
     public Response getSkills(@PathParam("id") final long id) {
         JobOffer jobOffer = jobOfferService.findById(id).orElseThrow(() -> new JobOfferNotFoundException(id));
 
-        List<SkillDTO> skills = jobOffer.getSkills().stream().map(skill -> SkillDTO.fromSkill(uriInfo,skill))
+        List<Skill> skills = jobOffer.getSkills();
+        if (skills == null || skills.isEmpty())
+            return Response.noContent().build();
+
+        List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo,skill))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<SkillDTO>>(skills) {}).build();
+        return Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}).build();
     }
 }
