@@ -23,7 +23,6 @@ public class JobOfferDTO {
     private double salary;
     private String modality;
     private String available;
-    private List<String> skills; //TODO: Solucionar con SkillController y SkillDTO para buscar por skill
     private JobOfferDTOLinks links;
 
 
@@ -34,8 +33,6 @@ public class JobOfferDTO {
         dto.description = jobOffer.getDescription();
         dto.salary = jobOffer.getSalary().doubleValue();
         dto.modality = jobOffer.getModality();
-        List<Skill> jobOfferSkills = jobOffer.getSkills();
-        dto.skills = jobOfferSkills.stream().map(Skill::getDescription).collect(java.util.stream.Collectors.toList());
 
         dto.links = new JobOfferDTOLinks(uriInfo, jobOffer);
 
@@ -90,14 +87,6 @@ public class JobOfferDTO {
         this.available = available;
     }
 
-    public List<String> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
-    }
-
     public JobOfferDTOLinks getLinks() {
         return links;
     }
@@ -111,25 +100,32 @@ public class JobOfferDTO {
         private URI self;
         private URI enterprise;
         private URI category;
+        private URI skills;
 
         public JobOfferDTOLinks() {
         }
 
         public JobOfferDTOLinks(final UriInfo uriInfo, final JobOffer jobOffer) {
-            final UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
+            this.self = uriInfo.getAbsolutePathBuilder()
                     .replacePath(JOB_OFFERS_URL)
-                    .path(String.valueOf(jobOffer.getId()));
-            this.self = jobOfferUriBuilder.build();
+                    .path(String.valueOf(jobOffer.getId()))
+                    .build();
 
-            UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
+            this.enterprise = uriInfo.getAbsolutePathBuilder()
                     .replacePath(ENTERPRISES_URL)
-                    .path(String.valueOf(jobOffer.getEnterprise().getId()));
-            this.enterprise = enterpriseUriBuilder.build();
+                    .path(String.valueOf(jobOffer.getEnterprise().getId()))
+                    .build();
 
-            UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+            this.category = uriInfo.getAbsolutePathBuilder()
                     .replacePath(CATEGORIES_URL)
-                    .path(String.valueOf(jobOffer.getCategory().getId()));
-            this.category = categoryUriBuilder.build();
+                    .path(String.valueOf(jobOffer.getCategory().getId()))
+                    .build();
+
+            this.skills = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .path(String.valueOf(jobOffer.getId()))
+                    .path("skills")
+                    .build();
         }
 
         public URI getSelf() {
@@ -154,6 +150,14 @@ public class JobOfferDTO {
 
         public void setCategory(URI category) {
             this.category = category;
+        }
+
+        public URI getSkills() {
+            return skills;
+        }
+
+        public void setSkills(URI skills) {
+            this.skills = skills;
         }
     }
 }
