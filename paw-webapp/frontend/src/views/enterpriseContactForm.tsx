@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { useRequestApi } from "../api/apiRequest"
 import { HttpStatusCode } from "axios"
+import Loader from "../components/loader"
 
 function ContactForm() {
   const navigate = useNavigate()
@@ -20,7 +21,8 @@ function ContactForm() {
   const { loading, apiRequest } = useRequestApi()
   const [userName, setUserName] = useState("")
   const [message, setMessage] = useState("")
-  const [jobOffersList, setJobOffersList] = useState([])
+  const [jobOffersList, setJobOffersList] = useState<any[]>([])
+  const [jobOffersLoading, setJobOffersLoading] = useState(true)
   const [jobOfferId, setJobOfferId] = useState("")
 
   useEffect(() => {
@@ -29,7 +31,12 @@ function ContactForm() {
         url: `/enterprises/${userInfo?.id}/jobOffers`,
         method: "GET",
       })
-      setJobOffersList(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setJobOffersList([])
+      } else {
+        setJobOffersList(response.data)
+      }
+      setJobOffersLoading(false)
     }
 
     const fetchUserName = async () => {
@@ -40,28 +47,28 @@ function ContactForm() {
       setUserName(response.data.name)
     }
 
-    if (setJobOffersList.length === 0) {
+    if (jobOffersLoading) {
       fetchJobOffers()
     }
     if (userName.length === 0) {
       fetchUserName()
     }
-  }, [apiRequest, setJobOffersList.length, userInfo?.id, userName.length, userId])
+  }, [apiRequest, jobOffersLoading, userInfo?.id, userName.length, userId])
 
-  const handlePost = async (e: any) => {
+  const handlePost = async () => {
     const response = await apiRequest({
       url: `/enterprises/${userInfo?.id}/contacts`,
-      method: "PUT",
+      method: "POST",
       body: {
         message,
         jobOfferId,
         userId,
       },
     })
-    if (response.status === HttpStatusCode.Ok) {
-      navigate(`/enterprises/${userInfo?.id}`)
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/users/${userId}`)
     } else {
-      //TODO: manejar error
+      // TODO: manejar error
     }
   }
 
@@ -84,7 +91,7 @@ function ContactForm() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform" onSubmit={handlePost}>
+                    <Form className="msform">
                       <div className="form-card">
                         <h2 className="fs-title"> {t("Message")} </h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicMessage">
@@ -97,22 +104,26 @@ function ContactForm() {
                         </Form.Group>
                         <div className="d-flex mb-4">
                           <label className="area">{t("Job Offers ")}</label>
-                          <Form.Select
-                            className="selectFrom"
-                            aria-label="Default select example"
-                            value={jobOfferId}
-                            onChange={(e) => setJobOfferId(e.target.value)}
-                          >
-                            {jobOffersList.map((jobOffer: any) => (
-                              <option key={jobOffer.id} value={jobOffer.id}>
-                                {jobOffer.name}
-                              </option>
-                            ))}
-                          </Form.Select>
+                          {jobOffersLoading ? (
+                            <Loader />
+                          ) : (
+                            <Form.Select
+                              className="selectFrom"
+                              aria-label="Default select example"
+                              value={jobOfferId}
+                              onChange={(e) => setJobOfferId(e.target.value)}
+                            >
+                              {jobOffersList.map((jobOffer: any) => (
+                                <option key={jobOffer.id} value={jobOffer.id}>
+                                  {jobOffer.position}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          )}
                         </div>
                       </div>
                       <p>{t("Fields required")}</p>
-                      <Button variant="success" type="submit">
+                      <Button variant="success" onClick={() => handlePost()}>
                         <strong>{t("Contact")}</strong>
                       </Button>
                     </Form>
