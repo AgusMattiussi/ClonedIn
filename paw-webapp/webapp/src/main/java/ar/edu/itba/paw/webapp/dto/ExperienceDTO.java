@@ -11,7 +11,6 @@ public class ExperienceDTO {
 
     private static final String USERS_URL = "webapp_war/users";
     
-    private URI user;
     private int monthFrom;
     private int yearFrom;
     private int monthTo;
@@ -20,6 +19,7 @@ public class ExperienceDTO {
     private String enterpriseName;
     private String description;
     private Long id;
+    private ExperienceDTOLinks links;
     
     public static ExperienceDTO fromExperience(final UriInfo uriInfo, final Experience experience) {
         final ExperienceDTO dto = new ExperienceDTO();
@@ -32,20 +32,9 @@ public class ExperienceDTO {
         dto.description = experience.getDescription();
         dto.id = experience.getId();
 
-        final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
-                .replacePath(USERS_URL)
-                .path(String.valueOf(experience.getUser().getId()));
-        dto.user = userUriBuilder.build();
+        dto.links = new ExperienceDTOLinks(uriInfo, experience);
 
         return dto;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
     }
 
     public int getMonthFrom() {
@@ -110,5 +99,49 @@ public class ExperienceDTO {
 
     public void setId(Long id) {
         	this.id = id;
+    }
+
+    public ExperienceDTOLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(ExperienceDTOLinks links) {
+        this.links = links;
+    }
+
+    public static class ExperienceDTOLinks {
+        private URI self;
+        private URI user;
+
+        public ExperienceDTOLinks() {
+        }
+
+        public ExperienceDTOLinks(final UriInfo uriInfo, final Experience experience) {
+            final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(USERS_URL)
+                .path(experience.getUser().getId().toString());
+            this.user = userUriBuilder.build();
+
+            final UriBuilder educationUriBuilder = userUriBuilder
+                    .path("experiences")
+                    .path(String.valueOf(experience.getId()));
+            this.self = educationUriBuilder.build();
+        }
+
+        public URI getSelf() {
+            return self;
+        }
+
+        public void setSelf(URI self) {
+            this.self = self;
+        }
+
+        public URI getUser() {
+            return user;
+        }
+
+        public void setUser(URI user) {
+            this.user = user;
+        }
     }
 }
