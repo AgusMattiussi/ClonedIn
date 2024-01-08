@@ -371,10 +371,10 @@ public class UserController {
     @Produces(ClonedInMediaType.EDUCATION_V1)
     @PreAuthorize(ENTERPRISE_OR_EDUCATION_OWNER)
     public Response getEducationById(@PathParam("id") @Min(1) final long id,
-                                     @PathParam("edId") @Min(1) final long educationId) {
+                                     @PathParam("edId") @Min(1) final long edId) {
 
-        EducationDTO educationDTO = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
-                .orElseThrow(() -> new EducationNotFoundException(educationId));
+        EducationDTO educationDTO = educationService.findById(edId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
+                .orElseThrow(() -> new EducationNotFoundException(edId));
 
         return Response.ok(educationDTO).build();
     }
@@ -402,8 +402,8 @@ public class UserController {
     @Path("/{id}/educations/{edId}")
     @PreAuthorize(EDUCATION_OWNER)
     public Response deleteEducationById(@PathParam("id") @Min(1) final long id,
-                                        @PathParam("edId") @Min(1) final long educationId) {
-        educationService.deleteEducation(educationId);
+                                        @PathParam("edId") @Min(1) final long edId) {
+        educationService.deleteEducation(edId);
         return Response.noContent().build();
     }
 

@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
 
+// TODO: Agregar endpoints para poner 'self'?
 public class ContactDTO {
 
     private static final String USERS_URL = "webapp_war/users";
