@@ -7,7 +7,10 @@ import { UserRole } from "../utils/constants"
 
 export interface UserInfo {
   sub: string
+  iat: number
+  iss: string
   exp: number
+  token_type: string
   role: UserRole
   id: string
 }
@@ -29,9 +32,23 @@ const useAuth = () => {
     if (token) {
       localStorage.setItem("accessToken", JSON.stringify(token))
       setUserInfo(jwtDecode(token))
-      // console.log(jwtDecode(token))
     } else {
       localStorage.removeItem("accessToken")
+    }
+  }
+
+  const getRefreshToken = () => {
+    return localStorage.getItem("refreshToken")
+  }
+
+  const isTokenExpired = (token: string) => {
+    try {
+      const decoded = jwtDecode(token) as UserInfo
+      const currentTime = Math.floor(Date.now() / 1000)
+      return decoded.exp < currentTime
+    } catch (error) {
+      // Error decoding token (invalid token format)
+      return true
     }
   }
 
@@ -42,6 +59,8 @@ const useAuth = () => {
   return {
     getAccessToken,
     setAccessToken,
+    getRefreshToken,
+    isTokenExpired,
     userInfo,
     handleLogout,
   }

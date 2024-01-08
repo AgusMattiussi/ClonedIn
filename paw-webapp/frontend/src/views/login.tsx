@@ -33,12 +33,9 @@ function Login() {
     e.preventDefault()
     const logged = await loginHandler(email, password)
     if (logged) {
-      console.log("Logged in")
       if (userInfo?.role === UserRole.USER) {
-        console.log(userInfo?.role)
         navigate("/jobOffers")
       } else {
-        console.log(userInfo?.role)
         navigate("/users")
       }
     } else {
