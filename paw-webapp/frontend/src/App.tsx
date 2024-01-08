@@ -44,7 +44,7 @@ function App() {
           <Route path="/enterprises/:id/jobOffers" element={<JobOfferForm />} />
           <Route path="/enterprises/:id/contacts" element={<ContactsEnterprise />} />
           <Route path="/enterprises/:id/interested" element={<InterestedEnterprise />} />
-          <Route path="/enterprises/:id/contact/:userId" element={<ContactForm />} />
+          <Route path="/enterprises/:id/contacts/:userId" element={<ContactForm />} />
 
           {/* JOB OFFER CONTROLLER */}
           <Route path="/jobOffers" element={<DiscoverJobs />} />

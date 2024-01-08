@@ -97,7 +97,7 @@ function ProfileUserCard({
               {t("Contacted")}
             </Badge>
           ) : (
-            <Button variant="outline-dark" onClick={() => navigate(`/enterprises/${userInfo?.id}/contact/${id}`)}>
+            <Button variant="outline-dark" onClick={() => navigate(`/enterprises/${userInfo?.id}/contacts/${id}`)}>
               {t("Contact")}
             </Button>
           )}
