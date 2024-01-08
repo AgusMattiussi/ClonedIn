@@ -25,7 +25,7 @@ public class CategoryHibernateDaoTest {
     private static final String TEST_CATEGORY_2 = "testCategory2";
     private static final String TEST_CATEGORY_3 = "testCategory3";
     private static final String NEW_CATEGORY = "newCategory";
-    private static final long CATEGORIES_COUNT = 2;
+    private static final long CATEGORIES_COUNT = 1;
 
     @PersistenceContext
     private EntityManager em;

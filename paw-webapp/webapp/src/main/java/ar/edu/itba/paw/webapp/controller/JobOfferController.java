@@ -32,7 +32,7 @@ public class JobOfferController {
 
     private static final int JOB_OFFERS_PER_PAGE = 3;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
 

@@ -27,7 +27,7 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPaginatio
 @Component
 public class CategoryController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryController.class);
     private static final int CATEGORIES_BY_PAGE = 20;
 
     @Context
