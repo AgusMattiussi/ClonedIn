@@ -128,25 +128,20 @@ public class EnterpriseController {
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam("position") final String position,
-                                 @QueryParam("minSalary") @Min(0) final double minSalary,
-                                 @QueryParam("maxSalary") @Min(0) final double maxSalary) {
+                                 @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
+                                 @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary) {
 
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
 
-        Category category = null;
-        if(categoryName != null && !categoryName.isEmpty())
-            category = categoryService.findByName(categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        Category category = categoryName != null ? categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
-        String modalityToFilter = "";
-        if(modality != null)
-            modalityToFilter = modality.getModality();
-
-        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modalityToFilter, enterprise.getName(),
-                        searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary), page - 1, PAGE_SIZE)
+        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, enterprise.getName(),
+                        searchTerm, position, minSalary, maxSalary, page - 1, PAGE_SIZE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modalityToFilter, enterprise.getName(),
-                        searchTerm, position, BigDecimal.valueOf(minSalary), BigDecimal.valueOf(maxSalary));
+        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterprise.getName(),
+                        searchTerm, position, minSalary, maxSalary);
 
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
