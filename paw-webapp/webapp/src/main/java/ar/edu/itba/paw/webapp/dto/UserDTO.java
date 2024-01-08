@@ -115,6 +115,8 @@ public class UserDTO {
         private URI experiences;
         private URI educations;
         private URI skills;
+        private URI applications;
+        private URI notifications;
 
         public UserDTOLinks() {
         }
@@ -127,6 +129,8 @@ public class UserDTO {
             this.experiences = userUriBuilder.clone().path("experiences").build();
             this.educations = userUriBuilder.clone().path("educations").build();
             this.skills = userUriBuilder.clone().path("skills").build();
+            this.applications = userUriBuilder.clone().path("applications").build();
+            this.notifications = userUriBuilder.clone().path("notifications").build();
 
             final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
             this.category = categoryUriBuilder.build();
@@ -178,6 +182,22 @@ public class UserDTO {
 
         public void setSkills(URI skills) {
             this.skills = skills;
+        }
+
+        public URI getApplications() {
+            return applications;
+        }
+
+        public void setApplications(URI applications) {
+            this.applications = applications;
+        }
+
+        public URI getNotifications() {
+            return notifications;
+        }
+
+        public void setNotifications(URI notifications) {
+            this.notifications = notifications;
         }
     }
 }
