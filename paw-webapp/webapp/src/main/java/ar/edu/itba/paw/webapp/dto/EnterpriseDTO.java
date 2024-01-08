@@ -122,6 +122,8 @@ public class EnterpriseDTO {
         private URI category;
         private URI self;
         private URI image;
+        private URI contacts;
+        private URI jobOffers;
 
         public EnterpriseDTOLinks() {
         }
@@ -134,6 +136,8 @@ public class EnterpriseDTO {
             this.self = enterpriseUriBuilder.build();
 
             this.image = enterpriseUriBuilder.clone().path("image").build();
+            this.contacts = enterpriseUriBuilder.clone().path("contacts").build();
+            this.jobOffers = enterpriseUriBuilder.clone().path("jobOffers").build();
 
             UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(CATEGORIES_URL)
@@ -163,6 +167,22 @@ public class EnterpriseDTO {
 
         public void setCategory(URI category) {
             this.category = category;
+        }
+
+        public URI getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(URI contacts) {
+            this.contacts = contacts;
+        }
+
+        public URI getJobOffers() {
+            return jobOffers;
+        }
+
+        public void setJobOffers(URI jobOffers) {
+            this.jobOffers = jobOffers;
         }
     }
 }
