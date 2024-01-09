@@ -9,6 +9,9 @@ import java.net.URI;
 // TODO: JobOffersInCategory, UsersWithCategory
 public class CategoryDTO {
     private static final String CATEGORY_URL = "webapp_war/categories";
+    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
+    private static final String USERS_URL = "webapp_war/users";
+    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
 
     private String name;
     private long id;
@@ -50,6 +53,9 @@ public class CategoryDTO {
 
     public static class CategoryDTOLinks {
         private URI self;
+        private URI jobOffersInCategory;
+        private URI usersInCategory;
+        private URI enterprisesInCategory;
 
         public CategoryDTOLinks(){}
 
@@ -57,6 +63,22 @@ public class CategoryDTO {
             final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath(CATEGORY_URL)
                     .path(String.valueOf(category.getId()));
             this.self = categoryUriBuilder.build();
+
+            this.jobOffersInCategory = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .queryParam("categoryName", category.getName())
+                    .build();
+
+            this.usersInCategory = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(USERS_URL)
+                    .queryParam("categoryName", category.getName())
+                    .build();
+
+            //TODO: GET @ /enterprises
+            this.enterprisesInCategory = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(ENTERPRISES_URL)
+                    .queryParam("categoryName", category.getName())
+                    .build();
         }
 
         public URI getSelf() {
@@ -65,6 +87,30 @@ public class CategoryDTO {
 
         public void setSelf(URI self) {
             this.self = self;
+        }
+
+        public URI getJobOffersInCategory() {
+            return jobOffersInCategory;
+        }
+
+        public void setJobOffersInCategory(URI jobOffersInCategory) {
+            this.jobOffersInCategory = jobOffersInCategory;
+        }
+
+        public URI getUsersInCategory() {
+            return usersInCategory;
+        }
+
+        public void setUsersInCategory(URI usersInCategory) {
+            this.usersInCategory = usersInCategory;
+        }
+
+        public URI getEnterprisesInCategory() {
+            return enterprisesInCategory;
+        }
+
+        public void setEnterprisesInCategory(URI enterprisesInCategory) {
+            this.enterprisesInCategory = enterprisesInCategory;
         }
     }
 }
