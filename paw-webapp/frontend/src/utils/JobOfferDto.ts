@@ -5,7 +5,6 @@ export default interface JobOfferDto {
   salary: string
   modality: string
   available: string
-  skills: []
   links: JobOfferDtoLinks
 }
 
@@ -13,4 +12,5 @@ interface JobOfferDtoLinks {
   self: string
   enterprise: string
   category: string
+  skills: []
 }

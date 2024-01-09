@@ -2,41 +2,46 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import CardHeader from "react-bootstrap/esm/CardHeader"
-import { useTranslation } from "react-i18next"
 import CancelModal from "../modals/cancelModal"
+import CategoryDto from "../../utils/CategoryDto"
+import SkillDto from "../../utils/SkillDto"
+import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import CategoryDto from "../../utils/CategoryDto"
+import { HttpStatusCode } from "axios"
 
 function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; contacted: boolean; job: any }) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
 
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
-  const [categoryLoading, setCategoryLoading] = useState(true)
-
-  const [skillsData, setSkillsData] = useState<any[]>([])
+  const [skillsData, setSkillsData] = useState<SkillDto[]>([])
+  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    const fetchCategory = async () => {
-      const response = await apiRequest({
-        url: job.links.category,
-        method: "GET",
-      })
-      setJobCategory(response.data)
-      setSkillsData(job.skills)
-      setCategoryLoading(false)
-    }
+    const fetchData = async () => {
+      try {
+        if (loadingData) {
+          const [categoryResponse, skillsResponse] = await Promise.all([
+            apiRequest({ url: job.links.category, method: "GET" }),
+            apiRequest({ url: job.links.skills, method: "GET" }),
+          ])
 
-    if (categoryLoading === true) {
-      fetchCategory()
+          setJobCategory(categoryResponse.data)
+          setSkillsData(skillsResponse.status === HttpStatusCode.NoContent ? [] : skillsResponse.data)
+          setLoadingData(false)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
+    if (loadingData) fetchData()
   }, [apiRequest])
 
-  const jobOfferSkillsList = skillsData.map((skill, index) => {
+  const jobOfferSkillsList = skillsData.map((skill) => {
     return (
-      <Badge key={index} pill bg="success" className="mx-1">
-        {skill}
+      <Badge key={skill.id} pill bg="success" className="mx-1">
+        {skill.description}
       </Badge>
     )
   })
@@ -76,7 +81,7 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
+            {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
           </div>
         </div>
       </div>

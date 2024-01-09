@@ -99,7 +99,11 @@ function JobOfferUserCard({ job }: { job: any }) {
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
             <Badge pill bg="success" className="mx-2">
-              {jobOffer?.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{jobOffer?.skills}</div>}
+              {jobOffer?.links.skills.length === 0 ? (
+                <div>{t("Skills Not Specified")}</div>
+              ) : (
+                <div>{jobOffer?.links.skills}</div>
+              )}
             </Badge>
           </div>
         </div>
