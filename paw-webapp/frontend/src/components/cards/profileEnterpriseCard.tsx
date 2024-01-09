@@ -4,6 +4,7 @@ import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import CategoryDto from "../../utils/CategoryDto"
+import { UserRole } from "../../utils/constants"
 import { useSharedAuth } from "../../api/auth"
 import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
@@ -45,7 +46,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       <Card.Img variant="top" src={imageUrl} />
-      {userInfo?.role === "ENTERPRISE" ? (
+      {userInfo?.role === UserRole.ENTERPRISE ? (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
@@ -58,7 +59,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
           <h5>{enterprise.name}</h5>
-          {userInfo?.role === "ENTERPRISE" ? (
+          {userInfo?.role === UserRole.ENTERPRISE ? (
             <Button
               className="float-end"
               type="button"
@@ -72,7 +73,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <></>
           )}
         </div>
-        {userInfo?.role === "ENTERPRISE" ? <hr /> : <></>}
+        {userInfo?.role === UserRole.ENTERPRISE ? <hr /> : <></>}
         <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">

@@ -26,7 +26,7 @@ function Navigation({ role }: { role: UserRole }) {
 
   return (
     <Navbar expand="lg" className="color-nav" variant="dark">
-      {role === "ENTERPRISE" ? (
+      {role === UserRole.ENTERPRISE ? (
         <div className="m-1 w-100 d-flex px-3">
           <Navbar.Brand onClick={() => navigate("/users")}>
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
@@ -86,7 +86,7 @@ function Navigation({ role }: { role: UserRole }) {
 }
 
 Navigation.defaultProps = {
-  role: "USER",
+  role: UserRole.USER,
 }
 
 export default Navigation

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "react-bootstrap"
 import { HttpStatusCode } from "axios"
 import { useSharedAuth } from "../api/auth"
+import { UserRole } from "../utils/constants"
 
 function Error(props: any) {
   const { t } = useTranslation()
@@ -46,7 +47,7 @@ function Error(props: any) {
           <span className="text-danger">{t("Error Title Span")}</span> {title}
         </p>
         <p className="lead">{message}</p>
-        {userInfo?.role === "USER" ? (
+        {userInfo?.role === UserRole.USER ? (
           <Button
             onClick={() => navigate("/jobOffers")}
             className="btn btn-primary"

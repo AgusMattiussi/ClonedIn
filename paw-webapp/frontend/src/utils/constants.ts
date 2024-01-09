@@ -1,11 +1,5 @@
 export const BASE_URL = "http://localhost:8080/webapp_war"
 
-export enum RequestMethod {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-}
-
 export enum UserRole {
   USER = "USER",
   ENTERPRISE = "ENTERPRISE",

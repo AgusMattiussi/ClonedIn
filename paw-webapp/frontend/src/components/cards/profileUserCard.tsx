@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
+import { UserRole } from "../../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react"
@@ -67,7 +68,7 @@ function ProfileUserCard({
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "10rem" }}>
       <Card.Img variant="top" src={imageUrl} />
-      {userInfo?.role === "ENTERPRISE" ? (
+      {userInfo?.role === UserRole.ENTERPRISE ? (
         <></>
       ) : (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>
@@ -80,7 +81,7 @@ function ProfileUserCard({
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
           <h5>{user.name}</h5>
-          {userInfo?.role === "USER" ? (
+          {userInfo?.role === UserRole.USER ? (
             <Button
               className="float-end"
               type="button"
