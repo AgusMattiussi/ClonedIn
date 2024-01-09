@@ -23,7 +23,7 @@ function JobOfferUserCard({ job }: { job: any }) {
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await apiRequest({
-        url: job.enterprise,
+        url: job.links.enterprise,
         method: "GET",
       })
       setEnterprise(response.data)
@@ -41,20 +41,20 @@ function JobOfferUserCard({ job }: { job: any }) {
 
     const fetchCategory = async () => {
       const response = await apiRequest({
-        url: job.jobOffer.category,
+        url: job.jobOffer.links.category,
         method: "GET",
       })
       setJobCategory(response.data)
       setCategoryLoading(false)
     }
 
-    if (enterpriseLoading === true) {
+    if (enterpriseLoading) {
       fetchEnterprise()
     }
-    if (jobLoading === true) {
+    if (jobLoading) {
       fetchJobOffer()
     }
-    if (categoryLoading === true) {
+    if (categoryLoading) {
       fetchCategory()
     }
   }, [apiRequest])

@@ -39,14 +39,14 @@ function ProfileUserCard({
       try {
         if (loadingData) {
           const [skillsResponse, categoryResponse, imageResponse] = await Promise.all([
-            apiRequest({ url: memorizedUser.skills, method: "GET" }),
-            apiRequest({ url: memorizedUser.category, method: "GET" }),
-            apiRequest({ url: memorizedUser.image, method: "GET" }),
+            apiRequest({ url: memorizedUser.links.skills, method: "GET" }),
+            apiRequest({ url: memorizedUser.links.category, method: "GET" }),
+            apiRequest({ url: memorizedUser.links.image, method: "GET" }),
           ])
 
           setSkillsData(skillsResponse.data)
           setUserCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === 200 ? memorizedUser.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === 200 ? memorizedUser.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {
@@ -107,11 +107,11 @@ function ProfileUserCard({
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
-              {user.category !== "No-Especificado" ? (
+              {user.links.category !== "No-Especificado" ? (
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.category == null ? t("No-especificado") : userCategory?.name}
+                    {user.links.category == null ? t("No-especificado") : userCategory?.name}
                   </Badge>
                 </div>
               ) : (

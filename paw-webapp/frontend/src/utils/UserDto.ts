@@ -1,17 +1,20 @@
 export default interface UserDto {
   id: number
-  name: string
   email: string
+  name: string
   location: string
-  category: string
   currentPosition: string
   description: string
-  education: string
+  educationLevel: string
   visibility: number
+  links: UserDtoLinks
+}
+
+interface UserDtoLinks {
   self: string
-  userSkills: string
-  educations: string
+  image: string
+  category: string
   experiences: string
-  images: string
-  //TODO: Add URIs for other resources (contacts)
+  educations: string
+  skills: string
 }

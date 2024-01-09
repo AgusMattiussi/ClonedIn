@@ -25,7 +25,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await apiRequest({
-        url: job.enterprise,
+        url: job.links.enterprise,
         method: "GET",
       })
       setJobEnterprise(response.data)
@@ -35,7 +35,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
 
     const fetchCategory = async () => {
       const response = await apiRequest({
-        url: job.category,
+        url: job.links.category,
         method: "GET",
       })
       setJobCategory(response.data)

@@ -27,12 +27,12 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
       try {
         if (loadingData) {
           const [categoryResponse, imageResponse] = await Promise.all([
-            apiRequest({ url: memorizedEnterprise.category, method: "GET" }),
-            apiRequest({ url: memorizedEnterprise.image, method: "GET" }),
+            apiRequest({ url: memorizedEnterprise.links.category, method: "GET" }),
+            apiRequest({ url: memorizedEnterprise.links.image, method: "GET" }),
           ])
 
           setEnterpriseCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {
@@ -78,10 +78,10 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <div>{t("Job Category")}:</div>
-              {enterprise.category !== "No-Especificado" ? (
+              {enterprise.links.category !== "No-Especificado" ? (
                 <div>
                   <Badge pill bg="success" className="mx-2">
-                    {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
+                    {enterprise.links.category == null ? t("No-especificado") : enterpriseCategory?.name}
                   </Badge>
                 </div>
               ) : (

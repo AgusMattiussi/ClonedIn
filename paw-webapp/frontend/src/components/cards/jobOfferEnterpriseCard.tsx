@@ -20,7 +20,7 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
   useEffect(() => {
     const fetchCategory = async () => {
       const response = await apiRequest({
-        url: job.category,
+        url: job.links.category,
         method: "GET",
       })
       setJobCategory(response.data)
@@ -55,7 +55,7 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-              {job.category == null ? t("No-especificado") : jobCategory?.name}
+              {job.links.category == null ? t("No-especificado") : jobCategory?.name}
             </Badge>
           </h5>
         </span>

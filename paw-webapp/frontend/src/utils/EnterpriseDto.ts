@@ -1,11 +1,17 @@
 export default interface EnterpriseDto {
   id: number
   name: string
-  category: string
+  email: string
+  location: string
   workers: string
-  year: string
-  link: string
+  year: number
+  website: string
   description: string
-  image: string
+  links: EnterpriseDtoLinks
+}
+
+interface EnterpriseDtoLinks {
   self: string
+  image: string
+  category: string
 }
