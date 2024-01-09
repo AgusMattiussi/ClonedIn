@@ -20,6 +20,8 @@ public final class ClonedInUrls {
     public static final String SKILLS_SUBDIRECTORY = "skills";
     public static final String APPLICATIONS_SUBDIRECTORY = "applications";
     public static final String NOTIFICATIONS_SUBDIRECTORY = "notifications";
-    
+
+    public static final String SKILL_DESCRIPTION_PARAM = "skillDescription";
+
     private ClonedInUrls() {}
 }

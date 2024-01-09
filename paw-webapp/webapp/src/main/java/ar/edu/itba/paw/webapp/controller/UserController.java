@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ClonedInUrls;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -27,6 +28,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 
@@ -110,7 +112,7 @@ public class UserController {
                               @QueryParam("minExpYears") @Min(0) final Integer minExpYears,
                               @QueryParam("maxExpYears") @Min(0) final Integer maxExpYears,
                               @QueryParam("location") final String location,
-                              @QueryParam("skillDescription") final String skillDescription) {
+                              @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
         Category category = categoryService.findByName(categoryName).orElse(null);
 

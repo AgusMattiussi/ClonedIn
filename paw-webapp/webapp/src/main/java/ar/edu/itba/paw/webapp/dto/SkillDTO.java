@@ -6,7 +6,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILLS_URL;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
 public class SkillDTO {
 
@@ -51,6 +51,7 @@ public class SkillDTO {
     //TODO: Pensar links utiles, como jobOffers con la skill, users con la skill, etc
     public static class SkillDTOLinks {
         private URI self;
+        private URI usersWithSkill;
 
         public SkillDTOLinks(){}
 
@@ -59,6 +60,11 @@ public class SkillDTO {
                     .replacePath(SKILLS_URL)
                     .path(String.valueOf(skill.getId()));
             this.self = categoryUriBuilder.build();
+
+            this.usersWithSkill = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(USERS_URL)
+                    .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())
+                    .build();
         }
 
         public URI getSelf() {
@@ -67,6 +73,14 @@ public class SkillDTO {
 
         public void setSelf(URI self) {
             this.self = self;
+        }
+
+        public URI getUsersWithSkill() {
+            return usersWithSkill;
+        }
+
+        public void setUsersWithSkill(URI usersWithSkill) {
+            this.usersWithSkill = usersWithSkill;
         }
     }
 
