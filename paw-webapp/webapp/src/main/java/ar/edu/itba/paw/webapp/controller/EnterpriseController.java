@@ -197,8 +197,10 @@ public class EnterpriseController {
         Category category = categoryService.findByName(jobOfferForm.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(jobOfferForm.getCategory()));
 
+        JobOfferModality modality = JobOfferModality.fromString(jobOfferForm.getModality());
+
         JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(),
-                jobOfferForm.getSalary(), jobOfferForm.getModality());
+                jobOfferForm.getSalary(), modality);
 
         //TODO: Agregar mas skills a la job offer
         List<String> formSkills = Arrays.asList(jobOfferForm.getSkill1(), jobOfferForm.getSkill2(), jobOfferForm.getSkill3(), jobOfferForm.getSkill4());

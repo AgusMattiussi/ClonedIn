@@ -28,7 +28,7 @@ public class JobOfferForm {
     private String category;
 
     @NotNull
-    private JobOfferModality modality;
+    private String modality;
 
     @Size(max=50)
     private String skill1;
@@ -107,11 +107,11 @@ public class JobOfferForm {
         this.category = category;
     }
 
-    public JobOfferModality getModality() {
+    public String getModality() {
         return modality;
     }
 
-    public void setModality(JobOfferModality modality) {
+    public void setModality(String modality) {
         this.modality = modality;
     }
 }

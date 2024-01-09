@@ -84,7 +84,7 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {status === "closed" ? (
+        {status === "Cerrada" ? (
           <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
             {t("Closed")}
           </Badge>
