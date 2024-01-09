@@ -1,21 +1,12 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
-import ar.edu.itba.paw.models.Skill;
-
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
+
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
 public class JobOfferDTO {
-
-    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
-    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
-    private static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
     private String position;

@@ -6,12 +6,10 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
+
 // TODO: JobOffersInCategory, UsersWithCategory
 public class CategoryDTO {
-    private static final String CATEGORY_URL = "webapp_war/categories";
-    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
-    private static final String USERS_URL = "webapp_war/users";
-    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
 
     private String name;
     private long id;
@@ -60,7 +58,8 @@ public class CategoryDTO {
         public CategoryDTOLinks(){}
 
         public CategoryDTOLinks(final UriInfo uriInfo, final Category category) {
-            final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath(CATEGORY_URL)
+            final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CATEGORIES_URL)
                     .path(String.valueOf(category.getId()));
             this.self = categoryUriBuilder.build();
 

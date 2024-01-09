@@ -6,9 +6,9 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class SkillDTO {
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILLS_URL;
 
-    private static final String SKILLS_URL = "webapp_war/skills";
+public class SkillDTO {
 
     private long id;
     private String description;
@@ -55,7 +55,8 @@ public class SkillDTO {
         public SkillDTOLinks(){}
 
         public SkillDTOLinks(UriInfo uriInfo, Skill skill) {
-            final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder().replacePath(SKILLS_URL)
+            final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(SKILLS_URL)
                     .path(String.valueOf(skill.getId()));
             this.self = categoryUriBuilder.build();
         }

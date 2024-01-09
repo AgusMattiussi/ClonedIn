@@ -5,14 +5,11 @@ import ar.edu.itba.paw.models.Contact;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.Date;
+
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
 // TODO: Agregar endpoints para poner 'self'?
 public class ContactDTO {
-
-    private static final String USERS_URL = "webapp_war/users";
-    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
-    private static final String JOB_OFFERS_URL = "webapp_war/jobOffers";
 
     private String status;
     private int filledBy;
@@ -72,10 +69,6 @@ public class ContactDTO {
         }
 
         public ContactDTOLinks(UriInfo uriInfo, Contact contact) {
-            UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder()
-                    .replacePath(USERS_URL)
-                    .path(String.valueOf(contact.getUser().getId()));
-
             UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
                     .path(contact.getUser().getId().toString());

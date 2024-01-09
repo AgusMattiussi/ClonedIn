@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CategoryService;
-import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
-import ar.edu.itba.paw.webapp.dto.UserDTO;
-import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 @Path("categories")
 @Component
@@ -47,7 +43,7 @@ public class CategoryController {
         long categoryCount = categoryService.getCategoryCount();
         long maxPages = categoryCount / CATEGORIES_BY_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {}),
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {}),
                 page, maxPages);
     }
 

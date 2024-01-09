@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -28,7 +27,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 
 @Path("users")
@@ -127,7 +126,7 @@ public class UserController {
                                      location, skillDescription);
         long maxPages = userCount/USERS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages);
     }
 
 
@@ -187,7 +186,7 @@ public class UserController {
         long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status.getStatus());
         long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages);
     }
 
 
@@ -278,7 +277,7 @@ public class UserController {
         long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
         long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
     }
 
     @GET
@@ -299,7 +298,7 @@ public class UserController {
         long experienceCount = experienceService.getExperienceCountForUser(user);
         long maxPages = experienceCount/EXPERIENCES_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages);
     }
 
     @GET
@@ -363,7 +362,7 @@ public class UserController {
         long educationCount = educationService.getEducationCountForUser(user);
         long maxPages = educationCount/EDUCATIONS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages);
     }
 
     @GET
@@ -425,7 +424,7 @@ public class UserController {
         long skillCount = userSkillService.getSkillCountForUser(user);
         long maxPages = skillCount/SKILLS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page, maxPages);
     }
 
     @POST

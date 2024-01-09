@@ -6,11 +6,10 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
+
 // TODO: Agregar links a las jobOffers
 public class EnterpriseDTO {
-
-    private static final String ENTERPRISES_URL = "webapp_war/enterprises";
-    private static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
     private String name;
@@ -110,13 +109,6 @@ public class EnterpriseDTO {
         this.links = links;
     }
 
-    @Override
-    public String toString() {
-        return "EnterpriseDTO{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 
     public static class EnterpriseDTOLinks {
         private URI category;
@@ -135,9 +127,9 @@ public class EnterpriseDTO {
 
             this.self = enterpriseUriBuilder.build();
 
-            this.image = enterpriseUriBuilder.clone().path("image").build();
-            this.contacts = enterpriseUriBuilder.clone().path("contacts").build();
-            this.jobOffers = enterpriseUriBuilder.clone().path("jobOffers").build();
+            this.image = enterpriseUriBuilder.clone().path(IMAGE_SUBDIRECTORY).build();
+            this.contacts = enterpriseUriBuilder.clone().path(CONTACTS_SUBDIRECTORY).build();
+            this.jobOffers = enterpriseUriBuilder.clone().path(JOB_OFFERS_SUBDIRECTORY).build();
 
             UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(CATEGORIES_URL)

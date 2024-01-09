@@ -30,7 +30,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 //TODO: Edit Enterprise
 
@@ -145,7 +145,7 @@ public class EnterpriseController {
 
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
     }
 
     //TODO: Mover esta logica al JobOfferController?
@@ -237,7 +237,7 @@ public class EnterpriseController {
         long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
         long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
     }
 
     @POST
