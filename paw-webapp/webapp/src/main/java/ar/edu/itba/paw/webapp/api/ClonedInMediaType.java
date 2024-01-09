@@ -22,6 +22,8 @@ public class ClonedInMediaType {
     public static final String USER_LIST_V1 = "application/vnd.clonedin.userList.v1+json";
     public static final String USER_SKILL_V1 = "application/vnd.clonedin.userSkill.v1+json";
     public static final String USER_SKILL_LIST_V1 = "application/vnd.clonedin.userSkillList.v1+json";
+    public static final String SKILL_V1 = "application/vnd.clonedin.userSkill.v1+json";
+    public static final String SKILL_LIST_V1 = "application/vnd.clonedin.userSkillList.v1+json";
 
     // Private constructor to avoid instantiation
     private ClonedInMediaType(){}

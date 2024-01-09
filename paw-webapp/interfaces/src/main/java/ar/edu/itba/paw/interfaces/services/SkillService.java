@@ -16,6 +16,8 @@ public interface SkillService {
 
     List<Skill> findMultipleByDescriptionOrCreate(List<String> description);
 
-    List<Skill> getAllSkills();
+    List<Skill> getAllSkills(int page, int pageSize);
+
+    long getSkillCount();
 
 }

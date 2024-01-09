@@ -57,7 +57,12 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public List<Skill> getAllSkills() {
-        return skillDao.getAllSkills();
+    public List<Skill> getAllSkills(int page, int pageSize) {
+        return skillDao.getAllSkills(page, pageSize);
+    }
+
+    @Override
+    public long getSkillCount() {
+        return skillDao.getSkillCount();
     }
 }

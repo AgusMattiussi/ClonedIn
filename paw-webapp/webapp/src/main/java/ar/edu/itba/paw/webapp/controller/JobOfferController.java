@@ -3,6 +3,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -32,7 +33,7 @@ public class JobOfferController {
 
     private static final int JOB_OFFERS_PER_PAGE = 3;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
 
@@ -57,11 +58,8 @@ public class JobOfferController {
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam("query") final String searchTerm) {
 
-        Category category = null;
-        if(categoryName != null && !categoryName.isEmpty()) {
-            category = categoryService.findByName(categoryName).orElseThrow(()
-                    -> new CategoryNotFoundException(String.format("Category '%s' not found or does not exist", categoryName)));
-        }
+        Category category = categoryName != null ? categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
         final List<JobOfferDTO> jobOfferList = jobOfferService.getJobOffersListByFilters(category, modality, searchTerm,
                         minSalary, maxSalary, page - 1, JOB_OFFERS_PER_PAGE)
@@ -85,7 +83,24 @@ public class JobOfferController {
     @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
     public Response getById(@PathParam("id") final long id) {
         JobOfferDTO jobOffer = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
-                .orElseThrow(() -> new NotFoundException(String.format("JobOffer with id '%d' not found or does not exist", id)));
+                .orElseThrow(() -> new JobOfferNotFoundException(id));
         return Response.ok(jobOffer).build();
+    }
+
+    @GET
+    @Path("/{id}/skills")
+    @Produces(ClonedInMediaType.SKILL_V1)
+    @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
+    public Response getSkills(@PathParam("id") final long id) {
+        JobOffer jobOffer = jobOfferService.findById(id).orElseThrow(() -> new JobOfferNotFoundException(id));
+
+        List<Skill> skills = jobOffer.getSkills();
+        if (skills == null || skills.isEmpty())
+            return Response.noContent().build();
+
+        List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo,skill))
+                .collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}).build();
     }
 }

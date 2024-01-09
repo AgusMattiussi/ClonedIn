@@ -157,7 +157,7 @@ public class UserController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         UserDTO user = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u))
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return Response.ok(user).build();
+        return Response.ok(user).links().build();
     }
 
 
@@ -371,10 +371,10 @@ public class UserController {
     @Produces(ClonedInMediaType.EDUCATION_V1)
     @PreAuthorize(ENTERPRISE_OR_EDUCATION_OWNER)
     public Response getEducationById(@PathParam("id") @Min(1) final long id,
-                                     @PathParam("edId") @Min(1) final long educationId) {
+                                     @PathParam("edId") @Min(1) final long edId) {
 
-        EducationDTO educationDTO = educationService.findById(educationId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
-                .orElseThrow(() -> new EducationNotFoundException(educationId));
+        EducationDTO educationDTO = educationService.findById(edId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
+                .orElseThrow(() -> new EducationNotFoundException(edId));
 
         return Response.ok(educationDTO).build();
     }
@@ -402,8 +402,8 @@ public class UserController {
     @Path("/{id}/educations/{edId}")
     @PreAuthorize(EDUCATION_OWNER)
     public Response deleteEducationById(@PathParam("id") @Min(1) final long id,
-                                        @PathParam("edId") @Min(1) final long educationId) {
-        educationService.deleteEducation(educationId);
+                                        @PathParam("edId") @Min(1) final long edId) {
+        educationService.deleteEducation(edId);
         return Response.noContent().build();
     }
 
@@ -415,33 +415,17 @@ public class UserController {
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<UserSkillDTO> skills = userSkillService.getSkillsForUser(user, page - 1, SKILLS_PER_PAGE)
-                .stream().map(s -> UserSkillDTO.fromSkill(uriInfo, user, s)).collect(Collectors.toList());
-
-        if (skills.isEmpty())
+        List<Skill> skills = user.getSkills();
+        if (skills == null || skills.isEmpty())
             return Response.noContent().build();
+
+        List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo, skill))
+                .collect(Collectors.toList());
 
         long skillCount = userSkillService.getSkillCountForUser(user);
         long maxPages = skillCount/SKILLS_PER_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<UserSkillDTO>>(skills) {}), page, maxPages);
-    }
-
-    @GET
-    @Path("/{id}/skills/{skillId}")
-    @Produces(ClonedInMediaType.USER_SKILL_V1)
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    public Response getSkillById(@PathParam("id") @Min(1) final long id,
-                                 @PathParam("skillId") @Min(1) final long skillId) {
-
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        if(!user.hasSkill(skillId))
-            throw new IllegalArgumentException(String.format("User with ID=%d does not have skill with ID=%d", id, skillId));
-
-        UserSkillDTO skillDTO = skillService.findById(skillId).map(s -> UserSkillDTO.fromSkill(uriInfo, user, s))
-                .orElseThrow(() -> new SkillNotFoundException(skillId));
-
-        return Response.ok(skillDTO).build();
+        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page, maxPages);
     }
 
     @POST

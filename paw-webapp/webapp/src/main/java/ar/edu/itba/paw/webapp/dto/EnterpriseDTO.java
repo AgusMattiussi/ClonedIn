@@ -6,6 +6,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+// TODO: Agregar links a las jobOffers
 public class EnterpriseDTO {
 
     private static final String ENTERPRISES_URL = "webapp_war/enterprises";
@@ -15,13 +16,11 @@ public class EnterpriseDTO {
     private String name;
     private String email;
     private String location;
-    private URI category;
     private String workers;
     private int year;
-    private String link;
+    private String website;
     private String description;
-    private URI image;
-    private URI self;
+    private EnterpriseDTOLinks links;
 
     public static EnterpriseDTO fromEnterprise(final UriInfo uriInfo, final Enterprise enterprise) {
         final EnterpriseDTO dto = new EnterpriseDTO();
@@ -31,20 +30,10 @@ public class EnterpriseDTO {
         dto.location = enterprise.getLocation();
         dto.workers = enterprise.getWorkers();
         dto.year = enterprise.getYear();
-        dto.link = enterprise.getLink();
+        dto.website = enterprise.getLink();
         dto.description = enterprise.getDescription();
 
-        UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(ENTERPRISES_URL)
-                .path(String.valueOf(enterprise.getId()));
-        dto.self = enterpriseUriBuilder.build();
-
-        dto.image = enterpriseUriBuilder.clone().path("image").build();
-
-        UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(CATEGORIES_URL)
-                .path(String.valueOf(enterprise.getCategory().getId()));
-        dto.category = categoryUriBuilder.build();
+        dto.links = new EnterpriseDTOLinks(uriInfo, enterprise);
 
         return dto;
     }
@@ -81,14 +70,6 @@ public class EnterpriseDTO {
         this.location = location;
     }
 
-    public URI getCategory() {
-        return category;
-    }
-
-    public void setCategory(URI category) {
-        this.category = category;
-    }
-
     public String getWorkers() {
         return workers;
     }
@@ -105,14 +86,6 @@ public class EnterpriseDTO {
         this.year = year;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -121,20 +94,20 @@ public class EnterpriseDTO {
         this.description = description;
     }
 
-    public URI getImage() {
-        return image;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setImage(URI image) {
-        this.image = image;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public URI getSelf() {
-        return self;
+    public EnterpriseDTOLinks getLinks() {
+        return links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setLinks(EnterpriseDTOLinks links) {
+        this.links = links;
     }
 
     @Override
@@ -142,7 +115,74 @@ public class EnterpriseDTO {
         return "EnterpriseDTO{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", self=" + self +
                 '}';
+    }
+
+    public static class EnterpriseDTOLinks {
+        private URI category;
+        private URI self;
+        private URI image;
+        private URI contacts;
+        private URI jobOffers;
+
+        public EnterpriseDTOLinks() {
+        }
+
+        public EnterpriseDTOLinks(UriInfo uriInfo, Enterprise enterprise) {
+            UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(ENTERPRISES_URL)
+                .path(String.valueOf(enterprise.getId()));
+
+            this.self = enterpriseUriBuilder.build();
+
+            this.image = enterpriseUriBuilder.clone().path("image").build();
+            this.contacts = enterpriseUriBuilder.clone().path("contacts").build();
+            this.jobOffers = enterpriseUriBuilder.clone().path("jobOffers").build();
+
+            UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CATEGORIES_URL)
+                    .path(String.valueOf(enterprise.getCategory().getId()));
+            this.category = categoryUriBuilder.build();
+        }
+
+        public URI getSelf() {
+            return self;
+        }
+
+        public void setSelf(URI self) {
+            this.self = self;
+        }
+
+        public URI getImage() {
+            return image;
+        }
+
+        public void setImage(URI image) {
+            this.image = image;
+        }
+
+        public URI getCategory() {
+            return category;
+        }
+
+        public void setCategory(URI category) {
+            this.category = category;
+        }
+
+        public URI getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(URI contacts) {
+            this.contacts = contacts;
+        }
+
+        public URI getJobOffers() {
+            return jobOffers;
+        }
+
+        public void setJobOffers(URI jobOffers) {
+            this.jobOffers = jobOffers;
+        }
     }
 }

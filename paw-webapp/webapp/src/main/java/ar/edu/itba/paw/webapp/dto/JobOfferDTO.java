@@ -18,15 +18,13 @@ public class JobOfferDTO {
     private static final String CATEGORIES_URL = "webapp_war/categories";
 
     private long id;
-    private URI enterprise;
-    private URI category;
     private String position;
     private String description;
     private double salary;
     private String modality;
     private String available;
-    private List<String> skills;
-    private URI self;
+    private JobOfferDTOLinks links;
+
 
     public static JobOfferDTO fromJobOffer(final UriInfo uriInfo, final JobOffer jobOffer) {
         final JobOfferDTO dto = new JobOfferDTO();
@@ -36,24 +34,7 @@ public class JobOfferDTO {
         dto.salary = jobOffer.getSalary().doubleValue();
         dto.modality = jobOffer.getModality();
 
-
-        List<Skill> jobOfferSkills = jobOffer.getSkills();
-        dto.skills = jobOfferSkills.stream().map(Skill::getDescription).collect(java.util.stream.Collectors.toList());
-
-        final UriBuilder jobOfferUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(JOB_OFFERS_URL)
-                .path(String.valueOf(jobOffer.getId()));
-        dto.self = jobOfferUriBuilder.build();
-
-        UriBuilder enterpriseUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(ENTERPRISES_URL)
-                .path(String.valueOf(jobOffer.getEnterprise().getId()));
-        dto.enterprise = enterpriseUriBuilder.build();
-
-        UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(CATEGORIES_URL)
-                .path(String.valueOf(jobOffer.getCategory().getId()));
-        dto.category = categoryUriBuilder.build();
+        dto.links = new JobOfferDTOLinks(uriInfo, jobOffer);
 
         return dto;
     }
@@ -64,22 +45,6 @@ public class JobOfferDTO {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public URI getEnterprise() {
-        return enterprise;
-    }
-
-    public void setEnterprise(URI enterprise) {
-        this.enterprise = enterprise;
-    }
-
-    public URI getCategory() {
-        return category;
-    }
-
-    public void setCategory(URI category) {
-        this.category = category;
     }
 
     public String getPosition() {
@@ -122,19 +87,77 @@ public class JobOfferDTO {
         this.available = available;
     }
 
-    public List<String> getSkills() {
-        return skills;
+    public JobOfferDTOLinks getLinks() {
+        return links;
     }
 
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
+    public void setLinks(JobOfferDTOLinks links) {
+        this.links = links;
     }
 
-    public URI getSelf() {
-        return self;
-    }
+    public static class JobOfferDTOLinks {
 
-    public void setSelf(URI self) {
-        this.self = self;
+        private URI self;
+        private URI enterprise;
+        private URI category;
+        private URI skills;
+
+        public JobOfferDTOLinks() {
+        }
+
+        public JobOfferDTOLinks(final UriInfo uriInfo, final JobOffer jobOffer) {
+            this.self = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .path(String.valueOf(jobOffer.getId()))
+                    .build();
+
+            this.enterprise = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(ENTERPRISES_URL)
+                    .path(String.valueOf(jobOffer.getEnterprise().getId()))
+                    .build();
+
+            this.category = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CATEGORIES_URL)
+                    .path(String.valueOf(jobOffer.getCategory().getId()))
+                    .build();
+
+            this.skills = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .path(String.valueOf(jobOffer.getId()))
+                    .path("skills")
+                    .build();
+        }
+
+        public URI getSelf() {
+            return self;
+        }
+
+        public void setSelf(URI self) {
+            this.self = self;
+        }
+
+        public URI getEnterprise() {
+            return enterprise;
+        }
+
+        public void setEnterprise(URI enterprise) {
+            this.enterprise = enterprise;
+        }
+
+        public URI getCategory() {
+            return category;
+        }
+
+        public void setCategory(URI category) {
+            this.category = category;
+        }
+
+        public URI getSkills() {
+            return skills;
+        }
+
+        public void setSkills(URI skills) {
+            this.skills = skills;
+        }
     }
 }
