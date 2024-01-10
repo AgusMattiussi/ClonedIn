@@ -1,3 +1,5 @@
+import CategoryDto from "./CategoryDto"
+
 export default interface UserDto {
   id: number
   email: string
@@ -7,6 +9,7 @@ export default interface UserDto {
   description: string
   educationLevel: string
   visibility: number
+  categoryInfo: CategoryDto
   links: UserDtoLinks
 }
 

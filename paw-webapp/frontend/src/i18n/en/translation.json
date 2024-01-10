@@ -72,6 +72,7 @@
   "Add Job Offer": "Add Job Offer",
   "Close Job Offer": "Close Job Offer",
   "No Job Offers": "Job offers not especified",
+  "No Contacts": "No contacts to show",
 
   "Hide My Profile": "Hide My Profile",
   "Show My Profile": "Show My Profile",
@@ -110,6 +111,11 @@
   "Cancelled": "Cancelled",
   "Closed": "Closed",
   "View All": "View All",
+
+  "accepted": "Accepted",
+  "rejected": "Rejected",
+  "cancelled": "Cancelled",
+  "closed": "Closed",
 
   "Required Skills": "Required Skills",
   "Description": "Description",
