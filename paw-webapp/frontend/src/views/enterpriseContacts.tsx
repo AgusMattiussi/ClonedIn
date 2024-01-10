@@ -167,13 +167,13 @@ function EnterpriseContacts() {
             {contact.jobOfferInfo?.position}
           </Link>
         </td>
-        <td>{contact.jobOfferInfo?.categoryInfo.name}</td>
+        <td>{t(contact.jobOfferInfo?.categoryInfo.name)}</td>
         <td>
           <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
             {contact.userInfo?.name}
           </Link>
         </td>
-        <td>{contact.userInfo?.categoryInfo.name}</td>
+        <td>{t(contact.userInfo?.categoryInfo.name)}</td>
         <td>{contact.date}</td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (

@@ -113,10 +113,10 @@
   "Closed": "Cerrada",
   "View All": "Ver Todo",
 
-  "accepted": "Aceptada",
-  "rejected": "Rechazada",
-  "cancelled": "Cancelada",
-  "closed": "Cerrada",
+  "aceptada": "Aceptada",
+  "rechazada": "Rechazada",
+  "cancelada": "Cancelada",
+  "cerrada": "Cerrada",
 
   "Required Skills": "Habilidades Requeridas",
   "Description": "Descripción",

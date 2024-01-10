@@ -112,10 +112,10 @@
   "Closed": "Closed",
   "View All": "View All",
 
-  "accepted": "Accepted",
-  "rejected": "Rejected",
-  "cancelled": "Cancelled",
-  "closed": "Closed",
+  "aceptada": "Accepted",
+  "rechazada": "Rejected",
+  "cancelada": "Cancelled",
+  "cerrada": "Closed",
 
   "Required Skills": "Required Skills",
   "Description": "Description",
