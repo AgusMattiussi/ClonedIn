@@ -84,9 +84,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String enterpriseName, String searchTerm,
+    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription, String enterpriseName, String searchTerm,
                                                     String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
-        return jobOfferDao.getJobOffersListByFilters(category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary, page, pageSize);
+        return jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName, searchTerm, position, minSalary, maxSalary, page, pageSize);
     }
 
     @Override
@@ -95,9 +95,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public long getActiveJobOffersCount(Category category, JobOfferModality modality, String enterpriseName, String searchTerm,
+    public long getActiveJobOffersCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName, String searchTerm,
                                         String position, BigDecimal minSalary, BigDecimal maxSalary) {
-        return jobOfferDao.getActiveJobOffersCount(category, modality, enterpriseName, searchTerm, position, minSalary, maxSalary);
+        return jobOfferDao.getActiveJobOffersCount(category, modality, skillDescription, enterpriseName, searchTerm, position, minSalary, maxSalary);
     }
 
     @Override

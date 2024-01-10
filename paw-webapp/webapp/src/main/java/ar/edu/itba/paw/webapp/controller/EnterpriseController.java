@@ -30,6 +30,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 //TODO: Edit Enterprise
@@ -126,6 +127,7 @@ public class EnterpriseController {
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("category") final String categoryName,
                                  @QueryParam("modality") final JobOfferModality modality,
+                                 @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam("position") final String position,
                                  @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
@@ -136,11 +138,11 @@ public class EnterpriseController {
         Category category = categoryName != null ? categoryService.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
-        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, enterprise.getName(),
-                        searchTerm, position, minSalary, maxSalary, page - 1, PAGE_SIZE)
+        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
+                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, page - 1, CONTACTS_PER_PAGE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, enterprise.getName(),
+        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, skillDescription, enterprise.getName(),
                         searchTerm, position, minSalary, maxSalary);
 
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
