@@ -7,9 +7,10 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class ExperienceDTO {
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.EXPERIENCES_SUBDIRECTORY;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.USERS_URL;
 
-    private static final String USERS_URL = "webapp_war/users";
+public class ExperienceDTO {
     
     private int monthFrom;
     private int yearFrom;
@@ -123,7 +124,7 @@ public class ExperienceDTO {
             this.user = userUriBuilder.build();
 
             final UriBuilder educationUriBuilder = userUriBuilder
-                    .path("experiences")
+                    .path(EXPERIENCES_SUBDIRECTORY)
                     .path(String.valueOf(experience.getId()));
             this.self = educationUriBuilder.build();
         }

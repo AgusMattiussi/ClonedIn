@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Education;
-import ar.edu.itba.paw.models.User;
-
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.EDUCATIONS_SUBDIRECTORY;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.USERS_URL;
+
 public class EducationDTO {
-    private static final String USER_URL = "webapp_war/users";
 
     private int monthFrom;
     private int yearFrom;
@@ -116,12 +116,12 @@ public class EducationDTO {
         public EducationDTOLinks(final UriInfo uriInfo, final Education education) {
 
             final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(USER_URL)
+                .replacePath(USERS_URL)
                 .path(education.getUser().getId().toString());
             this.user = userUriBuilder.build();
 
             final UriBuilder educationUriBuilder = userUriBuilder
-                    .path("educations")
+                    .path(EDUCATIONS_SUBDIRECTORY)
                     .path(String.valueOf(education.getId()));
             this.self = educationUriBuilder.build();
         }

@@ -6,10 +6,9 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class UserDTO {
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
-    private static final String USER_URL = "webapp_war/users";
-    private static final String CATEGORY_URL = "webapp_war/categories";
+public class UserDTO {
 
     private long id;
     private String email;
@@ -123,16 +122,21 @@ public class UserDTO {
 
         public UserDTOLinks(final UriInfo uriInfo, final User user) {
             //TODO: Revisar si hace falta eliminar el webapp_war para deployar
-            final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder().replacePath(USER_URL).path(String.valueOf(user.getId()));
-            this.self = userUriBuilder.build();
-            this.image = userUriBuilder.clone().path("image").build();
-            this.experiences = userUriBuilder.clone().path("experiences").build();
-            this.educations = userUriBuilder.clone().path("educations").build();
-            this.skills = userUriBuilder.clone().path("skills").build();
-            this.applications = userUriBuilder.clone().path("applications").build();
-            this.notifications = userUriBuilder.clone().path("notifications").build();
+            final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
+                    .replacePath(USERS_URL)
+                    .path(String.valueOf(user.getId()));
 
-            final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder().replacePath(CATEGORY_URL).path(String.valueOf(user.getCategory().getId()));
+            this.self = userUriBuilder.build();
+            this.image = userUriBuilder.clone().path(IMAGE_SUBDIRECTORY).build();
+            this.experiences = userUriBuilder.clone().path(EXPERIENCES_SUBDIRECTORY).build();
+            this.educations = userUriBuilder.clone().path(EDUCATIONS_SUBDIRECTORY).build();
+            this.skills = userUriBuilder.clone().path(SKILLS_SUBDIRECTORY).build();
+            this.applications = userUriBuilder.clone().path(APPLICATIONS_SUBDIRECTORY).build();
+            this.notifications = userUriBuilder.clone().path(NOTIFICATIONS_SUBDIRECTORY).build();
+
+            final UriBuilder categoryUriBuilder = uriInfo.getBaseUriBuilder()
+                    .replacePath(CATEGORIES_URL)
+                    .path(String.valueOf(user.getCategory().getId()));
             this.category = categoryUriBuilder.build();
         }
 

@@ -18,7 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.okResponseWithPagination;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 @Path("skills")
 @Component
@@ -45,7 +45,7 @@ public class SkillController {
         long skillCount = skillService.getSkillCount();
         long maxPages = skillCount / SKILLS_BY_PAGE + 1;
 
-        return okResponseWithPagination(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skills) {}),
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skills) {}),
                 page, maxPages);
     }
 

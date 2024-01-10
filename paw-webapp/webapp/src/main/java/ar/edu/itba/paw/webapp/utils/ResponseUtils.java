@@ -7,7 +7,7 @@ public final class ResponseUtils {
 
     private ResponseUtils() {}
 
-    public static Response okResponseWithPagination(UriInfo uriInfo, Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
+    public static Response paginatedOkResponse(UriInfo uriInfo, Response.ResponseBuilder responseBuilder, int currentPage, long maxPages) {
         if(currentPage > 1)
             responseBuilder.link(uriInfo.getAbsolutePathBuilder().queryParam("page", currentPage - 1).build(), "prev");
         if(currentPage < maxPages)
