@@ -45,7 +45,6 @@ public class JobOfferController {
     @Context
     private UriInfo uriInfo;
 
-    //TODO: Agregar parametro "enterprise" para sacar la logica de job offers del EnterpriseController
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
     @PreAuthorize("hasAuthority('USER')")

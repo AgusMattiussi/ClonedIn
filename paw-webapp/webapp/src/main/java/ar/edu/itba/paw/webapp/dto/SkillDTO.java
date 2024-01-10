@@ -52,6 +52,7 @@ public class SkillDTO {
     public static class SkillDTOLinks {
         private URI self;
         private URI usersWithSkill;
+        private URI jobOffersWithSkill;
 
         public SkillDTOLinks(){}
 
@@ -63,6 +64,11 @@ public class SkillDTO {
 
             this.usersWithSkill = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
+                    .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())
+                    .build();
+
+            this.jobOffersWithSkill = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
                     .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())
                     .build();
         }
@@ -81,6 +87,14 @@ public class SkillDTO {
 
         public void setUsersWithSkill(URI usersWithSkill) {
             this.usersWithSkill = usersWithSkill;
+        }
+
+        public URI getJobOffersWithSkill() {
+            return jobOffersWithSkill;
+        }
+
+        public void setJobOffersWithSkill(URI jobOffersWithSkill) {
+            this.jobOffersWithSkill = jobOffersWithSkill;
         }
     }
 

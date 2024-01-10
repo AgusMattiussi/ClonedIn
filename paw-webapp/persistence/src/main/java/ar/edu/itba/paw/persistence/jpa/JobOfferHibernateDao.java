@@ -131,8 +131,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
             queryStringBuilder.append(" AND LOWER(jo.position) LIKE LOWER(CONCAT('%', :position, '%'))");
         if(skillDescription != null && !skillDescription.isEmpty()) {
             queryStringBuilder
-                    .append(" AND EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo")
-                    .append(" AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :skillDescription, '%')) ESCAPE '\\')");
+                    .append(" AND EXISTS (SELECT josk FROM JobOfferSkill josk JOIN josk.skill sk WHERE josk.jobOffer = jo AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :skillDescription, '%'))  ESCAPE '\\')");
         }
         if(enterpriseName != null && !enterpriseName.isEmpty())
             queryStringBuilder.append(" AND LOWER(e.name) LIKE LOWER(CONCAT('%', :enterpriseName, '%'))");
@@ -177,7 +176,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("position", position);
         if(skillDescription != null && !skillDescription.isEmpty())
             query.setParameter("skillDescription", skillDescription);
-        if(!enterpriseName.isEmpty())
+        if(enterpriseName != null && !enterpriseName.isEmpty())
             query.setParameter("enterpriseName", enterpriseName);
         if(searchTerm != null && !searchTerm.isEmpty())
             query.setParameter("term", searchTerm);
@@ -203,7 +202,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
                                                     BigDecimal maxSalary, int page, int pageSize) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
-        if(!enterpriseName.isEmpty())
+        if(enterpriseName != null && !enterpriseName.isEmpty() || searchTerm != null && !searchTerm.isEmpty())
             queryStringBuilder.append(" JOIN jo.enterprise e");
 
         queryStringBuilder.append(" WHERE jo.available = :active");
@@ -248,7 +247,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
                                         String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(jo) FROM JobOffer jo");
 
-        if(!enterpriseName.isEmpty())
+        if(enterpriseName != null && !enterpriseName.isEmpty() || searchTerm != null && !searchTerm.isEmpty())
             queryStringBuilder.append(" JOIN jo.enterprise e");
 
         queryStringBuilder.append(" WHERE jo.available = :active");
