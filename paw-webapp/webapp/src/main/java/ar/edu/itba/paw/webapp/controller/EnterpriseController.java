@@ -223,9 +223,9 @@ public class EnterpriseController {
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                    @QueryParam("status") final JobOfferStatus status,
-                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                    @QueryParam("status") final String status,
+                                    @QueryParam("filledBy") @DefaultValue("any") String filledBy,
+                                    @QueryParam("sortBy") @DefaultValue("any") final String sortBy,
                                     @QueryParam("userId") @Min(1) final Long userId,
                                     @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
@@ -233,10 +233,14 @@ public class EnterpriseController {
         User user = userId != null ? userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)) : null;
         JobOffer jobOffer = jobOfferId != null ? jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId)) : null;
 
-        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status, sortBy,
+        JobOfferStatus statusEnum = status != null ? JobOfferStatus.fromString(status) : null;
+        FilledBy filledByEnum = FilledBy.fromString(filledBy);
+        SortBy sortByEnum = SortBy.fromString(sortBy);
+
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledByEnum, statusEnum, sortByEnum,
                 page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
-        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledByEnum, statusEnum);
         long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);

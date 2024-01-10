@@ -17,4 +17,13 @@ public enum JobOfferStatus {
         return status;
     }
 
+    public static JobOfferStatus fromString(String s) {
+        for (JobOfferStatus status : JobOfferStatus.values()) {
+            if (status.getStatus().equals(s)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
 }

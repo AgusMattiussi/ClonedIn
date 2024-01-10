@@ -27,7 +27,7 @@ function EnterpriseContacts() {
   const [isLoading, setLoading] = useState(true)
   const [contacts, setContacts] = useState<ContactDto[]>([])
 
-  const [status, setStatus] = useState("")
+  const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState("")
 
   document.title = t("My Recruits Page Title")
@@ -155,9 +155,14 @@ function EnterpriseContacts() {
   useEffect(() => {
     if (isLoading) {
       // setSearchParams(queryParams)
-      fetchContacts(status, sortBy)
+      fetchContacts(filterStatus, sortBy)
     }
-  }, [fetchContacts, isLoading, status, sortBy])
+  }, [fetchContacts, isLoading, filterStatus, sortBy])
+
+  const handleFilter = (status: string) => {
+    setFilterStatus(status)
+    setLoading(true)
+  }
 
   const contactsList = contacts.map((contact, index) => {
     return (
@@ -205,27 +210,42 @@ function EnterpriseContacts() {
                 <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
               </div>
               <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  onClick={() => handleFilter(JobOfferStatus.ACCEPTED)}
+                >
                   {t("Accepted")}
                 </Button>
               </div>
               <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  onClick={() => handleFilter(JobOfferStatus.DECLINED)}
+                >
                   {t("Rejected")}
                 </Button>
               </div>
               <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
-                <Button variant="outline-light " className="filterbtn">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  onClick={() => handleFilter(JobOfferStatus.PENDING)}
+                >
                   {t("Pending")}
                 </Button>
               </div>
-              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+              <div
+                className="d-flex flex-wrap justify-content-center mt-2 mx-4"
+                onClick={() => handleFilter(JobOfferStatus.CANCELLED)}
+              >
                 <Button variant="outline-light " className="filterbtn">
                   {t("Cancelled")}
                 </Button>
               </div>
               <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
-                <Button variant="outline-light " className="filterbtn">
+                <Button variant="outline-light " className="filterbtn" onClick={() => handleFilter("")}>
                   {t("View All")}
                 </Button>
               </div>
