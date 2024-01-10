@@ -19,6 +19,16 @@ export enum FilledBy {
   ANY = 2,
 }
 
+export enum SortBy {
+  ANY = "any",
+  JOB_OFFER_POSITION = "jobOfferPosition",
+  USERNAME = "username",
+  STATUS = "status",
+  DATE_ASC = "dateAsc",
+  DATE_DESC = "dateDesc",
+  YEARS_OF_EXPERIENCE = "yearsOfExperience",
+}
+
 export const AUTHORIZATION_HEADER = "x-access-token"
 
 export const monthNames = [

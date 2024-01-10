@@ -9,7 +9,7 @@ import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
 import CancelModal from "../components/modals/cancelModal"
 import Loader from "../components/loader"
-import { JobOfferStatus } from "../utils/constants"
+import { JobOfferStatus, SortBy } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
@@ -28,7 +28,7 @@ function EnterpriseContacts() {
   const [contacts, setContacts] = useState<ContactDto[]>([])
 
   const [filterStatus, setFilterStatus] = useState("")
-  const [sortBy, setSortBy] = useState("")
+  const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
 
   document.title = t("My Recruits Page Title")
 
@@ -164,6 +164,11 @@ function EnterpriseContacts() {
     setLoading(true)
   }
 
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy.toString())
+    setLoading(true)
+  }
+
   const contactsList = contacts.map((contact, index) => {
     return (
       <tr key={index}>
@@ -260,13 +265,13 @@ function EnterpriseContacts() {
                     className="px-3"
                     aria-label="Sort by select"
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={(e) => handleSort(e.target.value)}
                   >
-                    <option value="0"> {t("Order By")} </option>
-                    <option value="1"> {t("Job Offer")} </option>
-                    <option value="2"> {t("Name")} </option>
-                    <option value="4"> {t("Date asc")} </option>
-                    <option value="5"> {t("Date desc")} </option>
+                    <option value={SortBy.ANY}> {t("Order By")} </option>
+                    <option value={SortBy.JOB_OFFER_POSITION}> {t("Job Offer")} </option>
+                    <option value={SortBy.USERNAME}> {t("Name")} </option>
+                    <option value={SortBy.DATE_ASC}> {t("Date asc")} </option>
+                    <option value={SortBy.DATE_DESC}> {t("Date desc")} </option>
                   </Form.Select>
                 </div>
               </div>
