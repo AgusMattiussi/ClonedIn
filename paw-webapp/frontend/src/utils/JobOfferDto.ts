@@ -1,3 +1,5 @@
+import CategoryDto from "./CategoryDto"
+
 export default interface JobOfferDto {
   id: number
   position: string
@@ -5,6 +7,7 @@ export default interface JobOfferDto {
   salary: string
   modality: string
   available: string
+  categoryInfo: CategoryDto
   links: JobOfferDtoLinks
 }
 
