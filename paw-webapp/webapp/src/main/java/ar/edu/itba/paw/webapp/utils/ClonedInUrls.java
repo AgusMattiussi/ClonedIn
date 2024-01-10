@@ -14,7 +14,7 @@ public final class ClonedInUrls {
 
     public static final String EDUCATIONS_SUBDIRECTORY = "educations";
     public static final String EXPERIENCES_SUBDIRECTORY = "experiences";
-    public static final String IMAGE_SUBDIRECTORY = "images";
+    public static final String IMAGE_SUBDIRECTORY = "image";
     public static final String CONTACTS_SUBDIRECTORY = "contacts";
     public static final String JOB_OFFERS_SUBDIRECTORY = "jobOffers";
     public static final String SKILLS_SUBDIRECTORY = "skills";
