@@ -13,6 +13,12 @@ export enum JobOfferStatus {
   DECLINED = "rechazada",
 }
 
+export enum JobOfferAvailability {
+  ACTIVE = "Activa",
+  CLOSED = "Cerrada",
+  CANCELLED = "Cancelada",
+}
+
 export enum FilledBy {
   ENTERPRISE = 0,
   USER = 1,

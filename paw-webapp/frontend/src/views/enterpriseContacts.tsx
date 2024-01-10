@@ -9,7 +9,7 @@ import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
 import CancelModal from "../components/modals/cancelModal"
 import Loader from "../components/loader"
-import { JobOfferStatus, SortBy } from "../utils/constants"
+import { JobOfferStatus, SortBy, JobOfferAvailability } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
@@ -29,6 +29,8 @@ function EnterpriseContacts() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
+
+  const [jobOfferToCancelId, setJobOfferToCancelId] = useState<number | null>(null)
 
   document.title = t("My Recruits Page Title")
 
@@ -169,6 +171,28 @@ function EnterpriseContacts() {
     setLoading(true)
   }
 
+  const handleCancel = async () => {
+    const queryParams: Record<string, string> = {}
+    queryParams.availability = JobOfferAvailability.CANCELLED
+
+    const response = await apiRequest({
+      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCancelId}`,
+      method: "PUT",
+      queryParams: queryParams,
+    })
+
+    if (response.status === HttpStatusCode.Ok) {
+      setLoading(true)
+      const modalElement = document.getElementById("cancelModal")
+      modalElement?.classList.remove("show")
+      document.body.classList.remove("modal-open")
+      const modalBackdrop = document.querySelector(".modal-backdrop")
+      if (modalBackdrop) {
+        modalBackdrop.remove()
+      }
+    }
+  }
+
   const contactsList = contacts.map((contact, index) => {
     return (
       <tr key={index}>
@@ -192,6 +216,7 @@ function EnterpriseContacts() {
               style={{ minWidth: "90px", marginBottom: "5px" }}
               data-bs-toggle="modal"
               data-bs-target="#cancelModal"
+              onClick={() => setJobOfferToCancelId(contact.jobOfferInfo?.id)}
             >
               {t("Cancel")}
             </Button>
@@ -322,6 +347,7 @@ function EnterpriseContacts() {
         msg={t("Cancel JobOffer Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
+        onConfirmClick={handleCancel}
       />
     </div>
   )

@@ -168,11 +168,13 @@ public class EnterpriseController {
     @PreAuthorize(JOB_OFFER_OWNER)
     public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
                                                @PathParam("joid") @Min(1) final long joid,
-                                               @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
+                                               @QueryParam("availability") @NotNull final String availability) {
 
         JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
 
-        switch (availability) {
+        JobOfferAvailability availabilityEnum = JobOfferAvailability.fromString(availability);
+
+        switch (availabilityEnum) {
             case ACTIVE:
                 throw new IllegalArgumentException("Cannot update job offer availability to ACTIVE");
             case CLOSED:
