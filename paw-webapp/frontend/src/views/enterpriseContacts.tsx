@@ -243,6 +243,7 @@ function EnterpriseContacts() {
                 <Button
                   variant="outline-light "
                   className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.ACCEPTED}
                   onClick={() => handleFilter(JobOfferStatus.ACCEPTED)}
                 >
                   {t("Accepted")}
@@ -252,6 +253,7 @@ function EnterpriseContacts() {
                 <Button
                   variant="outline-light "
                   className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.DECLINED}
                   onClick={() => handleFilter(JobOfferStatus.DECLINED)}
                 >
                   {t("Rejected")}
@@ -261,16 +263,19 @@ function EnterpriseContacts() {
                 <Button
                   variant="outline-light "
                   className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.PENDING}
                   onClick={() => handleFilter(JobOfferStatus.PENDING)}
                 >
                   {t("Pending")}
                 </Button>
               </div>
-              <div
-                className="d-flex flex-wrap justify-content-center mt-2 mx-4"
-                onClick={() => handleFilter(JobOfferStatus.CANCELLED)}
-              >
-                <Button variant="outline-light " className="filterbtn">
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.CANCELLED}
+                  onClick={() => handleFilter(JobOfferStatus.CANCELLED)}
+                >
                   {t("Cancelled")}
                 </Button>
               </div>
