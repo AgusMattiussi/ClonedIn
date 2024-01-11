@@ -1,11 +1,15 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class EducationForm {
+
+    private static final int MIN_YEAR = 1900;
+    private static final int MAX_YEAR = 2100;
+
     @NotEmpty
     @Size(max=50)
     private String college;
@@ -14,18 +18,18 @@ public class EducationForm {
     @Size(max=50)
     private String degree;
 
-    @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})")
-    private String yearFrom;
+    @NotNull
+    @Min(MIN_YEAR)
+    @Max(MAX_YEAR)
+    private Integer yearFrom;
 
-    @NotEmpty
+    @NotNull
     private String monthFrom;
 
-    @NotEmpty
-    @Pattern(regexp = "(19|20)([0-9]{2})")
-    private String yearTo;
+    @Min(MIN_YEAR)
+    @Max(MAX_YEAR)
+    private Integer yearTo;
 
-    @NotEmpty
     private String monthTo;
 
     @Size(max=200)
@@ -55,6 +59,22 @@ public class EducationForm {
         this.comment = comment;
     }
 
+    public Integer getYearFrom() {
+        return yearFrom;
+    }
+
+    public void setYearFrom(Integer yearFrom) {
+        this.yearFrom = yearFrom;
+    }
+
+    public Integer getYearTo() {
+        return yearTo;
+    }
+
+    public void setYearTo(Integer yearTo) {
+        this.yearTo = yearTo;
+    }
+
     public String getMonthFrom() {
         return monthFrom;
     }
@@ -69,21 +89,5 @@ public class EducationForm {
 
     public void setMonthTo(String monthTo) {
         this.monthTo = monthTo;
-    }
-
-    public String getYearFrom() {
-        return yearFrom;
-    }
-
-    public void setYearFrom(String yearFrom) {
-        this.yearFrom = yearFrom;
-    }
-
-    public String getYearTo() {
-        return yearTo;
-    }
-
-    public void setYearTo(String yearTo) {
-        this.yearTo = yearTo;
     }
 }

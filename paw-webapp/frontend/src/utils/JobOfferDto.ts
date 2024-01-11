@@ -1,7 +1,19 @@
+import CategoryDto from "./CategoryDto"
+
 export default interface JobOfferDto {
   id: number
-  name: string
-  jobcategory: string
+  position: string
   description: string
-  //TODO: Add URIs for other resources (experiences, education, image, userSkills, contacts)
+  salary: string
+  modality: string
+  available: string
+  categoryInfo: CategoryDto
+  links: JobOfferDtoLinks
+}
+
+interface JobOfferDtoLinks {
+  self: string
+  enterprise: string
+  category: string
+  skills: []
 }

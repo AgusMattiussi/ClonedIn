@@ -7,13 +7,14 @@ import ProfileEnterpriseCard from "../components/cards/profileEnterpriseCard"
 import JobOfferEnterpriseCard from "../components/cards/jobOfferEnterpriseCard"
 import Navigation from "../components/navbar"
 import Pagination from "../components/pagination"
+import Loader from "../components/loader"
+import EnterpriseDto from "../utils/EnterpriseDto"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
 import { useRequestApi } from "../api/apiRequest"
-import EnterpriseDto from "../utils/EnterpriseDto"
 import { useNavigate, useParams } from "react-router-dom"
-import { BASE_URL } from "../utils/constants"
+import { HttpStatusCode } from "axios"
 
 function ProfileEnterprise() {
   const { loading, apiRequest } = useRequestApi()
@@ -29,8 +30,6 @@ function ProfileEnterprise() {
   const { userInfo } = useSharedAuth()
   const navigate = useNavigate()
 
-  const API_URL = BASE_URL + `/enterprises/${id}/`
-
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await apiRequest({
@@ -38,7 +37,7 @@ function ProfileEnterprise() {
         method: "GET",
       })
 
-      if (response.status === 500) {
+      if (response.status === 500 || response.status === 403) {
         navigate("/403")
       }
 
@@ -48,25 +47,26 @@ function ProfileEnterprise() {
 
     const fetchJobs = async () => {
       const response = await apiRequest({
-        url: API_URL + "jobOffers",
+        url: `/enterprises/${id}/jobOffers`,
         method: "GET",
       })
-      setJobs(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setJobs([])
+      } else {
+        setJobs(response.data)
+      }
       setJobsLoading(false)
     }
-    if (isEnterpriseLoading === true) {
+    if (isEnterpriseLoading) {
       fetchEnterprise()
     }
-    if(jobsLoading === true) {
+    if (jobsLoading) {
       fetchJobs()
-    } 
-
+    }
   }, [apiRequest, id])
 
   const enterprisesJobs = jobs.map((job) => {
-    return (
-      <JobOfferEnterpriseCard job={job} key={job.id}/>
-    )
+    return <JobOfferEnterpriseCard job={job} key={job.id} />
   })
 
   document.title = enterprise?.name + " | ClonedIn"
@@ -77,23 +77,32 @@ function ProfileEnterprise() {
       <Container fluid style={{ background: "#F2F2F2", height: "800px" }}>
         <Row className="row">
           <Col sm={3} className="col d-flex flex-column align-items-center">
-            <br />
-            <ProfileEnterpriseCard enterprise={enterprise} editable={true}/>
+            {isEnterpriseLoading ? (
+              <div className="my-5">
+                <Loader />
+              </div>
+            ) : (
+              <ProfileEnterpriseCard enterprise={enterprise} />
+            )}
           </Col>
           <Col sm={8} className="col d-flex flex-column align-items-center">
             <br />
-            <Button variant="success" type="button" href={`/jobOffers/${id}`}>
-              <div className="d-flex align-items-center justify-content-center">
-                <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
-                {t("Add Job Offer")}
-              </div>
-            </Button>
+            {userInfo?.role === "ENTERPRISE" ? (
+              <Button variant="success" type="button" onClick={() => navigate(`jobOffers`)}>
+                <div className="d-flex align-items-center justify-content-center">
+                  <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
+                  {t("Add Job Offer")}
+                </div>
+              </Button>
+            ) : (
+              <></>
+            )}
             <br />
-              {enterprisesJobs.length > 0 ? (
-                  <div>{enterprisesJobs}</div>
-                ) : (
-                  <div style={{ fontWeight: "bold" }}>{"There are no job Offers"}</div>
-                )}
+            {enterprisesJobs.length > 0 ? (
+              <div className="w-100">{enterprisesJobs}</div>
+            ) : (
+              <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
+            )}
             <Pagination />
           </Col>
         </Row>

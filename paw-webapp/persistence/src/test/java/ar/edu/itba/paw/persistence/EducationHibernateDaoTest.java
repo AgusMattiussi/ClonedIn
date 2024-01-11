@@ -117,7 +117,7 @@ public class EducationHibernateDaoTest {
 
     @Test
     public void testFindByUser(){
-        final List<Education> educationList = educationDao.findByUser(testUser);
+        final List<Education> educationList = educationDao.findByUser(testUser, 0 ,1);
 
         assertNotNull(educationList);
         assertFalse(educationList.isEmpty());

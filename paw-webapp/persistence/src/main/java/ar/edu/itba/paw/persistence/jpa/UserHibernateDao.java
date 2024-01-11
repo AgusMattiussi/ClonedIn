@@ -101,8 +101,11 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
+
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.visibility = :visible AND LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'", User.class);
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         query.setParameter("term", term);
@@ -142,12 +145,13 @@ public class UserHibernateDao implements UserDao {
         if(location != null && !location.isEmpty())
             queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
         if(skillDescription != null && !skillDescription.isEmpty())
-            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
+            queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND LOWER(sk.description) LIKE LOWER(CONCAT('%', :skillDescription, '%'))  ESCAPE '\\')");
         if(term != null && !term.isEmpty()) {
             queryStringBuilder.append(" AND (EXISTS (SELECT usk1 FROM UserSkill usk1 JOIN usk1.skill sk1 WHERE usk1.user = u ")
                     .append("AND LOWER(sk1.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')")
                     .append(" OR LOWER(u.location) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
-                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\')");
+                    .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(")");
         }
         if(minExpYears != null || maxExpYears != null){
             queryStringBuilder.append(" GROUP BY u.id HAVING");
@@ -206,8 +210,11 @@ public class UserHibernateDao implements UserDao {
     @Override
     public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription, int page, int pageSize) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
 
@@ -239,8 +246,10 @@ public class UserHibernateDao implements UserDao {
     @Override
     public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
-        term = term.replace("_", "\\_");
-        term = term.replace("%", "\\%");
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(DISTINCT u) FROM User u");
 
@@ -322,11 +331,21 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateUserProfileImage(long userID, Image image) {
-        Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
+    public void updateUserProfileImage(User user, Image image) {
+        /*Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
         query.setParameter("image", image);
         query.setParameter("userID", userID);
-        query.executeUpdate();
+        query.executeUpdate();*/
+
+        Image oldImage = user.getImage();
+
+        user.setImage(image);
+        em.persist(user);
+
+        if(oldImage != null){
+            oldImage = em.merge(oldImage);
+            em.remove(oldImage);
+        }
     }
 
     @Override

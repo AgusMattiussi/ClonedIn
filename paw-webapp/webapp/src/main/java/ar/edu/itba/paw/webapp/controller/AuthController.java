@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.webapp.dto.SimpleMessageDTO;
-import ar.edu.itba.paw.webapp.form.AuthenticationResponse;
 import ar.edu.itba.paw.webapp.auth.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +35,11 @@ public class AuthController {
         this.authService = authService;
     }
 
+
+    // This method exists as a 'No-Op' way to get an access token. However, any endpoint can
+    // be used for HTTP Basic authenticantion.
     @POST
     @Path("/access-token")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response authenticate(@Context HttpServletRequest request){
         // Authenticate the user using the HttpBasic credentials provided
         // Should not allow Bearer authentication, since it may lead to a security breach
@@ -54,7 +55,6 @@ public class AuthController {
 
     @POST
     @Path("/refresh-token")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public Response refreshToken(@Context HttpServletRequest request, @Context HttpHeaders headers){
         Cookie refreshTokenCookie = WebUtils.getCookie(request, "ClonedInRefreshToken");
         if(refreshTokenCookie == null){
@@ -78,7 +78,7 @@ public class AuthController {
         NewCookie newRefreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
 
         return Response.ok(new SimpleMessageDTO(CHECK_HEADER_MESSAGE))
-                .header("X-Access-Token", newAccessToken)
+                .header(ACCESS_TOKEN_HEADER, newAccessToken)
                 .cookie(newRefreshTokenCookie)
                 .build();
     }

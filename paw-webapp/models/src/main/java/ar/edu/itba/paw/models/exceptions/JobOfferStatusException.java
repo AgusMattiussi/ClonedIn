@@ -2,19 +2,38 @@ package ar.edu.itba.paw.models.exceptions;
 
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 
-public class JobOfferStatusException extends RuntimeException{
+import javax.ws.rs.core.Response;
 
-    private static final String STRING_MSG = "Could not change status to '%s' for job offer with id %d, including user with id %d." +
+public class JobOfferStatusException extends ClonedInException {
+
+    private static final Response.Status STATUS = Response.Status.CONFLICT;
+    private static final String DETAILS = "Could not change status to '%s' for job offer with id %d, including user with id %d." +
             " Maybe new status is incompatible with current status or the user is not in a valid application for the job offer.";
 
-    private final JobOfferStatus status;
+    private final JobOfferStatus jobOfferStatus;
 
-    public JobOfferStatusException(JobOfferStatus status, long jobOfferId, long userId) {
-        super(String.format(STRING_MSG, status, jobOfferId, userId));
-        this.status = status;
+    public JobOfferStatusException(JobOfferStatus jobOfferStatus, long jobOfferId, long userId) {
+        super(String.format(DETAILS, jobOfferStatus, jobOfferId, userId));
+        this.jobOfferStatus = jobOfferStatus;
     }
 
-    public JobOfferStatus getStatus() {
-        return status;
+
+    @Override
+    public String getSimpleMessage() {
+        switch (jobOfferStatus) {
+            case ACCEPTED:
+                return "Could not accept job offer";
+            case CANCELLED:
+                return "Could not cancel job offer";
+            case DECLINED:
+                return "Could not reject job offer";
+            default:
+                return "Could not change job offer status";
+        }
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
     }
 }

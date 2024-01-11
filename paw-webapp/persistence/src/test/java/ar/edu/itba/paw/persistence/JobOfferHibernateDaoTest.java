@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -33,7 +34,7 @@ public class JobOfferHibernateDaoTest {
 
     private static final String NEW_POSITION = "newPosition";
     private static final String NEW_DESCRIPTION = "newDescription";
-    private static final String TEST_MODALITY = "Remoto";
+    private static final JobOfferModality TEST_MODALITY = JobOfferModality.REMOTE;
     private static final String TEST_CATEGORY_DESC = "testCategory";
     private static final BigDecimal TEST_SALARY = BigDecimal.valueOf(1000.99);
     private static final String EMPTY_FIELD = "";
@@ -60,17 +61,17 @@ public class JobOfferHibernateDaoTest {
         testEnterprise = new Enterprise(TEST_NAME, TEST_EMAIL, EMPTY_FIELD, EMPTY_FIELD, testCategory, EMPTY_FIELD,
                 null, EMPTY_FIELD, EMPTY_FIELD, null);
         em.persist(testEnterprise);
-        testActiveJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY, JobOfferAvailability.ACTIVE.getStatus());
+        testActiveJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY.getModality(), JobOfferAvailability.ACTIVE.getStatus());
         em.persist(testActiveJobOffer);
-        testClosedJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY, JobOfferAvailability.CLOSED.getStatus());
+        testClosedJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY.getModality(), JobOfferAvailability.CLOSED.getStatus());
         em.persist(testClosedJobOffer);
-        testCancelledJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY, JobOfferAvailability.CANCELLED.getStatus());
+        testCancelledJobOffer = new JobOffer(testEnterprise, testCategory, EMPTY_FIELD, EMPTY_FIELD, TEST_SALARY, TEST_MODALITY.getModality(), JobOfferAvailability.CANCELLED.getStatus());
         em.persist(testCancelledJobOffer);
     }
 
     @Test
     public void testCreate() {
-        final JobOffer newJobOffer = dao.create(testEnterprise, testCategory, NEW_POSITION, NEW_DESCRIPTION, TEST_SALARY, TEST_MODALITY);
+        final JobOffer newJobOffer = dao.create(testEnterprise, testCategory, NEW_POSITION, NEW_DESCRIPTION, TEST_SALARY, TEST_MODALITY.getModality());
 
         assertNotNull(newJobOffer);
         assertEquals(testEnterprise, newJobOffer.getEnterprise());
@@ -78,7 +79,7 @@ public class JobOfferHibernateDaoTest {
         assertEquals(NEW_POSITION, newJobOffer.getPosition());
         assertEquals(NEW_DESCRIPTION, newJobOffer.getDescription());
         assertEquals(TEST_SALARY, newJobOffer.getSalary());
-        assertEquals(TEST_MODALITY, newJobOffer.getModality());
+        assertEquals(TEST_MODALITY.getModality(), newJobOffer.getModality());
     }
 
     @Test
@@ -90,7 +91,7 @@ public class JobOfferHibernateDaoTest {
         assertEquals(testEnterprise, existingJobOffer.get().getEnterprise());
         assertEquals(testCategory, existingJobOffer.get().getCategory());
         assertEquals(EMPTY_FIELD, existingJobOffer.get().getDescription());
-        assertEquals(TEST_MODALITY, existingJobOffer.get().getModality());
+        assertEquals(TEST_MODALITY.getModality(), existingJobOffer.get().getModality());
         assertEquals(TEST_SALARY, existingJobOffer.get().getSalary());
         assertEquals(JobOfferAvailability.ACTIVE.getStatus(), existingJobOffer.get().getAvailable());
     }
@@ -125,7 +126,7 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetJobOffersListByFilters(){
-        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, testEnterprise.getName(), EMPTY_FIELD,
+        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
                 EMPTY_FIELD, MIN_SALARY, MAX_SALARY, 0 ,8);
 
         assertFalse(jobOfferList.isEmpty());
@@ -150,7 +151,7 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetActiveJobOffersCount(){
-        assertEquals(1, dao.getActiveJobOffersCount(testCategory, TEST_MODALITY, testEnterprise.getName(), EMPTY_FIELD,
+        assertEquals(1, dao.getActiveJobOffersCount(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
                 EMPTY_FIELD, MIN_SALARY, MAX_SALARY));
     }
 

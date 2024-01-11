@@ -238,62 +238,92 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
-        switch (sortBy){
-            case USERNAME:
-                queryBuilder.append(" JOIN c.user u");
-                break;
-            case JOB_OFFER_POSITION:
-                queryBuilder.append(" JOIN c.jobOffer j");
+    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, JobOffer jobOffer, User user, FilledBy filledBy, String status, SortBy sortBy){
+
+        if(sortBy != null){
+            switch (sortBy){
+                case USERNAME:
+                    queryBuilder.append(" JOIN c.user u");
+                    break;
+                case JOB_OFFER_POSITION:
+                    queryBuilder.append(" JOIN c.jobOffer j");
+            }
         }
 
         queryBuilder.append(" WHERE c.enterprise = :enterprise");
 
-        if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
-        || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
-            queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
-        } else {
-            queryBuilder.append(" AND c.status = :status");
+        if(jobOffer != null){
+            queryBuilder.append(" AND c.jobOffer = :jobOffer");
         }
 
-        if(!filledBy.equals(FilledBy.ANY)) {
+        if(user != null){
+            queryBuilder.append(" AND c.user = :user");
+        }
+
+        if(status != null && !status.isEmpty()){
+            if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
+            || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
+                queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
+            } else {
+                queryBuilder.append(" AND c.status = :status");
+            }
+        }
+
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)) {
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
-        switch (sortBy){
-            case USERNAME:
-                queryBuilder.append(" ORDER BY u.name");
-                break;
-            case JOB_OFFER_POSITION:
-                queryBuilder.append(" ORDER BY j.position");
-                break;
-            case DATE_ASC:
-                queryBuilder.append(" ORDER BY c.date ASC");
-                break;
-            case DATE_DESC:
-                queryBuilder.append(" ORDER BY c.date DESC");
-                break;
+        if(sortBy != null){
+            switch (sortBy){
+                case USERNAME:
+                    queryBuilder.append(" ORDER BY u.name");
+                    break;
+                case JOB_OFFER_POSITION:
+                    queryBuilder.append(" ORDER BY j.position");
+                    break;
+                case DATE_ASC:
+                    queryBuilder.append(" ORDER BY c.date ASC");
+                    break;
+                case DATE_DESC:
+                    queryBuilder.append(" ORDER BY c.date DESC");
+                    break;
+            }
         }
     }
 
-    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, FilledBy filledBy, String status){
-        query.setParameter("enterprise", enterprise);
-        query.setParameter("status", status);
+    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, JobOffer jobOffer, User user,
+                                                       FilledBy filledBy, String status){
+        if(enterprise != null){
+            query.setParameter("enterprise", enterprise);
+        }
 
-        if(!filledBy.equals(FilledBy.ANY)) {
+        if(jobOffer != null){
+            query.setParameter("jobOffer", jobOffer);
+        }
+
+        if(user != null){
+            query.setParameter("user", user);
+        }
+
+        if(status != null && !status.isEmpty()){
+            query.setParameter("status", status);
+        }
+
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)) {
             query.setParameter("filledBy", filledBy.getValue());
         }
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+                                           String status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append("SELECT c FROM Contact c");
 
-        getContactsForEnterpriseAppendConditions(queryBuilder, filledBy, status, sortBy);
+        getContactsForEnterpriseAppendConditions(queryBuilder, jobOffer, user, filledBy, status, sortBy);
 
         query = em.createQuery(queryBuilder.toString(), Contact.class);
-        getContactsForEnterpriseSetParameters(query, enterprise, filledBy, status);
+        getContactsForEnterpriseSetParameters(query, enterprise, jobOffer, user, filledBy, status);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -488,6 +518,40 @@ public class ContactHibernateDao implements ContactDao {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("enterpriseID", enterpriseID);
         query.setParameter("filledBy", FilledBy.ENTERPRISE.getValue());
+        return ((BigInteger) query.getSingleResult()).longValue();
+    }
+
+    @Override
+    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseId");
+
+        if(jobOffer != null)
+            queryBuilder.append(" AND idOferta = :jobOfferId");
+
+        if(user != null)
+            queryBuilder.append(" AND idUsuario = :userId");
+
+        if(filledBy != null && filledBy != FilledBy.ANY)
+            queryBuilder.append(" AND creadoPor = :filledBy");
+
+        if(status != null && !status.isEmpty())
+            queryBuilder.append(" AND estado = :status");
+
+        Query query = em.createNativeQuery(queryBuilder.toString());
+        query.setParameter("enterpriseId", enterprise.getId());
+
+        if(jobOffer != null)
+            query.setParameter("jobOfferId", jobOffer.getId());
+
+        if(user != null)
+            query.setParameter("userId", user.getId());
+
+        if(filledBy != null && filledBy != FilledBy.ANY)
+            query.setParameter("filledBy", filledBy.getValue());
+
+        if(status != null && !status.isEmpty())
+            query.setParameter("status", status);
+
         return ((BigInteger) query.getSingleResult()).longValue();
     }
 

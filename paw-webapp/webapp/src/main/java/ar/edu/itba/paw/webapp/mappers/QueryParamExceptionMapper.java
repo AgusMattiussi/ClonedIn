@@ -16,8 +16,6 @@ public class QueryParamExceptionMapper implements ExceptionMapper<ParamException
 
     @Override
     public Response toResponse(ParamException.QueryParamException e) {
-        e.getParameterType();
-
         ErrorDTO errorDTO = new ErrorDTO(e.getClass(), MESSAGE, String.format(DESCRIPTION, e.getParameterName()));
         return Response.status(Response.Status.BAD_REQUEST).entity(errorDTO).build();
     }

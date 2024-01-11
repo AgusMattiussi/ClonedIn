@@ -3,14 +3,74 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { HttpStatusCode } from "axios"
+import Loader from "../components/loader"
 
 function ContactForm() {
-  const { t } = useTranslation()
   const navigate = useNavigate()
+
+  const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
+  const { userId } = useParams()
+
+  const { loading, apiRequest } = useRequestApi()
+  const [userName, setUserName] = useState("")
+  const [message, setMessage] = useState("")
+  const [jobOffersList, setJobOffersList] = useState<any[]>([])
+  const [jobOffersLoading, setJobOffersLoading] = useState(true)
+  const [jobOfferId, setJobOfferId] = useState("")
+
+  useEffect(() => {
+    const fetchJobOffers = async () => {
+      const response = await apiRequest({
+        url: `/enterprises/${userInfo?.id}/jobOffers`,
+        method: "GET",
+      })
+      if (response.status === HttpStatusCode.NoContent) {
+        setJobOffersList([])
+      } else {
+        setJobOffersList(response.data)
+      }
+      setJobOffersLoading(false)
+    }
+
+    const fetchUserName = async () => {
+      const response = await apiRequest({
+        url: `/users/${userId}`,
+        method: "GET",
+      })
+      setUserName(response.data.name)
+    }
+
+    if (jobOffersLoading) {
+      fetchJobOffers()
+    }
+    if (userName.length === 0) {
+      fetchUserName()
+    }
+  }, [apiRequest, jobOffersLoading, userInfo?.id, userName.length, userId])
+
+  const handlePost = async () => {
+    const response = await apiRequest({
+      url: `/enterprises/${userInfo?.id}/contacts`,
+      method: "POST",
+      body: {
+        message,
+        jobOfferId,
+        userId,
+      },
+    })
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/users/${userId}`)
+    } else {
+      // TODO: manejar error
+    }
+  }
 
   document.title = t("Contact Form Page Title")
 
@@ -23,7 +83,10 @@ function ContactForm() {
             <div className="col-11 col-sm-9 col-md-7 col-lg-6 p-0 mt-3 mb-2">
               <Card className="custom-card px-0 pt-4 pb-0 mt-3 mb-3">
                 <h2 className="text-center p-0 mt-3 mb-2">
-                  <strong> {t("Send message")} </strong>
+                  <strong>
+                    {" "}
+                    {t("Send message")} {userName}
+                  </strong>
                 </h2>
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
@@ -32,19 +95,35 @@ function ContactForm() {
                       <div className="form-card">
                         <h2 className="fs-title"> {t("Message")} </h2>
                         <Form.Group className="mb-3 mt-3" controlId="formBasicMessage">
-                          <Form.Control className="input" placeholder={t("Candidate").toString()} />
+                          <Form.Control
+                            className="input"
+                            placeholder={t("Candidate").toString()}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                          />
                         </Form.Group>
                         <div className="d-flex mb-4">
                           <label className="area">{t("Job Offers ")}</label>
-                          <Form.Select className="selectFrom" aria-label="Default select example">
-                            {/* TODO: agregar for con las job offers pasadas de la API*/}
-                            <option value="job offer id">Job Offer Name</option>
-                          </Form.Select>
+                          {jobOffersLoading ? (
+                            <Loader />
+                          ) : (
+                            <Form.Select
+                              className="selectFrom"
+                              aria-label="Default select example"
+                              value={jobOfferId}
+                              onChange={(e) => setJobOfferId(e.target.value)}
+                            >
+                              {jobOffersList.map((jobOffer: any) => (
+                                <option key={jobOffer.id} value={jobOffer.id}>
+                                  {jobOffer.position}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          )}
                         </div>
                       </div>
                       <p>{t("Fields required")}</p>
-                      {/* TODO: arreglar el metodo de link porque href es ilegal - funciona though*/}
-                      <Button href="/" variant="success" type="submit">
+                      <Button variant="success" onClick={() => handlePost()}>
                         <strong>{t("Contact")}</strong>
                       </Button>
                     </Form>

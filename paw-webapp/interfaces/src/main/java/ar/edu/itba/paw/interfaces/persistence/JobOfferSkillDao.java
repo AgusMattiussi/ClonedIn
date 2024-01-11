@@ -9,6 +9,7 @@ public interface JobOfferSkillDao {
 
     void addSkillToJobOffer(Skill skill, JobOffer jobOffer);
 
+
     List<JobOffer> getJobOffersWithSkill(Skill skill);
 
     List<Skill> getSkillsForJobOffer(JobOffer jobOffer);

@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.models.helpers;
 
+import ar.edu.itba.paw.models.enums.Month;
+import ar.edu.itba.paw.models.exceptions.InvalidDateException;
+
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,68 +11,35 @@ public final class DateHelper {
 
     private static final int MIN_YEAR = 1900;
     private static final int MAX_YEAR = 2100;
-    private static final int MIN_MONTH = 1;
-    private static final int MAX_MONTH = 12;
 
-    private static final Map<String, Integer> monthToNumber = new HashMap<>();
-    static {
-        monthToNumber.put("No-especificado", 0);
-        monthToNumber.put("Enero", 1);
-        monthToNumber.put("Febrero", 2);
-        monthToNumber.put("Marzo", 3);
-        monthToNumber.put("Abril", 4);
-        monthToNumber.put("Mayo", 5);
-        monthToNumber.put("Junio", 6);
-        monthToNumber.put("Julio", 7);
-        monthToNumber.put("Agosto", 8);
-        monthToNumber.put("Septiembre", 9);
-        monthToNumber.put("Octubre", 10);
-        monthToNumber.put("Noviembre", 11);
-        monthToNumber.put("Diciembre", 12);
-    }
 
     private DateHelper() {
     }
 
-    public static Integer monthToNumber(String monthName){
-        if(!monthToNumber.containsKey(monthName)) {
-            throw new InvalidParameterException();
-        }
-        return monthToNumber.get(monthName);
-    }
+    public static void validateDate(Month monthFrom, Integer yearFrom, Month monthTo, Integer yearTo){
+        if(yearFrom == null)
+            throw new InvalidDateException("'yearFrom' cannot be null");
+
+        if(monthFrom == null)
+            throw new InvalidDateException("'monthFrom' cannot be null");
+
+        if(yearFrom < MIN_YEAR || yearFrom > MAX_YEAR)
+            throw new InvalidDateException(String.format("'yearFrom' cannot be before %d or after %d", MIN_YEAR, MAX_YEAR));
 
 
-    public static boolean isIntervalValid(int from, int to){
-        return to >= from;
-    }
-
-    public static boolean isIntervalValid(String from, String to){
-        int intFrom;
-        int intTo;
-
-        try {
-            intFrom = Integer.parseInt(from);
-            intTo = Integer.parseInt(to);
-        } catch (NumberFormatException e){
-            return false;
+        if(yearTo != null && monthTo != null){
+            if(yearTo < MIN_YEAR || yearTo > MAX_YEAR)
+                throw new InvalidDateException(String.format("'yearTo' cannot be before %d or after %d", MIN_YEAR, MAX_YEAR));
+            if(yearTo < yearFrom)
+                throw new InvalidDateException("'yearTo' cannot be before 'yearFrom'");
+            if(yearTo.equals(yearFrom) && monthTo.getNumber() < monthFrom.getNumber())
+                throw new InvalidDateException("The 'monthTo' cannot be before 'monthFrom' for the same year");
         }
 
-        return isIntervalValid(intFrom, intTo);
-    }
+        if(yearTo == null && monthTo != null)
+            throw new InvalidDateException("'yearTo' cannot be null if 'monthTo' is not null");
 
-
-    public static boolean isYearValid(int year){
-        return year >= MIN_YEAR && year <= MAX_YEAR;
-    }
-
-    public static boolean isMonthValid(int month){
-        return month >= MIN_MONTH && month <= MAX_MONTH;
-    }
-
-    public static boolean isDateValid(int monthFrom, int yearFrom, int monthTo, int yearTo){
-        if(!isMonthValid(monthTo) || !isMonthValid(monthFrom) || !isYearValid(yearTo) || !isYearValid(yearFrom)) {
-            return false;
-        }
-        return yearTo > yearFrom || yearTo == yearFrom && monthTo >= monthFrom;
+        if(yearTo != null && monthTo == null)
+            throw new InvalidDateException("'monthTo' cannot be null if 'yearTo' is not null");
     }
 }

@@ -34,5 +34,5 @@ public interface EnterpriseDao {
 
     void updateCategory(long enterpriseID, Category newCategory);
 
-    void updateEnterpriseProfileImage(long enterpriseID, Image image);
+    void updateEnterpriseProfileImage(Enterprise enterprise, Image image);
 }

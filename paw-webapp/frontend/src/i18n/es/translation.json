@@ -71,6 +71,8 @@
   "Interested": "Interesados",
   "Add Job Offer": "Agregar Oferta de Trabajo",
   "Close Job Offer": "Cerrar Propuesta",
+  "No Job Offers": "Ofertas de trabajo no especificadas",
+  "No Contacts": "No hay contactos para mostrar",
 
   "Hide My Profile": "Ocultar Mi Perfil",
   "Show My Profile": "Mostrar Mi Perfil",
@@ -110,6 +112,12 @@
   "Cancelled": "Cancelado",
   "Closed": "Cerrada",
   "View All": "Ver Todo",
+
+  "aceptada": "Aceptada",
+  "rechazada": "Rechazada",
+  "cancelada": "Cancelada",
+  "pendiente": "Pendiente",
+  "cerrada": "Cerrada",
 
   "Required Skills": "Habilidades Requeridas",
   "Description": "Descripción",
@@ -181,7 +189,7 @@
   "Position": "Puesto *",
   "To ": "Hasta",
 
-  "Send message": "Contáctate con USERNAME",
+  "Send message": "Contáctate con ",
   "Message": "Mensaje",
   "Job Offers ": "Ofertas de trabajo *",
   "Candidate": "Nos gustaría que te postules como candidato",

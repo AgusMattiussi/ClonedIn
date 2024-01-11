@@ -49,7 +49,7 @@ function RegisterEnterprise() {
   const handleRegister = async (e: any) => {
     await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, year, link, aboutUs, category)
     await loginHandler(e.email, e.pass)
-    navigate("/profiles")
+    navigate("/users")
   }
 
   const handlePasswordVisibility = () => {

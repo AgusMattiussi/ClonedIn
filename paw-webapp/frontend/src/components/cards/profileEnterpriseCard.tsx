@@ -3,34 +3,51 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
+import CategoryDto from "../../utils/CategoryDto"
+import { UserRole } from "../../utils/constants"
+import { useSharedAuth } from "../../api/auth"
 import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
-import { useEffect, useState } from "react"
-import CategoryDto from "../../utils/CategoryDto"
+import { useNavigate } from "react-router-dom"
+import { useEffect, useMemo, useState } from "react"
 
-function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; enterprise: any }) {
+function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
+  const navigate = useNavigate()
   const { t } = useTranslation()
+  const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
+
+  const [loadingData, setLoadingData] = useState(true)
   const [enterpriseCategory, setEnterpriseCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
+  const [imageUrl, setImageUrl] = useState<string>("")
+
+  const memorizedEnterprise = useMemo(() => enterprise, [enterprise])
+
   useEffect(() => {
-    const fetchCategory = async () => {
-      const response = await apiRequest({
-        url: enterprise.category,
-        method: "GET",
-      })
-      setEnterpriseCategory(response.data)
+    const fetchData = async () => {
+      try {
+        if (loadingData) {
+          const [categoryResponse, imageResponse] = await Promise.all([
+            apiRequest({ url: memorizedEnterprise.links.category, method: "GET" }),
+            apiRequest({ url: memorizedEnterprise.links.image, method: "GET" }),
+          ])
+
+          setEnterpriseCategory(categoryResponse.data)
+          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setLoadingData(false)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
-    
-    if (enterpriseCategory === null) {
-      fetchCategory()
-    }
-  }, [apiRequest])
+    if (loadingData) fetchData()
+  }, [apiRequest, loadingData, memorizedEnterprise])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
-      <Card.Img variant="top" src={defaultProfile} />
-      {editable ? (
-        <Button type="button" variant="success" href="/imageProfile">
+      <Card.Img variant="top" src={imageUrl} />
+      {userInfo?.role === UserRole.ENTERPRISE ? (
+        <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
             <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
             {t("Edit Profile Picture")}
@@ -42,12 +59,12 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
           <h5>{enterprise.name}</h5>
-          {editable ? (
+          {userInfo?.role === UserRole.ENTERPRISE ? (
             <Button
               className="float-end"
               type="button"
               variant="outline-success"
-              href={`/editEnterprise/${enterprise.id}`}
+              onClick={() => navigate(`/editEnterprise/${enterprise.id}`)}
               style={{ paddingBottom: "10px" }}
             >
               <Icon.PencilSquare color="green" size={15} />
@@ -56,16 +73,16 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
             <></>
           )}
         </div>
-        {editable ? <hr /> : <></>}
-        <Card.Text>
+        {userInfo?.role === UserRole.ENTERPRISE ? <hr /> : <></>}
+        <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
-              {enterprise.category !== "No-Especificado" ? (
+              <div>{t("Job Category")}:</div>
+              {enterprise.links.category !== "No-Especificado" ? (
                 <div>
-                  {t("Job Category")}:
                   <Badge pill bg="success" className="mx-2">
-                  {enterprise.category == null ? t("No-especificado") : enterpriseCategory?.name}
+                    {enterprise.links.category == null ? t("No-especificado") : enterpriseCategory?.name}
                   </Badge>
                 </div>
               ) : (
@@ -99,14 +116,10 @@ function ProfileEnterpriseCard({ editable, enterprise }: { editable: boolean; en
               <p> {enterprise.description}</p>
             </div>
           </div>
-        </Card.Text>
+        </div>
       </Card.Body>
     </Card>
   )
-}
-
-ProfileEnterpriseCard.defaultProps = {
-  editable: false,
 }
 
 export default ProfileEnterpriseCard

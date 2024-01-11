@@ -2,39 +2,359 @@ import Container from "react-bootstrap/esm/Container"
 import Row from "react-bootstrap/esm/Row"
 import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
-import FilterStatusSideBar from "../components/sidebars/filterStatusSideBar"
-import EnterpriseSortBySelect from "../components/selects/enterpriseSortBySelect"
-import ContactsTable from "../components/tables/contactsTable"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit"
+import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
+import CancelModal from "../components/modals/cancelModal"
+import Loader from "../components/loader"
+import { JobOfferStatus, SortBy, JobOfferAvailability } from "../utils/constants"
+import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
+import { useRequestApi } from "../api/apiRequest"
+import { useNavigate, useSearchParams, Link } from "react-router-dom"
+import { useState, useEffect, useCallback } from "react"
 
 function EnterpriseContacts() {
+  const navigate = useNavigate()
+
   const { t } = useTranslation()
+  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
 
+  const [isLoading, setLoading] = useState(true)
+  const [contacts, setContacts] = useState<ContactDto[]>([])
+
+  const [filterStatus, setFilterStatus] = useState("")
+  const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
+
+  const [jobOfferToCancelId, setJobOfferToCancelId] = useState<number | null>(null)
+
   document.title = t("My Recruits Page Title")
+
+  // const [searchParams, setSearchParams] = useSearchParams()
+  let queryParams: Record<string, string> = {}
+
+  const fetchUserInfo = useCallback(
+    async (userUrl: string) => {
+      try {
+        const response = await apiRequest({
+          url: userUrl,
+          method: "GET",
+        })
+
+        if (response.status === HttpStatusCode.Ok) {
+          return response.data
+        } else {
+          console.error("Error fetching user info:", response)
+          return null
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error)
+        return null
+      }
+    },
+    [apiRequest],
+  )
+
+  const fetchJobOfferInfo = useCallback(
+    async (jobOfferUrl: string) => {
+      try {
+        const response = await apiRequest({
+          url: jobOfferUrl,
+          method: "GET",
+        })
+
+        if (response.status === HttpStatusCode.Ok) {
+          return response.data
+        } else {
+          console.error("Error fetching job offer info:", response)
+          return null
+        }
+      } catch (error) {
+        console.error("Error fetching job offer info:", error)
+        return null
+      }
+    },
+    [apiRequest],
+  )
+
+  const fetchCategoryInfo = useCallback(
+    async (categoryUrl: string) => {
+      try {
+        const response = await apiRequest({
+          url: categoryUrl,
+          method: "GET",
+        })
+
+        if (response.status === HttpStatusCode.Ok) {
+          return response.data
+        } else {
+          console.error("Error fetching category info:", response)
+          return null
+        }
+      } catch (error) {
+        console.error("Error fetching category info:", error)
+        return null
+      }
+    },
+    [apiRequest],
+  )
+
+  const fetchContacts = useCallback(
+    async (status: string, sortBy: string) => {
+      setLoading(true)
+      if (status) queryParams.status = status
+      if (sortBy) queryParams.sortBy = sortBy
+
+      try {
+        const response = await apiRequest({
+          url: `/enterprises/${userInfo?.id}/contacts`,
+          method: "GET",
+          queryParams: queryParams,
+        })
+
+        if (response.status === HttpStatusCode.InternalServerError) {
+          navigate("/403")
+        }
+
+        if (response.status === HttpStatusCode.NoContent) {
+          setContacts([])
+        } else {
+          const contactsData = await Promise.all(
+            response.data.map(async (contact: ContactDto) => {
+              const userInfo = await fetchUserInfo(contact.links.user)
+              const userCategoryInfo = await fetchCategoryInfo(userInfo.links.category)
+
+              const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
+              const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
+
+              return {
+                ...contact,
+                userInfo: {
+                  ...userInfo,
+                  categoryInfo: userCategoryInfo,
+                },
+                jobOfferInfo: {
+                  ...jobOfferInfo,
+                  categoryInfo: jobOfferCategoryInfo,
+                },
+              }
+            }),
+          )
+          setContacts(contactsData)
+        }
+      } catch (error) {
+        console.error("Error fetching jobs:", error)
+      }
+      setLoading(false)
+    },
+    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
+  )
+
+  useEffect(() => {
+    if (isLoading) {
+      // setSearchParams(queryParams)
+      fetchContacts(filterStatus, sortBy)
+    }
+  }, [fetchContacts, isLoading, filterStatus, sortBy])
+
+  const handleFilter = (status: string) => {
+    setFilterStatus(status)
+    setLoading(true)
+  }
+
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy.toString())
+    setLoading(true)
+  }
+
+  const handleCancel = async () => {
+    //TODO: revisar/actualizar con el nuevo endpoint
+    const queryParams: Record<string, string> = {}
+    queryParams.availability = JobOfferAvailability.CANCELLED
+
+    const response = await apiRequest({
+      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCancelId}`,
+      method: "PUT",
+      queryParams: queryParams,
+    })
+
+    if (response.status === HttpStatusCode.Ok) {
+      setLoading(true)
+      const modalElement = document.getElementById("cancelModal")
+      modalElement?.classList.remove("show")
+      document.body.classList.remove("modal-open")
+      const modalBackdrop = document.querySelector(".modal-backdrop")
+      if (modalBackdrop) {
+        modalBackdrop.remove()
+      }
+    }
+  }
+
+  const contactsList = contacts.map((contact, index) => {
+    return (
+      <tr key={index}>
+        <td>
+          <Link to={`/jobOffers/${contact.jobOfferInfo?.id}`} style={{ textDecoration: "none" }}>
+            {contact.jobOfferInfo?.position}
+          </Link>
+        </td>
+        <td>{t(contact.jobOfferInfo?.categoryInfo.name)}</td>
+        <td>
+          <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
+            {contact.userInfo?.name}
+          </Link>
+        </td>
+        <td>{t(contact.userInfo?.categoryInfo.name)}</td>
+        <td>{contact.date}</td>
+        <td>
+          {contact.status === JobOfferStatus.PENDING ? (
+            <Button
+              variant="danger"
+              style={{ minWidth: "90px", marginBottom: "5px" }}
+              data-bs-toggle="modal"
+              data-bs-target="#cancelModal"
+              onClick={() => setJobOfferToCancelId(contact.jobOfferInfo?.id)}
+            >
+              {t("Cancel")}
+            </Button>
+          ) : (
+            t(contact.status)
+          )}
+        </td>
+        <td />
+      </tr>
+    )
+  })
 
   return (
     <div>
       <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <FilterStatusSideBar />
+          <Col sm={2} className="sidebar">
+            <div className="d-flex flex-column justify-content-center">
+              <div className="search mx-auto">
+                <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.ACCEPTED}
+                  onClick={() => handleFilter(JobOfferStatus.ACCEPTED)}
+                >
+                  {t("Accepted")}
+                </Button>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.DECLINED}
+                  onClick={() => handleFilter(JobOfferStatus.DECLINED)}
+                >
+                  {t("Rejected")}
+                </Button>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.PENDING}
+                  onClick={() => handleFilter(JobOfferStatus.PENDING)}
+                >
+                  {t("Pending")}
+                </Button>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-2 mx-4">
+                <Button
+                  variant="outline-light "
+                  className="filterbtn"
+                  disabled={filterStatus === JobOfferStatus.CANCELLED}
+                  onClick={() => handleFilter(JobOfferStatus.CANCELLED)}
+                >
+                  {t("Cancelled")}
+                </Button>
+              </div>
+              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
+                <Button variant="outline-light " className="filterbtn" onClick={() => handleFilter("")}>
+                  {t("View All")}
+                </Button>
+              </div>
+            </div>
+          </Col>
           <Col className="d-flex flex-column my-2">
             <Row className="my-2">
               <div className="d-flex justify-content-between">
                 <h3 style={{ textAlign: "left" }}>{t("My Recruits")}</h3>
-                <EnterpriseSortBySelect />
+                <div style={{ width: "200px" }}>
+                  <Form.Select
+                    className="px-3"
+                    aria-label="Sort by select"
+                    value={sortBy}
+                    onChange={(e) => handleSort(e.target.value)}
+                  >
+                    <option value={SortBy.ANY}> {t("Order By")} </option>
+                    <option value={SortBy.JOB_OFFER_POSITION}> {t("Job Offer")} </option>
+                    <option value={SortBy.USERNAME}> {t("Name")} </option>
+                    <option value={SortBy.DATE_ASC}> {t("Date asc")} </option>
+                    <option value={SortBy.DATE_DESC}> {t("Date desc")} </option>
+                  </Form.Select>
+                </div>
               </div>
             </Row>
             <Row className="m-2">
-              <ContactsTable />
+              <MDBTable
+                className="table-light"
+                align="middle"
+                style={{ boxShadow: "0 0 2px rgba(0,0,0,0.16), 0 0 1px rgba(0,0,0,0.23)" }}
+              >
+                <MDBTableHead>
+                  <tr>
+                    <th scope="col">{t("Job Offer")}</th>
+                    <th scope="col">{t("Job Category")}</th>
+                    <th scope="col">{t("Name")}</th>
+                    <th scope="col">{t("Category")}</th>
+                    <th scope="col">{t("Date")}</th>
+                    <th scope="col">{t("Status")}</th>
+                    <th />
+                  </tr>
+                </MDBTableHead>
+                <MDBTableBody>
+                  {isLoading ? (
+                    <Loader />
+                  ) : contactsList.length > 0 ? (
+                    contactsList
+                  ) : (
+                    <tr>
+                      <td>{t("No Contacts")}</td>
+                      <td />
+                      <td />
+                      <td />
+                      <td />
+                      <td />
+                      <td />
+                    </tr>
+                  )}
+                  {}
+                </MDBTableBody>
+              </MDBTable>
               <Pagination />
             </Row>
           </Col>
         </Row>
       </Container>
+      <CancelModal
+        title={t("Modal Title")}
+        msg={t("Cancel JobOffer Modal Msg")}
+        cancel={t("Cancel")}
+        confirm={t("Confirm")}
+        onConfirmClick={handleCancel}
+      />
     </div>
   )
 }

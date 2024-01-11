@@ -192,6 +192,10 @@ public class Enterprise implements CustomUserDetails {
         return image;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public Set<Contact> getContacts() {
         return contacts;
     }

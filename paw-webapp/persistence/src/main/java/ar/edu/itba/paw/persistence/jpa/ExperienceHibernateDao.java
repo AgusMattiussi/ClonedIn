@@ -26,15 +26,6 @@ public class ExperienceHibernateDao implements ExperienceDao {
 
     @Override
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
-        if(monthTo == null && yearTo != null || monthTo != null && yearTo == null)
-            throw new InvalidParameterException(" monthTo y yearTo no pueden ser null simultaneamente");
-
-        if(monthTo != null && yearTo != null) {
-            if (!DateHelper.isDateValid(monthFrom, yearFrom, monthTo, yearTo))
-                throw new InvalidParameterException("La fecha" + monthFrom + "/" + yearFrom +
-                        " - " + monthTo + "/" + yearTo + " es incorrecta");
-        }
-
         final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);
         return experience;
@@ -46,11 +37,20 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
-    public List<Experience> findByUser(User user) {
-        TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user", Experience.class);
+    public List<Experience> findByUser(User user, int page, int pageSize) {
+        TypedQuery<Experience> query = em.createQuery("SELECT e FROM Experience e WHERE e.user = :user ORDER BY e.yearFrom DESC, e.monthFrom DESC", Experience.class);
         query.setParameter("user", user);
 
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    @Override
+    public long getExperienceCountForUser(User user) {
+        Query query = em.createQuery("SELECT COUNT(e) FROM Experience e WHERE e.user = :user");
+        query.setParameter("user", user);
+
+        return (Long) query.getSingleResult();
     }
 
     @Override

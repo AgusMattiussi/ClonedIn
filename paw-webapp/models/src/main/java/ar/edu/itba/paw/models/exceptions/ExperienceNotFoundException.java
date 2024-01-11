@@ -1,14 +1,24 @@
 package ar.edu.itba.paw.models.exceptions;
 
-public class ExperienceNotFoundException extends RuntimeException{
+import javax.ws.rs.core.Response;
 
-    private static final String STRING_MSG = "The experience with id %d was not found or does not exist";
+public class ExperienceNotFoundException extends ClonedInException{
+
+    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final String SIMPLE_MESSAGE = "Experience not found";
+    private static final String DETAILS = "The experience with id %d was not found or does not exist";
 
     public ExperienceNotFoundException(long experienceId) {
-        super(String.format(STRING_MSG, experienceId));
+        super(String.format(DETAILS, experienceId));
     }
 
-    public ExperienceNotFoundException(long experienceId, Throwable var1) {
-        super(String.format(STRING_MSG, experienceId),var1);
+    @Override
+    public String getSimpleMessage() {
+        return SIMPLE_MESSAGE;
+    }
+
+    @Override
+    public Response.Status getHttpStatus() {
+        return STATUS;
     }
 }

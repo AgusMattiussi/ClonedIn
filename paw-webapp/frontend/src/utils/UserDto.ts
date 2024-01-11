@@ -1,17 +1,27 @@
+import CategoryDto from "./CategoryDto"
+import ExperienceDto from "./ExperienceDto"
+import SkillDto from "./SkillDto"
+
 export default interface UserDto {
   id: number
-  name: string
   email: string
+  name: string
   location: string
-  category: string
   currentPosition: string
   description: string
-  education: string
+  educationLevel: string
   visibility: number
+  categoryInfo: CategoryDto
+  experienceInfo: ExperienceDto[]
+  skillsInfo: SkillDto[]
+  links: UserDtoLinks
+}
 
+interface UserDtoLinks {
   self: string
-  userSkills: string
-  educations: string
+  image: string
+  category: string
   experiences: string
-  //TODO: Add URIs for other resources (experiences, education, image, userSkills, contacts)
+  educations: string
+  skills: string
 }

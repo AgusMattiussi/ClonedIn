@@ -4,6 +4,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public interface JobOfferService {
 
-    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality);
+    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality);
 
     List<JobOffer> getAllJobOffers();
 
@@ -33,16 +34,18 @@ public interface JobOfferService {
 
     long getActiveJobOffersCountForEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, String modality, String enterpriseName, String skillDescription,
-                                             String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
+    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
+                                             String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, int page,
+                                             int pageSize);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
+    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
+                                             BigDecimal maxSalary, int page, int pageSize);
 
-    long getActiveJobOffersCount(Category category, String modality, String enterpriseName, String skillDescription,
-                                 String position, BigDecimal minSalary, BigDecimal maxSalary);
+    long getActiveJobOffersCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
+                                 String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary);
 
 
-    long getActiveJobOffersCount(Category category, String modality, String term, BigDecimal minSalary, BigDecimal maxSalary);
+    long getActiveJobOffersCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary);
 
     void closeJobOffer(JobOffer jobOffer);
 

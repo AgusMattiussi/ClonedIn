@@ -28,6 +28,7 @@ function JobOfferForm() {
     position: yup.string().required("Required"),
   })
   const [category, setCategory] = useState("")
+  const [position, setPosition] = useState("")
   const [description, setDescription] = useState("")
   const [salary, setSalary] = useState("")
   const [modality, setModality] = useState("")
@@ -45,24 +46,25 @@ function JobOfferForm() {
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest])
+  }, [apiRequest, categoryList.length])
 
   const handlePost = async (e: any) => {
-    const position = e.position
+    const jobPosition = e.position
+    const jobDescription = description
     const response = await apiRequest({
       url: `/enterprises/${id}/jobOffers`,
       method: "POST",
       body: {
-        category,
-        position,
-        description,
+        jobPosition,
+        jobDescription,
         salary,
+        category,
         modality,
         skills,
       },
     })
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/profileEnterprise/${id}`)
+      navigate(`/enterprises/${id}`)
     } else {
       //TODO: manejar error
     }
@@ -88,7 +90,7 @@ function JobOfferForm() {
                         position: "",
                       }}
                       onSubmit={(values) => {
-                        console.log(values)
+                        handlePost(values)
                       }}
                     >
                       {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -101,40 +103,49 @@ function JobOfferForm() {
                                 className="input"
                                 placeholder={t("Position*").toString()}
                                 value={values.position}
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
                                 isInvalid={!!errors.position}
                               />
                               <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicSalary">
                               <Form.Control
-                               className="input" 
-                               placeholder={t("Salary").toString()} 
-                               value={salary}
-                               onChange={(e) => setSalary(e.target.value)}
+                                className="input"
+                                placeholder={t("Salary").toString()}
+                                value={salary}
+                                onChange={(e) => setSalary(e.target.value)}
                               />
                             </Form.Group>
                             <div className="d-flex mb-4">
-                              <label className="area"> {t("Modality")} </label>
+                              <label className="area mx-2 py-1" style={{ width: "100px" }}>
+                                {t("Modality")}
+                              </label>
                               <Form.Select
-                               className="selectFrom" 
-                               aria-label="Default select example"
-                               value={modality}
-                               onChange={(e) => setModality(e.target.value)}
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={modality}
+                                onChange={(e) => setModality(e.target.value)}
+                                style={{ width: "70%" }}
                               >
+                                <option value="No-Especificado">{t("No-especificado")}</option>
                                 <option value="Remoto">{t("Home Office")}</option>
-                                <option value="Presencial">{t("On site")}</option>
+                                <option value="Presencial">{t("On Site")}</option>
                                 <option value="Mixto">{t("Mixed")}</option>
                               </Form.Select>
                             </div>
                             {/* TODO: agregar HABILIDADES REQUERIDAS CON EL INPUT DE +*/}
                             <div className="d-flex mb-4">
-                              <label className="area">{t("Job Category")}</label>
+                              <label className="area mx-2 py-1" style={{ width: "100px" }}>
+                                {t("Job Category")}
+                              </label>
                               <Form.Select
-                               className="selectFrom" 
-                               aria-label="Default select example"
-                               value={category}
-                               onChange={(e) => setCategory(e.target.value)}
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                style={{ width: "70%" }}
                               >
                                 <option key="1" value="No-Especificado">
                                   {t("No-especificado")}
@@ -148,11 +159,11 @@ function JobOfferForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
-                               placeholder={t("Description").toString()} 
-                               as="textarea" 
-                               rows={3}
-                               value={description}
-                               onChange={(e) => setDescription(e.target.value)}
+                                placeholder={t("Description").toString()}
+                                as="textarea"
+                                rows={3}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                               />
                             </Form.Group>
                           </div>

@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.webapp.validators.StringDiff;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
@@ -25,8 +27,8 @@ public class JobOfferForm {
     @NotEmpty
     private String category;
 
-    @NotEmpty
-    private String mode;
+    @NotNull
+    private String modality;
 
     @Size(max=50)
     private String skill1;
@@ -105,11 +107,11 @@ public class JobOfferForm {
         this.category = category;
     }
 
-    public String getMode() {
-        return mode;
+    public String getModality() {
+        return modality;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    public void setModality(String modality) {
+        this.modality = modality;
     }
 }

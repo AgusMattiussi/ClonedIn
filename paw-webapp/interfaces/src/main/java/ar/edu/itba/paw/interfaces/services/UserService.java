@@ -66,7 +66,7 @@ public interface UserService {
 
     void showUserProfile(long userID);
     
-    void updateProfileImage(long userId, Image image);
+    void updateProfileImage(User user, Image image);
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 }

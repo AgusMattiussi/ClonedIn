@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,26 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public List<Skill> getAllSkills() {
-        return skillDao.getAllSkills();
+    public List<Skill> findMultipleByDescriptionOrCreate(List<String> skillDescriptions) {
+        List<Skill> skills = new ArrayList<>();
+
+        for(String skillDesc : skillDescriptions) {
+            if(skillDesc != null && !skillDesc.isEmpty()) {
+                Skill skill = skillDao.findByDescriptionOrCreate(skillDesc);
+                skills.add(skill);
+            }
+        }
+
+        return skills;
+    }
+
+    @Override
+    public List<Skill> getAllSkills(int page, int pageSize) {
+        return skillDao.getAllSkills(page, pageSize);
+    }
+
+    @Override
+    public long getSkillCount() {
+        return skillDao.getSkillCount();
     }
 }

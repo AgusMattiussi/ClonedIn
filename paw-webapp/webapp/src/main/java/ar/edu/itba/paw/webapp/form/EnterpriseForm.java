@@ -5,11 +5,13 @@ import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class EnterpriseForm {
+
     @NotEmpty
     @Email
     @NotExistingEmail
@@ -32,8 +34,9 @@ public class EnterpriseForm {
     @NotEmpty
     private String workers;
 
-    @Pattern(regexp = "((1([0-9]{3}))|(20(([0-1][0-9])|2[0-2])))?")
-    private String year;
+    @NotNull
+    @Min(1000)
+    private Integer year;
 
     @Size(max=200)
     private String link;
@@ -92,11 +95,13 @@ public class EnterpriseForm {
         this.workers = workers;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
+        if(year > Calendar.getInstance().get(Calendar.YEAR))
+            throw new IllegalArgumentException("Year cannot be greater than current year");
         this.year = year;
     }
 

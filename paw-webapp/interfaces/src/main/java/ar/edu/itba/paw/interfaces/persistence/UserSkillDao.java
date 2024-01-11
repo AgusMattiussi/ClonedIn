@@ -14,7 +14,9 @@ public interface UserSkillDao {
 
     List<User> getUsersWithSkill(Skill skill);
 
-    List<Skill> getSkillsForUser(User user);
+    List<Skill> getSkillsForUser(User user, int page, int pageSize);
+
+    long getSkillCountForUser(User user);
 
     void deleteSkillFromUser(long userID, long skillID);
 

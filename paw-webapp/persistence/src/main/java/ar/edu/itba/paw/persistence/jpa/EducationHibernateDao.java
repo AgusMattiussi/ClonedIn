@@ -25,10 +25,6 @@ public class EducationHibernateDao implements EducationDao {
 
     @Override
     public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
-        if(!isDateValid(monthFrom, yearFrom, monthTo, yearTo))
-            throw new InvalidParameterException("La fecha" + monthFrom+ "/" + yearFrom +
-                    " - " + monthTo + "/" + yearTo +  " es incorrecta");
-
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);
         return education;
@@ -40,11 +36,20 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
-    public List<Education> findByUser(User user) {
+    public List<Education> findByUser(User user, int page, int pageSize) {
         TypedQuery<Education> query = em.createQuery("SELECT e FROM Education e WHERE e.user = :user", Education.class);
         query.setParameter("user", user);
 
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
+    }
+
+    @Override
+    public long getEducationCountForUser(User user) {
+        Query query = em.createQuery("SELECT COUNT(e) FROM Education e WHERE e.user = :user");
+        query.setParameter("user",user);
+
+        return (Long) query.getSingleResult();
     }
 
     @Override

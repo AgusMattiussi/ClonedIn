@@ -9,10 +9,12 @@ public interface CategoryService {
 
     Category create (String name);
 
+    //TODO: Agregar boolean de 'exactMatch' y metodo para buscar aproximado
     Optional<Category> findByName(String name);
 
     Optional<Category> findById(long id);
 
-    // TODO: Paginar
-    List<Category> getAllCategories();
+    List<Category> getAllCategories(int page, int pageSize);
+
+    long getCategoryCount();
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.CustomAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -37,7 +39,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private AuthUserDetailsService userDetailsService;
 
 
-    //TODO: ACTUALIZAR LOS URLS
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors()
@@ -51,16 +52,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
                 // Users and Enterprises
+                .antMatchers("/users/*/image").permitAll()
                 .antMatchers("/users", "/users/**").authenticated()
+                .antMatchers("/enterprises/*/image").permitAll()
                 .antMatchers("/enterprises", "/enterprises/**").authenticated()
                 // Categories
                 .antMatchers("/categories").permitAll()
+                // Skills
+                .antMatchers("/categories").permitAll()
                 // JobOffers
-                .antMatchers("/jobOffers/**").authenticated()
+                .antMatchers("/jobOffers", "/jobOffers/**").authenticated()
                 .and().exceptionHandling()
-//                    .accessDeniedHandler((request, response, ex) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
-//                    .authenticationEntryPoint((request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                //.authenticationProvider(authenticationProvider)
+                    .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
@@ -79,6 +82,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         cors.setAllowedMethods(Collections.singletonList("*"));
         cors.setAllowedHeaders(Collections.singletonList("*"));
         cors.setExposedHeaders(Arrays.asList("Authorization", "X-Refresh", "Location", "Link", "X-Total-Pages", "X-Access-Token"));
+        cors.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cors);
         return source;
@@ -93,6 +97,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Override

@@ -14,7 +14,7 @@ export function useLogin() {
         password,
       },
     })
-    return response.status !== HttpStatusCode.Unauthorized && response.status !== HttpStatusCode.InternalServerError
+    return response.status === HttpStatusCode.Ok
   }
 
   return { loading, loginHandler }

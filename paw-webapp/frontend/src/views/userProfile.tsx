@@ -59,7 +59,11 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setSkillsData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setSkillsData([])
+      } else {
+        setSkillsData(response.data)
+      }
       setSkillsLoading(false)
     }
 
@@ -71,7 +75,11 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setEducationsData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setEducationsData([])
+      } else {
+        setEducationsData(response.data)
+      }
       setEducationsLoading(false)
     }
 
@@ -83,20 +91,24 @@ function ProfileUser() {
       if (response.status === 403) {
         navigate("/403")
       }
-      setExperiencesData(response.data)
+      if (response.status === HttpStatusCode.NoContent) {
+        setExperiencesData([])
+      } else {
+        setExperiencesData(response.data)
+      }
       setExperiencesLoading(false)
     }
 
-    if (isUserLoading === true) {
+    if (isUserLoading) {
       fetchUser()
     }
-    if (experiencesLoading === true) {
+    if (experiencesLoading) {
       fetchExperiences()
     }
-    if (educationsLoading === true) {
+    if (educationsLoading) {
       fetchEducations()
     }
-    if (skillsLoading === true) {
+    if (skillsLoading) {
       fetchSkills()
     }
   }, [apiRequest, id])
@@ -109,7 +121,7 @@ function ProfileUser() {
           url: `/users/${id}/skills/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.Ok) {
           setSkillsLoading(true)
         }
         break
@@ -118,7 +130,7 @@ function ProfileUser() {
           url: `/users/${id}/educations/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.Ok) {
           setEducationsLoading(true)
         }
         break
@@ -127,7 +139,7 @@ function ProfileUser() {
           url: `/users/${id}/experiences/${object_id}`,
           method: "DELETE",
         })
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.Ok) {
           setExperiencesLoading(true)
         }
         break
@@ -135,9 +147,14 @@ function ProfileUser() {
   }
 
   const handleVisibility = async () => {
+    const queryParams: Record<string, string> = {}
+    if (user?.visibility === 1) queryParams.visibility = "invisible"
+    else queryParams.visibility = "visible"
+
     const response = await apiRequest({
       url: `/users/${id}/visibility`,
       method: "PUT",
+      queryParams: queryParams,
     })
     if (response.status === HttpStatusCode.Ok) {
       setUserLoading(true)
@@ -146,13 +163,13 @@ function ProfileUser() {
 
   const userSkillsList = skillsData.map((skill) => {
     return (
-      <>
+      <div key={skill.id}>
         {userInfo?.role === "ENTERPRISE" ? (
-          <Badge pill bg="success" text="light" className="mx-2 p-2" key={skill.id}>
+          <Badge pill bg="success" text="light" className="mx-2 p-2">
             {skill.description}
           </Badge>
         ) : (
-          <Badge pill bg="light" text="dark" className="mx-2" key={skill.id}>
+          <Badge pill bg="light" text="dark" className="mx-2">
             {skill.description}
             <Button
               type="button"
@@ -164,13 +181,13 @@ function ProfileUser() {
             </Button>
           </Badge>
         )}
-      </>
+      </div>
     )
   })
 
   const userEducationsList = educationsData.map((education) => {
     return (
-      <>
+      <div key={education.id}>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <h6>
             {education.institutionName} - {education.title}
@@ -191,13 +208,13 @@ function ProfileUser() {
         </p>
         <p>{education.description}</p>
         <hr />
-      </>
+      </div>
     )
   })
 
   const userExperienceList = experiencesData.map((experience) => {
     return (
-      <>
+      <div key={experience.id}>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <h6>
             {experience.enterpriseName} - {experience.position}
@@ -218,7 +235,7 @@ function ProfileUser() {
         </p>
         <p>{experience.description}</p>
         <hr />
-      </>
+      </div>
     )
   })
 
@@ -277,7 +294,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/experiences/${id}`)}
+                        onClick={() => navigate(`experiences`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
@@ -306,7 +323,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/educations/${id}`)}
+                        onClick={() => navigate(`educations`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
@@ -335,7 +352,7 @@ function ProfileUser() {
                       <Button
                         type="button"
                         variant="success"
-                        onClick={() => navigate(`/skills/${id}`)}
+                        onClick={() => navigate(`skills`)}
                         style={{ width: "200px" }}
                       >
                         <Icon.PlusSquare color="white" style={{ marginRight: "7px" }} />
@@ -345,12 +362,8 @@ function ProfileUser() {
                   </div>
                 </Card.Title>
                 <hr />
-                {/* TODO: View As Enterprise
-                <Badge pill bg="success" className="mx-2 p-2">
-                  skill1
-                </Badge> */}
                 {userSkillsList.length > 0 ? (
-                  <div>{userSkillsList}</div>
+                  <div className="d-flex">{userSkillsList}</div>
                 ) : (
                   <div style={{ fontWeight: "bold" }}>{t("Skills Not Specified")}</div>
                 )}

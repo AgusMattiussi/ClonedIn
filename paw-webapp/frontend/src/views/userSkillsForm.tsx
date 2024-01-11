@@ -36,7 +36,7 @@ function SkillsForm() {
       },
     })
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/profileUser/${id}`)
+      navigate(`/users/${id}`)
     } else {
       //TODO: manejar error
     }
@@ -92,7 +92,7 @@ function SkillsForm() {
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button onClick={() => navigate(`/profileUser/${id}`)} variant="outline-secondary">
+                        <Button onClick={() => navigate(`/users/${id}`)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

@@ -4,12 +4,12 @@ public class ErrorDTO {
 
     private String errorClass;
     private String message;
-    private String description;
+    private String detail;
 
-    public ErrorDTO(Class<?> errorClass, String message, String description) {
+    public ErrorDTO(Class<?> errorClass, String message, String detail) {
         this.errorClass = errorClass.getSimpleName();
         this.message = message;
-        this.description = description;
+        this.detail = detail;
     }
 
     public ErrorDTO() {
@@ -31,11 +31,11 @@ public class ErrorDTO {
         this.message = message;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
-import ar.edu.itba.paw.models.exceptions.UserIsNotProfileOwnerException;
+import ar.edu.itba.paw.models.exceptions.NotProfileOwnerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +31,7 @@ public class SecurityValidator {
 
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
-            throw new UserIsNotProfileOwnerException();
+            throw new NotProfileOwnerException(requesterID);
         return true;
     }
 
@@ -54,7 +54,7 @@ public class SecurityValidator {
     public boolean isUserVisible(long userID){
         User user = userService.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         if(user.getVisibility() != Visibility.VISIBLE.getValue())
-            throw new HiddenProfileException();
+            throw new HiddenProfileException(user.getName());
         return true;
     }
 
@@ -72,5 +72,13 @@ public class SecurityValidator {
             return false;
         User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return user.hasExperience(experienceID);
+    }
+
+    public boolean isEducationOwner(long educationID){
+        String email = getAuthEmail();
+        if(email == null)
+            return false;
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        return user.hasEducation(educationID);
     }
 }

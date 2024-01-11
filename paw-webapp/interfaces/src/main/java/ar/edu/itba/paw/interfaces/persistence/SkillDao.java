@@ -14,6 +14,8 @@ public interface SkillDao {
 
     Skill findByDescriptionOrCreate(String description);
 
-    List<Skill> getAllSkills();
+    List<Skill> getAllSkills(int page, int pageSize);
+
+    long getSkillCount();
 
 }

@@ -20,9 +20,6 @@ function Login() {
   const { loading, loginHandler } = useLogin()
   const { userInfo } = useSharedAuth()
 
-  //TODO: Remember me
-  //const [rememberMe, setRememberMe] = useState(false)
-
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -36,13 +33,10 @@ function Login() {
     e.preventDefault()
     const logged = await loginHandler(email, password)
     if (logged) {
-      console.log("Logged in")
       if (userInfo?.role === UserRole.USER) {
-        console.log(userInfo?.role)
-        navigate("/jobs")
+        navigate("/jobOffers")
       } else {
-        console.log(userInfo?.role)
-        navigate("/profiles")
+        navigate("/users")
       }
     } else {
       console.log("Not logged in")
@@ -87,9 +81,6 @@ function Login() {
                           >
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
-                        </Form.Group>
-                        <Form.Group className="mb-3 rememberme" controlId="formBasicCheckbox">
-                          <Form.Check type="checkbox" label={t("Remember me").toString()} />
                         </Form.Group>
                       </div>
                       <Button variant="success" type="submit">

@@ -23,17 +23,39 @@ export interface ApiRequestInput {
 export const useRequestApi = () => {
   const [loading, setLoading] = useState(false)
 
-  const { getAccessToken, setAccessToken } = useSharedAuth()
+  const { getAccessToken, setAccessToken, isTokenExpired, getRefreshToken } = useSharedAuth()
 
   const navigate = useNavigate()
 
   const api = axios.create({
     baseURL: BASE_URL,
     headers: { "Content-Type": "application/json" },
+    withCredentials: true,
   })
 
   async function apiRequest(input: ApiRequestInput): Promise<AxiosResponse> {
     const accessToken = getAccessToken()
+    // const refreshToken = getRefreshToken()
+
+    // const isAccessTokenExpired = isTokenExpired(accessToken?.replace(/"/g, "") || "")
+
+    // if (isAccessTokenExpired && refreshToken) {
+    //   try {
+    //     const refreshResponse = await api.post("auth/refresh-tokens", {
+    //       headers: { Cookie: `ClonedInRefreshToken=${refreshToken}` },
+    //     })
+
+    //     if (refreshResponse.headers[AUTHORIZATION_HEADER]) {
+    //       setAccessToken(refreshResponse.headers[AUTHORIZATION_HEADER])
+    //     }
+    //   } catch (refreshError) {
+    //     // Handle error when refresh token is invalid or expired
+    //     navigate("/login", {
+    //       state: { from: window.location.pathname.substring(13) },
+    //     })
+    //     throw new Error("Unable to refresh token. Please login again")
+    //   }
+    // }
 
     const { url, method, requiresAuth, credentials } = input
     let { headers, body } = input

@@ -77,7 +77,7 @@ public class SkillHibernateDaoTest {
 
     @Test
     public void testGetAllSkills(){
-        final List<Skill> allSkills = dao.getAllSkills();
+        final List<Skill> allSkills = dao.getAllSkills(0, 3);
         assertEquals(SKILLS_COUNT, allSkills.size());
     }
 

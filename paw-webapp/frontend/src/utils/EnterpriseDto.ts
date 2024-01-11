@@ -1,10 +1,17 @@
 export default interface EnterpriseDto {
   id: number
   name: string
-  jobcategory: string
-  employees: string
-  year: string
+  email: string
+  location: string
+  workers: string
+  year: number
   website: string
-  about: string
-  //TODO: Add URIs for other resources (experiences, education, image, userSkills, contacts)
+  description: string
+  links: EnterpriseDtoLinks
+}
+
+interface EnterpriseDtoLinks {
+  self: string
+  image: string
+  category: string
 }

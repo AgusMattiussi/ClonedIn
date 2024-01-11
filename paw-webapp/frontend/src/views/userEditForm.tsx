@@ -61,9 +61,8 @@ function EditUserForm() {
         level,
       },
     })
-    console.log(response)
-    if (response.status === HttpStatusCode.NoContent) {
-      navigate(`/profileUser/${id}`)
+    if (response.status === HttpStatusCode.Ok) {
+      navigate(`/users/${id}`)
     } else {
       //TODO: manejar error
     }
@@ -190,7 +189,7 @@ function EditUserForm() {
                     </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
-                        <Button onClick={() => navigate(-1)} variant="outline-secondary">
+                        <Button onClick={() => navigate(`/users/${id}`)} variant="outline-secondary">
                           <strong>{t("Return")}</strong>
                         </Button>
                       </div>

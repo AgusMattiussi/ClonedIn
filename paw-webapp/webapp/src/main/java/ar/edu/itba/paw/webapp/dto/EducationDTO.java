@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Education;
-import ar.edu.itba.paw.models.User;
-
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class EducationDTO {
-    private static final String USER_URL = "webapp_war/users";
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.EDUCATIONS_SUBDIRECTORY;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.USERS_URL;
 
-    private URI user;
+public class EducationDTO {
+
     private int monthFrom;
     private int yearFrom;
     private int monthTo;
@@ -19,6 +18,7 @@ public class EducationDTO {
     private String institutionName;
     private String description;
     private Long id;
+    private EducationDTOLinks links;
 
     public static EducationDTO fromEducation(final UriInfo uriInfo, final Education education) {
         final EducationDTO dto = new EducationDTO();
@@ -31,21 +31,8 @@ public class EducationDTO {
         dto.description = education.getDescription();
         dto.id = education.getId();
 
-        //FIXME: Corregir para que tenga sentido
-        final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
-                .replacePath(USER_URL)
-                .path(education.getUser().getId().toString());
-        dto.user = userUriBuilder.build();
-
+        dto.links = new EducationDTOLinks(uriInfo, education);
         return dto;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
     }
 
     public int getMonthFrom() {
@@ -110,5 +97,49 @@ public class EducationDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public EducationDTOLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(EducationDTOLinks links) {
+        this.links = links;
+    }
+
+    public static class EducationDTOLinks {
+        private URI user;
+        private URI self;
+
+        public EducationDTOLinks(){}
+
+        public EducationDTOLinks(final UriInfo uriInfo, final Education education) {
+
+            final UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
+                .replacePath(USERS_URL)
+                .path(education.getUser().getId().toString());
+            this.user = userUriBuilder.build();
+
+            final UriBuilder educationUriBuilder = userUriBuilder
+                    .path(EDUCATIONS_SUBDIRECTORY)
+                    .path(String.valueOf(education.getId()));
+            this.self = educationUriBuilder.build();
+        }
+
+        public URI getSelf() {
+            return self;
+        }
+
+        public void setSelf(URI self) {
+            this.self = self;
+        }
+
+        public URI getUser() {
+            return user;
+        }
+
+        public void setUser(URI user) {
+            this.user = user;
+        }
     }
 }

@@ -2,55 +2,61 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import CardHeader from "react-bootstrap/esm/CardHeader"
+import CategoryDto from "../../utils/CategoryDto"
+import EnterpriseDto from "../../utils/EnterpriseDto"
+import SkillDto from "../../utils/SkillDto"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import CategoryDto from "../../utils/CategoryDto"
-import EnterpriseDto from "../../utils/EnterpriseDto"
+import { useNavigate } from "react-router-dom"
+import { HttpStatusCode } from "axios"
 
 function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any }) {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
 
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
-  const [enterpriseLoading, setEnterpriseLoading] = useState(true)
-
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
-  const [categoryLoading, setCategoryLoading] = useState(true)
+  const [skillsData, setSkillsData] = useState<SkillDto[]>([])
+  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    const fetchEnterprise = async () => {
-      const response = await apiRequest({
-        url: job.enterprise,
-        method: "GET",
-      })
-      setJobEnterprise(response.data)
-      setEnterpriseLoading(false)
-    }
+    const fetchData = async () => {
+      try {
+        if (loadingData) {
+          const [enterpriseResponse, categoryResponse, skillsResponse] = await Promise.all([
+            apiRequest({ url: job.links.enterprise, method: "GET" }),
+            apiRequest({ url: job.links.category, method: "GET" }),
+            apiRequest({ url: job.links.skills, method: "GET" }),
+          ])
 
-    const fetchCategory = async () => {
-      const response = await apiRequest({
-        url: job.category,
-        method: "GET",
-      })
-      setJobCategory(response.data)
-      setCategoryLoading(false)
+          setJobEnterprise(enterpriseResponse.data)
+          setJobCategory(categoryResponse.data)
+          setSkillsData(skillsResponse.status === HttpStatusCode.NoContent ? [] : skillsResponse.data)
+          setLoadingData(false)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
-    if (enterpriseLoading === true) {
-      fetchEnterprise()
-    }
-    if (categoryLoading === true) {
-      fetchCategory()
-    }
-
+    if (loadingData) fetchData()
   }, [apiRequest])
+
+  const jobOfferSkillsList = skillsData.map((skill, index) => {
+    return (
+      <Badge key={index} pill bg="success" className="mx-1">
+        {skill.description}
+      </Badge>
+    )
+  })
 
   return (
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href={`/profileEnterprise/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
+            <a href={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
               {jobEnterprise?.name}{" "}
             </a>
             | {job.position}
@@ -80,9 +86,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            <Badge pill bg="success" className="mx-2">
-              {job.skills.length === 0 ? <div>{t("Skills Not Specified")}</div> : <div>{job.skills}</div>}
-            </Badge>
+            {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
           </div>
         </div>
         {contacted ? (
@@ -100,7 +104,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
           <h5>{t("Description")}</h5>
         </div>
         <div>
-          <Button variant="outline-dark" href={`/jobOffer/${job.id}`}>
+          <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
             {t("View More")}
           </Button>
         </div>

@@ -60,12 +60,12 @@ function EditEnterpriseForm() {
         workers,
         year,
         link,
-        description,        
+        description,
       },
     })
     console.log(response)
     if (response.status === HttpStatusCode.NoContent) {
-      navigate(`/profileEnterprise/${id}`)
+      navigate(`/enterprises/${id}`)
     } else {
       //TODO: manejar error
     }
@@ -111,20 +111,23 @@ function EditEnterpriseForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
-                                className="input" 
-                                placeholder={t("Location").toString()} 
+                                className="input"
+                                placeholder={t("Location").toString()}
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
                               />
                             </Form.Group>
                             <div className="d-flex mb-4">
-                              <label className="area" 
+                              <label
+                                className="area"
                                 style={{
                                   width: "100px",
                                 }}
-                                >{t("Quantity of employees")}</label>
-                              <Form.Select 
-                                className="selectFrom" 
+                              >
+                                {t("Quantity of employees")}
+                              </label>
+                              <Form.Select
+                                className="selectFrom"
                                 aria-label="Default select example"
                                 value={workers}
                                 onChange={(e) => setWorkers(e.target.value)}
@@ -142,11 +145,14 @@ function EditEnterpriseForm() {
                               </Form.Select>
                             </div>
                             <div className="d-flex mb-4">
-                              <label className="area"
+                              <label
+                                className="area"
                                 style={{
                                   width: "100px",
                                 }}
-                              >{t("Job Category")}</label>
+                              >
+                                {t("Job Category")}
+                              </label>
                               <Form.Select
                                 className="selectFrom"
                                 aria-label="Default select example"
@@ -165,27 +171,27 @@ function EditEnterpriseForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="formBasicYear">
                               <Form.Control
-                               className="input"
-                               placeholder={t("Funding Year").toString()}
-                               value={year}
-                               onChange={(e) => setYear(e.target.value)}
+                                className="input"
+                                placeholder={t("Funding Year").toString()}
+                                value={year}
+                                onChange={(e) => setYear(e.target.value)}
                               />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control
-                               className="input" 
-                               placeholder={t("Website").toString()}
-                               value={link}
-                               onChange={(e) => setLink(e.target.value)}
+                                className="input"
+                                placeholder={t("Website").toString()}
+                                value={link}
+                                onChange={(e) => setLink(e.target.value)}
                               />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
-                               placeholder={t("About Us").toString()} 
-                               as="textarea" 
-                               rows={3} 
-                               value={description}
-                               onChange={(e) => setDescription(e.target.value)}
+                                placeholder={t("About Us").toString()}
+                                as="textarea"
+                                rows={3}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                               />
                             </Form.Group>
                           </div>

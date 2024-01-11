@@ -25,6 +25,7 @@ public class ImageHibernateDao implements ImageDao {
     public Image uploadImage(byte[] bytes) {
         Image image = new Image(bytes);
         em.persist(image);
+        em.flush();
         return image;
     }
 }

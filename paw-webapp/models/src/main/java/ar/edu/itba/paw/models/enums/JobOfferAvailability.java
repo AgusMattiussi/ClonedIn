@@ -14,4 +14,13 @@ public enum JobOfferAvailability {
     public String getStatus() {
         return status;
     }
+
+    public static JobOfferAvailability fromString(String status) {
+        for (JobOfferAvailability jobOfferAvailability : JobOfferAvailability.values()) {
+            if (jobOfferAvailability.status.equalsIgnoreCase(status)) {
+                return jobOfferAvailability;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Invalid JobOfferAvailability: '%s'", status));
+    }
 }

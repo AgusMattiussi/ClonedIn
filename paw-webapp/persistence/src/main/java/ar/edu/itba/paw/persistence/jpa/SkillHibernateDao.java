@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,17 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
-    public List<Skill> getAllSkills() {
-        return em.createQuery("SELECT s FROM Skill s", Skill.class).getResultList();
+    public List<Skill> getAllSkills(int page, int pageSize) {
+        TypedQuery<Skill> query = em.createQuery("SELECT s FROM Skill s ORDER BY s.description ASC", Skill.class);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public long getSkillCount() {
+        Query query = em.createQuery("SELECT COUNT(s) FROM Skill s");
+
+        return (Long) query.getSingleResult();
     }
 }
