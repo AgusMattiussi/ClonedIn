@@ -9,8 +9,21 @@ import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
 import { HttpStatusCode } from "axios"
+import { JobOfferAvailability } from "../../utils/constants"
 
-function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; contacted: boolean; job: any }) {
+function JobOfferEnterpriseCard({
+  status,
+  contacted,
+  job,
+  handleClose,
+  setJobOfferId,
+}: {
+  status: any
+  contacted: boolean
+  job: any
+  handleClose: any
+  setJobOfferId: any
+}) {
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
 
@@ -89,13 +102,18 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {status === "Cerrada" ? (
+        {status === JobOfferAvailability.CLOSED ? (
           <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
             {t("Closed")}
           </Badge>
         ) : (
           <div>
-            <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#cancelModal">
+            <Button
+              variant="outline-dark"
+              data-bs-toggle="modal"
+              data-bs-target="#cancelModal"
+              onClick={() => setJobOfferId(job.id)}
+            >
               {t("Close Job Offer")}
             </Button>
             <CancelModal
@@ -103,6 +121,7 @@ function JobOfferEnterpriseCard({ status, contacted, job }: { status: any; conta
               msg={t("Close JobOffer Modal Msg")}
               cancel={t("Cancel")}
               confirm={t("Confirm")}
+              onConfirmClick={handleClose}
             />
           </div>
         )}

@@ -9,7 +9,7 @@ import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
 import CancelModal from "../components/modals/cancelModal"
 import Loader from "../components/loader"
-import { JobOfferStatus, SortBy, JobOfferAvailability } from "../utils/constants"
+import { JobOfferStatus, SortBy, JobOfferAvailability, FilledBy } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
@@ -29,6 +29,7 @@ function EnterpriseContacts() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
+  const filledBy = FilledBy.ENTERPRISE.toString()
 
   const [jobOfferToCancelId, setJobOfferToCancelId] = useState<number | null>(null)
 
@@ -106,6 +107,7 @@ function EnterpriseContacts() {
   const fetchContacts = useCallback(
     async (status: string, sortBy: string) => {
       setLoading(true)
+      queryParams.filledBy = filledBy
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
 

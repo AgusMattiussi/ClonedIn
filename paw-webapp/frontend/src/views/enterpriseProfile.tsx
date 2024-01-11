@@ -9,6 +9,7 @@ import Navigation from "../components/navbar"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
 import EnterpriseDto from "../utils/EnterpriseDto"
+import { JobOfferAvailability } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
@@ -17,6 +18,12 @@ import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
 function ProfileEnterprise() {
+  const navigate = useNavigate()
+
+  const { t } = useTranslation()
+  const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+
   const { loading, apiRequest } = useRequestApi()
 
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
@@ -25,10 +32,7 @@ function ProfileEnterprise() {
   const [jobs, setJobs] = useState<any[]>([])
   const [jobsLoading, setJobsLoading] = useState(true)
 
-  const { t } = useTranslation()
-  const { id } = useParams()
-  const { userInfo } = useSharedAuth()
-  const navigate = useNavigate()
+  const [jobOfferToCloseId, setJobOfferToCloseId] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchEnterprise = async () => {
@@ -37,7 +41,7 @@ function ProfileEnterprise() {
         method: "GET",
       })
 
-      if (response.status === 500 || response.status === 403) {
+      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
 
@@ -65,8 +69,32 @@ function ProfileEnterprise() {
     }
   }, [apiRequest, id])
 
+  const handleClose = async () => {
+    const queryParams: Record<string, string> = {}
+    queryParams.availability = JobOfferAvailability.CLOSED
+
+    const response = await apiRequest({
+      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCloseId}`,
+      method: "PUT",
+      queryParams: queryParams,
+    })
+
+    if (response.status === HttpStatusCode.Ok) {
+      setJobsLoading(true)
+      const modalElement = document.getElementById("cancelModal")
+      modalElement?.classList.remove("show")
+      document.body.classList.remove("modal-open")
+      const modalBackdrop = document.querySelector(".modal-backdrop")
+      if (modalBackdrop) {
+        modalBackdrop.remove()
+      }
+    }
+  }
+
   const enterprisesJobs = jobs.map((job) => {
-    return <JobOfferEnterpriseCard job={job} key={job.id} />
+    return (
+      <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
+    )
   })
 
   document.title = enterprise?.name + " | ClonedIn"
