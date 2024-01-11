@@ -21,7 +21,7 @@ function RegisterUser() {
   const [category, setCategory] = useState("")
   const [position, setPosition] = useState("")
   const [description, setDescription] = useState("")
-  const [studiesLevel, setStudiesLevel] = useState("")
+  const [educationLevel, setEducationLevel] = useState("")
   const [error, setError] = useState(null)
 
   const { loading, apiRequest } = useRequestApi()
@@ -44,7 +44,7 @@ function RegisterUser() {
   }, [apiRequest])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, position, description, category, studiesLevel)
+    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, position, description, category, e.educationLevel)
     await loginHandler(e.email, e.pass)
     navigate("/jobs")
   }
@@ -66,13 +66,14 @@ function RegisterUser() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Required"),
+    email: yup.string().email("Invalid Email").required("Required"),
     name: yup.string().required("Required"),
     pass: yup.string().required("Required").min(8, "Password is too short - should be 8 chars minimum."),
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], "Passwords must match")
       .required("Required"),
+    educationLevel: yup.string().required("Education level is required"),
   })
 
   return (
@@ -96,6 +97,7 @@ function RegisterUser() {
                         name: "",
                         pass: "",
                         repeatPass: "",
+                        educationLevel: "",
                       }}
                       onSubmit={(values) => {
                         handleRegister(values)
@@ -190,13 +192,16 @@ function RegisterUser() {
                                 onChange={(e) => setPosition(e.target.value)}
                               />
                             </Form.Group>
+                            <Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
                               <label className="area pt-1 mx-2">{t("Education Level")}</label>
                               <Form.Select
+                                name="educationLevel"
                                 className="selectFrom"
-                                value={studiesLevel}
-                                onChange={(e) => setStudiesLevel(e.target.value)}
+                                value={educationLevel}
+                                onChange={(e) => setEducationLevel(e.target.value)}
                                 style={{ width: "60%" }}
+                                isInvalid={!!errors.educationLevel}
                               >
                                 <option value="No-especificado"> {t("No-especificado")} </option>
                                 <option value="Primario"> {t("Primario")} </option>
@@ -205,7 +210,9 @@ function RegisterUser() {
                                 <option value="Graduado"> {t("Graduado")} </option>
                                 <option value="Postgrado"> {t("Postgrado")} </option>
                               </Form.Select>
+                              <Form.Control.Feedback type="invalid">{errors.educationLevel}</Form.Control.Feedback>
                             </div>
+                            </Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
                               <label className="area pt-1 mx-2">{t("Job Category")}</label>
                               <Form.Select
