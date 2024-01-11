@@ -20,9 +20,9 @@ export enum JobOfferAvailability {
 }
 
 export enum FilledBy {
-  ENTERPRISE = 0,
-  USER = 1,
-  ANY = 2,
+  ENTERPRISE = "enterprise",
+  USER = "user",
+  ANY = "any",
 }
 
 export enum SortBy {

@@ -116,7 +116,7 @@ function EnterpriseContacts() {
           queryParams: queryParams,
         })
 
-        if (response.status === 500) {
+        if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
         }
 
@@ -172,6 +172,7 @@ function EnterpriseContacts() {
   }
 
   const handleCancel = async () => {
+    //TODO: revisar/actualizar con el nuevo endpoint
     const queryParams: Record<string, string> = {}
     queryParams.availability = JobOfferAvailability.CANCELLED
 

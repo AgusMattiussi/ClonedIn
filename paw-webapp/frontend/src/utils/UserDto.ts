@@ -1,4 +1,6 @@
 import CategoryDto from "./CategoryDto"
+import ExperienceDto from "./ExperienceDto"
+import SkillDto from "./SkillDto"
 
 export default interface UserDto {
   id: number
@@ -10,6 +12,8 @@ export default interface UserDto {
   educationLevel: string
   visibility: number
   categoryInfo: CategoryDto
+  experienceInfo: ExperienceDto[]
+  skillsInfo: SkillDto[]
   links: UserDtoLinks
 }
 

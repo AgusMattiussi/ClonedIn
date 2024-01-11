@@ -115,6 +115,7 @@
   "aceptada": "Accepted",
   "rechazada": "Rejected",
   "cancelada": "Cancelled",
+  "pendiente": "Pending",
   "cerrada": "Closed",
 
   "Required Skills": "Required Skills",
