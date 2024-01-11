@@ -52,3 +52,5 @@ export const monthNames = [
   "Noviembre",
   "Diciembre",
 ]
+
+export const educationLevels = ["Primario", "Secundario", "Terciario", "Graduado", "Postgrado"]

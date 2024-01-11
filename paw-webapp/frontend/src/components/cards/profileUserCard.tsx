@@ -10,6 +10,7 @@ import { useEffect, useState, useMemo } from "react"
 import { useRequestApi } from "../../api/apiRequest"
 import { useSharedAuth } from "../../api/auth"
 import CategoryDto from "../../utils/CategoryDto"
+import { HttpStatusCode } from "axios"
 
 function ProfileUserCard({
   editable,
@@ -45,9 +46,9 @@ function ProfileUserCard({
             apiRequest({ url: memorizedUser.links.image, method: "GET" }),
           ])
 
-          setSkillsData(skillsResponse.data)
+          setSkillsData(skillsResponse.status === HttpStatusCode.NoContent ? [] : skillsResponse.data)
           setUserCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === 200 ? memorizedUser.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedUser.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {

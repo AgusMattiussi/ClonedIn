@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useRegisterEnterprise, useLogin } from "../api/authService"
 import { useRequestApi } from "../api/apiRequest"
-import { useSharedAuth } from "../api/auth"
 import * as formik from "formik"
 import * as yup from "yup"
 
@@ -24,12 +23,10 @@ function RegisterEnterprise() {
   const [link, setLink] = useState("")
   const [aboutUs, setAboutUs] = useState("")
   const [category, setCategory] = useState("")
-  const [error, setError] = useState(null)
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterEnterprise()
   const { loginHandler } = useLogin()
-  const { userInfo } = useSharedAuth()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -38,13 +35,12 @@ function RegisterEnterprise() {
         method: "GET",
       })
       setCategoryList(response.data)
-      setError(null)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest])
+  }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
     await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, year, link, aboutUs, category)

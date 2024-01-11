@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import * as React from "react"
 import * as Icon from "react-bootstrap-icons"
+import { educationLevels } from "../utils/constants"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
@@ -22,7 +23,6 @@ function RegisterUser() {
   const [position, setPosition] = useState("")
   const [description, setDescription] = useState("")
   const [educationLevel, setEducationLevel] = useState("")
-  const [error, setError] = useState(null)
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterUser()
@@ -35,16 +35,25 @@ function RegisterUser() {
         method: "GET",
       })
       setCategoryList(response.data)
-      setError(null)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest])
+  }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, position, description, category, e.educationLevel)
+    await registerHandler(
+      e.email,
+      e.pass,
+      e.repeatPass,
+      e.name,
+      city,
+      position,
+      description,
+      category,
+      e.educationLevel,
+    )
     await loginHandler(e.email, e.pass)
     navigate("/jobOffers")
   }
@@ -58,14 +67,11 @@ function RegisterUser() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    let educationLevels = ["Primario", "Secundario", "Terciario", "Graduado", "Postgrado"]
     if (educationLevels.includes(e.target.value)) {
-      console.log("ok")
+      setEducationLevel(e.target.value)
+    } else {
+      console.log("Invalid Education Level")
     }
-    else {
-      console.log("not ok")
-    }
-
   }
 
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
@@ -83,7 +89,7 @@ function RegisterUser() {
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], "Passwords must match")
-      .required("Required")
+      .required("Required"),
   })
 
   return (
@@ -203,25 +209,25 @@ function RegisterUser() {
                               />
                             </Form.Group>
                             <Form.Group>
-                            <div className="d-flex mb-4 justify-content-between">
-                              <label className="area pt-1 mx-2">{t("Education Level")}</label>
-                              <Form.Select
-                                name="educationLevel"
-                                className="selectFrom"
-                                value={educationLevel}
-                                onChange={(e) => handleEducationLevelSelect(e)}
-                                style={{ width: "60%" }}
-                                isInvalid={!!errors.educationLevel}
-                              >
-                                <option value="No-especificado"> {t("No-especificado")} </option>
-                                <option value="Primario"> {t("Primario")} </option>
-                                <option value="Secundario"> {t("Secundario")} </option>
-                                <option value="Terciario"> {t("Terciario")} </option>
-                                <option value="Graduado"> {t("Graduado")} </option>
-                                <option value="Postgrado"> {t("Postgrado")} </option>
-                              </Form.Select>
-                              <Form.Control.Feedback type="invalid">{errors.educationLevel}</Form.Control.Feedback>
-                            </div>
+                              <div className="d-flex mb-4 justify-content-between">
+                                <label className="area pt-1 mx-2">{t("Education Level")}</label>
+                                <Form.Select
+                                  name="educationLevel"
+                                  className="selectFrom"
+                                  value={educationLevel}
+                                  onChange={(e) => handleEducationLevelSelect(e)}
+                                  style={{ width: "60%" }}
+                                  isInvalid={!!errors.educationLevel}
+                                >
+                                  <option value="No-especificado"> {t("No-especificado")} </option>
+                                  <option value="Primario"> {t("Primario")} </option>
+                                  <option value="Secundario"> {t("Secundario")} </option>
+                                  <option value="Terciario"> {t("Terciario")} </option>
+                                  <option value="Graduado"> {t("Graduado")} </option>
+                                  <option value="Postgrado"> {t("Postgrado")} </option>
+                                </Form.Select>
+                                <Form.Control.Feedback type="invalid">{errors.educationLevel}</Form.Control.Feedback>
+                              </div>
                             </Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
                               <label className="area pt-1 mx-2">{t("Job Category")}</label>
