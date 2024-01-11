@@ -15,4 +15,13 @@ public enum ApplianceStatus {
     public String getStatus() {
         return status;
     }
+
+    public static ApplianceStatus fromString(String s) {
+        for (ApplianceStatus status : ApplianceStatus.values()) {
+            if (status.getStatus().equals(s)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

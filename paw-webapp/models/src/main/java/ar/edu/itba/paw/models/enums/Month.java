@@ -49,6 +49,6 @@ public enum Month {
                 return month;
             }
         }
-        return null;
+        throw new IllegalArgumentException();
     }
 }
