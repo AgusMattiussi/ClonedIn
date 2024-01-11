@@ -272,7 +272,44 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }
 
-    @PUT
+
+   @PUT
+   @Path("/{id}/contacts/")
+   @PreAuthorize(PROFILE_OWNER)
+   public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
+                                       @QueryParam("userId") @NotNull @Min(1) final long userId,
+                                       @QueryParam("joid") @NotNull @Min(1) final long jobOfferId,
+                                       @QueryParam("status") @NotNull final JobOfferStatus status) {
+
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+
+       if (status == JobOfferStatus.PENDING)
+           throw new IllegalArgumentException("Cannot update contact status to PENDING");
+
+       boolean successful = false;
+       switch (status) {
+           case ACCEPTED:
+               successful = contactService.acceptJobOffer(user, jobOffer);
+               break;
+           case DECLINED:
+               successful = contactService.rejectJobOffer(user, jobOffer);
+               break;
+           case CANCELLED:
+               successful = contactService.cancelJobOffer(user, jobOffer);
+               break;
+           case CLOSED:
+               successful = contactService.closeJobOffer(user, jobOffer);
+               break;
+       }
+       
+       if(!successful)
+           throw new IllegalStateException("Could not update contact status to " + status.getStatus());
+
+       return Response.noContent().build();
+   }
+
+
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @PreAuthorize(PROFILE_OWNER)
@@ -285,6 +322,7 @@ public class EnterpriseController {
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok().location(uri).build();
     }
+
 
     @GET
     @Path("/{id}/image")
