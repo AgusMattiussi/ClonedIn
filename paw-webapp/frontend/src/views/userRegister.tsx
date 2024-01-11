@@ -57,6 +57,17 @@ function RegisterUser() {
     setRepeatPasswordVisibility(!repeatPasswordVisibility)
   }
 
+  const handleEducationLevelSelect = (e: any) => {
+    let educationLevels = ["Primario", "Secundario", "Terciario", "Graduado", "Postgrado"]
+    if (educationLevels.includes(e.target.value)) {
+      console.log("ok")
+    }
+    else {
+      console.log("not ok")
+    }
+
+  }
+
   /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -72,8 +83,7 @@ function RegisterUser() {
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], "Passwords must match")
-      .required("Required"),
-    educationLevel: yup.string().required("Education level is required"),
+      .required("Required")
   })
 
   return (
@@ -199,7 +209,7 @@ function RegisterUser() {
                                 name="educationLevel"
                                 className="selectFrom"
                                 value={educationLevel}
-                                onChange={(e) => setEducationLevel(e.target.value)}
+                                onChange={(e) => handleEducationLevelSelect(e)}
                                 style={{ width: "60%" }}
                                 isInvalid={!!errors.educationLevel}
                               >
