@@ -2,13 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
-import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,7 +123,7 @@ public class JobOfferHibernateDaoTest {
     @Test
     public void testGetJobOffersListByFilters(){
         List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
-                EMPTY_FIELD, MIN_SALARY, MAX_SALARY, 0 ,8);
+                EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true, 0 ,8);
 
         assertFalse(jobOfferList.isEmpty());
         assertEquals(1, jobOfferList.size());
@@ -151,8 +147,8 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetActiveJobOffersCount(){
-        assertEquals(1, dao.getActiveJobOffersCount(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
-                EMPTY_FIELD, MIN_SALARY, MAX_SALARY));
+        assertEquals(1, dao.getJobOfferCount(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
+                EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true));
     }
 
     @Test

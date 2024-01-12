@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
 import ar.edu.itba.paw.interfaces.services.JobOfferService;
-import ar.edu.itba.paw.interfaces.services.JobOfferSkillService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
@@ -84,9 +83,11 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription, String enterpriseName, String searchTerm,
-                                                    String position, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
-        return jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName, searchTerm, position, minSalary, maxSalary, page, pageSize);
+    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
+                                                    String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
+                                                    BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
+        return jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName, searchTerm,
+                position, minSalary, maxSalary, onlyActive, page, pageSize);
     }
 
     @Override
@@ -95,14 +96,15 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public long getActiveJobOffersCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName, String searchTerm,
-                                        String position, BigDecimal minSalary, BigDecimal maxSalary) {
-        return jobOfferDao.getActiveJobOffersCount(category, modality, skillDescription, enterpriseName, searchTerm, position, minSalary, maxSalary);
+    public long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
+                                 String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive) {
+        return jobOfferDao.getJobOfferCount(category, modality, skillDescription, enterpriseName, searchTerm,
+                position, minSalary, maxSalary, onlyActive);
     }
 
     @Override
-    public long getActiveJobOffersCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
-        return jobOfferDao.getActiveJobOffersCount(category, modality, term, minSalary, maxSalary);
+    public long getJobOfferCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
+        return jobOfferDao.getJobOfferCount(category, modality, term, minSalary, maxSalary);
     }
 
     @Override

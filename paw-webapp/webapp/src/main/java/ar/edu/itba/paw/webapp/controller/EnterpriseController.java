@@ -139,11 +139,11 @@ public class EnterpriseController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
         List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
-                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, page - 1, CONTACTS_PER_PAGE)
+                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, false, page - 1, CONTACTS_PER_PAGE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, skillDescription, enterprise.getName(),
-                        searchTerm, position, minSalary, maxSalary);
+        long jobOffersCount = jobOfferService.getJobOfferCount(category, modality, skillDescription, enterprise.getName(),
+                        searchTerm, position, minSalary, maxSalary, false);
 
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
@@ -302,7 +302,7 @@ public class EnterpriseController {
                successful = contactService.closeJobOffer(user, jobOffer);
                break;
        }
-       
+
        if(!successful)
            throw new IllegalStateException("Could not update contact status to " + status.getStatus());
 
