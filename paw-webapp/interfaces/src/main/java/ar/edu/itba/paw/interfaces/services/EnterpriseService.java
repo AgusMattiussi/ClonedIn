@@ -48,5 +48,6 @@ public interface EnterpriseService {
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 
-    //List<Enterprise> getEnterpriseListByFilters(Category category, String location, String workers, String term, int page, int pageSize);
+    List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
+                                                String term, int page, int pageSize);
 }

@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -55,7 +56,6 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    // TODO: Esta hasheada?
     public void changePassword(String email, String password) {
         Query query = em.createQuery("UPDATE Enterprise SET password = :password WHERE email = :email");
         query.setParameter("password", password);
@@ -128,11 +128,6 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
 
     @Override
     public void updateEnterpriseProfileImage(Enterprise enterprise, Image image) {
-        /*Query query = em.createQuery("UPDATE Enterprise SET image = :image WHERE id = :enterpriseID");
-        query.setParameter("image", image);
-        query.setParameter("enterpriseID", enterpriseID);
-        query.executeUpdate();*/
-
         Image oldImage = enterprise.getImage();
 
         enterprise.setImage(image);
@@ -142,5 +137,58 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
             oldImage = em.merge(oldImage);
             em.remove(oldImage);
         }
+    }
+
+    @Override
+    public List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers,
+                                                       String enterpriseName, String term, int page, int pageSize) {
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
+
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT e FROM Enterprise e");
+
+        filterQueryAppendConditions(queryStringBuilder, category, location, workers, enterpriseName, term);
+
+        TypedQuery<Enterprise> query = em.createQuery(queryStringBuilder.toString(), Enterprise.class);
+        filterQuerySetParameters(query, category, location, workers, enterpriseName, term);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String location,
+                                             EmployeeRanges workers, String enterpriseName, String term) {
+
+        if(category != null)
+            queryStringBuilder.append(" AND e.category = :category");
+        if(workers != null)
+            queryStringBuilder.append(" AND e.workers = :workers");
+        if(location != null && !location.isEmpty())
+            queryStringBuilder.append(" AND LOWER(e.location) LIKE LOWER(CONCAT('%', :location, '%'))");
+        if(enterpriseName != null && !enterpriseName.isEmpty())
+            queryStringBuilder.append(" AND LOWER(e.name) LIKE LOWER(CONCAT('%', :enterpriseName, '%'))");
+        if(term != null && !term.isEmpty()) {
+            queryStringBuilder.append(" AND (EXISTS")
+                    .append(" LOWER(e.location) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR LOWER(e.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(" OR LOWER(e.description) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
+                    .append(")");
+        }
+    }
+
+    private void filterQuerySetParameters(TypedQuery<Enterprise> query, Category category, String location,
+                                          EmployeeRanges workers, String enterpriseName, String term) {
+        if(category != null)
+            query.setParameter("category", category);
+        if(location != null && !location.isEmpty())
+            query.setParameter("location", location);
+        if(workers != null)
+            query.setParameter("workers", workers.getStringValue());
+        if(enterpriseName != null && !enterpriseName.isEmpty())
+            query.setParameter("enterpriseName", enterpriseName);
+        if(term != null && !term.isEmpty())
+            query.setParameter("skillDescription", term);
     }
 }

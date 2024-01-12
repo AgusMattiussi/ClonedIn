@@ -13,10 +13,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Primary
 @Service
@@ -155,4 +152,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }
         return toReturn;
     }
+
+    @Override
+    public List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers,
+                                                       String enterpriseName, String term, int page, int pageSize) {
+        return enterpriseDao.getEnterpriseListByFilters(category, location, workers, enterpriseName, term, page, pageSize);
+    }
+
+
 }
