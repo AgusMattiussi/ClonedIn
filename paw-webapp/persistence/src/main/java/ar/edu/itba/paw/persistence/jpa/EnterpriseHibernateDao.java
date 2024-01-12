@@ -158,6 +158,23 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
         return query.getResultList();
     }
 
+    @Override
+    public long getEnterpriseCountByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName, String term) {
+        if(term != null && !term.isEmpty()){
+            term = term.replace("_", "\\_");
+            term = term.replace("%", "\\%");
+        }
+
+        StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(DISTINCT e) FROM Enterprise e");
+
+        filterQueryAppendConditions(queryStringBuilder, category, location, workers, enterpriseName, term);
+
+        Query query = em.createQuery(queryStringBuilder.toString());
+        filterQuerySetParameters(query, category, location, workers, enterpriseName, term);
+
+        return (Long) query.getSingleResult();
+    }
+
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String location,
                                              EmployeeRanges workers, String enterpriseName, String term) {
 
@@ -178,7 +195,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
         }
     }
 
-    private void filterQuerySetParameters(TypedQuery<Enterprise> query, Category category, String location,
+    private void filterQuerySetParameters(Query query, Category category, String location,
                                           EmployeeRanges workers, String enterpriseName, String term) {
         if(category != null)
             query.setParameter("category", category);

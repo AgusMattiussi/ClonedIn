@@ -159,5 +159,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         return enterpriseDao.getEnterpriseListByFilters(category, location, workers, enterpriseName, term, page, pageSize);
     }
 
+    @Override
+    public long getEnterpriseCountByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName, String term) {
+        return enterpriseDao.getEnterpriseCountByFilters(category, location, workers, enterpriseName, term);
+    }
+
 
 }

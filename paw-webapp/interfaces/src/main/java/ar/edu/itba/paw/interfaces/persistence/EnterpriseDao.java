@@ -41,4 +41,6 @@ public interface EnterpriseDao {
 
     List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
                                                 String term, int page, int pageSize);
+
+    long getEnterpriseCountByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName, String term);
 }
