@@ -139,11 +139,11 @@ public class EnterpriseController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
         List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
-                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, page - 1, CONTACTS_PER_PAGE)
+                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, false, page - 1, CONTACTS_PER_PAGE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long jobOffersCount = jobOfferService.getActiveJobOffersCount(category, modality, skillDescription, enterprise.getName(),
-                        searchTerm, position, minSalary, maxSalary);
+        long jobOffersCount = jobOfferService.getJobOfferCount(category, modality, skillDescription, enterprise.getName(),
+                        searchTerm, position, minSalary, maxSalary, false);
 
         long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
 
@@ -162,6 +162,7 @@ public class EnterpriseController {
         return Response.ok(jobOffer).build();
     }
 
+    //TODO: Mover esta logica al JobOfferController?
     @PUT
     @Path("/{id}/jobOffers/{joid}")
     @Transactional //TODO:Hace falta?
@@ -257,6 +258,9 @@ public class EnterpriseController {
         JobOffer jobOffer = jobOfferService.findById(contactForm.getJobOfferId())
                 .orElseThrow(() -> new JobOfferNotFoundException(contactForm.getJobOfferId()));
 
+        if(jobOffer.getEnterpriseID() != id)
+            throw new NotJobOfferOwnerException(id, contactForm.getJobOfferId());
+
         User user = userService.findById(contactForm.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(contactForm.getUserId()));
 
@@ -272,17 +276,57 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }
 
+    @GET
+    @Path("/{id}/contacts/{joid}")
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
+                                    @PathParam("joid") @Min(1) final long joid,
+                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
+                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
+
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, null, filledBy, status, sortBy,
+                page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, null, filledBy, status);
+        long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
+
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
+    }
+
+    @GET
+    @Path("/{id}/contacts/{joid}/{userId}")
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
+                                    @PathParam("joid") @Min(1) final long joid,
+                                    @PathParam("userId") @Min(1) final long userId) {
+
+        ContactDTO contactDTO = contactService.findByPrimaryKey(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c))
+                .orElseThrow(() -> new ContactNotFoundException(userId, joid));
+
+        return Response.ok(contactDTO).build();
+    }
+
 
    @PUT
-   @Path("/{id}/contacts/")
-   @PreAuthorize(PROFILE_OWNER)
+   @Path("/{id}/contacts/{joid}/{userId}")
+   @PreAuthorize(JOB_OFFER_OWNER)
    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
-                                       @QueryParam("userId") @NotNull @Min(1) final long userId,
-                                       @QueryParam("joid") @NotNull @Min(1) final long jobOfferId,
+                                       @PathParam("userId") @NotNull @Min(1) final long userId,
+                                       @PathParam("joid") @NotNull @Min(1) final long joid,
                                        @QueryParam("status") @NotNull final JobOfferStatus status) {
 
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+
+        if(contactService.alreadyContacted(user.getId(), jobOffer.getId()))
+            throw new ContactNotFoundException(user.getId(), jobOffer.getId());
 
        if (status == JobOfferStatus.PENDING)
            throw new IllegalArgumentException("Cannot update contact status to PENDING");
@@ -302,7 +346,7 @@ public class EnterpriseController {
                successful = contactService.closeJobOffer(user, jobOffer);
                break;
        }
-       
+
        if(!successful)
            throw new IllegalStateException("Could not update contact status to " + status.getStatus());
 

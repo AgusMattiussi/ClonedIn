@@ -34,18 +34,18 @@ public interface JobOfferService {
 
     long getActiveJobOffersCountForEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
-                                             String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, int page,
-                                             int pageSize);
+    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
+                                             String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
+                                             BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
 
     List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
                                              BigDecimal maxSalary, int page, int pageSize);
 
-    long getActiveJobOffersCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
-                                 String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary);
+    long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
+                          String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive);
 
 
-    long getActiveJobOffersCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary);
+    long getJobOfferCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary);
 
     void closeJobOffer(JobOffer jobOffer);
 
