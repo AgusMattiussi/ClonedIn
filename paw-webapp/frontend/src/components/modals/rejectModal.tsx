@@ -19,14 +19,13 @@ export default function RejectModal(props: any) {
             >
               {props.cancel}
             </button>
-            <a href="?">
-              <button
-                className="btn btn-danger"
-                style={{ whiteSpace: "normal", marginBottom: "0.75rem", width: "200px" }}
-              >
-                {props.confirm}
-              </button>
-            </a>
+            <button
+              className="btn btn-danger"
+              style={{ whiteSpace: "normal", marginBottom: "0.75rem", width: "200px" }}
+              onClick={props.onConfirmClick}
+            >
+              {props.confirm}
+            </button>
           </div>
         </div>
       </div>

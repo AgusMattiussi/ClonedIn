@@ -325,7 +325,7 @@ public class EnterpriseController {
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
 
-        if(contactService.alreadyContacted(user.getId(), jobOffer.getId()))
+        if(!contactService.alreadyContacted(user.getId(), jobOffer.getId()))
             throw new ContactNotFoundException(user.getId(), jobOffer.getId());
 
        if (status == JobOfferStatus.PENDING)

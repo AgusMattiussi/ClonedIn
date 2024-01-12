@@ -9,7 +9,7 @@ public class ContactNotFoundException extends ClonedInException{
     private static final String DETAILS = "The contact of the user with id '%d' with the job offer with id '%d' was not found or does not exist";
 
     public ContactNotFoundException(long userId, long jobOfferId) {
-        super(String.format(DETAILS, userId, userId));
+        super(String.format(DETAILS, userId, jobOfferId));
     }
 
     @Override

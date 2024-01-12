@@ -31,7 +31,8 @@ function EnterpriseContacts() {
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const filledBy = FilledBy.ENTERPRISE.toString()
 
-  const [jobOfferToCancelId, setJobOfferToCancelId] = useState<number | null>(null)
+  const [jobOfferToCancelId, setJobOfferToCancelId] = useState<any>()
+  const [userToCancelId, setUserToCancelId] = useState<any>()
 
   document.title = t("My Recruits Page Title")
 
@@ -153,7 +154,7 @@ function EnterpriseContacts() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
+    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo, filledBy],
   )
 
   useEffect(() => {
@@ -173,18 +174,25 @@ function EnterpriseContacts() {
     setLoading(true)
   }
 
+  const setParams = (jobOfferId: number, userId: number) => {
+    setJobOfferToCancelId(jobOfferId)
+    setUserToCancelId(userId)
+  }
+
   const handleCancel = async () => {
-    //TODO: revisar/actualizar con el nuevo endpoint
     const queryParams: Record<string, string> = {}
-    queryParams.availability = JobOfferAvailability.CANCELLED
+    queryParams.status = JobOfferStatus.CANCELLED
+
+    console.log("jobOfferToCancelId", jobOfferToCancelId)
+    console.log("userToCancelId", userToCancelId)
 
     const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCancelId}`,
+      url: `/enterprises/${userInfo?.id}/contacts/${jobOfferToCancelId}/${userToCancelId}`,
       method: "PUT",
       queryParams: queryParams,
     })
 
-    if (response.status === HttpStatusCode.Ok) {
+    if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
       const modalElement = document.getElementById("cancelModal")
       modalElement?.classList.remove("show")
@@ -219,7 +227,7 @@ function EnterpriseContacts() {
               style={{ minWidth: "90px", marginBottom: "5px" }}
               data-bs-toggle="modal"
               data-bs-target="#cancelModal"
-              onClick={() => setJobOfferToCancelId(contact.jobOfferInfo?.id)}
+              onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
             >
               {t("Cancel")}
             </Button>

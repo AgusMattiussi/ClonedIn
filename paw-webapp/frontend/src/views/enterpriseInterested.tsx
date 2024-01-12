@@ -33,7 +33,8 @@ function EnterpriseInterested() {
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const filledBy = FilledBy.USER.toString()
 
-  const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<number | null>(null)
+  const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
+  const [userToAnswerId, setUserToAnswerId] = useState<any>()
 
   document.title = t("Interested Page Title")
 
@@ -181,7 +182,17 @@ function EnterpriseInterested() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchExtraInfo, filledBy],
+    [
+      apiRequest,
+      queryParams,
+      navigate,
+      userInfo?.id,
+      fetchJobOfferInfo,
+      fetchUserInfo,
+      fetchExtraInfo,
+      filledBy,
+      fetchCategoryInfo,
+    ],
   )
 
   useEffect(() => {
@@ -201,20 +212,24 @@ function EnterpriseInterested() {
     setLoading(true)
   }
 
-  const handleAnswer = async () => {
-    //TODO: revisar/actualizar con el nuevo endpoint
+  const setParams = (jobOfferId: number, userId: number) => {
+    setJobOfferToAnswerId(jobOfferId)
+    setUserToAnswerId(userId)
+  }
+
+  const handleAnswer = async (answer: string) => {
     const queryParams: Record<string, string> = {}
-    queryParams.availability = JobOfferAvailability.CANCELLED
+    queryParams.status = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
 
     const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToAnswerId}`,
+      url: `/enterprises/${userInfo?.id}/contacts/${jobOfferToAnswerId}/${userToAnswerId}`,
       method: "PUT",
       queryParams: queryParams,
     })
 
-    if (response.status === HttpStatusCode.Ok) {
+    if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
-      const modalElement = document.getElementById("cancelModal")
+      const modalElement = document.getElementById(answer === "Accept" ? "acceptModal" : "rejectModal")
       modalElement?.classList.remove("show")
       document.body.classList.remove("modal-open")
       const modalBackdrop = document.querySelector(".modal-backdrop")
@@ -256,7 +271,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#acceptModal"
-                onClick={() => setJobOfferToAnswerId(contact.jobOfferInfo?.id)}
+                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
               >
                 {t("Accept")}
               </Button>
@@ -265,7 +280,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#rejectModal"
-                onClick={() => setJobOfferToAnswerId(contact.jobOfferInfo?.id)}
+                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
               >
                 {t("Decline")}
               </Button>
@@ -404,12 +419,14 @@ function EnterpriseInterested() {
         msg={t("Accept Application Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
+        onConfirmClick={() => handleAnswer("Accept")}
       />
       <RejectModal
         title={t("Modal Title")}
         msg={t("Reject Application Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
+        onConfirmClick={() => handleAnswer("Decline")}
       />
     </div>
   )
