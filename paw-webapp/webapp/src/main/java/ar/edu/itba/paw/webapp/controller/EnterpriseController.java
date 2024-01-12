@@ -162,6 +162,7 @@ public class EnterpriseController {
         return Response.ok(jobOffer).build();
     }
 
+    //TODO: Mover esta logica al JobOfferController?
     @PUT
     @Path("/{id}/jobOffers/{joid}")
     @Transactional //TODO:Hace falta?
@@ -274,15 +275,18 @@ public class EnterpriseController {
 
 
    @PUT
-   @Path("/{id}/contacts/")
+   @Path("/{id}/contacts/{joid}/{userId}")
    @PreAuthorize(JOB_OFFER_OWNER)
    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
-                                       @QueryParam("userId") @NotNull @Min(1) final long userId,
-                                       @QueryParam("joid") @NotNull @Min(1) final long jobOfferId,
+                                       @PathParam("userId") @NotNull @Min(1) final long userId,
+                                       @PathParam("joid") @NotNull @Min(1) final long joid,
                                        @QueryParam("status") @NotNull final JobOfferStatus status) {
 
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+
+        if(contactService.alreadyContacted(user.getId(), jobOffer.getId()))
+            throw new ContactNotFoundException(user.getId(), jobOffer.getId());
 
        if (status == JobOfferStatus.PENDING)
            throw new IllegalArgumentException("Cannot update contact status to PENDING");
