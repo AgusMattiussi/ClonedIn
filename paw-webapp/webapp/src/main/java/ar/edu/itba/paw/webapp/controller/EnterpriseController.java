@@ -258,6 +258,9 @@ public class EnterpriseController {
         JobOffer jobOffer = jobOfferService.findById(contactForm.getJobOfferId())
                 .orElseThrow(() -> new JobOfferNotFoundException(contactForm.getJobOfferId()));
 
+        if(jobOffer.getEnterpriseID() != id)
+            throw new NotJobOfferOwnerException(id, contactForm.getJobOfferId());
+
         User user = userService.findById(contactForm.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(contactForm.getUserId()));
 
@@ -271,6 +274,43 @@ public class EnterpriseController {
                 .path(String.valueOf(contact.getUser().getId()))
                 .build();
         return Response.created(uri).build();
+    }
+
+    @GET
+    @Path("/{id}/contacts/{joid}")
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
+                                    @PathParam("joid") @Min(1) final long joid,
+                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
+                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
+
+        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
+        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+
+        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, null, filledBy, status, sortBy,
+                page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+
+        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, null, filledBy, status);
+        long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
+
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
+    }
+
+    @GET
+    @Path("/{id}/contacts/{joid}/{userId}")
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
+                                    @PathParam("joid") @Min(1) final long joid,
+                                    @PathParam("userId") @Min(1) final long userId) {
+
+        ContactDTO contactDTO = contactService.findByPrimaryKey(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c))
+                .orElseThrow(() -> new ContactNotFoundException(userId, joid));
+
+        return Response.ok(contactDTO).build();
     }
 
 
