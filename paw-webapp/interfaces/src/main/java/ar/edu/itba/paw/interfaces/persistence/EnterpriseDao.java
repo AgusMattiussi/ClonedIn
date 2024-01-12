@@ -4,11 +4,13 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 
 import java.util.Optional;
 
 public interface EnterpriseDao {
-    Enterprise create(String email, String name, String password,  String location, Category category, String workers, Integer year, String link, String description);
+    Enterprise create(String email, String name, String password,  String location, Category category, EmployeeRanges workers,
+                      Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);
 
@@ -22,7 +24,7 @@ public interface EnterpriseDao {
 
     void updateName(long enterpriseID, String newName);
 
-    void updateWorkers(long enterpriseID, String newWorkers);
+    void updateWorkers(long enterpriseID, EmployeeRanges newWorkers);
 
     void updateYear(long enterpriseID, Integer newYear);
 

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,8 @@ import java.util.Set;
 
 public interface EnterpriseService {
 
-    Enterprise create(String email, String name, String password, String location, Category category, String workers, Integer year, String link, String description);
+    Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+                      Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);
 
@@ -28,7 +30,7 @@ public interface EnterpriseService {
 
     void updateDescription(long enterpriseID, String newDescription);
 
-    void updateWorkers(long enterpriseID, String newWorkers);
+    void updateWorkers(long enterpriseID, EmployeeRanges newWorkers);
 
     void updateYear(long enterpriseID, Integer newYear);
 
@@ -38,7 +40,7 @@ public interface EnterpriseService {
 
     void updateCategory(long enterpriseID, Category newCategory);
 
-    void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers);
+    void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, EmployeeRanges newWorkers);
 
     void updateProfileImage(Enterprise enterprise, Image image);
 

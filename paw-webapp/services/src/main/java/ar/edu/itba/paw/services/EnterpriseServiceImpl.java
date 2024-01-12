@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +36,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, Category category, String workers, Integer year, String link, String description) {
+    public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+                             Integer year, String link, String description) {
         return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, category, workers, year, link, description);
     }
 
@@ -75,7 +77,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateWorkers(long enterpriseID, String newWorkers) {
+    public void updateWorkers(long enterpriseID, EmployeeRanges newWorkers) {
         enterpriseDao.updateWorkers(enterpriseID, newWorkers);
     }
 
@@ -100,7 +102,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation, Category newCategory, String newLink, Integer newYear, String newWorkers) {
+    public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation,
+                                            Category newCategory, String newLink, Integer newYear, EmployeeRanges newWorkers) {
         if(!newName.isEmpty()) {
             updateName(enterpriseID, newName);
         }
@@ -125,7 +128,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             updateYear(enterpriseID, newYear);
         }
 
-        if(!newWorkers.isEmpty()) {
+        if(newWorkers != null) {
             updateWorkers(enterpriseID, newWorkers);
         }
 

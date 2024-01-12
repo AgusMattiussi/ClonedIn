@@ -24,7 +24,7 @@ public enum EmployeeRanges {
 
     public static EmployeeRanges fromString(String text) {
         for (EmployeeRanges b : EmployeeRanges.values()) {
-            if (b.stringValue.equalsIgnoreCase(text)) {
+            if (b.stringValue.equals(text)) {
                 return b;
             }
         }

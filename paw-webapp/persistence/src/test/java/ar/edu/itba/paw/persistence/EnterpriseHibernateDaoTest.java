@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class EnterpriseHibernateDaoTest {
 
     @Test
     public void testCreate() {
-        final Enterprise newEnterprise = dao.create(NEW_EMAIL, NEW_NAME, EMPTY_FIELD, EMPTY_FIELD, testCategory, EMPTY_FIELD,
+        final Enterprise newEnterprise = dao.create(NEW_EMAIL, NEW_NAME, EMPTY_FIELD, EMPTY_FIELD, testCategory, EmployeeRanges.FROM_51_TO_100,
                 null, EMPTY_FIELD, EMPTY_FIELD);
 
         assertNotNull(newEnterprise);
@@ -107,9 +108,9 @@ public class EnterpriseHibernateDaoTest {
     }
     @Test
     public void testUpdateWorkers(){
-        dao.updateWorkers(testEnterprise.getId(), UPDATED_STRING);
+        dao.updateWorkers(testEnterprise.getId(), EmployeeRanges.FROM_1_TO_10);
         em.refresh(testEnterprise);
-        assertEquals(UPDATED_STRING, testEnterprise.getWorkers());
+        assertEquals(EmployeeRanges.FROM_1_TO_10.getStringValue(), testEnterprise.getWorkers());
     }
 
     @Test

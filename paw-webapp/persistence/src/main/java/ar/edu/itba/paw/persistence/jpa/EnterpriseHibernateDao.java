@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +26,10 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     private EntityManager em;
 
     @Override
-    public Enterprise create(String email, String name, String password, String location, Category category, String workers, Integer year, String link, String description) {
-        final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers, year, link, description, DEFAULT_IMAGE);
+    public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+                             Integer year, String link, String description) {
+        final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers.getStringValue(),
+                year, link, description, DEFAULT_IMAGE);
         em.persist(enterprise);
         return enterprise;
     }
@@ -76,9 +79,9 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    public void updateWorkers(long enterpriseID, String newWorkers) {
+    public void updateWorkers(long enterpriseID, EmployeeRanges newWorkers) {
         Query query = em.createQuery("UPDATE Enterprise SET workers = :newWorkers WHERE id = :enterpriseID");
-        query.setParameter("newWorkers", newWorkers);
+        query.setParameter("newWorkers", newWorkers.getStringValue());
         query.setParameter("enterpriseID", enterpriseID);
         query.executeUpdate();
     }

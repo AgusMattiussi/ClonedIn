@@ -96,7 +96,7 @@ public class EnterpriseController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
         Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(),
-                enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkers(),
+                enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkersEnum(),
                 enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
 
         emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());

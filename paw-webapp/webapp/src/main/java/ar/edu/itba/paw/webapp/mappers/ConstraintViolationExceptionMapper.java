@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     private static final String MESSAGE = "Invalid parameter: %s = %s.";
-            //cv.getInvalidValue().toString()
 
     @Override
     public Response toResponse (final ConstraintViolationException exception) {

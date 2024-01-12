@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
+import ar.edu.itba.paw.webapp.validators.ValidEmployeeRange;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -31,7 +33,8 @@ public class EnterpriseForm {
     @Size(max=50)
     private String city;
 
-    @NotEmpty
+    @NotNull
+    @ValidEmployeeRange
     private String workers;
 
     @NotNull
@@ -127,6 +130,10 @@ public class EnterpriseForm {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public EmployeeRanges getWorkersEnum() {
+        return EmployeeRanges.fromString(workers);
     }
 
     @Override
