@@ -178,6 +178,10 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String location,
                                              EmployeeRanges workers, String enterpriseName, String term) {
 
+        // We use 1=1 to avoid having to check if we need to add a WHERE for each condition
+        if(category != null || workers != null || location != null || enterpriseName != null || term != null)
+            queryStringBuilder.append(" WHERE 1=1");
+
         if(category != null)
             queryStringBuilder.append(" AND e.category = :category");
         if(workers != null)

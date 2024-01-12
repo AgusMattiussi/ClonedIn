@@ -16,7 +16,7 @@ public class EnterpriseDTO {
     private String email;
     private String location;
     private String workers;
-    private int year;
+    private Integer year;
     private String website;
     private String description;
     private EnterpriseDTOLinks links;
@@ -77,11 +77,11 @@ public class EnterpriseDTO {
         this.workers = workers;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
