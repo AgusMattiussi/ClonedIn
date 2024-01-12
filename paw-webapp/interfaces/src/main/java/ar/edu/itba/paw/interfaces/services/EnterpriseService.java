@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -44,4 +45,6 @@ public interface EnterpriseService {
     Optional<Image> getProfileImage(int imageId);
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
+
+    //List<Enterprise> getEnterpriseListByFilters(Category category, String location, String workers, String term, int page, int pageSize);
 }
