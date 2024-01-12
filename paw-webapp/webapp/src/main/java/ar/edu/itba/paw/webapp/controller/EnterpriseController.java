@@ -275,7 +275,7 @@ public class EnterpriseController {
 
    @PUT
    @Path("/{id}/contacts/")
-   @PreAuthorize(PROFILE_OWNER)
+   @PreAuthorize(JOB_OFFER_OWNER)
    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
                                        @QueryParam("userId") @NotNull @Min(1) final long userId,
                                        @QueryParam("joid") @NotNull @Min(1) final long jobOfferId,
