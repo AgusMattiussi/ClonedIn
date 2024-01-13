@@ -90,6 +90,7 @@ function RegisterUser() {
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
+    educationLevel: yup.string().ensure().required(t('Required') as string).oneOf(educationLevels)
   })
 
   return (
@@ -215,7 +216,7 @@ function RegisterUser() {
                                   name="educationLevel"
                                   className="selectFrom"
                                   value={educationLevel}
-                                  onChange={(e) => handleEducationLevelSelect(e)}
+                                  onChange={(e) => setEducationLevel(e.target.value)}
                                   style={{ width: "60%" }}
                                   isInvalid={!!errors.educationLevel}
                                 >

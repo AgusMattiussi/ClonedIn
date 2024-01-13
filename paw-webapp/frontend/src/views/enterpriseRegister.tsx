@@ -65,15 +65,15 @@ function RegisterEnterprise() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Required"),
-    name: yup.string().required("Required"),
-    pass: yup.string().required("Required").min(8, "Password is too short - should be 8 chars minimum."),
+    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
+    name: yup.string().required(t('Required') as string),
+    pass: yup.string().required(t('Required') as string).min(8, t('Password Min Length') as string),
     repeatPass: yup
       .string()
-      .oneOf([yup.ref("pass")], "Passwords must match")
-      .required("Required"),
+      .oneOf([yup.ref("pass")], t('Password Match') as string)
+      .required(t('Required') as string),
   })
-
+  
   return (
     <div>
       <Header />
