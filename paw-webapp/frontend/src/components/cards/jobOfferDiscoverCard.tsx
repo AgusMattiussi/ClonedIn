@@ -124,15 +124,15 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
           <h5>{t("Description")}</h5>
         </div>
         {profile ? (
-          {userInfo?.role === UserRole.USER ? (
-          <div>
-            <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
-              {t("Apply")}
-            </Button>
-          </div>
+          userInfo?.role === UserRole.USER ? (
+            <div>
+              <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
+                {t("Apply")}
+              </Button>
+            </div>
           ) : (
             <></>
-          )}
+          )
         ) : (
           <div>
             <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
@@ -142,19 +142,17 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
         )}
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
-      {profile ? (
-        <div>
-          <p style={{ textAlign: "left", wordBreak: "break-all" }}>
-            {job.description}
-          </p>
-        </div>
-      ) : (
-        <div>
-          <p style={{ textAlign: "left", wordBreak: "break-all" }}>
-            {job.description.length > 200 ? job.description.substring(0, 200) + "..." : job.description}
-          </p>
-        </div>
-      )}
+        {profile ? (
+          <div>
+            <p style={{ textAlign: "left", wordBreak: "break-all" }}>{job.description}</p>
+          </div>
+        ) : (
+          <div>
+            <p style={{ textAlign: "left", wordBreak: "break-all" }}>
+              {job.description.length > 200 ? job.description.substring(0, 200) + "..." : job.description}
+            </p>
+          </div>
+        )}
       </div>
     </Card>
   )
