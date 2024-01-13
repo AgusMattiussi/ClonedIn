@@ -7,6 +7,7 @@ import { useRequestApi } from "../api/apiRequest"
 import JobOfferDto from "../utils/JobOfferDto"
 import { useNavigate, useParams } from "react-router-dom"
 import { BASE_URL } from "../utils/constants"
+import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 
 function JobOffer() {
   const { loading, apiRequest } = useRequestApi()
@@ -42,7 +43,9 @@ function JobOffer() {
         fluid
         style={{ background: "#F2F2F2" }}
       >
-        <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>{/* <JobOfferCard job={job} /> */}</div>
+        <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>
+          <JobOfferDiscoverCard job={job} profile={true} />
+        </div>
       </Container>
     </div>
   )

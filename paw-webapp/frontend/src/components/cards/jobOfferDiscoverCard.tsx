@@ -8,13 +8,17 @@ import SkillDto from "../../utils/SkillDto"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
+import { useSharedAuth } from "../../api/auth"
+import { UserRole } from "../../utils/constants"
 
-function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any }) {
+function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; contacted: boolean; job: any }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
+  const { userInfo } = useSharedAuth()
+  const { userId } = useParams()
 
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -42,6 +46,22 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
     }
     if (loadingData) fetchData()
   }, [apiRequest])
+
+  const handlePost = async () => {
+    const response = await apiRequest({
+      url: `/users/${userInfo?.id}/applications`,
+      method: "POST",
+      body: {
+        userId,
+        job,
+      },
+    })
+    if (response.status === HttpStatusCode.Created) {
+      navigate(`/users/${userId}`)
+    } else {
+      // TODO: manejar error
+    }
+  }
 
   const jobOfferSkillsList = skillsData.map((skill, index) => {
     return (
@@ -103,18 +123,38 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        <div>
-          <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
-            {t("View More")}
-          </Button>
-        </div>
+        {profile ? (
+          {userInfo?.role === UserRole.USER ? (
+          <div>
+            <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
+              {t("Apply")}
+            </Button>
+          </div>
+          ) : (
+            <></>
+          )}
+        ) : (
+          <div>
+            <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
+              {t("View More")}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
+      {profile ? (
+        <div>
+          <p style={{ textAlign: "left", wordBreak: "break-all" }}>
+            {job.description}
+          </p>
+        </div>
+      ) : (
         <div>
           <p style={{ textAlign: "left", wordBreak: "break-all" }}>
             {job.description.length > 200 ? job.description.substring(0, 200) + "..." : job.description}
           </p>
         </div>
+      )}
       </div>
     </Card>
   )
@@ -122,6 +162,7 @@ function JobOfferDiscoverCard({ contacted, job }: { contacted: boolean; job: any
 
 JobOfferDiscoverCard.defaultProps = {
   contacted: false,
+  profile: false,
 }
 
 export default JobOfferDiscoverCard
