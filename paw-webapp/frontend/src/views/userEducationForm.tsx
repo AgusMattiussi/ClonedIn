@@ -24,8 +24,8 @@ function EducationForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    college: yup.string().required("Required"),
-    degree: yup.string().required("Required"),
+    college: yup.string().required(t('Required') as string),
+    degree: yup.string().required(t('Required') as string),
     //TODO: agregar validaciones para las fechas
   })
   const [comment, setComment] = useState("")

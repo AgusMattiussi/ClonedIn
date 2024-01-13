@@ -25,7 +25,7 @@ function JobOfferForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    position: yup.string().required("Required"),
+    position: yup.string().required(t('Required') as string),
   })
   const [category, setCategory] = useState("")
   const [position, setPosition] = useState("")

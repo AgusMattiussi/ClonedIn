@@ -24,8 +24,8 @@ function ExperienceForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    company: yup.string().required("Required"),
-    position: yup.string().required("Required"),
+    company: yup.string().required(t('Required') as string),
+    position: yup.string().required(t('Required') as string),
     //TODO: agregar validaciones para las fechas
   })
   const [description, setDescription] = useState("")

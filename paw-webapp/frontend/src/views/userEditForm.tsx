@@ -25,7 +25,7 @@ function EditUserForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().required("Required"),
+    name: yup.string().required(t('Required') as string),
   })
   const [location, setLocation] = useState("")
   const [position, setPosition] = useState("")
