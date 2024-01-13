@@ -28,6 +28,11 @@
   "Website": "Website",
   "About Us": "About Us",
 
+  "Required": "Required",
+  "Invalid Email": "Invalid Email",
+  "Password Min Length": "Password is too short - 8 chars minimum.",
+  "Password Match": "Passwords must match",
+
   "No-especificado": "Choose",
   "Primario": "Primary",
   "Secundario": "Secondary",
