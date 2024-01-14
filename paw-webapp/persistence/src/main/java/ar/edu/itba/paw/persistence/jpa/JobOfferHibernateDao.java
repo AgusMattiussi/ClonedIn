@@ -208,6 +208,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         if(onlyActive)
             queryStringBuilder.append(" WHERE jo.available = :active");
+        else
+            queryStringBuilder.append(" WHERE 1 = 1");
 
         filterQueryAppendConditions(queryStringBuilder, category, modality, skillDescription, enterpriseName, searchTerm,
                 position, minSalary, maxSalary);
@@ -254,6 +256,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         if(onlyActive)
             queryStringBuilder.append(" WHERE jo.available = :active");
+        else
+            queryStringBuilder.append(" WHERE 1 = 1");
 
         filterQueryAppendConditions(queryStringBuilder, category, modality, skillDescription, enterpriseName, searchTerm,
                 position, minSalary, maxSalary);

@@ -24,6 +24,7 @@ public class JobOfferDTO {
         dto.description = jobOffer.getDescription();
         dto.salary = jobOffer.getSalary().doubleValue();
         dto.modality = jobOffer.getModality();
+        dto.available = jobOffer.getAvailable();
 
         dto.links = new JobOfferDTOLinks(uriInfo, jobOffer);
 

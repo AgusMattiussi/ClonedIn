@@ -56,7 +56,7 @@ function DiscoverJobs() {
           queryParams: queryParams,
         })
 
-        if (response.status === 500) {
+        if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
         }
 

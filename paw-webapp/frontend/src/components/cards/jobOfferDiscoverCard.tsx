@@ -85,7 +85,7 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-              {job.category == null ? t("No-especificado") : jobCategory?.name}
+              {job.links.category == null ? t("No-especificado") : jobCategory?.name}
             </Badge>
           </h5>
         </span>
