@@ -1,3 +1,5 @@
+import CategoryDto from "./CategoryDto"
+
 export default interface EnterpriseDto {
   id: number
   name: string
@@ -7,6 +9,7 @@ export default interface EnterpriseDto {
   year: number
   website: string
   description: string
+  categoryInfo: CategoryDto
   links: EnterpriseDtoLinks
 }
 
