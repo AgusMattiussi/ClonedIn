@@ -183,9 +183,6 @@ function EnterpriseContacts() {
     const queryParams: Record<string, string> = {}
     queryParams.status = JobOfferStatus.CANCELLED
 
-    console.log("jobOfferToCancelId", jobOfferToCancelId)
-    console.log("userToCancelId", userToCancelId)
-
     const response = await apiRequest({
       url: `/enterprises/${userInfo?.id}/contacts/${jobOfferToCancelId}/${userToCancelId}`,
       method: "PUT",
