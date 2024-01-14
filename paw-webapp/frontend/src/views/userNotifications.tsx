@@ -28,7 +28,6 @@ function NotificationsUser() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const filledBy = FilledBy.ENTERPRISE.toString()
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
 
@@ -106,7 +105,6 @@ function NotificationsUser() {
   const fetchNotifications = useCallback(
     async (status: string, sortBy: string) => {
       setLoading(true)
-      queryParams.filledBy = filledBy
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
 
@@ -152,16 +150,7 @@ function NotificationsUser() {
       }
       setLoading(false)
     },
-    [
-      apiRequest,
-      queryParams,
-      navigate,
-      userInfo?.id,
-      fetchJobOfferInfo,
-      fetchEnterpriseInfo,
-      fetchCategoryInfo,
-      filledBy,
-    ],
+    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchEnterpriseInfo, fetchCategoryInfo],
   )
 
   useEffect(() => {
