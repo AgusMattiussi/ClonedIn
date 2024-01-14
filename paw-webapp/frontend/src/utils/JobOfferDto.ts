@@ -15,5 +15,5 @@ interface JobOfferDtoLinks {
   self: string
   enterprise: string
   category: string
-  skills: []
+  skills: string
 }

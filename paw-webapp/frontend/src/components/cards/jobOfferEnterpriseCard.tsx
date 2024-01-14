@@ -10,6 +10,7 @@ import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
 import { HttpStatusCode } from "axios"
 import { JobOfferAvailability } from "../../utils/constants"
+import { Link } from "react-router-dom"
 
 function JobOfferEnterpriseCard({
   status,
@@ -65,9 +66,9 @@ function JobOfferEnterpriseCard({
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
+            <Link to={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
               {job.position}
-            </a>
+            </Link>
           </h5>
         </div>
         <span>

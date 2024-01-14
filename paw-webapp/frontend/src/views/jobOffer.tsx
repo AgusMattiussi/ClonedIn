@@ -1,23 +1,23 @@
 import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
-// import JobOfferCard from "../components/cards/jobOfferCard"
+import JobOfferDto from "../utils/JobOfferDto"
+import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
+import Loader from "../components/loader"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
 import { useRequestApi } from "../api/apiRequest"
-import JobOfferDto from "../utils/JobOfferDto"
 import { useNavigate, useParams } from "react-router-dom"
-import { BASE_URL } from "../utils/constants"
-import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
+import { HttpStatusCode } from "axios"
 
 function JobOffer() {
-  const { loading, apiRequest } = useRequestApi()
-  const [job, setJob] = useState<JobOfferDto | undefined>({} as JobOfferDto)
+  const navigate = useNavigate()
 
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const navigate = useNavigate()
 
-  const USER_API_URL = BASE_URL + `/jobOffer/${id}/`
+  const { loading, apiRequest } = useRequestApi()
+  const [job, setJob] = useState<JobOfferDto>({} as JobOfferDto)
+  const [isJobLoading, setJobLoading] = useState(true)
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -26,14 +26,15 @@ function JobOffer() {
         method: "GET",
       })
 
-      if (response.status === 500) {
+      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
 
       setJob(response.data)
+      setJobLoading(false)
     }
-    fetchJob()
-  }, [apiRequest, id])
+    if (isJobLoading) fetchJob()
+  }, [apiRequest, id, navigate, isJobLoading])
 
   return (
     <div>
@@ -43,8 +44,14 @@ function JobOffer() {
         fluid
         style={{ background: "#F2F2F2" }}
       >
-        <div style={{ maxWidth: "1000px", minHeight: "100vh" }}>
-          <JobOfferDiscoverCard job={job} profile={true} />
+        <div style={{ width: "90%", height: "100vh" }}>
+          {isJobLoading ? (
+            <div className="my-5">
+              <Loader />
+            </div>
+          ) : (
+            <JobOfferDiscoverCard job={job} seeMoreView={true} />
+          )}
         </div>
       </Container>
     </div>

@@ -5,20 +5,29 @@ import CardHeader from "react-bootstrap/esm/CardHeader"
 import CategoryDto from "../../utils/CategoryDto"
 import EnterpriseDto from "../../utils/EnterpriseDto"
 import SkillDto from "../../utils/SkillDto"
+import JobOfferDto from "../../utils/JobOfferDto"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, Link } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 import { useSharedAuth } from "../../api/auth"
 import { UserRole } from "../../utils/constants"
+import AcceptModal from "../modals/acceptModal"
 
-function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; contacted: boolean; job: any }) {
+function JobOfferDiscoverCard({
+  seeMoreView,
+  contacted,
+  job,
+}: {
+  seeMoreView: boolean
+  contacted: boolean
+  job: JobOfferDto
+}) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
-  const { userId } = useParams()
 
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -47,19 +56,24 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
     if (loadingData) fetchData()
   }, [apiRequest])
 
-  const handlePost = async () => {
+  const handleApply = async () => {
     const response = await apiRequest({
       url: `/users/${userInfo?.id}/applications`,
       method: "POST",
       body: {
-        userId,
-        job,
+        jobOfferId: job.id,
       },
     })
+
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/users/${userId}`)
-    } else {
-      // TODO: manejar error
+      setLoadingData(true)
+      const modalElement = document.getElementById("acceptModal")
+      modalElement?.classList.remove("show")
+      document.body.classList.remove("modal-open")
+      const modalBackdrop = document.querySelector(".modal-backdrop")
+      if (modalBackdrop) {
+        modalBackdrop.remove()
+      }
     }
   }
 
@@ -76,9 +90,9 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
           <h5>
-            <a href={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
+            <Link to={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
               {jobEnterprise?.name}{" "}
-            </a>
+            </Link>
             | {job.position}
           </h5>
         </div>
@@ -123,10 +137,10 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {profile ? (
+        {seeMoreView ? (
           userInfo?.role === UserRole.USER ? (
             <div>
-              <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
+              <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
                 {t("Apply")}
               </Button>
             </div>
@@ -142,7 +156,7 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
         )}
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
-        {profile ? (
+        {seeMoreView ? (
           <div>
             <p style={{ textAlign: "left", wordBreak: "break-all" }}>{job.description}</p>
           </div>
@@ -154,13 +168,20 @@ function JobOfferDiscoverCard({ profile, contacted, job }: { profile: boolean; c
           </div>
         )}
       </div>
+      <AcceptModal
+        title={t("Modal Title")}
+        msg={t("Application Modal Msg")}
+        cancel={t("Cancel")}
+        confirm={t("Confirm")}
+        onConfirmClick={handleApply}
+      />
     </Card>
   )
 }
 
 JobOfferDiscoverCard.defaultProps = {
   contacted: false,
-  profile: false,
+  seeMoreView: false,
 }
 
 export default JobOfferDiscoverCard
