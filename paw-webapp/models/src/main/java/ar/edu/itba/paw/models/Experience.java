@@ -16,7 +16,7 @@ public class Experience {
     @SequenceGenerator(sequenceName = "experiencia_id_seq", name = "experiencia_id_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", referencedColumnName="id")
     private User user;
 

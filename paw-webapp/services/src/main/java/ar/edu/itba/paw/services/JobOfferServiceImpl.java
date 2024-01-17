@@ -5,10 +5,13 @@ import ar.edu.itba.paw.interfaces.services.JobOfferService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
+import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,6 +32,13 @@ public class JobOfferServiceImpl implements JobOfferService {
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
         return jobOfferDao.create(enterprise, category, position, description, salary,
                 modality == null ? JobOfferModality.NOT_SPECIFIED.getModality() : modality.getModality());
+    }
+
+    @Override
+    @Transactional
+    public List<Skill> getSkills(long jobOfferId) {
+        JobOffer jobOffer = jobOfferDao.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        return jobOffer.getSkills();
     }
 
     @Override

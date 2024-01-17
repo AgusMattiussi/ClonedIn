@@ -33,6 +33,7 @@ public class Enterprise implements CustomUserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRubro")
     private Category category;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "empleados")
     private String workers;
@@ -56,10 +57,10 @@ public class Enterprise implements CustomUserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;*/
 
-    @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 
-    @OneToMany(mappedBy = "enterprise", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<JobOffer> jobOffersSet;
 
     @Override

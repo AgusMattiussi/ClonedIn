@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.validation.constraints.Min;
@@ -91,10 +92,9 @@ public class JobOfferController {
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.SKILL_V1)
     @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
+    @Transactional
     public Response getSkills(@PathParam("id") final long id) {
-        JobOffer jobOffer = jobOfferService.findById(id).orElseThrow(() -> new JobOfferNotFoundException(id));
-
-        List<Skill> skills = jobOffer.getSkills();
+        List<Skill> skills = jobOfferService.getSkills(id);
         if (skills == null || skills.isEmpty())
             return Response.noContent().build();
 

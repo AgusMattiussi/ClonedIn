@@ -41,10 +41,10 @@ public class JobOffer {
     @Column(name = "disponible")
     private String available;
 
-    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.LAZY)
     private Set<JobOfferSkill> jobOfferSkillSet;
 
-    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "jobOffer", fetch = FetchType.LAZY)
     private Set<Contact> contactSet;
 
     public JobOffer(Long id, Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality, String available) {

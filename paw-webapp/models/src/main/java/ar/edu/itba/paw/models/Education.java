@@ -14,22 +14,30 @@ public class Education {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "educacion_id_seq")
     @SequenceGenerator(sequenceName = "educacion_id_seq", name = "educacion_id_seq", allocationSize = 1)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
     private User user;
+
     @Column(name = "mesDesde")
     private int monthFrom;
+
     @Column(name = "anioDesde")
     private int yearFrom;
+
     @Column(name = "mesHasta")
     private int monthTo;
+
     @Column(name = "anioHasta")
     private int yearTo;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "titulo", nullable = false)
     private String title;
+
     @Column(name = "institucion", length = 100, nullable = false)
     private String institutionName;
+
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "descripcion")
     private String description;

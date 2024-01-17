@@ -55,20 +55,16 @@ public class User implements CustomUserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    /*@Transient
-    @Enumerated(EnumType.STRING)
-    private Role role;*/
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Experience> experiences;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Education> educationSet;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<UserSkill> userSkills;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
@@ -219,7 +215,7 @@ public class User implements CustomUserDetails {
         int result = 0;
         int currentYear=2022;
         
-        for (Experience experience : experiences) {
+        for (Experience experience : getExperiences()) {
             result += (experience.getYearTo() == null ? currentYear : experience.getYearTo()) - experience.getYearFrom();
         }
 

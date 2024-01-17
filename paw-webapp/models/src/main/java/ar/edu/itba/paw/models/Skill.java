@@ -19,10 +19,10 @@ public class Skill {
     @Column(name = "descripcion")
     private String description;
 
-    @OneToMany(mappedBy = "skill")
+    @OneToMany(mappedBy = "skill", fetch = FetchType.LAZY)
     private Set<JobOfferSkill> jobOfferSkillSet;
 
-    @OneToMany(mappedBy = "skill")
+    @OneToMany(mappedBy = "skill", fetch = FetchType.LAZY)
     private Set<UserSkill> userSkillSet;
 
 
