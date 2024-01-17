@@ -86,7 +86,7 @@
   <!-- Unconditional Cache Filter -->
   <filter>
     <filter-name>unconditionalCacheFilter</filter-name>
-    <filter-class>ar.edu.itba.paw.webapp.config.UnconditionalCacheFilter</filter-class>
+    <filter-class>ar.edu.itba.paw.webapp.filter.StaticElementsCacheFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>unconditionalCacheFilter</filter-name>
