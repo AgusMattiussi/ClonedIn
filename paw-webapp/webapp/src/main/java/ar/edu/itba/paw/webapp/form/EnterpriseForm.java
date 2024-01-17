@@ -102,6 +102,7 @@ public class EnterpriseForm {
         return year;
     }
 
+    //TODO: Year validator, para mejor mensaje de error
     public void setYear(Integer year) {
         if(year > Calendar.getInstance().get(Calendar.YEAR))
             throw new IllegalArgumentException("Year cannot be greater than current year");
@@ -135,5 +136,5 @@ public class EnterpriseForm {
     public EmployeeRanges getWorkersEnum() {
         return EmployeeRanges.fromString(workers);
     }
-    
+
 }

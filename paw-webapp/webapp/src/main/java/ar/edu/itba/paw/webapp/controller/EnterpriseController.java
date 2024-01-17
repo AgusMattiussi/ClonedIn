@@ -392,11 +392,11 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/image")
 //     @Produces set dynamically
-//    @PreAuthorize(USER_OR_PROFILE_OWNER)
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
         if(profileImage == null)
-            throw new ImageNotFoundException(id, Role.ENTERPRISE);
+            return Response.noContent().build();
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType()) // Replaces @Produces dynamically

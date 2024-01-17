@@ -519,7 +519,7 @@ public class UserController {
 
         Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
         if(profileImage == null)
-            throw new ImageNotFoundException(id, Role.USER);
+            return Response.noContent().build();
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType())
