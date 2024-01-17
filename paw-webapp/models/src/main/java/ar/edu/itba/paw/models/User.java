@@ -261,21 +261,21 @@ public class User implements CustomUserDetails {
         return false;
     }
 
-
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", category=" + category +
-                ", currentPosition='" + currentPosition + '\'' +
-                ", description='" + description + '\'' +
-                ", education='" + education + '\'' +
-                ", visibility=" + visibility +
-                '}';
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("id=").append(id);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", location='").append(location).append('\'');
+        sb.append(", category=").append(category);
+        sb.append(", currentPosition='").append(currentPosition).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", education='").append(education).append('\'');
+        sb.append(", visibility=").append(visibility);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

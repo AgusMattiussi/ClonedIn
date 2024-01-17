@@ -94,12 +94,14 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "user=" + user +
-                ", enterprise=" + enterprise +
-                ", jobOffer=" + jobOffer +
-                ", status='" + status + '\'' +
-                ", filledBy=" + filledBy +
-                '}';
+        final StringBuilder sb = new StringBuilder("Contact{");
+        sb.append("user=").append(user);
+        sb.append(", enterprise=").append(enterprise);
+        sb.append(", jobOffer=").append(jobOffer);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", filledBy=").append(filledBy);
+        sb.append(", date=").append(date);
+        sb.append('}');
+        return sb.toString();
     }
 }

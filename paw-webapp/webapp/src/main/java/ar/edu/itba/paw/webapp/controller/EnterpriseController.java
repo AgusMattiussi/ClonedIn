@@ -369,7 +369,7 @@ public class EnterpriseController {
        }
 
        if(!successful)
-           throw new IllegalStateException("Could not update contact status to " + status.getStatus());
+           throw new IllegalStateException(String.format("Could not update contact status to '%s'", status.getStatus()));
 
        return Response.noContent().build();
    }

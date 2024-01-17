@@ -63,21 +63,6 @@ public class Enterprise implements CustomUserDetails {
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<JobOffer> jobOffersSet;
 
-    @Override
-    public String toString() {
-        return "Enterprise{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", category=" + category +
-                ", workers=" + workers +
-                ", year=" + year +
-                ", link='" + link + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 
     public Enterprise(Long id, String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this.id = id;
@@ -233,5 +218,25 @@ public class Enterprise implements CustomUserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, email);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Enterprise{");
+        sb.append("id=").append(id);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", location='").append(location).append('\'');
+        sb.append(", category=").append(category);
+        sb.append(", workers='").append(workers).append('\'');
+        sb.append(", year=").append(year);
+        sb.append(", link='").append(link).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", image=").append(image);
+        sb.append(", contacts=").append(contacts);
+        sb.append(", jobOffersSet=").append(jobOffersSet);
+        sb.append('}');
+        return sb.toString();
     }
 }

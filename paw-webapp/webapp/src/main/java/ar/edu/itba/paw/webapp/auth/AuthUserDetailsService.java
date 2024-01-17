@@ -46,7 +46,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
         
         // Puede ser empresa. Si no, no existe el usuario
-        final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user by the email " + email));
+        final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("No user by the email '%s'", email)));
         return enterprise;
     }
     
