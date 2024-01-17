@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Async
-    void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
+    public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MULTIPART_MODE, ENCODING);
@@ -83,7 +83,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("profileUrl", baseUrl + "notificationsUser/" + user.getId());
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
-        mailMap.put("salary", jobOffer.getSalary() != null? "$" + String.valueOf(jobOffer.getSalary()) :
+        mailMap.put("salary", jobOffer.getSalary() != null? "$" + jobOffer.getSalary() :
                 messageSource.getMessage("contactMail.noSalaryMsg", null, locale));
         mailMap.put("modality", jobOffer.getModality());
         mailMap.put("enterpriseName", enterprise.getName());
