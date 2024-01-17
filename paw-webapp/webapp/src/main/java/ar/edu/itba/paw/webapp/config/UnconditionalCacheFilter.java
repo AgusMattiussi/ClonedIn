@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import com.sun.research.ws.wadl.HTTPMethods;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,9 +13,10 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class UnconditionalCacheFilter extends OncePerRequestFilter {
-    //TODO: Sacar de config
-    private static final int MAX_AGE = 4 * 60 * 60; // 4 hours
-    private static final String CACHE_CONTROL_VALUE = String.format("public, max-age=%d, immutable", MAX_AGE);
+
+    @Value("${unconditionalCache.maxAge}")
+    private int MAX_AGE;
+    private final String CACHE_CONTROL_VALUE = String.format("public, max-age=%d, immutable", MAX_AGE);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
