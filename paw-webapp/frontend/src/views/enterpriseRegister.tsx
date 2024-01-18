@@ -19,7 +19,6 @@ function RegisterEnterprise() {
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
   const [city, setCity] = useState("")
   const [workers, setWorkers] = useState("")
-  const [year, setYear] = useState("")
   const [link, setLink] = useState("")
   const [aboutUs, setAboutUs] = useState("")
   const [category, setCategory] = useState("")
@@ -43,7 +42,7 @@ function RegisterEnterprise() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, year, link, aboutUs, category)
+    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, e.foundingYear, link, aboutUs, category)
     await loginHandler(e.email, e.pass)
     navigate("/users")
   }

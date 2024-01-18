@@ -18,10 +18,7 @@ function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [city, setCity] = useState("")
   const [category, setCategory] = useState("")
-  const [position, setPosition] = useState("")
-  const [description, setDescription] = useState("")
   const [educationLevel, setEducationLevel] = useState("")
 
   const { loading, apiRequest } = useRequestApi()
@@ -48,11 +45,11 @@ function RegisterUser() {
       e.pass,
       e.repeatPass,
       e.name,
-      city,
-      position,
-      description,
+      e.location,
+      e.position,
+      e.description,
       category,
-      e.educationLevel,
+      educationLevel,
     )
     await loginHandler(e.email, e.pass)
     navigate("/jobOffers")
@@ -127,8 +124,6 @@ function RegisterUser() {
                         repeatPass: "",
                         location: "",
                         position: "",
-                        educationLevel: "",
-                        category: "",
                         description: "",
                       }}
                       onSubmit={(values) => {
