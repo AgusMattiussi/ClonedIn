@@ -32,6 +32,9 @@
   "Invalid Email": "Email Inválido",
   "Password Min Length": "Contraseña demasiado corta - al menos 8 caracteres",
   "Password Match": "Contraseñas deben coincidir",
+  "Invalid Year": "Año debe ser año actual o previo al actual",
+  "Single Line Max Length": "50 caracteres maximo",
+  "Multi Line Max Length": "200 caracteres maximo",
 
   "No-especificado": "Selecciona",
   "Primario": "Primario",

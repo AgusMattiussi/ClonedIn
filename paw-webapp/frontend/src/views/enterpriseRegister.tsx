@@ -72,6 +72,7 @@ function RegisterEnterprise() {
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
+    foundingYear: yup.number().max(new Date().getFullYear(), t('Invalid Year') as string),
   })
   
   return (
@@ -95,6 +96,7 @@ function RegisterEnterprise() {
                         name: "",
                         pass: "",
                         repeatPass: "",
+                        foundingYear: "",
                       }}
                       onSubmit={(values) => {
                         handleRegister(values)
@@ -214,11 +216,14 @@ function RegisterEnterprise() {
                             </div>
                             <Form.Group className="mb-3" controlId="formBasicYear">
                               <Form.Control
+                                name="foundingYear"
                                 className="input"
                                 placeholder={t("Funding Year").toString()}
-                                value={year}
-                                onChange={(e) => setYear(e.target.value)}
+                                value={values.foundingYear}
+                                onChange={handleChange}
+                                isInvalid={!!errors.foundingYear}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.foundingYear}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control

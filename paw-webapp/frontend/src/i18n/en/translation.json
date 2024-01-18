@@ -32,6 +32,9 @@
   "Invalid Email": "Invalid Email",
   "Password Min Length": "Password is too short - 8 chars minimum.",
   "Password Match": "Passwords must match",
+  "Invalid Year": "Year must be current year or less than current year",
+  "Single Line Max Length": "50 characters maximum",
+  "Multi Line Max Length": "200 characters maximum",
 
   "No-especificado": "Choose",
   "Primario": "Primary",

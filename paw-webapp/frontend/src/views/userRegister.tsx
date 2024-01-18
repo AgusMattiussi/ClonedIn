@@ -70,7 +70,16 @@ function RegisterUser() {
     if (educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
     } else {
-      console.log("Invalid Education Level")
+      alert("ERROR");
+    }
+  }
+
+  //TODO: Ver como leer la category list
+  const handleJobCategorySelect = (e: any) => {
+    if (e.target.value == "Moda") {
+      setCategory(e.target.value)
+    } else {
+      alert("ERROR");
     }
   }
 
@@ -90,7 +99,9 @@ function RegisterUser() {
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
-    educationLevel: yup.string().ensure().required(t('Required') as string).oneOf(educationLevels)
+    location: yup.string().max(50, t('Single Line Max Length') as string),
+    position: yup.string().max(50, t('Single Line Max Length') as string),
+    description: yup.string().max(200, t('Multi Line Max Length') as string),
   })
 
   return (
@@ -114,7 +125,11 @@ function RegisterUser() {
                         name: "",
                         pass: "",
                         repeatPass: "",
+                        location: "",
+                        position: "",
                         educationLevel: "",
+                        category: "",
+                        description: "",
                       }}
                       onSubmit={(values) => {
                         handleRegister(values)
@@ -195,30 +210,38 @@ function RegisterUser() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
+                                name="location"
                                 className="input"
                                 placeholder={t("Location").toString()}
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
+                                value={values.location}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.location}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPosition">
                               <Form.Control
+                                name="position"
                                 className="input"
                                 placeholder={t("Current Position").toString()}
-                                value={position}
-                                onChange={(e) => setPosition(e.target.value)}
+                                value={values.position}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.position}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
                               <div className="d-flex mb-4 justify-content-between">
                                 <label className="area pt-1 mx-2">{t("Education Level")}</label>
                                 <Form.Select
-                                  name="educationLevel"
                                   className="selectFrom"
                                   value={educationLevel}
-                                  onChange={(e) => setEducationLevel(e.target.value)}
+                                  onChange={handleEducationLevelSelect}
                                   style={{ width: "60%" }}
-                                  isInvalid={!!errors.educationLevel}
                                 >
                                   <option value="No-especificado"> {t("No-especificado")} </option>
                                   <option value="Primario"> {t("Primario")} </option>
@@ -227,7 +250,6 @@ function RegisterUser() {
                                   <option value="Graduado"> {t("Graduado")} </option>
                                   <option value="Postgrado"> {t("Postgrado")} </option>
                                 </Form.Select>
-                                <Form.Control.Feedback type="invalid">{errors.educationLevel}</Form.Control.Feedback>
                               </div>
                             </Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
@@ -251,13 +273,18 @@ function RegisterUser() {
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
+                                name="description"
                                 placeholder={t("About Me").toString()}
                                 as="textarea"
                                 rows={3}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={values.description}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.description}
                               />
                             </Form.Group>
+                            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                           </div>
                           <p> {t("Fields required")} </p>
                           <Button variant="success" type="submit">
