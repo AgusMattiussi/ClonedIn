@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import Loader from "../components/loader"
 import Pagination from "../components/pagination"
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../api/apiRequest"
@@ -76,7 +76,6 @@ function DiscoverProfiles() {
         // Handle error as needed
         console.error("Error fetching users:", error)
       }
-
       setLoading(false)
     },
     [apiRequest, queryParams, navigate],
@@ -130,14 +129,13 @@ function DiscoverProfiles() {
     setEducationLevel("")
     setMinExpYears("")
     setMaxExpYears("")
+    setLoading(true)
   }
 
   //TODO: ordenamiento
   const usersList = users.map((user) => {
     return (
-      <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
         <ProfileUserCard user={user} />
-      </Link>
     )
   })
 

@@ -41,8 +41,15 @@ function DiscoverJobs() {
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string) => {
+    async (
+      categoryName: string,
+      modality: string,
+      searchTerm: string, 
+      minSalary: string,
+      maxSalary: string
+    ) => {
       setLoading(true)
+
       if (categoryName) queryParams.categoryName = categoryName
       if (modality) queryParams.modality = modality
       if (searchTerm) queryParams.searchTerm = searchTerm
@@ -73,24 +80,6 @@ function DiscoverJobs() {
     [apiRequest, queryParams, navigate],
   )
 
-  const handleSearch = () => {
-    console.log("Search")
-    setLoading(true)
-  }
-
-  const handleFilter = () => {
-    console.log("Filter")
-    setLoading(true)
-  }
-
-  const handleClear = () => {
-    setSearchTerm("")
-    setCategoryName("")
-    setModality("")
-    setMinSalary("")
-    setMaxSalary("")
-  }
-
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await apiRequest({
@@ -110,8 +99,39 @@ function DiscoverJobs() {
       // setSearchParams(queryParams)
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary)
     }
-  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs])
+  }, [
+    apiRequest,
+    categoryName,
+    modality,
+    searchTerm,
+    minSalary,
+    maxSalary,
+    isLoading,
+    fetchJobs,
+    setSearchParams,
+    queryParams
+  ])
 
+  const handleSearch = () => {
+    console.log("Search")
+    setLoading(true)
+  }
+
+  const handleFilter = () => {
+    console.log("Filter")
+    setLoading(true)
+  }
+
+  const handleClear = () => {
+    setSearchTerm("")
+    setCategoryName("")
+    setModality("")
+    setMinSalary("")
+    setMaxSalary("")
+    setLoading(true)
+  }
+
+  
   const jobsList = jobs.map((job) => {
     return <JobOfferDiscoverCard job={job} key={job.id} />
   })
