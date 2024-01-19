@@ -24,19 +24,22 @@ function EducationForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    college: yup.string().required(t('Required') as string),
-    degree: yup.string().required(t('Required') as string),
+    college: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    degree: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    comment: yup.string().max(50, t('Single Line Max Length') as string),
+    yearFrom: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    yearTo: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     //TODO: agregar validaciones para las fechas
   })
-  const [comment, setComment] = useState("")
   const [monthFrom, setMonthFrom] = useState("Enero")
-  const [yearFrom, setYearFrom] = useState("")
   const [monthTo, setMonthTo] = useState("")
-  const [yearTo, setYearTo] = useState("")
 
   const handlePost = async (e: any) => {
     const college = e.college
     const degree = e.degree
+    const comment = e.comment
+    const yearFrom = e.yearFrom
+    const yearTo = e.yearTo
     const response = await apiRequest({
       url: `/users/${id}/educations`,
       method: "POST",
@@ -77,6 +80,9 @@ function EducationForm() {
                       initialValues={{
                         college: "",
                         degree: "",
+                        comment: "",
+                        yearFrom: "",
+                        yearTo: "",
                       }}
                       onSubmit={(values) => {
                         handlePost(values)
@@ -110,11 +116,14 @@ function EducationForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicComment">
                               <Form.Control
+                                name="comment"
                                 className="input"
                                 placeholder={t("Comment").toString()}
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
+                                value={values.comment}
+                                onChange={handleChange}
+                                isInvalid={!!errors.comment}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.comment}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <div className="row ml-4">
@@ -143,11 +152,14 @@ function EducationForm() {
                                 </div>
                                 <div className="col-sm-4">
                                   <Form.Control
+                                    name="yearFrom"
                                     className="input"
                                     placeholder={t("Year").toString()}
-                                    value={yearFrom}
-                                    onChange={(e) => setYearFrom(e.target.value)}
+                                    value={values.yearFrom}
+                                    onChange={handleChange}
+                                    isInvalid={!!errors.yearFrom}
                                   />
+                                  <Form.Control.Feedback type="invalid">{errors.yearFrom}</Form.Control.Feedback>
                                 </div>
                               </div>
                             </div>
@@ -178,11 +190,14 @@ function EducationForm() {
                                 </div>
                                 <div className="col-sm-4">
                                   <Form.Control
+                                    name="yearTo"
                                     className="input"
                                     placeholder={t("Year").toString()}
-                                    value={yearTo}
-                                    onChange={(e) => setYearTo(e.target.value)}
+                                    value={values.yearTo}
+                                    onChange={handleChange}
+                                    isInvalid={!!errors.yearTo}
                                   />
+                                  <Form.Control.Feedback type="invalid">{errors.yearTo}</Form.Control.Feedback>
                                 </div>
                               </div>
                             </div>

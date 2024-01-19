@@ -64,7 +64,7 @@ function RegisterUser() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    if (educationLevels.includes(e.target.value)) {
+    if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
     } else {
       alert("ERROR");
@@ -73,7 +73,7 @@ function RegisterUser() {
 
   //TODO: Ver como leer la category list
   const handleJobCategorySelect = (e: any) => {
-    if (e.target.value == "Moda") {
+    if (e.target.value === "Moda") {
       setCategory(e.target.value)
     } else {
       alert("ERROR");
@@ -90,7 +90,7 @@ function RegisterUser() {
 
   const schema = yup.object().shape({
     email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
-    name: yup.string().required(t('Required') as string),
+    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
     pass: yup.string().required(t('Required') as string).min(8, t('Password Min Length') as string),
     repeatPass: yup
       .string()
