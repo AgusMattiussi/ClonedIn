@@ -39,6 +39,7 @@
   "Invalid URL": "Invalid URL",
   "Invalid String": "Field must be a string",
   "Invalid Number": "Field must be a number",
+  "Invalid End Year": "End year should be greater than start year",
 
   "No-especificado": "Choose",
   "Primario": "Primary",
