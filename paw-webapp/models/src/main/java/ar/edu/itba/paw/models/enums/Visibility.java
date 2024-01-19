@@ -26,7 +26,7 @@ public enum Visibility {
                 return visibility;
             }
         }
-        throw new IllegalArgumentException(String.format("Invalid visibility value: %s", value));
+        throw new IllegalArgumentException("Invalid visibility value: " + value);
     }
 
     public static Visibility fromString(String asString) {
@@ -35,7 +35,7 @@ public enum Visibility {
                 return visibility;
             }
         }
-        throw new IllegalArgumentException(String.format("Invalid visibility string: %s", asString));
+        throw new IllegalArgumentException("Invalid visibility string: " + asString);
     }
 
     @Override

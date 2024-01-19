@@ -74,10 +74,9 @@ public class Skill {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Skill{");
-        sb.append("id=").append(id);
-        sb.append(", description='").append(description).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Skill{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
