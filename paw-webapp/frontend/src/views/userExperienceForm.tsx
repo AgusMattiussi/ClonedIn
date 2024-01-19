@@ -24,18 +24,15 @@ function ExperienceForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    company: yup.string().required(t('Required') as string),
-    position: yup.string().required(t('Required') as string),
+    company: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
     description: yup.string().max(200, t('Multi Line Max Length') as string),
     yearFrom: yup.number().typeError(t('Invalid Number') as string).required().min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     yearTo: yup.number().typeError(t('Invalid Number') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     //TODO: agregar validaciones para las fechas
   })
-  const [description, setDescription] = useState("")
   const [monthFrom, setMonthFrom] = useState("")
-  const [yearFrom, setYearFrom] = useState("")
   const [monthTo, setMonthTo] = useState("")
-  const [yearTo, setYearTo] = useState("")
 
   const handlePost = async (e: any) => {
     const company = e.company
