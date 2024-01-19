@@ -17,10 +17,7 @@ function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [city, setCity] = useState("")
   const [workers, setWorkers] = useState("")
-  const [link, setLink] = useState("")
-  const [aboutUs, setAboutUs] = useState("")
   const [category, setCategory] = useState("")
 
   const { loading, apiRequest } = useRequestApi()
@@ -42,7 +39,7 @@ function RegisterEnterprise() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(e.email, e.pass, e.repeatPass, e.name, city, workers, e.foundingYear, link, aboutUs, category)
+    await registerHandler(e.email, e.pass, e.repeatPass, e.name, e.city, workers, e.foundingYear, e.link, e.aboutUs, category)
     await loginHandler(e.email, e.pass)
     navigate("/users")
   }
@@ -63,6 +60,8 @@ function RegisterEnterprise() {
 
   const { Formik } = formik
 
+  const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
+
   const schema = yup.object().shape({
     email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
     name: yup.string().required(t('Required') as string),
@@ -71,7 +70,10 @@ function RegisterEnterprise() {
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
-    foundingYear: yup.number().max(new Date().getFullYear(), t('Invalid Year') as string),
+    city: yup.string().max(50, t('Single Line Max Length') as string),
+    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    link: yup.string().matches(re, t('Invalid URL') as string).max(50, t('Single Line Max Length') as string),
+    aboutUs: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   
   return (
@@ -95,7 +97,10 @@ function RegisterEnterprise() {
                         name: "",
                         pass: "",
                         repeatPass: "",
+                        city: "",
                         foundingYear: "",
+                        link: "",
+                        aboutUs: "",
                       }}
                       onSubmit={(values) => {
                         handleRegister(values)
@@ -168,11 +173,14 @@ function RegisterEnterprise() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
+                                name="city"
                                 className="input"
                                 placeholder={t("Location").toString()}
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
+                                value={values.city}
+                                onChange={handleChange}
+                                isInvalid={!!errors.city}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
                               <label className="area pt-1 mx-1">{t("Quantity of employees")}</label>
@@ -226,20 +234,26 @@ function RegisterEnterprise() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control
+                                name="link"
                                 className="input"
                                 placeholder={t("Website").toString()}
-                                value={link}
-                                onChange={(e) => setLink(e.target.value)}
+                                value={values.link}
+                                onChange={handleChange}
+                                isInvalid={!!errors.link}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.link}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
+                                name="aboutUs"
                                 placeholder={t("About Us").toString()}
                                 as="textarea"
                                 rows={3}
-                                value={aboutUs}
-                                onChange={(e) => setAboutUs(e.target.value)}
+                                value={values.aboutUs}
+                                onChange={handleChange}
+                                isInvalid={!!errors.aboutUs}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.aboutUs}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>
