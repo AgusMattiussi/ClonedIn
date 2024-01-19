@@ -32,7 +32,7 @@ public class EducationServiceImpl implements EducationService {
 
         DateHelper.validateDate(monthFrom, yearFrom, monthTo, yearTo);
 
-        return educationDao.add(user, monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
+        return educationDao.add(user, monthFrom.getNumber(), yearFrom, monthTo.getNumber(),
                 yearTo, title, institutionName, description);
     }
 
