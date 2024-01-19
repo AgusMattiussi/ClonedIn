@@ -13,6 +13,7 @@ import ar.edu.itba.paw.models.enums.SortBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,10 @@ import java.util.Optional;
 public class ContactServiceImpl implements ContactService {
 
     private final ContactDao contactDao;
-    private final JobOfferSkillDao jobOfferSkillDao;
 
     @Autowired
-    public ContactServiceImpl(ContactDao contactDao, JobOfferSkillDao jobOfferSkillDao) {
+    public ContactServiceImpl(ContactDao contactDao) {
         this.contactDao = contactDao;
-        this.jobOfferSkillDao= jobOfferSkillDao;
     }
 
     @Override
@@ -36,6 +35,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
         return contactDao.addContact(enterprise, user, jobOffer, filledBy);
     }

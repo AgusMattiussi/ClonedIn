@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.UserSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class UserSkillServiceImpl implements UserSkillService {
 
 
     @Override
+    @Transactional
     public UserSkill addSkillToUser(Skill skill, User user) {
         return userSkillDao.addSkillToUser(skill, user);
     }
@@ -50,6 +52,7 @@ public class UserSkillServiceImpl implements UserSkillService {
     }
 
     @Override
+    @Transactional
     public void deleteSkillFromUser(long userID, long skillID) {
         userSkillDao.deleteSkillFromUser(userID, skillID);
     }

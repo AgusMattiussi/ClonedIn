@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class CategoryHibernateDao implements CategoryDao {
 
     @PersistenceContext
@@ -42,7 +41,7 @@ public class CategoryHibernateDao implements CategoryDao {
 
     @Override
     public List<Category> getAllCategories(int page, int pageSize) {
-        TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c WHERE c.id <> 1 ORDER BY c.name ASC", Category.class);
+        TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c WHERE c.id <> 1", Category.class);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();

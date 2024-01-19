@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class SkillHibernateDao implements SkillDao {
 
     @PersistenceContext

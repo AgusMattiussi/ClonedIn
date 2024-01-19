@@ -16,7 +16,6 @@ import java.util.List;
 
 @Primary
 @Repository
-@Transactional
 public class UserSkillHibernateDao implements UserSkillDao {
 
     @PersistenceContext

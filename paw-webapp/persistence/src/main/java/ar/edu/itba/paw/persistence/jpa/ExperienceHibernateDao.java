@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class ExperienceHibernateDao implements ExperienceDao {
 
     @PersistenceContext

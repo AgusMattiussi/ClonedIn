@@ -15,7 +15,6 @@ import java.util.List;
 
 @Primary
 @Repository
-@Transactional
 public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
 
     @PersistenceContext

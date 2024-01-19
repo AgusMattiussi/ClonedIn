@@ -30,7 +30,7 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 @Component
 public class JobOfferController {
 
-    private static final int JOB_OFFERS_PER_PAGE = 3;
+    private static final int JOB_OFFERS_PER_PAGE = 5;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
@@ -55,7 +55,7 @@ public class JobOfferController {
                                  @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary,
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam("position") final String position,
-                                 @QueryParam("query") final String searchTerm,
+                                 @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
                                  @QueryParam("enterprise") final String enterpriseName) {
 
@@ -92,7 +92,6 @@ public class JobOfferController {
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.SKILL_V1)
     @PreAuthorize(USER_OR_JOB_OFFER_OWNER)
-    @Transactional
     public Response getSkills(@PathParam("id") final long id) {
         List<Skill> skills = jobOfferService.getSkills(id);
         if (skills == null || skills.isEmpty())

@@ -52,9 +52,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
                 // Users and Enterprises
-                .antMatchers("/users/*/image").permitAll()
+                //.antMatchers("/users/*/image").permitAll()
                 .antMatchers("/users", "/users/**").authenticated()
-                .antMatchers("/enterprises/*/image").permitAll()
+                //.antMatchers("/enterprises/*/image").permitAll()
                 .antMatchers("/enterprises", "/enterprises/**").authenticated()
                 // Categories
                 .antMatchers("/categories").permitAll()

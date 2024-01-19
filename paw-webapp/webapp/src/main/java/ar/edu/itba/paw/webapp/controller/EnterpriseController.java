@@ -37,11 +37,11 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 @Path("enterprises")
 @Component
-@Transactional
 public class EnterpriseController {
 
-    public static final int ENTERPRISES_PER_PAGE = 10;
+    public static final int ENTERPRISES_PER_PAGE = 15;
     private static final int CONTACTS_PER_PAGE = 10;
+    private static final int JOB_OFFERS_PER_PAGE = 5;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
@@ -160,13 +160,13 @@ public class EnterpriseController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
         List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
-                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, false, page - 1, CONTACTS_PER_PAGE)
+                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, false, page - 1, JOB_OFFERS_PER_PAGE)
                 .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
         long jobOffersCount = jobOfferService.getJobOfferCount(category, modality, skillDescription, enterprise.getName(),
                         searchTerm, position, minSalary, maxSalary, false);
 
-        long maxPages = jobOffersCount / CONTACTS_PER_PAGE + 1;
+        long maxPages = jobOffersCount / JOB_OFFERS_PER_PAGE + 1;
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
     }
@@ -183,11 +183,10 @@ public class EnterpriseController {
         return Response.ok(jobOffer).build();
     }
 
-    //TODO: Mover esta logica al JobOfferController?
     @PUT
     @Path("/{id}/jobOffers/{joid}")
-    @Transactional //TODO:Hace falta?
     @PreAuthorize(JOB_OFFER_OWNER)
+    @Transactional
     public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
                                                @PathParam("joid") @Min(1) final long joid,
                                                @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
@@ -214,6 +213,7 @@ public class EnterpriseController {
     @Path("/{id}/jobOffers")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response createJobOffer(@PathParam("id") @Min(1) final long id,
                                    @Valid @NotNull final JobOfferForm jobOfferForm) {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
@@ -268,6 +268,7 @@ public class EnterpriseController {
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response contactUser(@PathParam("id") @Min(1) final long id,
                                 @Valid @NotNull final ContactForm contactForm){
 
@@ -289,7 +290,6 @@ public class EnterpriseController {
 
         Contact contact = contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 
-        // TODO: Chequear si funciona este link
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getJobOffer().getId()))
                 .path(String.valueOf(contact.getUser().getId()))
@@ -301,6 +301,7 @@ public class EnterpriseController {
     @Path("/{id}/contacts/{joid}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)
+    @Transactional
     public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
                                     @PathParam("joid") @Min(1) final long joid,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
@@ -334,7 +335,7 @@ public class EnterpriseController {
         return Response.ok(contactDTO).build();
     }
 
-
+    //TODO: Evaluar que se puede hacer en cada caso, segun FilledBy
    @PUT
    @Path("/{id}/contacts/{joid}/{userId}")
    @PreAuthorize(JOB_OFFER_OWNER)
@@ -345,9 +346,9 @@ public class EnterpriseController {
 
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+        Contact contact = contactService.findByPrimaryKey(user.getId(), jobOffer.getId())
+                .orElseThrow(() -> new ContactNotFoundException(user.getId(), jobOffer.getId()));
 
-        if(!contactService.alreadyContacted(user.getId(), jobOffer.getId()))
-            throw new ContactNotFoundException(user.getId(), jobOffer.getId());
 
        if (status == JobOfferStatus.PENDING)
            throw new IllegalArgumentException("Cannot update contact status to PENDING");
@@ -355,9 +356,13 @@ public class EnterpriseController {
        boolean successful = false;
        switch (status) {
            case ACCEPTED:
+               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
+                   throw new IllegalStateException("Cannot accept a contact that was filled by this enterprise");
                successful = contactService.acceptJobOffer(user, jobOffer);
                break;
            case DECLINED:
+               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
+                   throw new IllegalStateException("Cannot decline a contact that was filled by this enterprise");
                successful = contactService.rejectJobOffer(user, jobOffer);
                break;
            case CANCELLED:
@@ -374,10 +379,11 @@ public class EnterpriseController {
        return Response.noContent().build();
    }
 
-
+    @PUT
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response uploadImage(@PathParam("id") @Min(1) final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
         Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));

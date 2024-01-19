@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -33,6 +34,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
                              Integer year, String link, String description) {
         return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, category, workers, year, link, description);
@@ -132,6 +134,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public void updateProfileImage(Enterprise enterprise, Image image) {
         enterpriseDao.updateEnterpriseProfileImage(enterprise, image);
     }

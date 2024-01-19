@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.enums.FilledBy;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -12,14 +13,14 @@ import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 public class ContactDTO {
 
     private String status;
-    private int filledBy;
+    private String filledBy;
     private String date;
     private ContactDTOLinks links;
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact) {
         final ContactDTO dto = new ContactDTO();
         dto.status = contact.getStatus();
-        dto.filledBy = contact.getFilledBy();
+        dto.filledBy = FilledBy.fromInt(contact.getFilledBy()).getAsString();
         dto.date = contact.getDate();
 
         dto.links = new ContactDTOLinks(uriInfo, contact);
@@ -36,11 +37,11 @@ public class ContactDTO {
         this.status = status;
     }
 
-    public int getFilledBy() {
+    public String getFilledBy() {
         return filledBy;
     }
 
-    public void setFilledBy(int filledBy) {
+    public void setFilledBy(String filledBy) {
         this.filledBy = filledBy;
     }
 

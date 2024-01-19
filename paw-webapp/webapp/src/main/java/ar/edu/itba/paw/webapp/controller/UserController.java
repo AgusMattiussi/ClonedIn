@@ -34,15 +34,14 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 @Path("users")
 @Component
-@Transactional
 public class UserController {
 
     private static final int PAGE_SIZE = 10;
     private static final int JOB_OFFERS_PER_PAGE = 3;
-    private static final int APPLICATIONS_PER_PAGE = 3;
-    private static final int NOTIFICATIONS_PER_PAGE = APPLICATIONS_PER_PAGE;
+    private static final int APPLICATIONS_PER_PAGE = 5;
+    private static final int NOTIFICATIONS_PER_PAGE = 5;
     private static final int EXPERIENCES_PER_PAGE = 3;
-    private static final int USERS_PER_PAGE = 8;
+    private static final int USERS_PER_PAGE = 12;
     private static final int EDUCATIONS_PER_PAGE = 3;
     private static final int SKILLS_PER_PAGE = 5;
 
@@ -282,6 +281,7 @@ public class UserController {
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
     }
 
+
     @GET
     @Path("/{id}/experiences")
     @Produces(ClonedInMediaType.EXPERIENCE_LIST_V1)
@@ -307,6 +307,7 @@ public class UserController {
     @Path("/{id}/experiences/{expId}")
     @Produces(ClonedInMediaType.EXPERIENCE_V1)
     @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
+    @Transactional
     public Response getExperienceById(@PathParam("id") @Min(1) final long id,
                                       @PathParam("expId") @Min(1) final long expId) {
 
@@ -408,10 +409,12 @@ public class UserController {
         return Response.noContent().build();
     }
 
+    // TODO: Paginar?
     @GET
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    @Transactional
     public Response getSkills(@PathParam("id") @Min(1) final long id,
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -433,6 +436,7 @@ public class UserController {
     @Path("/{id}/skills")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response addSkill(@PathParam("id") @Min(1) final long id,
                              @NotNull @Valid final SkillForm skillForm){
         User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -442,9 +446,6 @@ public class UserController {
             throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", id, skillForm.getSkill()));
 
         userSkillService.addSkillToUser(skill, user);
-
-        LOGGER.debug("A new skill was registered under id: {}", skill.getId());
-        LOGGER.info("A new skill was registered");
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(skill.getId())).build();
         return Response.created(uri).build();
@@ -514,7 +515,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
-//    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
         Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();

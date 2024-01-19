@@ -29,6 +29,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
+    @Transactional
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
         return jobOfferDao.create(enterprise, category, position, description, salary,
                 modality == null ? JobOfferModality.NOT_SPECIFIED.getModality() : modality.getModality());

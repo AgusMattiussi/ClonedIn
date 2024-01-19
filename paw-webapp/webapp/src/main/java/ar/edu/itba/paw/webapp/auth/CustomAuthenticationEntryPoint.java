@@ -20,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ErrorDTO errorDTO = new ErrorDTO(e.getClass(), "Authentication Exception", e.getMessage());
 
-        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         mapper.writeValue(response.getWriter(), errorDTO);
     }

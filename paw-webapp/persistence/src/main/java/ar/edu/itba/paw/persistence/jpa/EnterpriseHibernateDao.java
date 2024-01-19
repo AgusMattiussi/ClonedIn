@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class EnterpriseHibernateDao implements EnterpriseDao {
 
     public static final Image DEFAULT_IMAGE = null;

@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class JobOfferHibernateDao implements JobOfferDao {
 
     @PersistenceContext

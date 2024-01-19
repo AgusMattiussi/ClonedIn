@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 @Primary
 @Repository
-@Transactional
 public class ImageHibernateDao implements ImageDao {
     @PersistenceContext
     private EntityManager em;

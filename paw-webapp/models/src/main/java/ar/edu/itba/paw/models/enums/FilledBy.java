@@ -33,4 +33,13 @@ public enum FilledBy {
         throw new InvalidParameterException();
     }
 
+    public static FilledBy fromInt(int i) {
+        for (FilledBy filledBy : FilledBy.values()) {
+            if (filledBy.getValue() == i) {
+                return filledBy;
+            }
+        }
+        throw new InvalidParameterException();
+    }
+
 }

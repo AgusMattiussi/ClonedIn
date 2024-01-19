@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class UserHibernateDao implements UserDao {
 
     private static final Image DEFAULT_IMAGE = null;

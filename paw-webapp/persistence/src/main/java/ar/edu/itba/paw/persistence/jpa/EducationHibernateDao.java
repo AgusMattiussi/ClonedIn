@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@Transactional
 public class EducationHibernateDao implements EducationDao {
 
     @PersistenceContext

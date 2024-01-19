@@ -9,17 +9,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Primary
 @Repository
 public class ContactHibernateDao implements ContactDao {
@@ -30,11 +26,11 @@ public class ContactHibernateDao implements ContactDao {
     //FIXME: Revisar que este metodo devuelva correctamente
     @Override
     public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
-        Query query = em.createNativeQuery("SELECT * FROM contactado WHERE idUsuario = :userID AND idOferta = :jobOfferID");
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.user.id = :userID AND c.jobOffer.id = :jobOfferID", Contact.class);
         query.setParameter("userID", userID);
         query.setParameter("jobOfferID", jobOfferID);
 
-        return (Optional<Contact>) query.getResultList().stream().findFirst();
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

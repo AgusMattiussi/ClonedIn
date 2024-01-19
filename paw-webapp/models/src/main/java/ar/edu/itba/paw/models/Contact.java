@@ -88,6 +88,10 @@ public class Contact {
         return filledBy;
     }
 
+    public FilledBy getFilledByEnum() {
+        return FilledBy.fromInt(filledBy);
+    }
+
     public String getDate() {
         return date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : "";
     }

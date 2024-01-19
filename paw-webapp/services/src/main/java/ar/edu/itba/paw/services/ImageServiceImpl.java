@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public Image uploadImage(byte[] bytes) {
         return imageDao.uploadImage(bytes);
     }
