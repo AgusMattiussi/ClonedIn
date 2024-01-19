@@ -39,10 +39,11 @@ public class JobOfferSkill {
 
     @Override
     public String toString() {
-        return "JobOfferSkill{" +
-                "jobOffer=" + jobOffer +
-                ", skill=" + skill +
-                '}';
+        final StringBuilder sb = new StringBuilder("JobOfferSkill{");
+        sb.append("jobOffer=").append(jobOffer);
+        sb.append(", skill=").append(skill);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

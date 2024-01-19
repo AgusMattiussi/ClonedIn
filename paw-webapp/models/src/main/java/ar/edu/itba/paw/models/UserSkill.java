@@ -39,10 +39,11 @@ public class UserSkill {
 
     @Override
     public String toString() {
-        return "UserSkill{" +
-                "user=" + user +
-                ", skill=" + skill +
-                '}';
+        final StringBuilder sb = new StringBuilder("UserSkill{");
+        sb.append("user=").append(user);
+        sb.append(", skill=").append(skill);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override

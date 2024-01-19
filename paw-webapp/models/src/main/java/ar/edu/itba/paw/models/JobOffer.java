@@ -123,16 +123,17 @@ public class JobOffer {
 
     @Override
     public String toString() {
-        return "JobOffer{" +
-                "id=" + id +
-                ", enterprise=" + enterprise +
-                ", category=" + category +
-                ", position='" + position + '\'' +
-                ", description='" + description + '\'' +
-                ", salary=" + salary +
-                ", modality='" + modality + '\'' +
-                ", available='" + available + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("JobOffer{");
+        sb.append("id=").append(id);
+        sb.append(", enterprise=").append(enterprise);
+        sb.append(", category=").append(category);
+        sb.append(", position='").append(position).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", salary=").append(salary);
+        sb.append(", modality='").append(modality).append('\'');
+        sb.append(", available='").append(available).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     @Override
