@@ -25,7 +25,10 @@ function EditUserForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().required(t('Required') as string),
+    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    location: yup.string().max(50, t('Single Line Max Length') as string),
+    position: yup.string().max(50, t('Single Line Max Length') as string),
+    aboutMe: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [location, setLocation] = useState("")
   const [position, setPosition] = useState("")
@@ -49,6 +52,9 @@ function EditUserForm() {
 
   const handlePost = async (e: any) => {
     const name = e.name
+    const location = e.location
+    const position = e.position
+    const aboutMe = e.aboutMe
     const response = await apiRequest({
       url: `/users/${id}`,
       method: "PUT",
@@ -86,6 +92,9 @@ function EditUserForm() {
                       validationSchema={schema}
                       initialValues={{
                         name: "",
+                        location: "",
+                        position: "",
+                        aboutMe: "",
                       }}
                       onSubmit={(values) => {
                         handlePost(values)
@@ -108,19 +117,25 @@ function EditUserForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
+                                name="location"
                                 className="input"
                                 placeholder={t("Location").toString()}
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
+                                value={values.location}
+                                onChange={handleChange}
+                                isInvalid={!!errors.location}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPosition">
                               <Form.Control
+                                name="position"
                                 className="input"
                                 placeholder={t("Current Position").toString()}
-                                value={position}
-                                onChange={(e) => setPosition(e.target.value)}
+                                value={values.position}
+                                onChange={handleChange}
+                                isInvalid={!!errors.position}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <label
@@ -172,12 +187,15 @@ function EditUserForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
+                                name="aboutMe"
                                 placeholder={t("About Me").toString()}
                                 as="textarea"
                                 rows={3}
-                                value={aboutMe}
-                                onChange={(e) => setAboutMe(e.target.value)}
+                                value={values.aboutMe}
+                                onChange={handleChange}
+                                isInvalid={!!errors.aboutMe}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.aboutMe}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
                           <p> {t("Fields required")}</p>
