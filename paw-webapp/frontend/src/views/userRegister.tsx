@@ -64,7 +64,7 @@ function RegisterUser() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    if (educationLevels.includes(e.target.value)) {
+    if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
     } else {
       alert("ERROR");
