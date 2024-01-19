@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
 import { UserRole } from "../../utils/constants"
 import { useTranslation } from "react-i18next"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react"
 import { useRequestApi } from "../../api/apiRequest"
 import { useSharedAuth } from "../../api/auth"
@@ -60,7 +60,7 @@ function ProfileUserCard({
 
   const userSkillsList = skillsData.map((skill, index) => {
     return (
-      <Badge key={index} pill bg="success" className="mx-2">
+      <Badge key={index} pill bg="success" className="mx-2" >
         {skill.description}
       </Badge>
     )
@@ -68,16 +68,18 @@ function ProfileUserCard({
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "10rem" }}>
-      <Card.Img variant="top" src={imageUrl} />
       {userInfo?.role === UserRole.ENTERPRISE ? (
-        <></>
+        <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
+          <Card.Img variant="top" src={imageUrl} />
+        </Link>
       ) : (
-        <Button type="button" variant="success" onClick={() => navigate(`image`)}>
-          <div className="d-flex align-items-center justify-content-center">
-            <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
-            {t("Edit Profile Picture")}
-          </div>
-        </Button>
+        <><Card.Img variant="top" src={imageUrl} />
+          <Button type="button" variant="success" onClick={() => navigate(`image`)}>
+            <div className="d-flex align-items-center justify-content-center">
+              <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
+              {t("Edit Profile Picture")}
+            </div>
+          </Button></>
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">
@@ -113,7 +115,7 @@ function ProfileUserCard({
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.links.category == null ? t("No-especificado") : userCategory?.name}
+                    {user.links.category == null ? t("No-especificado") : t(userCategory!.name)}
                   </Badge>
                 </div>
               ) : (

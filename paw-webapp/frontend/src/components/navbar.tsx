@@ -28,7 +28,7 @@ function Navigation({ role }: { role: UserRole }) {
     <Navbar expand="lg" className="color-nav" variant="dark">
       {role === UserRole.ENTERPRISE ? (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand onClick={() => navigate("/users")}>
+          <Navbar.Brand href="/users">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -55,7 +55,7 @@ function Navigation({ role }: { role: UserRole }) {
         </div>
       ) : (
         <div className="m-1 w-100 d-flex px-3">
-          <Navbar.Brand onClick={() => navigate("/jobOffers")}>
+          <Navbar.Brand href="/jobOffers">
             <img src={logo} alt="" height="40" className="d-inline-block align-top" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
