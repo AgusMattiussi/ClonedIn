@@ -127,19 +127,12 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser (@NotNull @Valid final UserForm userForm) {
-        Category category = categoryService.findByName(userForm.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(userForm.getCategory()));
+    public Response createUser(@NotNull @Valid final UserForm userForm) {
+        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
+                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
 
-        final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
-
-        emailService.sendRegisterUserConfirmationEmail(user, LocaleContextHolder.getLocale());
-
-        LOGGER.debug("A new user was registered under id: {}", user.getId());
-        LOGGER.info("A new user was registered");
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
 

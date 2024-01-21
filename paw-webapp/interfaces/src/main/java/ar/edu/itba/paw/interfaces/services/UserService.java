@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface UserService {
-    User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education);
+    User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education);
 
     Optional<User> findByEmail(String email);
 
