@@ -2,10 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
-import ar.edu.itba.paw.interfaces.services.ContactService;
-import ar.edu.itba.paw.interfaces.services.EnterpriseService;
-import ar.edu.itba.paw.interfaces.services.JobOfferService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
@@ -13,12 +10,11 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
-import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
-import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +33,8 @@ public class ContactServiceImpl implements ContactService {
     private UserService userService;
     @Autowired
     private JobOfferService jobOfferService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
@@ -47,6 +45,31 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
         return contactDao.addContact(enterprise, user, jobOffer, filledBy);
+    }
+
+    @Override
+    @Transactional
+    public Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage) {
+        Enterprise enterprise = enterpriseService.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+
+        if(this.alreadyContacted(userId, jobOfferId))
+            throw new AlreadyContactedException(userId, jobOfferId);
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
+                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+
+        if(jobOffer.getEnterpriseID() != enterpriseId)
+            throw new NotJobOfferOwnerException(enterpriseId, jobOfferId);
+
+        User user = userService.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        Contact contact = this.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
+
+        emailService.sendContactEmail(user, enterprise, jobOffer, contactMessage, LocaleContextHolder.getLocale());
+
+        return contact;
     }
 
     @Override

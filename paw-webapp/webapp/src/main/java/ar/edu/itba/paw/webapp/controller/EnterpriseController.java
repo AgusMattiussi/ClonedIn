@@ -230,27 +230,11 @@ public class EnterpriseController {
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
     public Response contactUser(@PathParam("id") @Min(1) final long id,
                                 @Valid @NotNull final ContactForm contactForm){
 
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
-
-        if(contactService.alreadyContacted(contactForm.getUserId(), contactForm.getJobOfferId()))
-            throw new AlreadyContactedException(contactForm.getUserId(), contactForm.getJobOfferId());
-
-        JobOffer jobOffer = jobOfferService.findById(contactForm.getJobOfferId())
-                .orElseThrow(() -> new JobOfferNotFoundException(contactForm.getJobOfferId()));
-
-        if(jobOffer.getEnterpriseID() != id)
-            throw new NotJobOfferOwnerException(id, contactForm.getJobOfferId());
-
-        User user = userService.findById(contactForm.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(contactForm.getUserId()));
-
-        emailService.sendContactEmail(user, enterprise, jobOffer, contactForm.getMessage(), LocaleContextHolder.getLocale());
-
-        Contact contact = contactService.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
+        Contact contact = contactService.addContact(id, contactForm.getUserId(), contactForm.getJobOfferId(),
+                FilledBy.ENTERPRISE, contactForm.getMessage());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getJobOffer().getId()))

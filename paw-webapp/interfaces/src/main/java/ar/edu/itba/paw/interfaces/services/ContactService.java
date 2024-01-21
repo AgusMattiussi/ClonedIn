@@ -18,6 +18,8 @@ public interface ContactService {
 
     Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
 
+    Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage);
+
     List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy);
 
     List<User> getUsersForEnterprise(Enterprise enterprise, FilledBy filledBy);
