@@ -3,6 +3,9 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
+import ar.edu.itba.paw.interfaces.services.EnterpriseService;
+import ar.edu.itba.paw.interfaces.services.JobOfferService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
@@ -10,6 +13,10 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -22,12 +29,14 @@ import java.util.Optional;
 @Service
 public class ContactServiceImpl implements ContactService {
 
-    private final ContactDao contactDao;
-
     @Autowired
-    public ContactServiceImpl(ContactDao contactDao) {
-        this.contactDao = contactDao;
-    }
+    private ContactDao contactDao;
+    @Autowired
+    private EnterpriseService enterpriseService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JobOfferService jobOfferService;
 
     @Override
     public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
@@ -87,10 +96,24 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                                  JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
+    public PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+                                           JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
         String statusValue = status != null ? status.getStatus() : null;
-        return contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, statusValue, sortBy, page, pageSize);
+
+        Enterprise enterprise = enterpriseService.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        User user = userId != null ?
+                userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)) : null;
+        JobOffer jobOffer = jobOfferId != null ?
+                jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId)) : null;
+
+        List<Contact> contacts = contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, statusValue,
+                sortBy, page-1, pageSize);
+
+        long contactCount = this.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
+        long maxPages = contactCount / pageSize + 1;
+
+        return new PaginatedResource<>(contacts, page, maxPages);
     }
 
     @Override

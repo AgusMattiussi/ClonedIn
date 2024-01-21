@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,8 @@ public interface ContactService {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                           JobOfferStatus status, SortBy sortBy, int page, int pageSize);
+    PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+                                                        JobOfferStatus status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
 

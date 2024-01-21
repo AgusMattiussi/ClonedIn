@@ -213,17 +213,17 @@ public class EnterpriseController {
                                     @QueryParam("userId") @Min(1) final Long userId,
                                     @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
-        User user = userId != null ? userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)) : null;
-        JobOffer jobOffer = jobOfferId != null ? jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId)) : null;
+        PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, jobOfferId, userId, filledBy,
+                status, sortBy, page, CONTACTS_PER_PAGE);
 
-        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, status, sortBy,
-                page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+        if(contacts.isEmpty())
+            return Response.noContent().build();
 
-        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
-        long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
+        List<ContactDTO> contactDTOList = contacts.getPage().stream()
+                .map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOList) {}), page,
+                contacts.getMaxPages());
     }
 
     @POST
@@ -270,17 +270,17 @@ public class EnterpriseController {
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
+        PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, joid, null, filledBy,
+                status, sortBy, page, CONTACTS_PER_PAGE);
 
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
+        if(contacts.isEmpty())
+            return Response.noContent().build();
 
-        List<ContactDTO> contactList = contactService.getContactsForEnterprise(enterprise, jobOffer, null, filledBy, status, sortBy,
-                page - 1, CONTACTS_PER_PAGE).stream().map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+        List<ContactDTO> contactDTOs = contacts.getPage().stream()
+                .map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
 
-        long contactCount = contactService.getContactsCountForEnterprise(enterprise, jobOffer, null, filledBy, status);
-        long maxPages = contactCount / CONTACTS_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactList) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
+                contacts.getMaxPages());
     }
 
     @GET
