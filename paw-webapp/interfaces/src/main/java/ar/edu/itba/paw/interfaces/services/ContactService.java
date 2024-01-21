@@ -80,4 +80,6 @@ public interface ContactService {
 
     long getContactsCountForUser(User user);
 
+    void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+
 }

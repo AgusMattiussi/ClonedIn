@@ -237,8 +237,8 @@ public class EnterpriseController {
                 FilledBy.ENTERPRISE, contactForm.getMessage());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(contact.getJobOffer().getId()))
-                .path(String.valueOf(contact.getUser().getId()))
+                .path(contact.getJobOffer().getId().toString())
+                .path(contact.getUser().getId().toString())
                 .build();
         return Response.created(uri).build();
     }
@@ -247,7 +247,6 @@ public class EnterpriseController {
     @Path("/{id}/contacts/{joid}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)
-    @Transactional
     public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
                                     @PathParam("joid") @Min(1) final long joid,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
@@ -282,48 +281,17 @@ public class EnterpriseController {
     }
 
     //TODO: Evaluar que se puede hacer en cada caso, segun FilledBy
-   @PUT
-   @Path("/{id}/contacts/{joid}/{userId}")
-   @PreAuthorize(JOB_OFFER_OWNER)
-   public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
+    @PUT
+    @Path("/{id}/contacts/{joid}/{userId}")
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
                                        @PathParam("userId") @NotNull @Min(1) final long userId,
                                        @PathParam("joid") @NotNull @Min(1) final long joid,
                                        @QueryParam("status") @NotNull final JobOfferStatus status) {
 
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
-        Contact contact = contactService.findByPrimaryKey(user.getId(), jobOffer.getId())
-                .orElseThrow(() -> new ContactNotFoundException(user.getId(), jobOffer.getId()));
-
-
-       if (status == JobOfferStatus.PENDING)
-           throw new IllegalArgumentException("Cannot update contact status to PENDING");
-
-       boolean successful = false;
-       switch (status) {
-           case ACCEPTED:
-               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
-                   throw new IllegalStateException("Cannot accept a contact that was filled by this enterprise");
-               successful = contactService.acceptJobOffer(user, jobOffer);
-               break;
-           case DECLINED:
-               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
-                   throw new IllegalStateException("Cannot decline a contact that was filled by this enterprise");
-               successful = contactService.rejectJobOffer(user, jobOffer);
-               break;
-           case CANCELLED:
-               successful = contactService.cancelJobOffer(user, jobOffer);
-               break;
-           case CLOSED:
-               successful = contactService.closeJobOffer(user, jobOffer);
-               break;
-       }
-
-       if(!successful)
-           throw new IllegalStateException(String.format("Could not update contact status to '%s'", status.getStatus()));
-
-       return Response.noContent().build();
-   }
+        contactService.updateContactStatus(userId, joid, status);
+        return Response.noContent().build();
+    }
 
     @PUT
     @Path("/{id}/image")

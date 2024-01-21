@@ -119,6 +119,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
                                            JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
         String statusValue = status != null ? status.getStatus() : null;
@@ -238,6 +239,44 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public long getContactsCountForUser(User user) {
         return contactDao.getContactsCountForUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status) {
+        User user = userService.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId)
+                .orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        Contact contact = this.findByPrimaryKey(user.getId(), jobOffer.getId())
+                .orElseThrow(() -> new ContactNotFoundException(user.getId(), jobOffer.getId()));
+
+
+       if (status == JobOfferStatus.PENDING)
+           throw new IllegalArgumentException("Cannot update contact status to PENDING");
+
+       boolean successful = false;
+       switch (status) {
+           case ACCEPTED:
+               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
+                   throw new IllegalStateException("Cannot accept a contact that was filled by this enterprise");
+               successful = this.acceptJobOffer(user, jobOffer);
+               break;
+           case DECLINED:
+               if(contact.getFilledByEnum() == FilledBy.ENTERPRISE)
+                   throw new IllegalStateException("Cannot decline a contact that was filled by this enterprise");
+               successful = this.rejectJobOffer(user, jobOffer);
+               break;
+           case CANCELLED:
+               successful = this.cancelJobOffer(user, jobOffer);
+               break;
+           case CLOSED:
+               successful = this.closeJobOffer(user, jobOffer);
+               break;
+       }
+
+       if(!successful)
+           throw new IllegalStateException(String.format("Could not update contact status to '%s'", status.getStatus()));
     }
 
 }
