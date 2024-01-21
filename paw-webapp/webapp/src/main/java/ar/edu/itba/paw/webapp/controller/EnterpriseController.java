@@ -213,7 +213,6 @@ public class EnterpriseController {
     @Path("/{id}/jobOffers")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
     public Response createJobOffer(@PathParam("id") @Min(1) final long id,
                                    @Valid @NotNull final JobOfferForm jobOfferForm) {
         JobOffer jobOffer = jobOfferService.create(id, jobOfferForm.getCategory(), jobOfferForm.getJobPosition(),
