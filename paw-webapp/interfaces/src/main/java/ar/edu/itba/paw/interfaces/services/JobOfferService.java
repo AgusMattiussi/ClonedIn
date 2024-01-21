@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,9 +40,13 @@ public interface JobOfferService {
 
     long getActiveJobOffersCountForEnterprise(Enterprise enterprise);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
-                                             String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
-                                             BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
+    PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+                                                          String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
+                                                          BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
+
+    PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+                                                          long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
+                                                          BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
 
     List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
                                              BigDecimal maxSalary, int page, int pageSize);

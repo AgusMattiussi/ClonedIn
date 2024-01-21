@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -122,10 +123,29 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
-                                                    String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
-                                                    BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
-        return jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName, searchTerm,
+    public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+                                                                 String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
+                                                                 BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
+        Category category = categoryName != null ? categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
+
+        List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName,
+                searchTerm, position, minSalary, maxSalary, onlyActive, page-1, pageSize);
+
+        long jobOffersCount = this.getJobOfferCount(category, modality, skillDescription, enterpriseName,
+                        searchTerm, position, minSalary, maxSalary, onlyActive);
+        long maxPages = jobOffersCount / pageSize + 1;
+
+        return new PaginatedResource<>(jobOffers, page, maxPages);
+    }
+
+    @Override
+    public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+                                                                 long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
+                                                                 BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
+        Enterprise enterprise = enterpriseService.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        return getJobOffersListByFilters(categoryName, modality, skillDescription, enterprise.getName(), searchTerm,
                 position, minSalary, maxSalary, onlyActive, page, pageSize);
     }
 

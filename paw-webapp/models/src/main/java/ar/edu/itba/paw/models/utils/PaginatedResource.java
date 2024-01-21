@@ -39,4 +39,8 @@ public class PaginatedResource<R> {
     public boolean hasPreviousPage() {
         return currentPage > 1;
     }
+
+    public boolean isEmpty() {
+        return page.isEmpty();
+    }
 }

@@ -100,6 +100,9 @@ public class EnterpriseController {
         PaginatedResource<Enterprise> enterprises = enterpriseService.getEnterpriseListByFilters(categoryName, location,
                 workers, enterpriseName, searchTerm, page, ENTERPRISES_PER_PAGE);
 
+        if(enterprises.isEmpty())
+            return Response.noContent().build();
+
         List<EnterpriseDTO> enterpriseDTOList = enterprises.getPage().stream()
                 .map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e)).collect(Collectors.toList());
 
@@ -153,21 +156,14 @@ public class EnterpriseController {
                                  @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
                                  @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary) {
 
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
+        PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
+                        id, searchTerm, position, minSalary, maxSalary, false, page, JOB_OFFERS_PER_PAGE);
 
-        Category category = categoryName != null ? categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
+        List<JobOfferDTO> jobOfferDTOS = jobOffers.getPage().stream()
+                .map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
-                        enterprise.getName(), searchTerm, position, minSalary, maxSalary, false, page - 1, JOB_OFFERS_PER_PAGE)
-                .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
-
-        long jobOffersCount = jobOfferService.getJobOfferCount(category, modality, skillDescription, enterprise.getName(),
-                        searchTerm, position, minSalary, maxSalary, false);
-
-        long maxPages = jobOffersCount / JOB_OFFERS_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferDTOS) {}), page,
+                jobOffers.getMaxPages());
     }
 
     //TODO: Mover esta logica al JobOfferController?

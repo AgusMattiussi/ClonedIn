@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,24 +59,17 @@ public class JobOfferController {
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
                                  @QueryParam("enterprise") final String enterpriseName) {
-
-        Category category = categoryName != null ? categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
-
-        List<JobOfferDTO> jobOffers = jobOfferService.getJobOffersListByFilters(category, modality, skillDescription,
-                        enterpriseName, searchTerm, position, minSalary, maxSalary, true, page - 1, JOB_OFFERS_PER_PAGE)
-                .stream().map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
+        PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
+                        enterpriseName, searchTerm, position, minSalary, maxSalary, true, page, JOB_OFFERS_PER_PAGE);
 
         if(jobOffers.isEmpty())
             return Response.noContent().build();
 
-        long jobOffersCount = jobOfferService.getJobOfferCount(category, modality, skillDescription, enterpriseName,
-                        searchTerm, position, minSalary, maxSalary, false);
+        List<JobOfferDTO> jobOfferDTOS = jobOffers.getPage().stream()
+                .map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
 
-        long maxPages = jobOffersCount / JOB_OFFERS_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOffers) {}),
-                page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferDTOS) {}),
+                page, jobOffers.getMaxPages());
     }
 
     @GET
