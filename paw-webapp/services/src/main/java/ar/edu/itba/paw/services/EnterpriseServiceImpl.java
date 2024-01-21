@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
+import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Category;
@@ -8,6 +9,8 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,18 +23,15 @@ import java.util.*;
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
 
-    private final EnterpriseDao enterpriseDao;
     @Autowired
-    private final PasswordEncoder passwordEncoder;
-    private final ImageService imageService;
-
-
+    private EnterpriseDao enterpriseDao;
     @Autowired
-    public EnterpriseServiceImpl(EnterpriseDao enterpriseDao, PasswordEncoder passwordEncoder, ImageService imageService) {
-        this.enterpriseDao = enterpriseDao;
-        this.passwordEncoder = passwordEncoder;
-        this.imageService = imageService;
-    }
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ImageService imageService;
+    @Autowired
+    private CategoryService categoryService;
+
 
     @Override
     @Transactional
@@ -157,9 +157,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers,
-                                                       String enterpriseName, String term, int page, int pageSize) {
-        return enterpriseDao.getEnterpriseListByFilters(category, location, workers, enterpriseName, term, page, pageSize);
+    public PaginatedResource<Enterprise> getEnterpriseListByFilters(String categoryName, String location, EmployeeRanges workers,
+                                                                    String enterpriseName, String term, int page, int pageSize) {
+
+        Category category = categoryName != null ? categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
+
+        List<Enterprise> enterprises = enterpriseDao.getEnterpriseListByFilters(category, location, workers, enterpriseName,
+                term, page-1, pageSize);
+        long enterpriseCount = this.getEnterpriseCountByFilters(category, location, workers, enterpriseName, term);
+        long maxPages = enterpriseCount / pageSize + 1;
+
+        return new PaginatedResource<>(enterprises, page, maxPages);
     }
 
     @Override

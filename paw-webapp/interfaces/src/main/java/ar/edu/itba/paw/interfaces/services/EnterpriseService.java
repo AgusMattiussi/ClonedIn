@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 import java.util.Map;
@@ -48,8 +49,8 @@ public interface EnterpriseService {
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 
-    List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
-                                                String term, int page, int pageSize);
+    PaginatedResource<Enterprise> getEnterpriseListByFilters(String category, String location, EmployeeRanges workers, String enterpriseName,
+                                                             String term, int page, int pageSize);
 
     long getEnterpriseCountByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName, String term);
 }

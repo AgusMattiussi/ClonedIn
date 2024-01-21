@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
@@ -96,16 +97,14 @@ public class EnterpriseController {
                                    @QueryParam("enterpriseName") final String enterpriseName,
                                    @QueryParam("searchTerm") final String searchTerm) {
 
-        Category category = categoryName != null ? categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
+        PaginatedResource<Enterprise> enterprises = enterpriseService.getEnterpriseListByFilters(categoryName, location,
+                workers, enterpriseName, searchTerm, page, ENTERPRISES_PER_PAGE);
 
-        List<EnterpriseDTO> enterpriseList = enterpriseService.getEnterpriseListByFilters(category, location, workers, enterpriseName,
-                searchTerm, page - 1, ENTERPRISES_PER_PAGE).stream().map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e)).collect(Collectors.toList());
+        List<EnterpriseDTO> enterpriseDTOList = enterprises.getPage().stream()
+                .map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e)).collect(Collectors.toList());
 
-        long enterpriseCount = enterpriseService.getEnterpriseCountByFilters(category, location, workers, enterpriseName, searchTerm);
-        long maxPages = enterpriseCount / ENTERPRISES_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EnterpriseDTO>>(enterpriseList) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EnterpriseDTO>>(enterpriseDTOList) {}),
+                page, enterprises.getMaxPages());
     }
 
     @POST
