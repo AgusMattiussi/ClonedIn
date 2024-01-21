@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
@@ -20,6 +21,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static ar.edu.itba.paw.models.enums.JobOfferAvailability.*;
 
 @Primary
 @Service
@@ -87,6 +90,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
+    @Transactional
     public Optional<JobOffer> findById(long id) {
         return jobOfferDao.findById(id);
     }
@@ -174,5 +178,22 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public void cancelJobOffer(JobOffer jobOffer) {
         jobOfferDao.cancelJobOffer(jobOffer);
+    }
+
+    @Override
+    @Transactional
+    public void updateJobOfferAvailability(long jobOfferId, JobOfferAvailability availability) {
+        JobOffer jobOffer = this.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+
+        switch (availability) {
+            case ACTIVE:
+                throw new IllegalArgumentException("Cannot update job offer availability to ACTIVE");
+            case CLOSED:
+                this.closeJobOffer(jobOffer);
+                break;
+            case CANCELLED:
+                this.cancelJobOffer(jobOffer);
+                break;
+        }
     }
 }

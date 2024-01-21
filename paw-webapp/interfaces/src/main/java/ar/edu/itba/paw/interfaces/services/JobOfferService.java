@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
@@ -60,5 +61,7 @@ public interface JobOfferService {
     void closeJobOffer(JobOffer jobOffer);
 
     void cancelJobOffer(JobOffer jobOffer);
+
+    void updateJobOfferAvailability(long jobOfferId, JobOfferAvailability availability);
 
 }

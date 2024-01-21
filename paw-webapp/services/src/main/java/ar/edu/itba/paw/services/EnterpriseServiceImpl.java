@@ -62,6 +62,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Optional<Long> getIdForEmail(String email) {
         return enterpriseDao.getIdForEmail(email);
     }

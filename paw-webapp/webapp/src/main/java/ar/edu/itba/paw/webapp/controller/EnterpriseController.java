@@ -174,25 +174,11 @@ public class EnterpriseController {
     @PUT
     @Path("/{id}/jobOffers/{joid}")
     @PreAuthorize(JOB_OFFER_OWNER)
-    @Transactional
     public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
                                                @PathParam("joid") @Min(1) final long joid,
                                                @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
+        jobOfferService.updateJobOfferAvailability(joid, availability);
 
-        JobOffer jobOffer = jobOfferService.findById(joid).orElseThrow(() -> new JobOfferNotFoundException(joid));
-
-        switch (availability) {
-            case ACTIVE:
-                throw new IllegalArgumentException("Cannot update job offer availability to ACTIVE");
-            case CLOSED:
-                jobOfferService.closeJobOffer(jobOffer);
-                break;
-            case CANCELLED:
-                jobOfferService.cancelJobOffer(jobOffer);
-                break;
-        }
-
-        //TODO: Chequear si este path funciona
         final URI uri = uriInfo.getAbsolutePath();
         return Response.ok().location(uri).build();
     }
