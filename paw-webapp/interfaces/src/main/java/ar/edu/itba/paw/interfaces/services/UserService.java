@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 import java.util.Map;
@@ -44,8 +45,8 @@ public interface UserService {
 
     List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize);
 
-    List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription, int page, int pageSize);
+    PaginatedResource<User> getUsersListByFilters(String categoryName, String educationLevel, String term, Integer minExpYears,
+                                                  Integer maxExpYears, String location, String skillDescription, int page, int pageSize);
 
     void updateName(long userID, String newName);
 

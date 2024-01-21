@@ -4,10 +4,10 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.utils.ClonedInUrls;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -113,21 +113,15 @@ public class UserController {
                               @QueryParam("location") final String location,
                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
-        Category category = categoryService.findByName(categoryName).orElse(null);
+        final PaginatedResource<User> users = us.getUsersListByFilters(categoryName, educationLevel, searchTerm, minExpYears,
+                maxExpYears, location, skillDescription, page, USERS_PER_PAGE);
 
-        final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription, page-1, USERS_PER_PAGE)
-                .stream().map(u -> UserDTO.fromUser(uriInfo,u))
-                .collect(Collectors.toList());
-
-        if (allUsers.isEmpty())
+        if (users.isEmpty())
             return Response.noContent().build();
 
-        final long userCount = us.getUsersCountByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription);
-        long maxPages = userCount/USERS_PER_PAGE + 1;
+        List<UserDTO> userDTOS = users.getPage().stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(userDTOS) {}), page, users.getMaxPages());
     }
 
 

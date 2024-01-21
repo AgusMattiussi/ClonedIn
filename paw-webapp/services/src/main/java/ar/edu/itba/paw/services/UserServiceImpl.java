@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Category;
@@ -8,6 +9,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,17 +23,13 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private final UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    private final ImageService imageService;
-
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final ImageService imageService) {
-        this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
-        this.imageService = imageService;
-    }
+    private ImageService imageService;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
@@ -115,9 +113,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription, int page, int pageSize) {
-        return userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillDescription, page, pageSize);
+    public PaginatedResource<User> getUsersListByFilters(String categoryName, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+                                                         String location, String skillDescription, int page, int pageSize) {
+
+        Category category = categoryService.findByName(categoryName).orElse(null);
+
+        List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
+                                     location, skillDescription, page-1, pageSize);
+
+        final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
+                                     location, skillDescription);
+        long maxPages = userCount/pageSize + 1;
+
+        return new PaginatedResource<>(users, page, maxPages);
     }
 
     @Override
