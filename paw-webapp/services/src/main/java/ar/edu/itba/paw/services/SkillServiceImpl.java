@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.interfaces.services.SkillService;
 import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,12 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public List<Skill> getAllSkills(int page, int pageSize) {
-        return skillDao.getAllSkills(page, pageSize);
+    public PaginatedResource<Skill> getAllSkills(int page, int pageSize) {
+        List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
+        long skillCount = this.getSkillCount();
+        long maxPages = skillCount / pageSize + 1;
+
+        return new PaginatedResource<>(skills, page, maxPages);
     }
 
     @Override

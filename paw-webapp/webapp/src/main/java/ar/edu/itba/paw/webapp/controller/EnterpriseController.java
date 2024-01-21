@@ -54,7 +54,7 @@ public class EnterpriseController {
     private ContactService contactService;
     @Context
     private UriInfo uriInfo;
-    
+
 
     @GET
     @Produces(ClonedInMediaType.ENTERPRISE_LIST_V1)
