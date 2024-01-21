@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.services.EducationService;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Month;
-import ar.edu.itba.paw.models.helpers.DateHelper;
+import ar.edu.itba.paw.models.utils.DateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
