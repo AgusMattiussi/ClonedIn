@@ -25,6 +25,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
+    @Transactional
     public Experience create(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description) {
         Month monthFrom = Month.fromString(monthFromString);
         Month monthTo = Month.fromString(monthToString);
