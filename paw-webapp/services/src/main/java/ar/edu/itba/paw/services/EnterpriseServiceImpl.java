@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -149,6 +150,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Transactional
     public void updateProfileImage(Enterprise enterprise, Image image) {
         enterpriseDao.updateEnterpriseProfileImage(enterprise, image);
+    }
+
+    @Override
+    @Transactional
+    public void updateProfileImage(long enterpriseId, byte[] bytes) {
+        Enterprise enterprise = this.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        Image image = imageService.uploadImage(bytes);
+        this.updateProfileImage(enterprise, image);
     }
 
     @Override

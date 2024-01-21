@@ -18,7 +18,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -297,12 +296,9 @@ public class EnterpriseController {
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
     public Response uploadImage(@PathParam("id") @Min(1) final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
-        Image image = imageService.uploadImage(bytes);
-        enterpriseService.updateProfileImage(enterprise, image);
+        enterpriseService.updateProfileImage(id, bytes);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok().location(uri).build();
