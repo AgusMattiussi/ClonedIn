@@ -15,6 +15,8 @@ public interface JobOfferService {
 
     JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality);
 
+    JobOffer create(long enterpriseId, String categoryName, String position, String description, BigDecimal salary, String modalityName, List<String> skillDescriptions);
+
     List<Skill> getSkills(long jobOfferId);
 
     List<JobOffer> getAllJobOffers();

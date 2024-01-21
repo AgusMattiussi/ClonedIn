@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferDao;
-import ar.edu.itba.paw.interfaces.services.JobOfferService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,18 +24,43 @@ import java.util.Optional;
 @Service
 public class JobOfferServiceImpl implements JobOfferService {
 
-    private final JobOfferDao jobOfferDao;
-
     @Autowired
-    public JobOfferServiceImpl(JobOfferDao jobOfferDao){
-        this.jobOfferDao = jobOfferDao;
-    }
+    private JobOfferDao jobOfferDao;
+    @Autowired
+    private EnterpriseService enterpriseService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private SkillService skillService;
+    @Autowired
+    private JobOfferSkillService jobOfferSkillService;
 
     @Override
     @Transactional
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
-        return jobOfferDao.create(enterprise, category, position, description, salary,
-                modality == null ? JobOfferModality.NOT_SPECIFIED.getModality() : modality.getModality());
+        return jobOfferDao.create(enterprise, category, position, description, salary, modality);
+    }
+
+    @Override
+    @Transactional
+    public JobOffer create(long enterpriseId, String categoryName, String position, String description, BigDecimal salary, String modalityName, List<String> skillDescriptions) {
+        Enterprise enterprise = enterpriseService.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+
+        Category category = categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        JobOfferModality modality = modalityName == null || modalityName.isEmpty() ?
+                JobOfferModality.NOT_SPECIFIED : JobOfferModality.fromString(modalityName);
+
+        JobOffer jobOffer = this.create(enterprise, category, position, description,
+                salary, modality);
+
+        //TODO: Agregar mas skills a la job offer
+        List<Skill> skills = skillService.findMultipleByDescriptionOrCreate(skillDescriptions);
+        jobOfferSkillService.addSkillToJobOffer(skills, jobOffer);
+
+        return jobOffer;
     }
 
     @Override

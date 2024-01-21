@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface JobOfferDao {
 
-    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality);
+    JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality);
 
     Optional<JobOffer> findById(long id);
 

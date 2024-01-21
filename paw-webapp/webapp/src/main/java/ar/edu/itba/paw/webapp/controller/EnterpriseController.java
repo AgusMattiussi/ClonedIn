@@ -216,25 +216,14 @@ public class EnterpriseController {
     @Transactional
     public Response createJobOffer(@PathParam("id") @Min(1) final long id,
                                    @Valid @NotNull final JobOfferForm jobOfferForm) {
-        Enterprise enterprise = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id));
-
-        Category category = categoryService.findByName(jobOfferForm.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(jobOfferForm.getCategory()));
-
-        JobOfferModality modality = JobOfferModality.fromString(jobOfferForm.getModality());
-
-        JobOffer jobOffer = jobOfferService.create(enterprise, category, jobOfferForm.getJobPosition(), jobOfferForm.getJobDescription(),
-                jobOfferForm.getSalary(), modality);
-
-        //TODO: Agregar mas skills a la job offer
-        List<String> formSkills = Arrays.asList(jobOfferForm.getSkill1(), jobOfferForm.getSkill2(), jobOfferForm.getSkill3(), jobOfferForm.getSkill4());
-        List<Skill> skills = skillService.findMultipleByDescriptionOrCreate(formSkills);
-        jobOfferSkillService.addSkillToJobOffer(skills, jobOffer);
+        JobOffer jobOffer = jobOfferService.create(id, jobOfferForm.getCategory(), jobOfferForm.getJobPosition(),
+                jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getModality(),
+                jobOfferForm.getSkillsList());
 
         LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
         LOGGER.info("A new job offer was registered");
 
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOffer.getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(jobOffer.getId().toString()).build();
         return Response.created(uri).build();
     }
 
