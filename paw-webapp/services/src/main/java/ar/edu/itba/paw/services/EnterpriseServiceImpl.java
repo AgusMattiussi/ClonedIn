@@ -161,11 +161,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public Optional<Image> getProfileImage(int imageId) {
-        if(imageId == 1) {
-            return imageService.getImage(1);
-        }
-        return imageService.getImage(imageId);
+    public Optional<Image> getProfileImage(long enterpriseId) {
+        Enterprise enterprise = this.findById(enterpriseId)
+                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+
+        return Optional.ofNullable(enterprise.getImage());
     }
 
     @Override

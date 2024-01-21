@@ -47,7 +47,7 @@ public interface EnterpriseService {
 
     void updateProfileImage(long enterpriseId, byte[] bytes);
 
-    Optional<Image> getProfileImage(int imageId);
+    Optional<Image> getProfileImage(long enterpriseId);
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 

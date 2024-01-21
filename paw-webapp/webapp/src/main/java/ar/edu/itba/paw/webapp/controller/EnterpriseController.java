@@ -14,9 +14,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -49,42 +47,14 @@ public class EnterpriseController {
     private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id) AND @securityValidator.isJobOfferOwner(#joid)";
 
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private EnterpriseService enterpriseService;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private EmailService emailService;
     @Autowired
     private JobOfferService jobOfferService;
     @Autowired
-    private SkillService skillService;
-    @Autowired
-    private JobOfferSkillService jobOfferSkillService;
-    @Autowired
     private ContactService contactService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    protected AuthenticationManager authenticationManager;
     @Context
     private UriInfo uriInfo;
-
-    @Autowired
-    public EnterpriseController(final EnterpriseService enterpriseService, final CategoryService categoryService,
-                                final JobOfferService jobOfferService, final SkillService skillService,
-                                final JobOfferSkillService jobOfferSkillService, final ContactService contactService,
-                                final UserService userService, final EmailService emailService) {
-        this.enterpriseService = enterpriseService;
-        this.categoryService = categoryService;
-        this.jobOfferService = jobOfferService;
-        this.skillService = skillService;
-        this.jobOfferSkillService = jobOfferSkillService;
-        this.contactService = contactService;
-        this.userService = userService;
-        this.emailService = emailService;
-    }
+    
 
     @GET
     @Produces(ClonedInMediaType.ENTERPRISE_LIST_V1)
@@ -307,15 +277,15 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-//     @Produces set dynamically
+//  @Produces - set dynamically
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
-        Image profileImage = enterpriseService.findById(id).orElseThrow(() -> new EnterpriseNotFoundException(id)).getImage();
-        if(profileImage == null)
+        Optional<Image> profileImage = enterpriseService.getProfileImage(id);
+        if(!profileImage.isPresent())
             return Response.noContent().build();
 
-        return Response.ok(profileImage.getBytes())
-                .type(profileImage.getMimeType()) // Replaces @Produces dynamically
+        return Response.ok(profileImage.get().getBytes())
+                .type(profileImage.get().getMimeType()) // Replaces @Produces dynamically
                 .build();
     }
 }
