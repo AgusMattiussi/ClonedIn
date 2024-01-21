@@ -14,7 +14,7 @@ import java.util.Set;
 
 public interface EnterpriseService {
 
-    Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+    Enterprise create(String email, String name, String password, String location, String categoryName, EmployeeRanges workers,
                       Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);

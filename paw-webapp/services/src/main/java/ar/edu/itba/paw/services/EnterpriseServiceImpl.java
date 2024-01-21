@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EnterpriseDao;
 import ar.edu.itba.paw.interfaces.services.CategoryService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Category;
@@ -13,6 +14,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +33,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private ImageService imageService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private EmailService emailService;
 
 
     @Override
     @Transactional
-    public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+    public Enterprise create(String email, String name, String password, String location, String categoryName, EmployeeRanges workers,
                              Integer year, String link, String description) {
-        return enterpriseDao.create(email, name, passwordEncoder.encode(password), location, category, workers, year, link, description);
+        Category category = categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        Enterprise enterprise = enterpriseDao.create(email, name, passwordEncoder.encode(password), location, category,
+                workers, year, link, description);
+
+        emailService.sendRegisterEnterpriseConfirmationEmail(email, name, LocaleContextHolder.getLocale());
+        return enterprise;
     }
 
     @Override

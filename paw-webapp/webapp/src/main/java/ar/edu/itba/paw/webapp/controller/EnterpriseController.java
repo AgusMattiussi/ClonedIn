@@ -113,21 +113,14 @@ public class EnterpriseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createEnterprise(@NotNull @Valid final EnterpriseForm enterpriseForm) {
-
-        String categoryName = enterpriseForm.getCategory();
-        Category category = categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
-
         Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(),
-                enterpriseForm.getPassword(), enterpriseForm.getCity(), category, enterpriseForm.getWorkersEnum(),
+                enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getWorkersEnum(),
                 enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
-
-        emailService.sendRegisterEnterpriseConfirmationEmail(enterpriseForm.getEmail(), enterpriseForm.getName(), LocaleContextHolder.getLocale());
 
         LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());
         LOGGER.info("A new enterprise was registered");
 
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(enterprise.getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(enterprise.getId().toString()).build();
         return Response.created(uri).build();
     }
 
