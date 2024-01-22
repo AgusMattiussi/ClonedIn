@@ -99,8 +99,16 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
-        return contactDao.getContactsForUser(user, filledBy, status, sortBy, page, pageSize);
+    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, SortBy sortBy,
+                                                         int page, int pageSize) {
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        List<Contact> contacts = contactDao.getContactsForUser(user, filledBy, status, sortBy, page-1, pageSize);
+
+        long applicationsCount = this.getContactsCountForUser(user, filledBy, status);
+        long maxPages = applicationsCount/pageSize + 1;
+
+        return new PaginatedResource<>(contacts, page, maxPages);
     }
 
     @Override
@@ -232,8 +240,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCountForUser(long userID, FilledBy filledBy, String status) {
-        return contactDao.getContactsCountForUser(userID, filledBy, status);
+    public long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status) {
+        return contactDao.getContactsCountForUser(user, filledBy, status);
     }
 
     @Override

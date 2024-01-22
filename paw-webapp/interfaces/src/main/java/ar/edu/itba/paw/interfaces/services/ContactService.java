@@ -30,7 +30,7 @@ public interface ContactService {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize);
+    PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
@@ -76,7 +76,7 @@ public interface ContactService {
 
     long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status);
 
-    long getContactsCountForUser(long userID, FilledBy filledBy, String status);
+    long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status);
 
     long getContactsCountForUser(User user);
 

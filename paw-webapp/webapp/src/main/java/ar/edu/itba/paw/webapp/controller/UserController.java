@@ -166,15 +166,17 @@ public class UserController {
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, FilledBy.USER, status,
+                sortBy, page, APPLICATIONS_PER_PAGE);
 
-        List<ContactDTO> applications = contactService.getContactsForUser(user, FilledBy.USER, status.getStatus(), sortBy, page-1,
-                        APPLICATIONS_PER_PAGE).stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        if(applications.isEmpty())
+            return Response.noContent().build();
 
-        long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status.getStatus());
-        long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
+        List<ContactDTO> contactDTOs = applications.getPage().stream()
+                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
+                applications.getMaxPages());
     }
 
 
@@ -255,17 +257,19 @@ public class UserController {
     public Response getNotifications(@PathParam("id") final long id,
                                      @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                      @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                     @QueryParam("status") final String status) {
+                                     @QueryParam("status") final JobOfferStatus status) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        PaginatedResource<Contact> notifications = contactService.getContactsForUser(id, FilledBy.ENTERPRISE, status, sortBy,
+                        page, PAGE_SIZE);
 
-        List<ContactDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
-                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        if(notifications.isEmpty())
+            return Response.noContent().build();
 
-        long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
-        long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
+        List<ContactDTO> contactDTOs = notifications.getPage().stream()
+                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
+                notifications.getMaxPages());
     }
 
 
