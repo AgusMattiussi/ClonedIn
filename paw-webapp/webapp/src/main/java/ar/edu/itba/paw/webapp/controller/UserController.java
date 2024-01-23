@@ -251,18 +251,16 @@ public class UserController {
     public Response getExperiences(@PathParam("id") final long id,
                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        List<ExperienceDTO> experiences = experienceService.findByUser(user, page - 1, EXPERIENCES_PER_PAGE)
-                .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
+        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, EXPERIENCES_PER_PAGE);
 
         if(experiences.isEmpty())
             return Response.noContent().build();
 
-        long experienceCount = experienceService.getExperienceCountForUser(user);
-        long maxPages = experienceCount/EXPERIENCES_PER_PAGE + 1;
+        List<ExperienceDTO> experienceDTOs = experiences.getPage().stream()
+                .map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experienceDTOs) {}),
+                page, experiences.getMaxPages());
     }
 
     @GET

@@ -2,10 +2,13 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
 import ar.edu.itba.paw.interfaces.services.ExperienceService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Month;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.DateHelper;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -17,12 +20,11 @@ import java.util.Optional;
 @Primary
 @Service
 public class ExperienceServiceImpl implements ExperienceService {
-    private final ExperienceDao experienceDao;
 
     @Autowired
-    public ExperienceServiceImpl(ExperienceDao experienceDao) {
-        this.experienceDao = experienceDao;
-    }
+    private ExperienceDao experienceDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Experience create(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description) {
@@ -42,8 +44,15 @@ public class ExperienceServiceImpl implements ExperienceService {
 
 
     @Override
-    public List<Experience> findByUser(User user, int page, int pageSize) {
-        return experienceDao.findByUser(user, page, pageSize);
+    @Transactional
+    public PaginatedResource<Experience> findByUser(long userId, int page, int pageSize) {
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        List<Experience> experiences = experienceDao.findByUser(user, page - 1, pageSize);
+        long experienceCount = this.getExperienceCountForUser(user);
+        long maxPages = experienceCount/pageSize + 1;
+
+        return new PaginatedResource<>(experiences, page, maxPages);
     }
 
     @Override
