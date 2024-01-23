@@ -26,6 +26,7 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
+    @Transactional
     public Education add(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String title, String institutionName, String description) {
         Month monthFrom = Month.fromString(monthFromString);
         Month monthTo = Month.fromString(monthToString);
