@@ -9,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 @StringDiff(string1 = "skill1", string2 = "skill2")
 public class JobOfferForm {
@@ -27,7 +29,6 @@ public class JobOfferForm {
     @NotEmpty
     private String category;
 
-    @NotNull
     private String modality;
 
     @Size(max=50)
@@ -113,5 +114,9 @@ public class JobOfferForm {
 
     public void setModality(String modality) {
         this.modality = modality;
+    }
+
+    public List<String> getSkillsList() {
+        return Arrays.asList(skill1, skill2, skill3, skill4);
     }
 }

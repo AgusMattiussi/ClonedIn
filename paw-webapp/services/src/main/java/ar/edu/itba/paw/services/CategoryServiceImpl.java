@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.models.Category;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories(int page, int pageSize) {
-        return categoryDao.getAllCategories(page, pageSize);
+    public PaginatedResource<Category> getAllCategories(int page, int pageSize) {
+        List<Category> categoryList = categoryDao.getAllCategories(page-1, pageSize);
+        long categoryCount = this.getCategoryCount();
+        long maxPages = categoryCount / pageSize + 1;
+
+        return new PaginatedResource<>(categoryList, page, maxPages);
     }
 
     @Override

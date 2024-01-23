@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public interface EnterpriseService {
 
-    Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
+    Enterprise create(String email, String name, String password, String location, String categoryName, EmployeeRanges workers,
                       Integer year, String link, String description);
 
     Optional<Enterprise> findByEmail(String email);
@@ -44,12 +45,14 @@ public interface EnterpriseService {
 
     void updateProfileImage(Enterprise enterprise, Image image);
 
-    Optional<Image> getProfileImage(int imageId);
+    void updateProfileImage(long enterpriseId, byte[] bytes);
+
+    Optional<Image> getProfileImage(long enterpriseId);
 
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 
-    List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
-                                                String term, int page, int pageSize);
+    PaginatedResource<Enterprise> getEnterpriseListByFilters(String category, String location, EmployeeRanges workers, String enterpriseName,
+                                                             String term, int page, int pageSize);
 
     long getEnterpriseCountByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName, String term);
 }

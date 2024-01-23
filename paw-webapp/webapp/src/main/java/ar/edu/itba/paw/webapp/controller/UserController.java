@@ -4,10 +4,10 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.utils.ClonedInUrls;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -113,40 +113,26 @@ public class UserController {
                               @QueryParam("location") final String location,
                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
-        Category category = categoryService.findByName(categoryName).orElse(null);
+        final PaginatedResource<User> users = us.getUsersListByFilters(categoryName, educationLevel, searchTerm, minExpYears,
+                maxExpYears, location, skillDescription, page, USERS_PER_PAGE);
 
-        final List<UserDTO> allUsers = us.getUsersListByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription, page-1, USERS_PER_PAGE)
-                .stream().map(u -> UserDTO.fromUser(uriInfo,u))
-                .collect(Collectors.toList());
-
-        if (allUsers.isEmpty())
+        if (users.isEmpty())
             return Response.noContent().build();
 
-        final long userCount = us.getUsersCountByFilters(category, educationLevel, searchTerm, minExpYears, maxExpYears,
-                                     location, skillDescription);
-        long maxPages = userCount/USERS_PER_PAGE + 1;
+        List<UserDTO> userDTOS = users.getPage().stream().map(u -> UserDTO.fromUser(uriInfo,u)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(allUsers) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<UserDTO>>(userDTOS) {}), page, users.getMaxPages());
     }
 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response createUser (@NotNull @Valid final UserForm userForm) {
-        Category category = categoryService.findByName(userForm.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(userForm.getCategory()));
+    public Response createUser(@NotNull @Valid final UserForm userForm) {
+        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
+                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
 
-        final User user = us.register(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                category, userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
-
-        emailService.sendRegisterUserConfirmationEmail(user, LocaleContextHolder.getLocale());
-
-        LOGGER.debug("A new user was registered under id: {}", user.getId());
-        LOGGER.info("A new user was registered");
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
 
@@ -180,15 +166,17 @@ public class UserController {
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, FilledBy.USER, status,
+                sortBy, page, APPLICATIONS_PER_PAGE);
 
-        List<ContactDTO> applications = contactService.getContactsForUser(user, FilledBy.USER, status.getStatus(), sortBy, page-1,
-                        APPLICATIONS_PER_PAGE).stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        if(applications.isEmpty())
+            return Response.noContent().build();
 
-        long applicationsCount = contactService.getContactsCountForUser(id, FilledBy.USER, status.getStatus());
-        long maxPages = applicationsCount/APPLICATIONS_PER_PAGE + 1;
+        List<ContactDTO> contactDTOs = applications.getPage().stream()
+                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(applications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
+                applications.getMaxPages());
     }
 
 
@@ -199,23 +187,9 @@ public class UserController {
     public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
                                     @NotNull @Valid ApplyToJobOfferForm applyToJobOfferForm) {
 
-        long jobOfferId = applyToJobOfferForm.getJobOfferId();
+        contactService.addContact(id, applyToJobOfferForm.getJobOfferId(), FilledBy.USER);
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-        long enterpriseId = jobOffer.getEnterpriseID();
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
-
-
-        if(contactService.alreadyContacted(id, jobOfferId)) {
-            LOGGER.error("User with ID={} has already applied to job offer with ID={}", id, jobOfferId);
-            throw new AlreadyAppliedException(id, jobOfferId);
-        }
-
-        contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
-        emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(applyToJobOfferForm.getJobOfferId())).build();
         return Response.created(uri).build();
     }
 
@@ -226,13 +200,7 @@ public class UserController {
     public Response cancelApplication(@PathParam("id") @Min(1) final long id,
                                       @PathParam("jobOfferId") @Min(1) final long jobOfferId) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-
-        if(!contactService.cancelJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, id);
-
-        emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        contactService.cancelJobOffer(id, jobOfferId);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
@@ -242,20 +210,11 @@ public class UserController {
     @PUT
     @Path("/{id}/notifications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response updateJobOfferStatus(@PathParam("id") final long id,
+    public Response updateContactStatus(@PathParam("id") final long id,
                                          @PathParam("jobOfferId") final long jobOfferId,
                                          @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-
-        if(newStatus != JobOfferStatus.ACCEPTED && newStatus != JobOfferStatus.DECLINED)
-            throw new JobOfferStatusException(newStatus, jobOfferId, id);
-
-        if (newStatus == JobOfferStatus.ACCEPTED && !contactService.acceptJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, id);
-        else if (newStatus == JobOfferStatus.DECLINED && !contactService.rejectJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, id);
+        contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
@@ -269,17 +228,19 @@ public class UserController {
     public Response getNotifications(@PathParam("id") final long id,
                                      @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                      @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                     @QueryParam("status") final String status) {
+                                     @QueryParam("status") final JobOfferStatus status) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        PaginatedResource<Contact> notifications = contactService.getContactsForUser(id, FilledBy.ENTERPRISE, status, sortBy,
+                        page, PAGE_SIZE);
 
-        List<ContactDTO> notifications = contactService.getContactsForUser(user, FilledBy.ENTERPRISE, status, sortBy, page-1, PAGE_SIZE)
-                .stream().map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+        if(notifications.isEmpty())
+            return Response.noContent().build();
 
-        long notificationsCount = contactService.getContactsCountForUser(id, FilledBy.ENTERPRISE, status);
-        long maxPages = notificationsCount/NOTIFICATIONS_PER_PAGE + 1;
+        List<ContactDTO> contactDTOs = notifications.getPage().stream()
+                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(notifications) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
+                notifications.getMaxPages());
     }
 
 

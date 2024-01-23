@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.SkillService;
+import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.exceptions.SkillNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.SkillDTO;
 import org.slf4j.Logger;
@@ -36,17 +38,16 @@ public class SkillController {
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final List<SkillDTO> skills = skillService.getAllSkills(page-1, SKILLS_BY_PAGE).stream()
-                .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
+        final PaginatedResource<Skill> skills = skillService.getAllSkills(page, SKILLS_BY_PAGE);
 
         if (skills.isEmpty())
             return Response.noContent().build();
 
-        long skillCount = skillService.getSkillCount();
-        long maxPages = skillCount / SKILLS_BY_PAGE + 1;
+        List<SkillDTO> skillDTOs = skills.getPage().stream()
+                .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skills) {}),
-                page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}),
+                page, skills.getMaxPages());
     }
 
     @GET

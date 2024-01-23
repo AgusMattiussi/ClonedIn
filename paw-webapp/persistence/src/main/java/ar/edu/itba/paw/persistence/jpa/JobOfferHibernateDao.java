@@ -31,8 +31,9 @@ public class JobOfferHibernateDao implements JobOfferDao {
     private ContactDao contactDao;
 
     @Override
-    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, String modality) {
-        final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary, modality, JobOfferAvailability.ACTIVE.getStatus());
+    public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
+        final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary,
+                modality.getModality(), JobOfferAvailability.ACTIVE.getStatus());
         em.persist(jobOffer);
         return jobOffer;
     }

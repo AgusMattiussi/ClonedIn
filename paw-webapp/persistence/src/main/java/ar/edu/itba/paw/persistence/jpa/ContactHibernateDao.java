@@ -125,21 +125,22 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, String status, SortBy sortBy){
+    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, JobOfferStatus status, SortBy sortBy){
         if(!filledBy.equals(FilledBy.ANY)){
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
-        if(status != null && !status.isEmpty()){
-            if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy == FilledBy.ENTERPRISE
-            || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy == FilledBy.USER) {
+        if(status != null){
+            if(status == JobOfferStatus.CANCELLED && filledBy == FilledBy.ENTERPRISE
+            || status == JobOfferStatus.DECLINED && filledBy == FilledBy.USER) {
                 queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
             } else {
                 queryBuilder.append(" AND c.status = :status");
             }
         }
 
-        switch (sortBy){
+        if(sortBy != null){
+            switch (sortBy){
             case DATE_ASC:
                 queryBuilder.append(" ORDER BY c.date ASC");
                 break;
@@ -147,13 +148,15 @@ public class ContactHibernateDao implements ContactDao {
                 queryBuilder.append(" ORDER BY c.date DESC");
                 break;
         }
+        }
+
     }
 
-    private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, String status){
+    private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, JobOfferStatus status){
         query.setParameter("user", user);
 
-        if(status != null && !status.isEmpty()){
-            query.setParameter("status", status);
+        if(status != null){
+            query.setParameter("status", status.getStatus());
         }
 
         if(!filledBy.equals(FilledBy.ANY)) {
@@ -162,7 +165,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c WHERE c.user = :user");
 
@@ -559,12 +562,14 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForUser(long userID, FilledBy filledBy, String status) {
-        Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idUsuario = :userID AND creadoPor = :filledBy AND estado = :status");
-        query.setParameter("userID", userID);
-        query.setParameter("filledBy", filledBy.getValue());
-        query.setParameter("status", status);
+    public long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status) {
+        StringBuilder queryBuilder = new StringBuilder().append("SELECT COUNT(c) FROM Contact c WHERE c.user = :user");
 
-        return ((BigInteger) query.getSingleResult()).longValue();
+        getContactsForUserAppendConditions(queryBuilder, filledBy, status, null);
+
+        Query query = em.createQuery(queryBuilder.toString());
+        getContactsForUserSetParameters(query, user, filledBy, status);
+
+        return (Long) query.getSingleResult();
     }
 }

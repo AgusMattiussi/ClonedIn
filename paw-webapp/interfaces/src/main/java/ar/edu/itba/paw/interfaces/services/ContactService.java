@@ -6,7 +6,9 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,9 @@ public interface ContactService {
 
     Optional<Contact> findByPrimaryKey(long userID, long jobOfferID);
 
-    Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
+    Contact addContact(long userId, long jobOfferId, FilledBy filledBy);
+
+    Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage);
 
     List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy);
 
@@ -27,7 +31,7 @@ public interface ContactService {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, String status, SortBy sortBy, int page, int pageSize);
+    PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
@@ -35,8 +39,8 @@ public interface ContactService {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                           JobOfferStatus status, SortBy sortBy, int page, int pageSize);
+    PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+                                                        JobOfferStatus status, SortBy sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
 
@@ -60,7 +64,7 @@ public interface ContactService {
 
     boolean rejectJobOffer(User user, JobOffer jobOffer);
 
-    boolean cancelJobOffer(User user, JobOffer jobOffer);
+    boolean cancelJobOffer(long userId, long jobOfferId);
 
     boolean cancelJobOfferForEveryone(JobOffer jobOffer);
 
@@ -73,8 +77,19 @@ public interface ContactService {
 
     long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status);
 
-    long getContactsCountForUser(long userID, FilledBy filledBy, String status);
+    long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status);
 
     long getContactsCountForUser(User user);
+
+    void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+
+    void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+
+    default void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
+        if (updatedBy == Role.ENTERPRISE)
+            updateEnterpriseContactStatus(userId, jobOfferId, status);
+        else
+            updateUserContactStatus(userId, jobOfferId, status);
+    }
 
 }

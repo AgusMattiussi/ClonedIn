@@ -3,16 +3,13 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.helpers.DateHelper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 

@@ -17,9 +17,11 @@ public enum ApplianceStatus {
     }
 
     public static ApplianceStatus fromString(String s) {
-        for (ApplianceStatus status : ApplianceStatus.values()) {
-            if (status.getStatus().equals(s)) {
-                return status;
+        if(s != null && !s.isEmpty()) {
+            for (ApplianceStatus status : ApplianceStatus.values()) {
+                if (status.getStatus().equals(s)) {
+                    return status;
+                }
             }
         }
         throw new IllegalArgumentException();

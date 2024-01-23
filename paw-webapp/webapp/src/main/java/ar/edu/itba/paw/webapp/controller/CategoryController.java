@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CategoryService;
+import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +36,16 @@ public class CategoryController {
     @GET
     @Produces(ClonedInMediaType.CATEGORY_LIST_V1)
     public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final List<CategoryDTO> categories = categoryService.getAllCategories(page-1, CATEGORIES_BY_PAGE).stream()
-                .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
+        final PaginatedResource<Category> categories = categoryService.getAllCategories(page, CATEGORIES_BY_PAGE);
 
-        if (categories.isEmpty())
+        if (categories.getPage().isEmpty())
             return Response.noContent().build();
 
-        long categoryCount = categoryService.getCategoryCount();
-        long maxPages = categoryCount / CATEGORIES_BY_PAGE + 1;
+        final List<CategoryDTO> categoryDTOs = categories.getPage().stream()
+                .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categories) {}),
-                page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categoryDTOs) {}),
+                page, categories.getMaxPages());
     }
 
     @GET

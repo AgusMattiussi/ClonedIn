@@ -67,7 +67,7 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testCreate() {
-        final JobOffer newJobOffer = dao.create(testEnterprise, testCategory, NEW_POSITION, NEW_DESCRIPTION, TEST_SALARY, TEST_MODALITY.getModality());
+        final JobOffer newJobOffer = dao.create(testEnterprise, testCategory, NEW_POSITION, NEW_DESCRIPTION, TEST_SALARY, TEST_MODALITY);
 
         assertNotNull(newJobOffer);
         assertEquals(testEnterprise, newJobOffer.getEnterprise());
@@ -122,8 +122,8 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetJobOffersListByFilters(){
-        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null, testEnterprise.getName(), EMPTY_FIELD,
-                EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true, 0 ,8);
+        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null,
+                testEnterprise.getName(), EMPTY_FIELD, EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true, 0 ,8);
 
         assertFalse(jobOfferList.isEmpty());
         assertEquals(1, jobOfferList.size());

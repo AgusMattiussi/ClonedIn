@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.services.CategoryService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Category;
@@ -8,8 +10,13 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,23 +27,33 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private final UserDao userDao;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private final ImageService imageService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final ImageService imageService) {
-        this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
-        this.imageService = imageService;
-    }
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ImageService imageService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     @Transactional
-    public User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
-        return userDao.create(email, passwordEncoder.encode(password), name, location, category, currentPosition, description, education);
+    public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
+        Category category = categoryService.findByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        User user = userDao.create(email, passwordEncoder.encode(password), name, location, category, currentPosition, description, education);
+
+        emailService.sendRegisterUserConfirmationEmail(user, LocaleContextHolder.getLocale());
+
+        LOGGER.debug("A new user was registered under id: {}", user.getId());
+        LOGGER.info("A new user was registered");
+
+        return user;
     }
 
     @Override
@@ -116,9 +133,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription, int page, int pageSize) {
-        return userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillDescription, page, pageSize);
+    public PaginatedResource<User> getUsersListByFilters(String categoryName, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+                                                         String location, String skillDescription, int page, int pageSize) {
+
+        Category category = categoryService.findByName(categoryName).orElse(null);
+
+        List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
+                                     location, skillDescription, page-1, pageSize);
+
+        final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
+                                     location, skillDescription);
+        long maxPages = userCount/pageSize + 1;
+
+        return new PaginatedResource<>(users, page, maxPages);
     }
 
     @Override
