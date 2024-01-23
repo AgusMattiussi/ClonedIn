@@ -217,8 +217,18 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public boolean cancelJobOffer(User user, JobOffer jobOffer) {
-        return contactDao.cancelJobOffer(user, jobOffer);
+    @Transactional
+    public boolean cancelJobOffer(long userId, long jobOfferId) {
+
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+
+        if(!contactDao.cancelJobOffer(user, jobOffer))
+            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, userId);
+
+        emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+
+        return true;
     }
 
     @Override
@@ -289,7 +299,7 @@ public class ContactServiceImpl implements ContactService {
                successful = this.rejectJobOffer(user, jobOffer);
                break;
            case CANCELLED:
-               successful = this.cancelJobOffer(user, jobOffer);
+               successful = this.cancelJobOffer(userId, jobOfferId);
                break;
            case CLOSED:
                successful = this.closeJobOffer(user, jobOffer);

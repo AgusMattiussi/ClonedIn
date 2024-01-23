@@ -63,7 +63,7 @@ public interface ContactService {
 
     boolean rejectJobOffer(User user, JobOffer jobOffer);
 
-    boolean cancelJobOffer(User user, JobOffer jobOffer);
+    boolean cancelJobOffer(long userId, long jobOfferId);
 
     boolean cancelJobOfferForEveryone(JobOffer jobOffer);
 

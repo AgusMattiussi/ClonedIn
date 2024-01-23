@@ -200,13 +200,7 @@ public class UserController {
     public Response cancelApplication(@PathParam("id") @Min(1) final long id,
                                       @PathParam("jobOfferId") @Min(1) final long jobOfferId) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-
-        if(!contactService.cancelJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, id);
-
-        emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        contactService.cancelJobOffer(id, jobOfferId);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
