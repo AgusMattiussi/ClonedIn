@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExperienceService {
-    Experience create(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description);
+    Experience create(long userId, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description);
 
     Optional<Experience> findById(long experienceId);
 

@@ -267,7 +267,6 @@ public class UserController {
     @Path("/{id}/experiences/{expId}")
     @Produces(ClonedInMediaType.EXPERIENCE_V1)
     @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
-    @Transactional
     public Response getExperienceById(@PathParam("id") @Min(1) final long id,
                                       @PathParam("expId") @Min(1) final long expId) {
 
@@ -284,14 +283,9 @@ public class UserController {
     public Response addExperience(@PathParam("id") final long id,
                                   @NotNull @Valid ExperienceForm experienceForm){
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        Experience experience = experienceService.create(user, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
+        Experience experience = experienceService.create(id, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
                 experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getCompany(), experienceForm.getJob(),
                 experienceForm.getJobDesc());
-
-        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
-        LOGGER.info("A new experience was registered");
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(experience.getId())).build();
         return Response.created(uri).build();

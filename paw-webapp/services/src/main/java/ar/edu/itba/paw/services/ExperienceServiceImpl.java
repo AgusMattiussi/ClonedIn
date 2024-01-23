@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.enums.Month;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.DateHelper;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -21,20 +23,30 @@ import java.util.Optional;
 @Service
 public class ExperienceServiceImpl implements ExperienceService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExperienceServiceImpl.class);
+
     @Autowired
     private ExperienceDao experienceDao;
     @Autowired
     private UserService userService;
 
     @Override
-    public Experience create(User user, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description) {
+    @Transactional
+    public Experience create(long userId, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description) {
         Month monthFrom = Month.fromString(monthFromString);
-        Month monthTo = Month.fromString(monthToString);
+        Month monthTo = monthToString != null ? Month.fromString(monthToString) : null;
 
         DateHelper.validateDate(monthFrom,yearFrom, monthTo, yearTo);
 
-        return experienceDao.create(user, monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        Experience experience = experienceDao.create(user, monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
                 yearTo, enterpriseName, position, description);
+
+        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
+        LOGGER.info("A new experience was registered");
+
+        return experience;
     }
 
     @Override
