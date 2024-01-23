@@ -9,8 +9,9 @@ import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
 import { HttpStatusCode } from "axios"
-import { JobOfferAvailability } from "../../utils/constants"
-import { Link } from "react-router-dom"
+import { JobOfferAvailability, UserRole } from "../../utils/constants"
+import { Link, useNavigate } from "react-router-dom"
+import { useSharedAuth } from "../../api/auth"
 
 function JobOfferEnterpriseCard({
   status,
@@ -26,7 +27,9 @@ function JobOfferEnterpriseCard({
   setJobOfferId: any
 }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { loading, apiRequest } = useRequestApi()
+  const { userInfo } = useSharedAuth()
 
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
   const [skillsData, setSkillsData] = useState<SkillDto[]>([])
@@ -65,11 +68,17 @@ function JobOfferEnterpriseCard({
       {" "}
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
-          <h5>
+          {userInfo?.role === UserRole.ENTERPRISE ? (
+            <h5>
             <Link to={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
               {job.position}
             </Link>
-          </h5>
+            </h5>
+            ) : (
+              <h5>
+              {job.position}
+              </h5>
+            )}
         </div>
         <span>
           <h5 className="pt-2">
@@ -103,7 +112,8 @@ function JobOfferEnterpriseCard({
         <div className="d-flex flex-column">
           <h5>{t("Description")}</h5>
         </div>
-        {job.available === JobOfferAvailability.CLOSED ? (
+        {userInfo?.role === UserRole.ENTERPRISE ? (
+        job.available === JobOfferAvailability.CLOSED ? (
           <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
             {t("Closed")}
           </Badge>
@@ -124,6 +134,13 @@ function JobOfferEnterpriseCard({
               confirm={t("Confirm")}
               onConfirmClick={handleClose}
             />
+          </div>
+        )
+        ) : (
+          <div>
+            <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
+              {t("View More")}
+            </Button>
           </div>
         )}
       </div>

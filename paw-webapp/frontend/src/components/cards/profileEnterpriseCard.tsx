@@ -82,7 +82,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
               {enterprise.links.category !== "No-Especificado" ? (
                 <div>
                   <Badge pill bg="success" className="mx-2">
-                    {enterprise.links.category == null ? t("No-especificado") : enterpriseCategory?.name}
+                    {enterprise.links.category == null ? t("No-especificado") : t(enterpriseCategory!.name)}
                   </Badge>
                 </div>
               ) : (
