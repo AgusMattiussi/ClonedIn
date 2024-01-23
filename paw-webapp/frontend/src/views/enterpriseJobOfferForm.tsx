@@ -26,11 +26,11 @@ function JobOfferForm() {
 
   const schema = yup.object().shape({
     position: yup.string().required(t('Required') as string),
+    salary: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
+    description: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [category, setCategory] = useState("")
-  const [position, setPosition] = useState("")
   const [description, setDescription] = useState("")
-  const [salary, setSalary] = useState("")
   const [modality, setModality] = useState("")
   const [skills, setSkills] = useState("")
 
@@ -50,7 +50,8 @@ function JobOfferForm() {
 
   const handlePost = async (e: any) => {
     const jobPosition = e.position
-    const jobDescription = description
+    const jobDescription = e.description
+    const salary = e.salary
     const response = await apiRequest({
       url: `/enterprises/${id}/jobOffers`,
       method: "POST",
@@ -88,6 +89,8 @@ function JobOfferForm() {
                       validationSchema={schema}
                       initialValues={{
                         position: "",
+                        salary: "",
+                        description: "",
                       }}
                       onSubmit={(values) => {
                         handlePost(values)
@@ -112,11 +115,16 @@ function JobOfferForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicSalary">
                               <Form.Control
+                                name="salary"
                                 className="input"
                                 placeholder={t("Salary").toString()}
-                                value={salary}
-                                onChange={(e) => setSalary(e.target.value)}
+                                value={values.salary}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.salary}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.salary}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex mb-4">
                               <label className="area mx-2 py-1" style={{ width: "100px" }}>
@@ -159,12 +167,17 @@ function JobOfferForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
+                                name="description"
                                 placeholder={t("Description").toString()}
                                 as="textarea"
                                 rows={3}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={values.description}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.description}
                               />
+                              <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>

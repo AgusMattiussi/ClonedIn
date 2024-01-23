@@ -40,6 +40,8 @@
   "Invalid String": "Field must be a string",
   "Invalid Number": "Field must be a number",
   "Invalid End Year": "End year should be greater than start year",
+  "Invalid Salary Min": "Salary must be a positive value",
+  "Invalid Salary Max": "Salario debe ser menor a 1000000000",
 
   "No-especificado": "Choose",
   "Primario": "Primary",
