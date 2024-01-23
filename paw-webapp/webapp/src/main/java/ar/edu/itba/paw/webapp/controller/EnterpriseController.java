@@ -258,7 +258,7 @@ public class EnterpriseController {
                                        @PathParam("joid") @NotNull @Min(1) final long joid,
                                        @QueryParam("status") @NotNull final JobOfferStatus status) {
 
-        contactService.updateContactStatus(userId, joid, status);
+        contactService.updateContactStatus(userId, joid, status, Role.ENTERPRISE);
         return Response.noContent().build();
     }
 

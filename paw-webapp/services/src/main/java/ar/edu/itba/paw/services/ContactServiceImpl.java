@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
@@ -274,7 +275,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status) {
+    public void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status){
         User user = userService.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId)
@@ -309,5 +310,37 @@ public class ContactServiceImpl implements ContactService {
        if(!successful)
            throw new IllegalStateException(String.format("Could not update contact status to '%s'", status.getStatus()));
     }
+
+    @Override
+    @Transactional
+    public void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status){
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+
+        JobOfferStatus currentStatus = contactDao.getStatus(user, jobOffer)
+                .map(JobOfferStatus::fromString)
+                .orElseThrow(() -> new ContactNotFoundException(userId, jobOfferId));
+
+        if(currentStatus != JobOfferStatus.PENDING)
+            throw new JobOfferStatusException(status, jobOfferId, userId);
+
+        if(status != JobOfferStatus.ACCEPTED && status != JobOfferStatus.DECLINED)
+            throw new JobOfferStatusException(status, jobOfferId, userId);
+
+        if (status == JobOfferStatus.ACCEPTED && !this.acceptJobOffer(user, jobOffer))
+            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, userId);
+        else if (status == JobOfferStatus.DECLINED && !this.rejectJobOffer(user, jobOffer))
+            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
+        if (updatedBy == Role.ENTERPRISE)
+            updateEnterpriseContactStatus(userId, jobOfferId, status);
+        else
+            updateUserContactStatus(userId, jobOfferId, status);
+    }
+
 
 }

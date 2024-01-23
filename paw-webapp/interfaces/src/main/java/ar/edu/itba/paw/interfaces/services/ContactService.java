@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.SortBy;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
@@ -80,6 +81,15 @@ public interface ContactService {
 
     long getContactsCountForUser(User user);
 
-    void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+    void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+
+    void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+
+    default void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
+        if (updatedBy == Role.ENTERPRISE)
+            updateEnterpriseContactStatus(userId, jobOfferId, status);
+        else
+            updateUserContactStatus(userId, jobOfferId, status);
+    }
 
 }

@@ -210,20 +210,11 @@ public class UserController {
     @PUT
     @Path("/{id}/notifications/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response updateJobOfferStatus(@PathParam("id") final long id,
+    public Response updateContactStatus(@PathParam("id") final long id,
                                          @PathParam("jobOfferId") final long jobOfferId,
                                          @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-
-        if(newStatus != JobOfferStatus.ACCEPTED && newStatus != JobOfferStatus.DECLINED)
-            throw new JobOfferStatusException(newStatus, jobOfferId, id);
-
-        if (newStatus == JobOfferStatus.ACCEPTED && !contactService.acceptJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, id);
-        else if (newStatus == JobOfferStatus.DECLINED && !contactService.rejectJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, id);
+        contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
