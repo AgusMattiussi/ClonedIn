@@ -151,6 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
                                       Category newCategory, String newEducationLevel) {
         if(newName != null && !newName.isEmpty()) {
