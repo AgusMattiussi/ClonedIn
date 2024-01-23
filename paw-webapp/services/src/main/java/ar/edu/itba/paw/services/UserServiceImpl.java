@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User register(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
         return userDao.create(email, passwordEncoder.encode(password), name, location, category, currentPosition, description, education);
     }

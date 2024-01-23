@@ -13,7 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Component;
 import ar.edu.itba.paw.models.User;
+import org.springframework.transaction.annotation.Transactional;
 
+//TODO: Sacar @Transactionals y hacerlos en los services
 @Component
 public class SecurityValidator {
 
@@ -35,6 +37,7 @@ public class SecurityValidator {
         return true;
     }
 
+    @Transactional
     public boolean isUserProfileOwner(long profileID) {
         String email = getAuthEmail();
         if(email == null)
@@ -43,6 +46,7 @@ public class SecurityValidator {
         return isProfileOwner(userID, profileID);
     }
 
+    @Transactional
     public boolean isEnterpriseProfileOwner(long profileID) {
         String email = getAuthEmail();
         if(email == null)
@@ -51,6 +55,7 @@ public class SecurityValidator {
         return isProfileOwner(enterpriseID, profileID);
     }
 
+    @Transactional
     public boolean isUserVisible(long userID){
         User user = userService.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         if(user.getVisibility() != Visibility.VISIBLE.getValue())
@@ -58,6 +63,7 @@ public class SecurityValidator {
         return true;
     }
 
+    @Transactional
     public boolean isJobOfferOwner(long jobOfferId){
         String email = getAuthEmail();
         if(email == null)
@@ -66,6 +72,7 @@ public class SecurityValidator {
         return enterprise.isJobOfferOwner(jobOfferId);
     }
 
+    @Transactional
     public boolean isExperienceOwner(long experienceID){
         String email = getAuthEmail();
         if(email == null)
@@ -74,6 +81,7 @@ public class SecurityValidator {
         return user.hasExperience(experienceID);
     }
 
+    @Transactional
     public boolean isEducationOwner(long educationID){
         String email = getAuthEmail();
         if(email == null)

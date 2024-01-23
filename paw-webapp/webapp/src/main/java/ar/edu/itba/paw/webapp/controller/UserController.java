@@ -133,6 +133,7 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response createUser (@NotNull @Valid final UserForm userForm) {
         Category category = categoryService.findByName(userForm.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(userForm.getCategory()));
@@ -484,6 +485,7 @@ public class UserController {
     @PUT
     @Path("/{id}/visibility")
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response updateVisibility(@PathParam("id") @Min(1) final long id,
                                      @NotNull @QueryParam("visibility") final Visibility visibility) {
 
@@ -501,6 +503,7 @@ public class UserController {
     @Path("/{id}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response uploadImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
 
