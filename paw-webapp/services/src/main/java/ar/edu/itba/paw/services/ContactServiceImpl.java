@@ -43,8 +43,21 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy) {
-        return contactDao.addContact(enterprise, user, jobOffer, filledBy);
+    public Contact addContact(long userId, long jobOfferId, FilledBy filledBy) {
+
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        long enterpriseId = jobOffer.getEnterpriseID();
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+
+        if(this.alreadyContacted(userId, jobOfferId))
+            throw new AlreadyAppliedException(userId, jobOfferId);
+
+        Contact contact = contactDao.addContact(enterprise, user, jobOffer, filledBy);
+
+        emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+
+        return contact;
     }
 
     @Override
@@ -65,7 +78,7 @@ public class ContactServiceImpl implements ContactService {
         User user = userService.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        Contact contact = this.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
+        Contact contact = contactDao.addContact(enterprise, user, jobOffer, FilledBy.ENTERPRISE);
 
         emailService.sendContactEmail(user, enterprise, jobOffer, contactMessage, LocaleContextHolder.getLocale());
 

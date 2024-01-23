@@ -187,23 +187,9 @@ public class UserController {
     public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
                                     @NotNull @Valid ApplyToJobOfferForm applyToJobOfferForm) {
 
-        long jobOfferId = applyToJobOfferForm.getJobOfferId();
+        contactService.addContact(id, applyToJobOfferForm.getJobOfferId(), FilledBy.USER);
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
-        long enterpriseId = jobOffer.getEnterpriseID();
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
-
-
-        if(contactService.alreadyContacted(id, jobOfferId)) {
-            LOGGER.error("User with ID={} has already applied to job offer with ID={}", id, jobOfferId);
-            throw new AlreadyAppliedException(id, jobOfferId);
-        }
-
-        contactService.addContact(enterprise, user, jobOffer, FilledBy.USER);
-        emailService.sendApplicationEmail(enterprise, user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(applyToJobOfferForm.getJobOfferId())).build();
         return Response.created(uri).build();
     }
 

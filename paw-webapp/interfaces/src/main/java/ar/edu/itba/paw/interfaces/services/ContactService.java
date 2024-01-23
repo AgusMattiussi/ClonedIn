@@ -16,7 +16,7 @@ public interface ContactService {
 
     Optional<Contact> findByPrimaryKey(long userID, long jobOfferID);
 
-    Contact addContact(Enterprise enterprise, User user, JobOffer jobOffer, FilledBy filledBy);
+    Contact addContact(long userId, long jobOfferId, FilledBy filledBy);
 
     Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage);
 
