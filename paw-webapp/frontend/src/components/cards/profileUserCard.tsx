@@ -67,7 +67,7 @@ function ProfileUserCard({
   })
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "10rem" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem"}}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
           <Card.Img variant="top" src={imageUrl} />
