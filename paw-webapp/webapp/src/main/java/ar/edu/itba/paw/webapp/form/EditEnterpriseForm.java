@@ -1,22 +1,27 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.webapp.validators.ValidEmployeeRange;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 
 public class EditEnterpriseForm {
     @Size(max=50)
     private String name;
 
     @Size(max=50)
-    private String location;
+    private String city;
 
-    @NotEmpty
+    @ValidEmployeeRange
     private String workers;
 
-    @Pattern(regexp = "((1([0-9]{3}))|(20(([0-1][0-9])|2[0-2])))?")
-    private String year;
+    //TODO: Validator
+    @Min(1000)
+    private Integer year;
 
     @Size(max=200)
     private String link;
@@ -24,7 +29,6 @@ public class EditEnterpriseForm {
     @Size(max=600)
     private String aboutUs;
 
-    @NotEmpty
     private String category;
 
     public String getName() {
@@ -35,27 +39,35 @@ public class EditEnterpriseForm {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getCity() {
+        return city;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getWorkers() {
         return workers;
     }
 
+    public EmployeeRanges getWorkersEnum() {
+        if(workers == null)
+            return null;
+        return EmployeeRanges.fromString(workers);
+    }
+
     public void setWorkers(String workers) {
         this.workers = workers;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
+        if(year > Calendar.getInstance().get(Calendar.YEAR))
+            throw new IllegalArgumentException("Year cannot be greater than current year");
         this.year = year;
     }
 

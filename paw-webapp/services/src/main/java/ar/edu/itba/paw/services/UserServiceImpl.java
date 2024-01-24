@@ -185,8 +185,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
                                       String newCategory, String newEducationLevel, Visibility newVisibility) {
 
-        Category category = newCategory != null? categoryService.findByName(newCategory)
-                .orElseThrow(() -> new CategoryNotFoundException(newCategory)) : null;
+
 
         if(newName != null && !newName.isEmpty()) {
             updateName(userID, newName);
@@ -204,7 +203,9 @@ public class UserServiceImpl implements UserService {
             updateCurrentPosition(userID, newPosition);
         }
 
-        if(category != null) {
+        if(newCategory != null) {
+            Category category = categoryService.findByName(newCategory)
+                .orElseThrow(() -> new CategoryNotFoundException(newCategory));
             updateCategory(userID, category);
         }
 

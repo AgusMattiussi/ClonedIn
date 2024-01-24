@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
-//TODO: Edit Enterprise
-
 @Path("enterprises")
 @Component
 public class EnterpriseController {
@@ -101,6 +99,19 @@ public class EnterpriseController {
         EnterpriseDTO enterpriseDTO = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e))
                 .orElseThrow(() -> new EnterpriseNotFoundException(id));
         return Response.ok(enterpriseDTO).build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(PROFILE_OWNER)
+    public Response updateEnterprise(@PathParam("id") @Min(1) final long id,
+                                     @Valid @NotNull final EditEnterpriseForm form) {
+        enterpriseService.updateEnterpriseInformation(id, form.getName(), form.getAboutUs(), form.getCity(),
+                form.getCategory(), form.getLink(), form.getYear(), form.getWorkersEnum());
+
+        final URI uri = uriInfo.getAbsolutePath();
+        return Response.ok().location(uri).build();
     }
 
 

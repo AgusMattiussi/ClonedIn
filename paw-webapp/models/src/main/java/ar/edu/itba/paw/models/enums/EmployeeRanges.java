@@ -23,9 +23,9 @@ public enum EmployeeRanges {
     }
 
     public static EmployeeRanges fromString(String text) {
-        for (EmployeeRanges b : EmployeeRanges.values()) {
-            if (b.stringValue.equals(text)) {
-                return b;
+        for (EmployeeRanges range : EmployeeRanges.values()) {
+            if (range.stringValue.equals(text)) {
+                return range;
             }
         }
         throw new IllegalArgumentException(String.format("No constant range matching text '%s' found", text));
