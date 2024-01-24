@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<User> findById(long userId) {
         return userDao.findById(userId);
     }
@@ -181,7 +183,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                                      Category newCategory, String newEducationLevel) {
+                                      String newCategory, String newEducationLevel, Visibility newVisibility) {
+
+        Category category = newCategory != null? categoryService.findByName(newCategory)
+                .orElseThrow(() -> new CategoryNotFoundException(newCategory)) : null;
+
         if(newName != null && !newName.isEmpty()) {
             updateName(userID, newName);
         }
@@ -198,12 +204,16 @@ public class UserServiceImpl implements UserService {
             updateCurrentPosition(userID, newPosition);
         }
 
-        if(newCategory != null) {
-            updateCategory(userID, newCategory);
+        if(category != null) {
+            updateCategory(userID, category);
         }
 
         if(newEducationLevel != null && !newEducationLevel.isEmpty()) {
             updateEducationLevel(userID, newEducationLevel);
+        }
+
+        if(newVisibility != null) {
+            updateVisibility(userID, newVisibility);
         }
     }
 
@@ -222,8 +232,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfileImage(User user, Image image) {
+    @Transactional
+    public void updateProfileImage(long userId, byte[] imageBytes) {
+        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Image image = imageService.uploadImage(imageBytes);
+
         userDao.updateUserProfileImage(user, image);
+    }
+
+    @Override
+    @Transactional
+    public Optional<Image> getProfileImage(long userId) {
+        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return Optional.ofNullable(user.getImage());
     }
 
     @Override

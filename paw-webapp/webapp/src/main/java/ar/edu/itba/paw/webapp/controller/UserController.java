@@ -43,7 +43,7 @@ public class UserController {
     private static final int EXPERIENCES_PER_PAGE = 3;
     private static final int USERS_PER_PAGE = 12;
     private static final int EDUCATIONS_PER_PAGE = 3;
-    private static final int SKILLS_PER_PAGE = 5;
+    private static final int SKILLS_PER_PAGE = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -251,25 +251,22 @@ public class UserController {
     public Response getExperiences(@PathParam("id") final long id,
                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        List<ExperienceDTO> experiences = experienceService.findByUser(user, page - 1, EXPERIENCES_PER_PAGE)
-                .stream().map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
+        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, EXPERIENCES_PER_PAGE);
 
         if(experiences.isEmpty())
             return Response.noContent().build();
 
-        long experienceCount = experienceService.getExperienceCountForUser(user);
-        long maxPages = experienceCount/EXPERIENCES_PER_PAGE + 1;
+        List<ExperienceDTO> experienceDTOs = experiences.getPage().stream()
+                .map(exp -> ExperienceDTO.fromExperience(uriInfo, exp)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experiences) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ExperienceDTO>>(experienceDTOs) {}),
+                page, experiences.getMaxPages());
     }
 
     @GET
     @Path("/{id}/experiences/{expId}")
     @Produces(ClonedInMediaType.EXPERIENCE_V1)
     @PreAuthorize(ENTERPRISE_OR_EXPERIENCE_OWNER)
-    @Transactional
     public Response getExperienceById(@PathParam("id") @Min(1) final long id,
                                       @PathParam("expId") @Min(1) final long expId) {
 
@@ -286,14 +283,9 @@ public class UserController {
     public Response addExperience(@PathParam("id") final long id,
                                   @NotNull @Valid ExperienceForm experienceForm){
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        Experience experience = experienceService.create(user, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
+        Experience experience = experienceService.create(id, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
                 experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getCompany(), experienceForm.getJob(),
                 experienceForm.getJobDesc());
-
-        LOGGER.debug("A new experience was registered under id: {}", experience.getId());
-        LOGGER.info("A new experience was registered");
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(experience.getId())).build();
         return Response.created(uri).build();
@@ -316,18 +308,16 @@ public class UserController {
     public Response getEducations(@PathParam("id") @Min(1) final long id,
                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        List<EducationDTO> educations = educationService.findByUser(user, page - 1, EDUCATIONS_PER_PAGE)
-                .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
+        PaginatedResource<Education> educations = educationService.findByUser(id, page, EDUCATIONS_PER_PAGE);
 
         if(educations.isEmpty())
             return Response.noContent().build();
 
-        long educationCount = educationService.getEducationCountForUser(user);
-        long maxPages = educationCount/EDUCATIONS_PER_PAGE + 1;
+        List<EducationDTO> educationDTOs = educations.getPage().stream()
+                .map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educationDTOs) {}), page,
+                educations.getMaxPages());
     }
 
     @GET
@@ -349,14 +339,10 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response addEducation(@PathParam("id") @Min(1) final long id,
                                  @NotNull @Valid final EducationForm educationForm){
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        Education education = educationService.add(user, educationForm.getMonthFrom(), educationForm.getYearFrom(),
+        Education education = educationService.add(id, educationForm.getMonthFrom(), educationForm.getYearFrom(),
                 educationForm.getMonthTo(), educationForm.getYearTo(), educationForm.getDegree(), educationForm.getCollege(),
                 educationForm.getComment());
-
-        LOGGER.debug("A new education was registered under id: {}", education.getId());
-        LOGGER.info("A new education was registered");
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(education.getId())).build();
         return Response.created(uri).build();
@@ -371,45 +357,36 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    // TODO: Paginar?
+
     @GET
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    @Transactional
     public Response getSkills(@PathParam("id") @Min(1) final long id,
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<Skill> skills = user.getSkills();
-        if (skills == null || skills.isEmpty())
+        PaginatedResource<Skill> skills = userSkillService.getSkillsForUser(id, page, SKILLS_PER_PAGE);
+
+        if (skills.isEmpty())
             return Response.noContent().build();
 
-        List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo, skill))
-                .collect(Collectors.toList());
+        List<SkillDTO> skillDTOs = skills.getPage().stream()
+                .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
-        long skillCount = userSkillService.getSkillCountForUser(user);
-        long maxPages = skillCount/SKILLS_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page,
+                skills.getMaxPages());
     }
 
     @POST
     @Path("/{id}/skills")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
     public Response addSkill(@PathParam("id") @Min(1) final long id,
                              @NotNull @Valid final SkillForm skillForm){
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
-        if(userSkillService.alreadyExists(skill, user))
-            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", id, skillForm.getSkill()));
+        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getSkill(), id);
 
-        userSkillService.addSkillToUser(skill, user);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(skill.getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(userSkill.getSkill().getId())).build();
         return Response.created(uri).build();
     }
 
@@ -428,32 +405,9 @@ public class UserController {
     public Response editUser( @PathParam("id") @Min(1) final long id,
                               @NotNull @Valid final EditUserForm editUserForm) {
 
-        Category category = null;
-
-        String formCategory = editUserForm.getCategory();
-        if(formCategory != null && !formCategory.isEmpty()) {
-            category = categoryService.findByName(editUserForm.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(editUserForm.getCategory()));
-        }
-
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), category, editUserForm.getLevel());
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        return Response.ok().location(uri).build();
-    }
-
-    @PUT
-    @Path("/{id}/visibility")
-    @PreAuthorize(PROFILE_OWNER)
-    @Transactional
-    public Response updateVisibility(@PathParam("id") @Min(1) final long id,
-                                     @NotNull @QueryParam("visibility") final Visibility visibility) {
-
-        if (visibility == Visibility.INVISIBLE)
-            us.hideUserProfile(id);
-        else
-            us.showUserProfile(id);
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel(),
+                editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
         return Response.ok().location(uri).build();
@@ -464,13 +418,10 @@ public class UserController {
     @Path("/{id}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
-    public Response uploadImage(@PathParam("id") final long id,
+    public Response updateImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        Image image = imageService.uploadImage(bytes);
-        us.updateProfileImage(user, image);
+        us.updateProfileImage(id, bytes);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok().location(uri).build();
@@ -480,11 +431,10 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
-        Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
-        if(profileImage == null)
-            return Response.noContent().build();
+        Image profileImage = us.getProfileImage(id).orElseThrow(() -> new ImageNotFoundException(id, Role.USER));
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType())

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.Visibility;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -16,11 +17,12 @@ public class EditUserForm {
     @Size(max=600)
     private String aboutMe;
 
-    @NotEmpty
     private String category;
 
-    @NotEmpty
     private String level;
+
+    //TODO: Visibility validator?
+    private String visibility;
 
     public String getName() {
         return name;
@@ -68,5 +70,17 @@ public class EditUserForm {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    public Visibility getVisibilityAsEnum() {
+        return Visibility.fromString(visibility);
     }
 }

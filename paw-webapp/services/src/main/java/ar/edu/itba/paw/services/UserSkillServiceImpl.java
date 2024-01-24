@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
+import ar.edu.itba.paw.interfaces.services.SkillService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UserSkillService;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -16,17 +20,22 @@ import java.util.List;
 @Service
 public class UserSkillServiceImpl implements UserSkillService {
 
-    private final UserSkillDao userSkillDao;
-
     @Autowired
-    public UserSkillServiceImpl(UserSkillDao userSkillDao){
-        this.userSkillDao = userSkillDao;
-    }
-
+    private UserSkillDao userSkillDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SkillService skillService;
 
     @Override
     @Transactional
-    public UserSkill addSkillToUser(Skill skill, User user) {
+    public UserSkill addSkillToUser(String skillDescription, long userId) {
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Skill skill = skillService.findByDescriptionOrCreate(skillDescription);
+
+        if(this.alreadyExists(skill, user))
+            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", userId, skillDescription));
+
         return userSkillDao.addSkillToUser(skill, user);
     }
 
@@ -42,8 +51,15 @@ public class UserSkillServiceImpl implements UserSkillService {
     }
 
     @Override
-    public List<Skill> getSkillsForUser(User user, int page, int pageSize) {
-        return userSkillDao.getSkillsForUser(user, page, pageSize);
+    @Transactional
+    public PaginatedResource<Skill> getSkillsForUser(long userId, int page, int pageSize) {
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        List<Skill> skills =  userSkillDao.getSkillsForUser(user, page-1, pageSize);
+        long skillCount = this.getSkillCountForUser(user);
+        long maxPages = skillCount/pageSize + 1;
+
+        return new PaginatedResource<>(skills, page, maxPages);
     }
 
     @Override
