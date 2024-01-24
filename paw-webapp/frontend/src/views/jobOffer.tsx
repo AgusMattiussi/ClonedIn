@@ -36,6 +36,8 @@ function JobOffer() {
     if (isJobLoading) fetchJob()
   }, [apiRequest, id, navigate, isJobLoading])
 
+  document.title = job?.position + " | ClonedIn"
+
   return (
     <div>
       <Navigation role={userInfo?.role} />

@@ -89,12 +89,18 @@ function JobOfferDiscoverCard({
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
+        {userInfo?.role === UserRole.USER ? (
           <h5>
             <Link to={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
               {jobEnterprise?.name}{" "}
             </Link>
             | {job.position}
           </h5>
+        ):(
+          <h5>
+            {job.position}
+          </h5>
+        )}
         </div>
         <span>
           <h5 className="pt-2">

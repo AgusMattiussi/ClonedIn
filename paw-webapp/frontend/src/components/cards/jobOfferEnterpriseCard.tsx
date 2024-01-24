@@ -83,7 +83,7 @@ function JobOfferEnterpriseCard({
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-              {job.links.category == null ? t("No-especificado") : jobCategory?.name}
+              {job.links.category == null ? t("No-especificado") : t(jobCategory!.name)}
             </Badge>
           </h5>
         </span>
