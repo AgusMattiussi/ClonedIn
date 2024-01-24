@@ -11,6 +11,7 @@ import * as formik from "formik"
 import * as yup from "yup"
 import { useRequestApi } from "../api/apiRequest"
 import { HttpStatusCode } from "axios"
+import EnterpriseDto from "../utils/EnterpriseDto"
 
 function EditEnterpriseForm() {
   const navigate = useNavigate()
@@ -23,9 +24,14 @@ function EditEnterpriseForm() {
   document.title = t("Edit Page Title")
 
   const { Formik } = formik
+  const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
   const schema = yup.object().shape({
-    name: yup.string().required(t('Required') as string),
+    name: yup.string().max(50, t('Single Line Max Length') as string),
+    city: yup.string().max(50, t('Single Line Max Length') as string),
+    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    link: yup.string().matches(re, t('Invalid URL') as string).max(50, t('Single Line Max Length') as string),
+    aboutUs: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [location, setLocation] = useState("")
   const [workers, setWorkers] = useState("")
@@ -33,8 +39,22 @@ function EditEnterpriseForm() {
   const [link, setLink] = useState("")
   const [year, setYear] = useState("")
   const [description, setDescription] = useState("")
+  const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
 
   useEffect(() => {
+    const fetchEnterprise = async () => {
+      const response = await apiRequest({
+        url: `/enterprises/${id}`,
+        method: "GET",
+      })
+      if (response.status === 500 || response.status === 403) {
+        navigate("/403")
+      }
+      if (response.status === HttpStatusCode.Ok) {
+        setEnterprise(response.data)
+      }
+    }
+
     const fetchCategories = async () => {
       const response = await apiRequest({
         url: "/categories",
@@ -45,30 +65,30 @@ function EditEnterpriseForm() {
 
     if (categoryList.length === 0) {
       fetchCategories()
+      fetchEnterprise()
     }
   }, [apiRequest])
 
   const handlePost = async (e: any) => {
-    const name = e.name
-    const response = await apiRequest({
-      url: `/enterprises/${id}`,
-      method: "PUT",
-      body: {
-        name,
-        location,
-        category,
-        workers,
-        year,
-        link,
-        description,
-      },
-    })
-    console.log(response)
-    if (response.status === HttpStatusCode.NoContent) {
-      navigate(`/enterprises/${id}`)
-    } else {
-      //TODO: manejar error
-    }
+    // const response = await apiRequest({
+    //   url: `/enterprises/${id}`,
+    //   method: "PUT",
+    //   body: {
+    //     e.name,
+    //     e.city,
+    //     category,
+    //     workers,
+    //     e.foundingYear,
+    //     e.link,
+    //     e.aboutUs,
+    //   },
+    // })
+    // console.log(response)
+    // if (response.status === HttpStatusCode.NoContent) {
+    //   navigate(`/enterprises/${id}`)
+    // } else {
+    //   //TODO: manejar error
+    // }
   }
 
   return (
@@ -89,6 +109,10 @@ function EditEnterpriseForm() {
                       validationSchema={schema}
                       initialValues={{
                         name: "",
+                        city: "",
+                        foundingYear: "",
+                        link: "",
+                        aboutUs: "",
                       }}
                       onSubmit={(values) => {
                         handlePost(values)
@@ -102,7 +126,7 @@ function EditEnterpriseForm() {
                               <Form.Control
                                 name="name"
                                 className="input"
-                                placeholder={t("Name*").toString()}
+                                placeholder={enterprise?.name}
                                 value={values.name}
                                 onChange={handleChange}
                                 isInvalid={!!errors.name}
@@ -112,9 +136,10 @@ function EditEnterpriseForm() {
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
                                 className="input"
-                                placeholder={t("Location").toString()}
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
+                                placeholder={enterprise?.location}
+                                value={values.city}
+                                onChange={handleChange}
+                                isInvalid={!!errors.city}
                               />
                             </Form.Group>
                             <div className="d-flex mb-4">
@@ -172,26 +197,29 @@ function EditEnterpriseForm() {
                             <Form.Group className="mb-3" controlId="formBasicYear">
                               <Form.Control
                                 className="input"
-                                placeholder={t("Funding Year").toString()}
-                                value={year}
-                                onChange={(e) => setYear(e.target.value)}
+                                placeholder={''+enterprise?.year}
+                                value={values.foundingYear}
+                                onChange={handleChange}
+                                isInvalid={!!errors.foundingYear}
                               />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control
                                 className="input"
-                                placeholder={t("Website").toString()}
-                                value={link}
-                                onChange={(e) => setLink(e.target.value)}
+                                placeholder={enterprise?.website}
+                                value={values.link}
+                                onChange={handleChange}
+                                isInvalid={!!errors.link}
                               />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
-                                placeholder={t("About Us").toString()}
+                                placeholder={enterprise?.description}
                                 as="textarea"
                                 rows={3}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={values.aboutUs}
+                                onChange={handleChange}
+                                isInvalid={!!errors.aboutUs}
                               />
                             </Form.Group>
                           </div>

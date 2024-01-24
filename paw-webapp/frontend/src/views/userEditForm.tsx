@@ -11,6 +11,7 @@ import { useRequestApi } from "../api/apiRequest"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
+import UserDto from "../utils/UserDto"
 
 function EditUserForm() {
   const navigate = useNavigate()
@@ -25,15 +26,29 @@ function EditUserForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    name: yup.string().max(50, t('Single Line Max Length') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
     aboutMe: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [category, setCategory] = useState("")
   const [level, setLevel] = useState("")
+  const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const response = await apiRequest({
+        url: `/users/${id}`,
+        method: "GET",
+      })
+      if (response.status === 500 || response.status === 403) {
+        navigate("/403")
+      }
+      if (response.status === HttpStatusCode.Ok) {
+        setUser(response.data)
+      }
+    }
+
     const fetchCategories = async () => {
       const response = await apiRequest({
         url: "/categories",
@@ -44,6 +59,7 @@ function EditUserForm() {
 
     if (categoryList.length === 0) {
       fetchCategories()
+      fetchUser()
     }
   }, [apiRequest])
 
@@ -105,7 +121,7 @@ function EditUserForm() {
                               <Form.Control
                                 name="name"
                                 className="input"
-                                placeholder={t("Name*").toString()}
+                                placeholder={user?.name}
                                 value={values.name}
                                 onChange={handleChange}
                                 isInvalid={!!errors.name}
@@ -116,7 +132,7 @@ function EditUserForm() {
                               <Form.Control
                                 name="location"
                                 className="input"
-                                placeholder={t("Location").toString()}
+                                placeholder={user?.location}
                                 value={values.location}
                                 onChange={handleChange}
                                 isInvalid={!!errors.location}
@@ -127,7 +143,7 @@ function EditUserForm() {
                               <Form.Control
                                 name="position"
                                 className="input"
-                                placeholder={t("Current Position").toString()}
+                                placeholder={user?.currentPosition}
                                 value={values.position}
                                 onChange={handleChange}
                                 isInvalid={!!errors.position}
@@ -185,7 +201,7 @@ function EditUserForm() {
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
                                 name="aboutMe"
-                                placeholder={t("About Me").toString()}
+                                placeholder={user?.description}
                                 as="textarea"
                                 rows={3}
                                 value={values.aboutMe}
