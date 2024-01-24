@@ -137,9 +137,9 @@ function JobOfferForm() {
                                 style={{ width: "70%" }}
                               >
                                 <option value="No-Especificado">{t("No-especificado")}</option>
-                                <option value="Remoto">{t("Home Office")}</option>
-                                <option value="Presencial">{t("On Site")}</option>
-                                <option value="Mixto">{t("Mixed")}</option>
+                                <option value="Remoto">{t("Remoto")}</option>
+                                <option value="Presencial">{t("Presencial")}</option>
+                                <option value="Mixto">{t("Mixto")}</option>
                               </Form.Select>
                             </div>
                             {/* TODO: agregar HABILIDADES REQUERIDAS CON EL INPUT DE +*/}

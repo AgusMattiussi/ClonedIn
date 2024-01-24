@@ -87,7 +87,7 @@ function JobOfferUserCard({
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-              {job.links.category == null ? t("No-especificado") : jobCategory?.name}
+              {job.links.category == null ? t("No-especificado") : t(jobCategory!.name)}
             </Badge>
           </h5>
         </span>
@@ -96,7 +96,7 @@ function JobOfferUserCard({
       <div className="d-flex justify-content-between px-3">
         <div className="d-flex flex-column">
           <h5>{t("Modality")}</h5>
-          <p>{job?.modality}</p>
+          <p>{t(job?.modality)}</p>
         </div>
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>
@@ -108,9 +108,7 @@ function JobOfferUserCard({
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-            <Badge pill bg="success" className="mx-2">
               {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
-            </Badge>
           </div>
         </div>
         <div className="d-flex flex-column">

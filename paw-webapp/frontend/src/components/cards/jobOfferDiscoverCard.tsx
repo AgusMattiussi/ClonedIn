@@ -114,7 +114,7 @@ function JobOfferDiscoverCard({
       <div className="d-flex justify-content-between px-3">
         <div className="d-flex flex-column">
           <h5>{t("Modality")}</h5>
-          <p>{job.modality}</p>
+          <p>{t(job.modality)}</p>
         </div>
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>

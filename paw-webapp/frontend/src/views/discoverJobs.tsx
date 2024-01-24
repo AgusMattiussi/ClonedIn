@@ -96,7 +96,6 @@ function DiscoverJobs() {
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary)
     }
   }, [
@@ -197,9 +196,9 @@ function DiscoverJobs() {
                   <option key="1" value="">
                     {t("Modality")}
                   </option>
-                  <option value="Remoto">{t("Home Office")}</option>
-                  <option value="Presencial">{t("On Site")}</option>
-                  <option value="Mixto">{t("Mixed")}</option>
+                  <option value="Remoto">{t("Remoto")}</option>
+                  <option value="Presencial">{t("Presencial")}</option>
+                  <option value="Mixto">{t("Mixto")}</option>
                 </Form.Select>
               </div>
             </Row>
