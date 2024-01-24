@@ -413,33 +413,15 @@ public class UserController {
         return Response.ok().location(uri).build();
     }
 
-    //TODO: Mover a editUser
-    @PUT
-    @Path("/{id}/visibility")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response updateVisibility(@PathParam("id") @Min(1) final long id,
-                                     @NotNull @QueryParam("visibility") final Visibility visibility) {
-
-        if (visibility == Visibility.INVISIBLE)
-            us.hideUserProfile(id);
-        else
-            us.showUserProfile(id);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        return Response.ok().location(uri).build();
-    }
-
 
     @PUT
     @Path("/{id}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PreAuthorize(PROFILE_OWNER)
-    public Response uploadImage(@PathParam("id") final long id,
+    public Response updateImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        Image image = imageService.uploadImage(bytes);
-        us.updateProfileImage(user, image);
+        us.updateProfileImage(id, bytes);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.ok().location(uri).build();

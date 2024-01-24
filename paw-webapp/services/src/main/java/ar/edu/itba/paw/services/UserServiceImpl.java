@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
+import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,7 +231,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfileImage(User user, Image image) {
+    @Transactional
+    public void updateProfileImage(long userId, byte[] imageBytes) {
+        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Image image = imageService.uploadImage(imageBytes);
+
         userDao.updateUserProfileImage(user, image);
     }
 
