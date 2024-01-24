@@ -24,6 +24,7 @@ function RegisterUser() {
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterUser()
   const { loginHandler } = useLogin()
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -40,7 +41,7 @@ function RegisterUser() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(
+    const registered = await registerHandler(
       e.email,
       e.pass,
       e.repeatPass,
@@ -51,8 +52,14 @@ function RegisterUser() {
       category,
       educationLevel,
     )
-    await loginHandler(e.email, e.pass)
-    navigate("/jobOffers")
+    if (registered) {
+      await loginHandler(e.email, e.pass)
+      navigate("/jobOffers")
+    }
+    else {
+      console.log("Not registered")
+      setError(t("Invalid Credentials") as string)
+    }
   }
 
   const handlePasswordVisibility = () => {
@@ -147,6 +154,7 @@ function RegisterUser() {
                                 isInvalid={!!errors.email}
                               />
                               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                              {error && <div className="error" style={{color: "red"}}>{error}</div>}
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicName">
                               <Form.Control
