@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
 import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +119,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/jobOffers")
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
+    @PreAuthorize(PROFILE_OWNER)
     public Response getJobOffers(@PathParam("id") @Min(1) final long id,
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("category") final String categoryName,
@@ -291,12 +292,14 @@ public class EnterpriseController {
 //  @Produces - set dynamically
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
-        Optional<Image> profileImage = enterpriseService.getProfileImage(id);
-        if(!profileImage.isPresent())
+        Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
+        if(profileImage == null)
             return Response.noContent().build();
 
-        return Response.ok(profileImage.get().getBytes())
-                .type(profileImage.get().getMimeType()) // Replaces @Produces dynamically
+        return Response.ok(profileImage.getBytes())
+                .type(profileImage.getMimeType()) // @Produces
+                .tag(profileImage.getEntityTag())
+                .cacheControl(ResponseUtils.imageCacheControl())
                 .build();
     }
 }

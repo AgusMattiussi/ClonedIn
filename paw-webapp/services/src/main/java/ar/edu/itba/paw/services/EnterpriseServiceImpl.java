@@ -174,6 +174,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Optional<Image> getProfileImage(long enterpriseId) {
         Enterprise enterprise = this.findById(enterpriseId)
                 .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));

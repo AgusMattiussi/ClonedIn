@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -431,13 +432,16 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+//  @Produces - set dynamically
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
         Image profileImage = us.getProfileImage(id).orElseThrow(() -> new ImageNotFoundException(id, Role.USER));
 
         return Response.ok(profileImage.getBytes())
-                .type(profileImage.getMimeType())
+                .type(profileImage.getMimeType()) // @Produces
+                .tag(profileImage.getEntityTag())
+                .cacheControl(ResponseUtils.imageCacheControl())
                 .build();
     }
 
