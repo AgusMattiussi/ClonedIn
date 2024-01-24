@@ -58,9 +58,9 @@ public class JobOfferController {
                                  @QueryParam("position") final String position,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
-                                 @QueryParam("enterprise") final String enterpriseName) {
+                                 @QueryParam("enterpriseId") final Long enterpriseId) {
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        enterpriseName, searchTerm, position, minSalary, maxSalary, true, page, JOB_OFFERS_PER_PAGE);
+                        enterpriseId, searchTerm, position, minSalary, maxSalary, true, page, JOB_OFFERS_PER_PAGE);
 
         if(jobOffers.isEmpty())
             return Response.noContent().build();

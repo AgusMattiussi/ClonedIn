@@ -126,32 +126,27 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferDao.getActiveJobOffersCountForEnterprise(enterprise);
     }
 
+
     @Override
     public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
-                                                                 String enterpriseName, String searchTerm, String position, BigDecimal minSalary,
+                                                                 Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
                                                                  BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
         Category category = categoryName != null ? categoryService.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
-        List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseName,
+        if(enterpriseId != null)
+            enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+
+        List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseId,
                 searchTerm, position, minSalary, maxSalary, onlyActive, page-1, pageSize);
 
-        long jobOffersCount = this.getJobOfferCount(category, modality, skillDescription, enterpriseName,
+        long jobOffersCount = this.getJobOfferCount(category, modality, skillDescription, enterpriseId,
                         searchTerm, position, minSalary, maxSalary, onlyActive);
         long maxPages = jobOffersCount / pageSize + 1;
 
         return new PaginatedResource<>(jobOffers, page, maxPages);
     }
 
-    @Override
-    public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
-                                                                 long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
-                                                                 BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
-        Enterprise enterprise = enterpriseService.findById(enterpriseId)
-                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
-        return getJobOffersListByFilters(categoryName, modality, skillDescription, enterprise.getName(), searchTerm,
-                position, minSalary, maxSalary, onlyActive, page, pageSize);
-    }
 
     @Override
     public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
@@ -159,9 +154,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, String enterpriseName,
+    public long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, Long enterpriseId,
                                  String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive) {
-        return jobOfferDao.getJobOfferCount(category, modality, skillDescription, enterpriseName, searchTerm,
+        return jobOfferDao.getJobOfferCount(category, modality, skillDescription, enterpriseId, searchTerm,
                 position, minSalary, maxSalary, onlyActive);
     }
 
