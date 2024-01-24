@@ -51,7 +51,7 @@ public class User implements CustomUserDetails {
     @Column(name = "visibilidad"/*, columnDefinition = "integer default 1"*/)
     private int visibility;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idImagen")
     private Image image;
 

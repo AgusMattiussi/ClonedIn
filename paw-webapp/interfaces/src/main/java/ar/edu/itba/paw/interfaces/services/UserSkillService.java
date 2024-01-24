@@ -3,18 +3,19 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 
 public interface UserSkillService {
 
-    UserSkill addSkillToUser(Skill skill, User user);
+    UserSkill addSkillToUser(String skillDescription, long userId);
 
     boolean alreadyExists(Skill skill, User user);
 
     List<User> getUsersWithSkill(Skill skill);
 
-    List<Skill> getSkillsForUser(User user, int page, int pageSize);
+    PaginatedResource<Skill> getSkillsForUser(long userId, int page, int pageSize);
 
     long getSkillCountForUser(User user);
 
