@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public interface UserService {
     void updateEducationLevel(long userID, String newEducationLevel);
 
     void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                               Category newCategory, String newEducationLevel);
+                               String newCategory, String newEducationLevel, Visibility visibility);
 
     void hideUserProfile(long userID);
 

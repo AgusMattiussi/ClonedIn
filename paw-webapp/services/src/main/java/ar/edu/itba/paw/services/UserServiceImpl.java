@@ -179,8 +179,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                                      Category newCategory, String newEducationLevel) {
+                                      String newCategory, String newEducationLevel, Visibility newVisibility) {
+
+        Category category = newCategory != null? categoryService.findByName(newCategory)
+                .orElseThrow(() -> new CategoryNotFoundException(newCategory)) : null;
+
         if(newName != null && !newName.isEmpty()) {
             updateName(userID, newName);
         }
@@ -197,12 +202,16 @@ public class UserServiceImpl implements UserService {
             updateCurrentPosition(userID, newPosition);
         }
 
-        if(newCategory != null) {
-            updateCategory(userID, newCategory);
+        if(category != null) {
+            updateCategory(userID, category);
         }
 
         if(newEducationLevel != null && !newEducationLevel.isEmpty()) {
             updateEducationLevel(userID, newEducationLevel);
+        }
+
+        if(newVisibility != null) {
+            updateVisibility(userID, newVisibility);
         }
     }
 

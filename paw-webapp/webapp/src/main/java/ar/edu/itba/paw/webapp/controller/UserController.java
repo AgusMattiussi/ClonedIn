@@ -405,21 +405,15 @@ public class UserController {
     public Response editUser( @PathParam("id") @Min(1) final long id,
                               @NotNull @Valid final EditUserForm editUserForm) {
 
-        Category category = null;
-
-        String formCategory = editUserForm.getCategory();
-        if(formCategory != null && !formCategory.isEmpty()) {
-            category = categoryService.findByName(editUserForm.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(editUserForm.getCategory()));
-        }
-
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), category, editUserForm.getLevel());
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel(),
+                editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
         return Response.ok().location(uri).build();
     }
 
+    //TODO: Mover a editUser
     @PUT
     @Path("/{id}/visibility")
     @PreAuthorize(PROFILE_OWNER)
