@@ -381,18 +381,12 @@ public class UserController {
     @Path("/{id}/skills")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    @Transactional
     public Response addSkill(@PathParam("id") @Min(1) final long id,
                              @NotNull @Valid final SkillForm skillForm){
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        Skill skill = skillService.findByDescriptionOrCreate(skillForm.getSkill());
 
-        if(userSkillService.alreadyExists(skill, user))
-            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", id, skillForm.getSkill()));
+        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getSkill(), id);
 
-        userSkillService.addSkillToUser(skill, user);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(skill.getId())).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(userSkill.getSkill().getId())).build();
         return Response.created(uri).build();
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
+import ar.edu.itba.paw.interfaces.services.SkillService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.UserSkillService;
 import ar.edu.itba.paw.models.Skill;
@@ -23,10 +24,18 @@ public class UserSkillServiceImpl implements UserSkillService {
     private UserSkillDao userSkillDao;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SkillService skillService;
 
     @Override
     @Transactional
-    public UserSkill addSkillToUser(Skill skill, User user) {
+    public UserSkill addSkillToUser(String skillDescription, long userId) {
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Skill skill = skillService.findByDescriptionOrCreate(skillDescription);
+
+        if(this.alreadyExists(skill, user))
+            throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", userId, skillDescription));
+
         return userSkillDao.addSkillToUser(skill, user);
     }
 

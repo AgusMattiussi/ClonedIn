@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserSkillService {
 
-    UserSkill addSkillToUser(Skill skill, User user);
+    UserSkill addSkillToUser(String skillDescription, long userId);
 
     boolean alreadyExists(Skill skill, User user);
 
