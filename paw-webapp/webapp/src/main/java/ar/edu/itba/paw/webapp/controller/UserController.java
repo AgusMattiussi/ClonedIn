@@ -357,27 +357,24 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    // TODO: Paginar?
+
     @GET
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    @Transactional
     public Response getSkills(@PathParam("id") @Min(1) final long id,
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        List<Skill> skills = user.getSkills();
-        if (skills == null || skills.isEmpty())
+        PaginatedResource<Skill> skills = userSkillService.getSkillsForUser(id, page, SKILLS_PER_PAGE);
+
+        if (skills.isEmpty())
             return Response.noContent().build();
 
-        List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo, skill))
-                .collect(Collectors.toList());
+        List<SkillDTO> skillDTOs = skills.getPage().stream()
+                .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
-        long skillCount = userSkillService.getSkillCountForUser(user);
-        long maxPages = skillCount/SKILLS_PER_PAGE + 1;
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}), page,
+                skills.getMaxPages());
     }
 
     @POST
