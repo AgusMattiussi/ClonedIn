@@ -16,6 +16,7 @@ import { UserRole } from "../utils/constants"
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const { loading, loginHandler } = useLogin()
   const { userInfo } = useSharedAuth()
@@ -40,7 +41,7 @@ function Login() {
       }
     } else {
       console.log("Not logged in")
-      //TODO: Show errors in the form
+      setError(t("Invalid Credentials") as string)
     }
   }
 
@@ -82,6 +83,7 @@ function Login() {
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
                         </Form.Group>
+                        {error && <div className="error" style={{color: "red"}}>{error}</div>}
                       </div>
                       <Button variant="success" type="submit">
                         <strong>{t("Log In")}</strong>

@@ -30,7 +30,6 @@ function JobOfferForm() {
     description: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [category, setCategory] = useState("")
-  const [description, setDescription] = useState("")
   const [modality, setModality] = useState("")
   const [skills, setSkills] = useState("")
 
