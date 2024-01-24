@@ -20,9 +20,11 @@ public class EnterpriseForm {
     @Size(max=100)
     private String email;
 
+    @NotEmpty
     @Size(min = 6, max = 20)
     private String password;
 
+    @NotEmpty
     @Size(min = 6, max = 20)
     private String repeatPassword;
 
@@ -37,7 +39,6 @@ public class EnterpriseForm {
     @ValidEmployeeRange
     private String workers;
 
-    @NotNull
     @Min(1000)
     private Integer year;
 

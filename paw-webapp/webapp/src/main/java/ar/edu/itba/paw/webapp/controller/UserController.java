@@ -106,7 +106,7 @@ public class UserController {
     @PreAuthorize(ENTERPRISE)
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("categoryName") final String categoryName,
-                              @QueryParam("educationLevel") final String educationLevel,
+                              @QueryParam("educationLevel") final EducationLevel educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
                               @QueryParam("minExpYears") @Min(0) final Integer minExpYears,
                               @QueryParam("maxExpYears") @Min(0) final Integer maxExpYears,
@@ -129,7 +129,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@NotNull @Valid final UserForm userForm) {
         final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevelEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(user.getId().toString()).build();
@@ -406,7 +406,7 @@ public class UserController {
                               @NotNull @Valid final EditUserForm editUserForm) {
 
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel(),
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
                 editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();

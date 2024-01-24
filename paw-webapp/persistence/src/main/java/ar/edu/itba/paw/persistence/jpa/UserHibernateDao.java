@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -23,8 +24,10 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
-    public User create(String email, String password, String name, String location, Category category, String currentPosition, String description, String education) {
-        final User user = new User(email, password, name, location, category, currentPosition, description, education, Visibility.VISIBLE.getValue(), DEFAULT_IMAGE);
+    public User create(String email, String password, String name, String location, Category category, String currentPosition,
+                       String description, EducationLevel education) {
+        final User user = new User(email, password, name, location, category, currentPosition, description,
+                education.getStringValue(), Visibility.VISIBLE.getValue(), DEFAULT_IMAGE);
         em.persist(user);
         return user;
     }
@@ -124,22 +127,23 @@ public class UserHibernateDao implements UserDao {
     }
 
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder,Category category, String location, String educationLevel, String skillDescription){
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder,Category category, String location,
+                                             EducationLevel educationLevel, String skillDescription){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
         if(location != null && !location.isEmpty())
             queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
-        if(educationLevel != null && !educationLevel.isEmpty())
+        if(educationLevel != null)
             queryStringBuilder.append(" AND u.education = :education");
         if(skillDescription != null && !skillDescription.isEmpty())
             queryStringBuilder.append(" AND EXISTS (SELECT usk FROM UserSkill usk JOIN usk.skill sk WHERE usk.user = u AND sk.description LIKE :skillDescription)");
     }
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, String educationLevel, String term,
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, EducationLevel educationLevel, String term,
                                              String location, String skillDescription, Integer minExpYears, Integer maxExpYears){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
-        if(educationLevel != null && !educationLevel.isEmpty())
+        if(educationLevel != null)
             queryStringBuilder.append(" AND u.education = :education");
         if(location != null && !location.isEmpty())
             queryStringBuilder.append(" AND LOWER(u.location) LIKE LOWER(CONCAT('%', :location, '%'))");
@@ -163,25 +167,25 @@ public class UserHibernateDao implements UserDao {
         }
     }
 
-    private void filterQuerySetParameters(Query query, Category category, String location, String educationLevel, String skillDescription){
+    private void filterQuerySetParameters(Query query, Category category, String location, EducationLevel educationLevel, String skillDescription){
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
         if(location != null && !location.isEmpty())
             query.setParameter("location", location);
-        if(educationLevel != null && !educationLevel.isEmpty())
-            query.setParameter("education", educationLevel);
+        if(educationLevel != null)
+            query.setParameter("education", educationLevel.getStringValue());
         if(skillDescription != null && !skillDescription.isEmpty())
             query.setParameter("skillDescription", skillDescription);
     }
 
-    private void filterQuerySetParameters(Query query, Category category, String educationLevel, String term, String location,
+    private void filterQuerySetParameters(Query query, Category category, EducationLevel educationLevel, String term, String location,
                                           String skillDescription, Integer minExpYears, Integer maxExpYears){
         query.setParameter("visible", Visibility.VISIBLE.getValue());
         if(category != null)
             query.setParameter("category", category);
-        if(educationLevel != null && !educationLevel.isEmpty())
-            query.setParameter("education", educationLevel);
+        if(educationLevel != null)
+            query.setParameter("education", educationLevel.getStringValue());
         if(term != null && !term.isEmpty())
             query.setParameter("term", term);
         if(location != null && !location.isEmpty())
@@ -195,7 +199,8 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize) {
+    public List<User> getUsersListByFilters(Category category, String location, EducationLevel educationLevel,
+                                            String skillDescription, int page, int pageSize) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u WHERE visibilidad = :visible");
         filterQueryAppendConditions(queryStringBuilder, category, location, educationLevel, skillDescription);
 
@@ -207,7 +212,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+    public List<User> getUsersListByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription, int page, int pageSize) {
 
         if(term != null && !term.isEmpty()){
@@ -232,7 +237,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription) {
+    public long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT COUNT(u) FROM User u WHERE visibilidad = :visible");
         filterQueryAppendConditions(queryStringBuilder, category, location, educationLevel, skillDescription);
 
@@ -243,7 +248,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+    public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
         if(term != null && !term.isEmpty()){
             term = term.replace("_", "\\_");
@@ -314,9 +319,9 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateEducationLevel(long userID, String newEducationLevel) {
+    public void updateEducationLevel(long userID, EducationLevel newEducationLevel) {
         Query query = em.createQuery("UPDATE User SET education = :newEducationLevel WHERE id = :userID");
-        query.setParameter("newEducationLevel", newEducationLevel);
+        query.setParameter("newEducationLevel", newEducationLevel.getStringValue());
         query.setParameter("userID", userID);
         query.executeUpdate();
     }

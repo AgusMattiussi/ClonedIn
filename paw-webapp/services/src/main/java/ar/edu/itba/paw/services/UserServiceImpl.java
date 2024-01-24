@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
@@ -43,7 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education) {
+    public User create(String email, String password, String name, String location, String categoryName, String currentPosition,
+                       String description, EducationLevel education) {
         Category category = categoryService.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
@@ -99,12 +101,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription) {
+    public long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription) {
         return userDao.getUsersCountByFilters(category, location, educationLevel, skillDescription);
     }
 
     @Override
-    public long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+    public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
         return userDao.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillDescription);
     }
@@ -130,13 +132,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize) {
+    public List<User> getUsersListByFilters(Category category, String location, EducationLevel educationLevel,
+                                            String skillDescription, int page, int pageSize) {
         return userDao.getUsersListByFilters(category, location, educationLevel, skillDescription, page, pageSize);
     }
 
     @Override
-    public PaginatedResource<User> getUsersListByFilters(String categoryName, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                                         String location, String skillDescription, int page, int pageSize) {
+    public PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
+                                                         Integer maxExpYears, String location, String skillDescription, int page, int pageSize) {
 
         Category category = categoryService.findByName(categoryName).orElse(null);
 
@@ -176,14 +179,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateEducationLevel(long userID, String newEducationLevel) {
+    public void updateEducationLevel(long userID, EducationLevel newEducationLevel) {
         userDao.updateEducationLevel(userID, newEducationLevel);
     }
 
     @Override
     @Transactional
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                                      String newCategory, String newEducationLevel, Visibility newVisibility) {
+                                      String newCategory, EducationLevel newEducationLevel, Visibility newVisibility) {
 
 
 
@@ -209,7 +212,7 @@ public class UserServiceImpl implements UserService {
             updateCategory(userID, category);
         }
 
-        if(newEducationLevel != null && !newEducationLevel.isEmpty()) {
+        if(newEducationLevel != null) {
             updateEducationLevel(userID, newEducationLevel);
         }
 
