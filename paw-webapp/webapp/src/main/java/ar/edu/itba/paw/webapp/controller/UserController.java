@@ -308,18 +308,16 @@ public class UserController {
     public Response getEducations(@PathParam("id") @Min(1) final long id,
                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
 
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        List<EducationDTO> educations = educationService.findByUser(user, page - 1, EDUCATIONS_PER_PAGE)
-                .stream().map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
+        PaginatedResource<Education> educations = educationService.findByUser(id, page, EDUCATIONS_PER_PAGE);
 
         if(educations.isEmpty())
             return Response.noContent().build();
 
-        long educationCount = educationService.getEducationCountForUser(user);
-        long maxPages = educationCount/EDUCATIONS_PER_PAGE + 1;
+        List<EducationDTO> educationDTOs = educations.getPage().stream()
+                .map(ed -> EducationDTO.fromEducation(uriInfo, ed)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educations) {}), page, maxPages);
+        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<EducationDTO>>(educationDTOs) {}), page,
+                educations.getMaxPages());
     }
 
     @GET
@@ -341,14 +339,10 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response addEducation(@PathParam("id") @Min(1) final long id,
                                  @NotNull @Valid final EducationForm educationForm){
-        User user = us.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
-        Education education = educationService.add(user, educationForm.getMonthFrom(), educationForm.getYearFrom(),
+        Education education = educationService.add(id, educationForm.getMonthFrom(), educationForm.getYearFrom(),
                 educationForm.getMonthTo(), educationForm.getYearTo(), educationForm.getDegree(), educationForm.getCollege(),
                 educationForm.getComment());
-
-        LOGGER.debug("A new education was registered under id: {}", education.getId());
-        LOGGER.info("A new education was registered");
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(education.getId())).build();
         return Response.created(uri).build();
