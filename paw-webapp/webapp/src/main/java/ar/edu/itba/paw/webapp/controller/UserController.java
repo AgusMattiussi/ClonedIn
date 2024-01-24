@@ -43,7 +43,7 @@ public class UserController {
     private static final int EXPERIENCES_PER_PAGE = 3;
     private static final int USERS_PER_PAGE = 12;
     private static final int EDUCATIONS_PER_PAGE = 3;
-    private static final int SKILLS_PER_PAGE = 5;
+    private static final int SKILLS_PER_PAGE = 10;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -431,11 +431,10 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
-        Image profileImage = us.findById(id).orElseThrow(() -> new UserNotFoundException(id)).getImage();
-        if(profileImage == null)
-            return Response.noContent().build();
+        Image profileImage = us.getProfileImage(id).orElseThrow(() -> new ImageNotFoundException(id, Role.USER));
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType())

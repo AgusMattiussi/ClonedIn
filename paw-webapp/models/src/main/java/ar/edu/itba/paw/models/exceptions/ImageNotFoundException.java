@@ -10,8 +10,8 @@ public class ImageNotFoundException extends ClonedInException {
     private static final String SIMPLE_MESSAGE = "Image not found";
     private static final String DETAILS = "The image for the %s with id '%d' was not found or does not exist";
 
-    public ImageNotFoundException(long imageId, Role role) {
-        super(String.format(DETAILS, role.getName(), imageId));
+    public ImageNotFoundException(long id, Role role) {
+        super(String.format(DETAILS, role.getName(), id));
     }
 
     @Override

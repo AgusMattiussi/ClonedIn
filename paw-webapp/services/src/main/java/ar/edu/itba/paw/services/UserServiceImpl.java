@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<User> findById(long userId) {
         return userDao.findById(userId);
     }
@@ -237,6 +238,13 @@ public class UserServiceImpl implements UserService {
         Image image = imageService.uploadImage(imageBytes);
 
         userDao.updateUserProfileImage(user, image);
+    }
+
+    @Override
+    @Transactional
+    public Optional<Image> getProfileImage(long userId) {
+        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return Optional.ofNullable(user.getImage());
     }
 
     @Override

@@ -70,5 +70,7 @@ public interface UserService {
     
     void updateProfileImage(long userId, byte[] image);
 
+    Optional<Image> getProfileImage(long userId);
+
     Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 }
