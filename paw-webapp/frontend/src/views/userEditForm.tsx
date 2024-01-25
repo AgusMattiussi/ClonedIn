@@ -32,7 +32,7 @@ function EditUserForm() {
     aboutMe: yup.string().max(200, t('Multi Line Max Length') as string),
   })
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
-  const [category, setCategory] = useState(user?.categoryInfo.id.toString())
+  const [category, setCategory] = useState(user?.categoryInfo?.name)
   const [level, setLevel] = useState(user?.educationLevel)
 
   useEffect(() => {
