@@ -17,6 +17,8 @@ public interface UserService {
     User create(String email, String password, String name, String location, String categoryName, String currentPosition,
                 String description, EducationLevel education);
 
+    void delete(long userId);
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findById(long userId);

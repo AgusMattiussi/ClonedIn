@@ -60,6 +60,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void delete(long userId) {
+        User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        userDao.delete(user);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);
     }

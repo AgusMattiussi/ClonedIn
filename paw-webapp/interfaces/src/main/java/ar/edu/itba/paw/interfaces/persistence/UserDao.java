@@ -13,6 +13,8 @@ public interface UserDao {
     User create(String email, String password, String name, String location, Category category, String currentPosition,
                 String description, EducationLevel education);
 
+    void delete(User user);
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findById(long userId);

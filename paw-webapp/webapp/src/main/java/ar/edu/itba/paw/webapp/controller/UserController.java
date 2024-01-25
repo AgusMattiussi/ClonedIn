@@ -149,11 +149,12 @@ public class UserController {
     }
 
 
-    /* TODO:
-    @DELETE
+    // TODO: Esto deberia estar validado por un mail de confirmacion
+    /*@DELETE
     @Path("/{id}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response deleteById(@PathParam("id") final long id) {
-        //us.deleteById(id);
+        us.delete(id);
         return Response.noContent().build();
     }*/
 
@@ -162,7 +163,7 @@ public class UserController {
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response getApplications(@PathParam("id") final long id,
+    public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status,

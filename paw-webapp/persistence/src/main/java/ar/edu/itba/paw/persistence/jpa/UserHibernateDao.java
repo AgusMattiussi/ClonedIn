@@ -33,6 +33,11 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public void delete(User user) {
+        em.remove(user);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         final TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u WHERE u.email = :email", User.class);
         query.setParameter("email", email);
