@@ -45,7 +45,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> findByEnterprise(Enterprise enterprise) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise ORDER BY j.available ASC", JobOffer.class);
+        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.enterprise = :enterprise ORDER BY jo.available ASC", JobOffer.class);
         query.setParameter("enterprise", enterprise);
 
         return query.getResultList();
@@ -53,7 +53,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise ORDER BY j.available ASC", JobOffer.class);
+        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.enterprise = :enterprise ORDER BY jo.available ASC", JobOffer.class);
         query.setParameter("enterprise", enterprise);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
@@ -62,7 +62,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> findActiveByEnterprise(Enterprise enterprise) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status ORDER BY j.available ASC", JobOffer.class);
+        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.enterprise = :enterprise AND jo.available = :status ORDER BY jo.available ASC", JobOffer.class);
         query.setParameter("enterprise", enterprise);
         query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
 
@@ -71,7 +71,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :status ORDER BY j.available ASC", JobOffer.class);
+        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo WHERE jo.enterprise = :enterprise AND jo.available = :status ORDER BY jo.available ASC", JobOffer.class);
         query.setParameter("enterprise", enterprise);
         query.setParameter("status", JobOfferAvailability.ACTIVE.getStatus());
 
@@ -82,12 +82,12 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public List<JobOffer> getAllJobOffers() {
-        return em.createQuery("SELECT j FROM JobOffer j ORDER BY j.available ASC", JobOffer.class).getResultList();
+        return em.createQuery("SELECT jo FROM JobOffer jo ORDER BY jo.available ASC", JobOffer.class).getResultList();
     }
 
     @Override
     public List<JobOffer> getAllJobOffers(int page, int pageSize) {
-        TypedQuery<JobOffer> query = em.createQuery("SELECT j FROM JobOffer j ORDER BY j.available ASC", JobOffer.class);
+        TypedQuery<JobOffer> query = em.createQuery("SELECT jo FROM JobOffer jo ORDER BY jo.available ASC", JobOffer.class);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -95,13 +95,13 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getJobOffersCount() {
-        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j ORDER BY j.available ASC");
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo ORDER BY jo.available ASC");
         return (Long) query.getSingleResult();
     }
 
     @Override
     public long getJobOffersCountForEnterprise(Enterprise enterprise) {
-        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j WHERE j.enterprise = :enterprise ORDER BY j.available ASC");
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.enterprise = :enterprise ORDER BY jo.available ASC");
         query.setParameter("enterprise", enterprise);
 
         return (Long) query.getSingleResult();
@@ -109,7 +109,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getActiveJobOffersCountForEnterprise(Enterprise enterprise) {
-        Query query = em.createQuery("SELECT COUNT(j) FROM JobOffer j WHERE j.enterprise = :enterprise AND j.available = :active");
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.enterprise = :enterprise AND jo.available = :active");
         query.setParameter("enterprise", enterprise);
         query.setParameter("active", JobOfferAvailability.ACTIVE.getStatus());
 
