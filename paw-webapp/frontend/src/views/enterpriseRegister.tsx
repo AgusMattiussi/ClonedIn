@@ -40,17 +40,21 @@ function RegisterEnterprise() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
+    let fYear = e.foundingYear
+    if (fYear == '') {
+      fYear = null
+    }
     const registered = await registerHandler(
       e.email,
       e.pass, 
       e.repeatPass, 
       e.name, 
-      e.city, 
-      workers, 
-      e.foundingYear, 
+      e.city,
+      category, 
+      workers,
+      fYear,
       e.link, 
-      e.aboutUs, 
-      category)
+      e.aboutUs)
     if (registered) {
       await loginHandler(e.email, e.pass)
       navigate("/users")

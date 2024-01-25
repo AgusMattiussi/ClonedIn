@@ -64,11 +64,11 @@ export function useRegisterEnterprise() {
     repeatPassword: string,
     name: string,
     city: string,
+    category: string,
     workers: string,
     year: string,
     link: string,
     aboutUs: string,
-    category: string,
   ) {
     const response = await apiRequest({
       url: "/enterprises",
@@ -79,13 +79,14 @@ export function useRegisterEnterprise() {
         repeatPassword,
         name,
         city,
+        category,
         workers,
         year,
         link,
         aboutUs,
-        category,
       },
     })
+    console.log(response)
     return response.status !== HttpStatusCode.BadRequest
   }
 

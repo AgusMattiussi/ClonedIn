@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.enums;
 
 public enum EmployeeRanges {
 
+    NOT_SPECIFIED("No-especificado"),
     FROM_1_TO_10("1-10"),
     FROM_11_TO_50("11-50"),
     FROM_51_TO_100("51-100"),
