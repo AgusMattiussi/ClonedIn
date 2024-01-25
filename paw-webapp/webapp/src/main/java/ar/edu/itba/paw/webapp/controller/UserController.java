@@ -183,7 +183,7 @@ public class UserController {
 
 
     @POST
-    @Path("/{id}/applications")
+    @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
     public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
