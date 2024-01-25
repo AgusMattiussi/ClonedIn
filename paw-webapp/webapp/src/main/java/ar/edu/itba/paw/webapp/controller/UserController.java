@@ -197,23 +197,10 @@ public class UserController {
 
 
     @PUT
-    @Path("/{id}/applications/{jobOfferId}")
+    @Path("/{id}/contacts/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response cancelApplication(@PathParam("id") @Min(1) final long id,
-                                      @PathParam("jobOfferId") @Min(1) final long jobOfferId) {
-
-        contactService.cancelJobOffer(id, jobOfferId);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
-        return Response.ok().location(uri).build();
-    }
-
-
-    @PUT
-    @Path("/{id}/notifications/{jobOfferId}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response updateContactStatus(@PathParam("id") final long id,
-                                         @PathParam("jobOfferId") final long jobOfferId,
+    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
+                                         @PathParam("jobOfferId") @Min(1) final long jobOfferId,
                                          @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
         contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);

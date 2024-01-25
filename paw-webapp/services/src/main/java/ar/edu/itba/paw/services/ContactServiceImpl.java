@@ -330,13 +330,23 @@ public class ContactServiceImpl implements ContactService {
         if(currentStatus != JobOfferStatus.PENDING)
             throw new JobOfferStatusException(status, jobOfferId, userId);
 
-        if(status != JobOfferStatus.ACCEPTED && status != JobOfferStatus.DECLINED)
+        boolean successful = false;
+
+        switch (status) {
+            case ACCEPTED:
+                successful = this.acceptJobOffer(user, jobOffer);
+                break;
+            case DECLINED:
+                successful = this.rejectJobOffer(user, jobOffer);
+                break;
+            case CANCELLED:
+                successful = this.cancelJobOffer(userId, jobOfferId);
+                break;
+        }
+
+        if(!successful)
             throw new JobOfferStatusException(status, jobOfferId, userId);
 
-        if (status == JobOfferStatus.ACCEPTED && !this.acceptJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, userId);
-        else if (status == JobOfferStatus.DECLINED && !this.rejectJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, userId);
     }
 
     @Override
