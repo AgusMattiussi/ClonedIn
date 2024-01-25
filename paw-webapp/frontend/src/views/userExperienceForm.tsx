@@ -32,7 +32,7 @@ function ExperienceForm() {
     //TODO: agregar validaciones para las fechas
   })
   const [monthFrom, setMonthFrom] = useState(t("Enero") as string)
-  const [monthTo, setMonthTo] = useState("")
+  const [monthTo, setMonthTo] = useState(t("Present") as string)
 
   const handlePost = async (e: any) => {
     const company = e.company
