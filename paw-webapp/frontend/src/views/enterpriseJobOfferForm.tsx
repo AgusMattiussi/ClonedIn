@@ -29,8 +29,8 @@ function JobOfferForm() {
     salary: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
     description: yup.string().max(200, t('Multi Line Max Length') as string),
   })
-  const [category, setCategory] = useState("")
-  const [modality, setModality] = useState("")
+  const [category, setCategory] = useState("No-Especificado")
+  const [modality, setModality] = useState("No-especificado")
   const [skills, setSkills] = useState("")
 
   useEffect(() => {

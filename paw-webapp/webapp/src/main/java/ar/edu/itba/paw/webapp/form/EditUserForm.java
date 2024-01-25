@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -64,12 +65,19 @@ public class EditUserForm {
         this.category = category;
     }
 
+    //TODO: Validator
     public String getLevel() {
         return level;
     }
 
     public void setLevel(String level) {
-        this.level = level;
+        this.level = EducationLevel.fromString(level).getStringValue();
+    }
+
+    public EducationLevel getLevelEnum() {
+        if(level == null)
+            return null;
+        return EducationLevel.fromString(level);
     }
 
     public String getVisibility() {
@@ -81,6 +89,8 @@ public class EditUserForm {
     }
 
     public Visibility getVisibilityAsEnum() {
+        if(visibility == null)
+            return null;
         return Visibility.fromString(visibility);
     }
 }

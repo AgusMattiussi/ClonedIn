@@ -33,13 +33,9 @@ function EditEnterpriseForm() {
     link: yup.string().matches(re, t('Invalid URL') as string).max(50, t('Single Line Max Length') as string),
     aboutUs: yup.string().max(200, t('Multi Line Max Length') as string),
   })
-  const [location, setLocation] = useState("")
-  const [workers, setWorkers] = useState("")
-  const [category, setCategory] = useState("")
-  const [link, setLink] = useState("")
-  const [year, setYear] = useState("")
-  const [description, setDescription] = useState("")
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
+  const [workers, setWorkers] = useState(enterprise?.workers)
+  const [category, setCategory] = useState(enterprise?.categoryInfo.id.toString())
 
   useEffect(() => {
     const fetchEnterprise = async () => {

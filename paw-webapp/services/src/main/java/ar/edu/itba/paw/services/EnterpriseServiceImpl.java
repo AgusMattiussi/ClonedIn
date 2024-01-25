@@ -74,65 +74,78 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public void changePassword(String email, String password) {
         enterpriseDao.changePassword(email, passwordEncoder.encode(password));
     }
 
     @Override
+    @Transactional
     public void updateName(long enterpriseID, String newName) {
         enterpriseDao.updateName(enterpriseID, newName);
     }
 
     @Override
+    @Transactional
     public void updateDescription(long enterpriseID, String newDescription) {
         enterpriseDao.updateDescription(enterpriseID, newDescription);
     }
 
     @Override
+    @Transactional
     public void updateWorkers(long enterpriseID, EmployeeRanges newWorkers) {
         enterpriseDao.updateWorkers(enterpriseID, newWorkers);
     }
 
     @Override
+    @Transactional
     public void updateYear(long enterpriseID, Integer newYear) {
         enterpriseDao.updateYear(enterpriseID, newYear);
     }
 
     @Override
+    @Transactional
     public void updateLink(long enterpriseID, String newLink) {
         enterpriseDao.updateLink(enterpriseID, newLink);
     }
 
     @Override
+    @Transactional
     public void updateLocation(long enterpriseID, String newLocation) {
         enterpriseDao.updateLocation(enterpriseID, newLocation);
     }
 
     @Override
+    @Transactional
     public void updateCategory(long enterpriseID, Category category) {
         enterpriseDao.updateCategory(enterpriseID, category);
     }
 
     @Override
+    @Transactional
     public void updateEnterpriseInformation(long enterpriseID, String newName, String newDescription, String newLocation,
-                                            Category newCategory, String newLink, Integer newYear, EmployeeRanges newWorkers) {
-        if(!newName.isEmpty()) {
+                                            String newCategory, String newLink, Integer newYear, EmployeeRanges newWorkers) {
+
+
+        if( newName != null && !newName.isEmpty()) {
             updateName(enterpriseID, newName);
         }
 
-        if(!newDescription.isEmpty()) {
+        if(newDescription != null && !newDescription.isEmpty()) {
             updateDescription(enterpriseID, newDescription);
         }
 
-        if(!newLocation.isEmpty()) {
+        if(newLocation != null && !newLocation.isEmpty()) {
             updateLocation(enterpriseID, newLocation);
         }
 
-        if(newCategory != null) {
-            updateCategory(enterpriseID, newCategory);
+        if(newCategory != null && !newCategory.isEmpty()) {
+            Category category = categoryService.findByName(newCategory)
+                .orElseThrow(() -> new CategoryNotFoundException(newCategory));
+            updateCategory(enterpriseID, category);
         }
 
-        if(!newLink.isEmpty()) {
+        if(newLink != null && !newLink.isEmpty()) {
             updateLink(enterpriseID, newLink);
         }
 
@@ -161,6 +174,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Optional<Image> getProfileImage(long enterpriseId) {
         Enterprise enterprise = this.findById(enterpriseId)
                 .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));

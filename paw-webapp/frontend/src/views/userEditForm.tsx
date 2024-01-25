@@ -31,9 +31,9 @@ function EditUserForm() {
     position: yup.string().max(50, t('Single Line Max Length') as string),
     aboutMe: yup.string().max(200, t('Multi Line Max Length') as string),
   })
-  const [category, setCategory] = useState("")
-  const [level, setLevel] = useState("")
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
+  const [category, setCategory] = useState(user?.categoryInfo.id.toString())
+  const [level, setLevel] = useState(user?.educationLevel)
 
   useEffect(() => {
     const fetchUser = async () => {

@@ -18,12 +18,13 @@ function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [category, setCategory] = useState("")
-  const [educationLevel, setEducationLevel] = useState("")
+  const [category, setCategory] = useState("No-Especificado")
+  const [educationLevel, setEducationLevel] = useState("No-especificado")
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterUser()
   const { loginHandler } = useLogin()
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -40,7 +41,7 @@ function RegisterUser() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(
+    const registered = await registerHandler(
       e.email,
       e.pass,
       e.repeatPass,
@@ -51,8 +52,14 @@ function RegisterUser() {
       category,
       educationLevel,
     )
-    await loginHandler(e.email, e.pass)
-    navigate("/jobOffers")
+    if (registered) {
+      await loginHandler(e.email, e.pass)
+      navigate("/jobOffers")
+    }
+    else {
+      console.log("Not registered")
+      setError(t("Invalid Credentials") as string)
+    }
   }
 
   const handlePasswordVisibility = () => {
@@ -64,17 +71,8 @@ function RegisterUser() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
+    if (e.target.value == "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
-    } else {
-      alert("ERROR");
-    }
-  }
-
-  //TODO: Ver como leer la category list
-  const handleJobCategorySelect = (e: any) => {
-    if (e.target.value === "Moda") {
-      setCategory(e.target.value)
     } else {
       alert("ERROR");
     }
@@ -89,16 +87,16 @@ function RegisterUser() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
-    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    pass: yup.string().required(t('Required') as string).min(8, t('Password Min Length') as string),
+    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
+    name: yup.string().required(t('Required') as string).max(100, t('Single Line Max Length') as string),
+    pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
-    description: yup.string().max(200, t('Multi Line Max Length') as string),
+    description: yup.string().max(600, t('Multi Line Max Length') as string),
   })
 
   return (
@@ -147,6 +145,7 @@ function RegisterUser() {
                                 isInvalid={!!errors.email}
                               />
                               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                              {error && <div className="error" style={{color: "red"}}>{error}</div>}
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicName">
                               <Form.Control

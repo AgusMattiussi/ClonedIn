@@ -13,6 +13,9 @@ public class ValidEmployeeRangeValidator implements ConstraintValidator<ValidEmp
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
+        if(s == null)
+            return true;
+
         try {
             EmployeeRanges.fromString(s);
         } catch (IllegalArgumentException e) {

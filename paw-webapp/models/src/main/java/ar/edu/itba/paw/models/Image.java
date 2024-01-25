@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import javax.ws.rs.core.EntityTag;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -48,6 +49,10 @@ public class Image {
         return URLConnection.guessContentTypeFromStream(imageBytes);
     }
 
+    public EntityTag getEntityTag() {
+        return new EntityTag(String.valueOf(id));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -75,4 +80,5 @@ public class Image {
         sb.append('}');
         return sb.toString();
     }
+
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.utils;
 
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -17,5 +18,12 @@ public final class ResponseUtils {
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", 1).build(), "first")
                 .link(uriInfo.getAbsolutePathBuilder().queryParam("page", maxPages).build(), "last")
                 .build();
+    }
+
+    public static CacheControl imageCacheControl() {
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setNoTransform(true);
+        cacheControl.setMustRevalidate(true);
+        return cacheControl;
     }
 }

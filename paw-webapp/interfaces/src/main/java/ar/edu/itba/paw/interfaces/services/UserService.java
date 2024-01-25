@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
@@ -13,7 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface UserService {
-    User create(String email, String password, String name, String location, String categoryName, String currentPosition, String description, String education);
+    User create(String email, String password, String name, String location, String categoryName, String currentPosition,
+                String description, EducationLevel education);
+
+    void delete(long userId);
 
     Optional<User> findByEmail(String email);
 
@@ -31,9 +35,9 @@ public interface UserService {
 
     long getVisibleUsersCount();
 
-    long getUsersCountByFilters(Category category, String location, String educationLevel, String skillDescription);
+    long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription);
 
-    long getUsersCountByFilters(Category category, String educationLevel, String term, Integer minExpYears, Integer maxExpYears,
+    long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                 String location, String skillDescription);
 
     List<User> getVisibleUsers(int page, int pageSize);
@@ -44,9 +48,10 @@ public interface UserService {
 
     List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize);
 
-    List<User> getUsersListByFilters(Category category, String location, String educationLevel, String skillDescription, int page, int pageSize);
+    List<User> getUsersListByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription,
+                                     int page, int pageSize);
 
-    PaginatedResource<User> getUsersListByFilters(String categoryName, String educationLevel, String term, Integer minExpYears,
+    PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
                                                   Integer maxExpYears, String location, String skillDescription, int page, int pageSize);
 
     void updateName(long userID, String newName);
@@ -59,10 +64,10 @@ public interface UserService {
 
     void updateCategory(long userID, Category newCategory);
 
-    void updateEducationLevel(long userID, String newEducationLevel);
+    void updateEducationLevel(long userID, EducationLevel newEducationLevel);
 
     void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
-                               String newCategory, String newEducationLevel, Visibility visibility);
+                               String newCategory, EducationLevel newEducationLevel, Visibility visibility);
 
     void hideUserProfile(long userID);
 

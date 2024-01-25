@@ -17,12 +17,13 @@ function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [workers, setWorkers] = useState("")
-  const [category, setCategory] = useState("")
+  const [workers, setWorkers] = useState("No-especificado")
+  const [category, setCategory] = useState("No-Especificado")
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterEnterprise()
   const { loginHandler } = useLogin()
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,9 +40,29 @@ function RegisterEnterprise() {
   }, [apiRequest, categoryList.length])
 
   const handleRegister = async (e: any) => {
-    await registerHandler(e.email, e.pass, e.repeatPass, e.name, e.city, workers, e.foundingYear, e.link, e.aboutUs, category)
-    await loginHandler(e.email, e.pass)
-    navigate("/users")
+    let fYear = e.foundingYear
+    if (fYear == '') {
+      fYear = null
+    }
+    const registered = await registerHandler(
+      e.email,
+      e.pass, 
+      e.repeatPass, 
+      e.name, 
+      e.city,
+      category, 
+      workers,
+      fYear,
+      e.link, 
+      e.aboutUs)
+    if (registered) {
+      await loginHandler(e.email, e.pass)
+      navigate("/users")
+    }
+    else {
+      console.log("Not registered")
+      setError(t("Invalid Credentials") as string)
+    }
   }
 
   const handlePasswordVisibility = () => {
@@ -121,6 +142,7 @@ function RegisterEnterprise() {
                                 isInvalid={!!errors.email}
                               />
                               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                              {error && <div className="error" style={{color: "red"}}>{error}</div>}
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicName">
                               <Form.Control

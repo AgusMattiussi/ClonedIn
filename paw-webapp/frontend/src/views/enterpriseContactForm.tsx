@@ -23,12 +23,12 @@ function ContactForm() {
   const [message, setMessage] = useState("")
   const [jobOffersList, setJobOffersList] = useState<any[]>([])
   const [jobOffersLoading, setJobOffersLoading] = useState(true)
-  const [jobOfferId, setJobOfferId] = useState("")
+  const [jobOfferId, setJobOfferId] = useState(jobOffersList[0].id)
 
   useEffect(() => {
     const fetchJobOffers = async () => {
       const response = await apiRequest({
-        url: `/enterprises/${userInfo?.id}/jobOffers`,
+        url: `/jobOffers?enterprise=${userInfo?.id}`,
         method: "GET",
       })
       if (response.status === HttpStatusCode.NoContent) {

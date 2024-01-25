@@ -46,6 +46,9 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public Contact addContact(long userId, long jobOfferId, FilledBy filledBy) {
 
+        if(filledBy == FilledBy.ANY)
+            throw new IllegalArgumentException("FilledBy cannot be ANY");
+
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
         long enterpriseId = jobOffer.getEnterpriseID();
@@ -64,6 +67,9 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage) {
+        if(filledBy == FilledBy.ANY)
+            throw new IllegalArgumentException("FilledBy cannot be ANY");
+
         Enterprise enterprise = enterpriseService.findById(enterpriseId)
                 .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 
@@ -324,13 +330,23 @@ public class ContactServiceImpl implements ContactService {
         if(currentStatus != JobOfferStatus.PENDING)
             throw new JobOfferStatusException(status, jobOfferId, userId);
 
-        if(status != JobOfferStatus.ACCEPTED && status != JobOfferStatus.DECLINED)
+        boolean successful = false;
+
+        switch (status) {
+            case ACCEPTED:
+                successful = this.acceptJobOffer(user, jobOffer);
+                break;
+            case DECLINED:
+                successful = this.rejectJobOffer(user, jobOffer);
+                break;
+            case CANCELLED:
+                successful = this.cancelJobOffer(userId, jobOfferId);
+                break;
+        }
+
+        if(!successful)
             throw new JobOfferStatusException(status, jobOfferId, userId);
 
-        if (status == JobOfferStatus.ACCEPTED && !this.acceptJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.ACCEPTED, jobOfferId, userId);
-        else if (status == JobOfferStatus.DECLINED && !this.rejectJobOffer(user, jobOffer))
-            throw new JobOfferStatusException(JobOfferStatus.DECLINED, jobOfferId, userId);
     }
 
     @Override

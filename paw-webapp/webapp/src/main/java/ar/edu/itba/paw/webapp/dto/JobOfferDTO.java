@@ -11,7 +11,7 @@ public class JobOfferDTO {
     private long id;
     private String position;
     private String description;
-    private double salary;
+    private Double salary;
     private String modality;
     private String available;
     private JobOfferDTOLinks links;
@@ -22,7 +22,7 @@ public class JobOfferDTO {
         dto.id = jobOffer.getId();
         dto.position = jobOffer.getPosition();
         dto.description = jobOffer.getDescription();
-        dto.salary = jobOffer.getSalary().doubleValue();
+        dto.salary = jobOffer.getSalary() != null ? jobOffer.getSalary().doubleValue() : null;
         dto.modality = jobOffer.getModality();
         dto.available = jobOffer.getAvailable();
 
@@ -55,11 +55,11 @@ public class JobOfferDTO {
         this.description = description;
     }
 
-    public double getSalary() {
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
 

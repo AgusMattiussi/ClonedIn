@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -106,7 +107,7 @@ public class UserController {
     @PreAuthorize(ENTERPRISE)
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("categoryName") final String categoryName,
-                              @QueryParam("educationLevel") final String educationLevel,
+                              @QueryParam("educationLevel") final EducationLevel educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
                               @QueryParam("minExpYears") @Min(0) final Integer minExpYears,
                               @QueryParam("maxExpYears") @Min(0) final Integer maxExpYears,
@@ -129,7 +130,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@NotNull @Valid final UserForm userForm) {
         final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevel());
+                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevelEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(user.getId().toString()).build();
@@ -148,25 +149,27 @@ public class UserController {
     }
 
 
-    /* TODO:
-    @DELETE
+    // TODO: Esto deberia estar validado por un mail de confirmacion
+    /*@DELETE
     @Path("/{id}")
+    @PreAuthorize(PROFILE_OWNER)
     public Response deleteById(@PathParam("id") final long id) {
-        //us.deleteById(id);
+        us.delete(id);
         return Response.noContent().build();
     }*/
 
 
     @GET
-    @Path("/{id}/applications")
+    @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
-    public Response getApplications(@PathParam("id") final long id,
+    public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                    @QueryParam("status") final JobOfferStatus status) {
+                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("filledBy") final FilledBy filledBy) {
 
-        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, FilledBy.USER, status,
+        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, filledBy, status,
                 sortBy, page, APPLICATIONS_PER_PAGE);
 
         if(applications.isEmpty())
@@ -181,7 +184,7 @@ public class UserController {
 
 
     @POST
-    @Path("/{id}/applications")
+    @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
     public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
@@ -195,52 +198,16 @@ public class UserController {
 
 
     @PUT
-    @Path("/{id}/applications/{jobOfferId}")
+    @Path("/{id}/contacts/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
-    public Response cancelApplication(@PathParam("id") @Min(1) final long id,
-                                      @PathParam("jobOfferId") @Min(1) final long jobOfferId) {
-
-        contactService.cancelJobOffer(id, jobOfferId);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
-        return Response.ok().location(uri).build();
-    }
-
-
-    @PUT
-    @Path("/{id}/notifications/{jobOfferId}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response updateContactStatus(@PathParam("id") final long id,
-                                         @PathParam("jobOfferId") final long jobOfferId,
+    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
+                                         @PathParam("jobOfferId") @Min(1) final long jobOfferId,
                                          @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
 
         contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
-    }
-
-
-    @GET
-    @Path("/{id}/notifications")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response getNotifications(@PathParam("id") final long id,
-                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                     @QueryParam("status") final JobOfferStatus status) {
-
-        PaginatedResource<Contact> notifications = contactService.getContactsForUser(id, FilledBy.ENTERPRISE, status, sortBy,
-                        page, PAGE_SIZE);
-
-        if(notifications.isEmpty())
-            return Response.noContent().build();
-
-        List<ContactDTO> contactDTOs = notifications.getPage().stream()
-                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
-                notifications.getMaxPages());
     }
 
 
@@ -406,7 +373,7 @@ public class UserController {
                               @NotNull @Valid final EditUserForm editUserForm) {
 
         us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevel(),
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
                 editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
@@ -431,13 +398,16 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+//  @Produces - set dynamically
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
         Image profileImage = us.getProfileImage(id).orElseThrow(() -> new ImageNotFoundException(id, Role.USER));
 
         return Response.ok(profileImage.getBytes())
-                .type(profileImage.getMimeType())
+                .type(profileImage.getMimeType()) // @Produces
+                .tag(profileImage.getEntityTag())
+                .cacheControl(ResponseUtils.imageCacheControl())
                 .build();
     }
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.After;
@@ -47,7 +48,7 @@ public class UserHibernateDaoTest {
     public static final String CHANGED_DESCRIPTION = "newDescription";
     public static final String CHANGED_LOCATION = "newLocation";
     public static final String CHANGED_CURRENT_POSITION = "newPosition";
-    public static final String CHANGED_EDUCATION_LEVEL = "Secundario";
+    public static final EducationLevel CHANGED_EDUCATION_LEVEL = EducationLevel.SECONDARY;
     public static final Visibility CHANGED_VISIBILITY = Visibility.INVISIBLE;
 
 
@@ -92,7 +93,7 @@ public class UserHibernateDaoTest {
     @Test
     public void testCreate(){
         User created = userDao.create(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME, EMPTY_FIELD, testCategory, EMPTY_FIELD,
-                EMPTY_FIELD, EMPTY_FIELD);
+                EMPTY_FIELD, EducationLevel.NOT_SPECIFIED);
 
         User found = em.find(User.class, created.getId());
 
@@ -168,7 +169,7 @@ public class UserHibernateDaoTest {
 
     @Test
     public void testGetUsersCountByFilters(){
-        long count = userDao.getUsersCountByFilters(testCategory, TEST_USER_LOCATION, EMPTY_FIELD, "");
+        long count = userDao.getUsersCountByFilters(testCategory, TEST_USER_LOCATION, null, "");
 
         assertEquals(1, count);
     }
@@ -212,7 +213,7 @@ public class UserHibernateDaoTest {
 
     @Test
     public void testGetUsersListByFilters(){
-        List<User> userList = userDao.getUsersListByFilters(testCategory, TEST_USER_LOCATION, EMPTY_FIELD, "", 0, 10);
+        List<User> userList = userDao.getUsersListByFilters(testCategory, TEST_USER_LOCATION, null, "", 0, 10);
 
         assertFalse(userList.isEmpty());
         assertEquals(1, userList.size());
@@ -283,7 +284,7 @@ public class UserHibernateDaoTest {
         em.refresh(found);
 
         assertNotNull(found);
-        assertEquals(CHANGED_EDUCATION_LEVEL, found.getEducation());
+        assertEquals(CHANGED_EDUCATION_LEVEL.getStringValue(), found.getEducation());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
@@ -108,7 +109,14 @@ public class UserForm {
         return level;
     }
 
+    //TODO: Validator
+    public EducationLevel getLevelEnum() {
+        if(level == null)
+            return null;
+        return EducationLevel.fromString(level);
+    }
+
     public void setLevel(String level) {
-        this.level = level;
+        this.level = EducationLevel.fromString(level).getStringValue();
     }
 }
