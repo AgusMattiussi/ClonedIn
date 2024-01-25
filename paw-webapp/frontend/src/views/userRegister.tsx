@@ -18,8 +18,8 @@ function RegisterUser() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [category, setCategory] = useState("")
-  const [educationLevel, setEducationLevel] = useState("")
+  const [category, setCategory] = useState("No-Especificado")
+  const [educationLevel, setEducationLevel] = useState("No-especificado")
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterUser()
@@ -73,15 +73,6 @@ function RegisterUser() {
   const handleEducationLevelSelect = (e: any) => {
     if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
-    } else {
-      alert("ERROR");
-    }
-  }
-
-  //TODO: Ver como leer la category list
-  const handleJobCategorySelect = (e: any) => {
-    if (e.target.value === "Moda") {
-      setCategory(e.target.value)
     } else {
       alert("ERROR");
     }

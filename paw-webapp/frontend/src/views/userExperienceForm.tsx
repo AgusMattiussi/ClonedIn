@@ -31,8 +31,8 @@ function ExperienceForm() {
     yearTo: yup.number().typeError(t('Invalid Number') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     //TODO: agregar validaciones para las fechas
   })
-  const [monthFrom, setMonthFrom] = useState(t("Enero") as string)
-  const [monthTo, setMonthTo] = useState("")
+  const [monthFrom, setMonthFrom] = useState("Enero")
+  const [monthTo, setMonthTo] = useState("No-especificado")
 
   const handlePost = async (e: any) => {
     const company = e.company
@@ -183,7 +183,7 @@ function ExperienceForm() {
                                     value={monthTo}
                                     onChange={(e) => setMonthTo(e.target.value)}
                                   >
-                                    <option value="No-Especificado"> {t("No-especificado")} </option>
+                                    <option value="No-especificado"> {t("No-especificado")} </option>
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
                                     <option value="Marzo"> {t("Marzo")} </option>

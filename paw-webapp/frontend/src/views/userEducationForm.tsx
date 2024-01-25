@@ -32,7 +32,7 @@ function EducationForm() {
     //TODO: agregar validaciones para las fechas
   })
   const [monthFrom, setMonthFrom] = useState("Enero")
-  const [monthTo, setMonthTo] = useState("")
+  const [monthTo, setMonthTo] = useState("Enero")
 
   const handlePost = async (e: any) => {
     const college = e.college

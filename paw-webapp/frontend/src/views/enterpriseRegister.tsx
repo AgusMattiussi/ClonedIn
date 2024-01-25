@@ -17,8 +17,8 @@ function RegisterEnterprise() {
   const [categoryList, setCategoryList] = useState([])
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [repeatPasswordVisibility, setRepeatPasswordVisibility] = useState(false)
-  const [workers, setWorkers] = useState("")
-  const [category, setCategory] = useState("")
+  const [workers, setWorkers] = useState("No-especificado")
+  const [category, setCategory] = useState("No-Especificado")
 
   const { loading, apiRequest } = useRequestApi()
   const { registerHandler } = useRegisterEnterprise()
