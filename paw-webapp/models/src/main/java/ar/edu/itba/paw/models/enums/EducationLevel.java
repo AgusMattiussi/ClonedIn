@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.enums;
 
 public enum EducationLevel {
-    NOT_SPECIFIED("No especificado"),
+    NOT_SPECIFIED("No-especificado"),
     PRIMARY("Primario"),
     SECONDARY("Secundario"),
     TERTIARY("Terciario"),

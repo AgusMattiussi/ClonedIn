@@ -71,7 +71,7 @@ function RegisterUser() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
+    if (e.target.value == "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
     } else {
       alert("ERROR");
@@ -87,16 +87,16 @@ function RegisterUser() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
-    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    pass: yup.string().required(t('Required') as string).min(8, t('Password Min Length') as string),
+    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
+    name: yup.string().required(t('Required') as string).max(100, t('Single Line Max Length') as string),
+    pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
-    description: yup.string().max(200, t('Multi Line Max Length') as string),
+    description: yup.string().max(600, t('Multi Line Max Length') as string),
   })
 
   return (
