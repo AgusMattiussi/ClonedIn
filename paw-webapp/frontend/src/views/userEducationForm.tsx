@@ -26,8 +26,8 @@ function EducationForm() {
   const schema = yup.object().shape({
     college: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
     degree: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    comment: yup.string().max(50, t('Single Line Max Length') as string),
-    yearFrom: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    comment: yup.string().max(200, t('Single Line Max Length') as string),
+    yearFrom: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).min(1900, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     yearTo: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     //TODO: agregar validaciones para las fechas
   })

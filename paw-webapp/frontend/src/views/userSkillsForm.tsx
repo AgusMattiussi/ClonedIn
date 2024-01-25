@@ -23,7 +23,7 @@ function SkillsForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    skill: yup.string().required(t('Required') as string),
+    skill: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
   })
 
   const handlePost = async (e: any) => {
