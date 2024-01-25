@@ -159,15 +159,16 @@ public class UserController {
 
 
     @GET
-    @Path("/{id}/applications")
+    @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
     public Response getApplications(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                    @QueryParam("status") final JobOfferStatus status) {
+                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("filledBy") final FilledBy filledBy) {
 
-        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, FilledBy.USER, status,
+        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, filledBy, status,
                 sortBy, page, APPLICATIONS_PER_PAGE);
 
         if(applications.isEmpty())
@@ -219,29 +220,6 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
-    }
-
-
-    @GET
-    @Path("/{id}/notifications")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response getNotifications(@PathParam("id") final long id,
-                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
-                                     @QueryParam("status") final JobOfferStatus status) {
-
-        PaginatedResource<Contact> notifications = contactService.getContactsForUser(id, FilledBy.ENTERPRISE, status, sortBy,
-                        page, PAGE_SIZE);
-
-        if(notifications.isEmpty())
-            return Response.noContent().build();
-
-        List<ContactDTO> contactDTOs = notifications.getPage().stream()
-                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
-                notifications.getMaxPages());
     }
 
 

@@ -46,6 +46,9 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public Contact addContact(long userId, long jobOfferId, FilledBy filledBy) {
 
+        if(filledBy == FilledBy.ANY)
+            throw new IllegalArgumentException("FilledBy cannot be ANY");
+
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
         long enterpriseId = jobOffer.getEnterpriseID();
@@ -64,6 +67,9 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage) {
+        if(filledBy == FilledBy.ANY)
+            throw new IllegalArgumentException("FilledBy cannot be ANY");
+
         Enterprise enterprise = enterpriseService.findById(enterpriseId)
                 .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 

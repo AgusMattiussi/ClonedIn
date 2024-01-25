@@ -126,7 +126,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, JobOfferStatus status, SortBy sortBy){
-        if(!filledBy.equals(FilledBy.ANY)){
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)){
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
@@ -159,7 +159,7 @@ public class ContactHibernateDao implements ContactDao {
             query.setParameter("status", status.getStatus());
         }
 
-        if(!filledBy.equals(FilledBy.ANY)) {
+        if(filledBy != null && !filledBy.equals(FilledBy.ANY)) {
             query.setParameter("filledBy", filledBy.getValue());
         }
     }
