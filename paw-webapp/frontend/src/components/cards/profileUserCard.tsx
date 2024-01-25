@@ -111,16 +111,16 @@ function ProfileUserCard({
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
-              {user.links.category !== "No-Especificado" ? (
+              {user.links.category !== null ? (
                 <div className="d-flex flex-row align-items-center">
                   {t("Category")}:
                   <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {user.links.category == null ? t("No-especificado") : t(userCategory!.name)}
+                    {userCategory!.name == "No-Especificado" ? t("No especificado") : t(userCategory!.name)}
                   </Badge>
                 </div>
               ) : (
                 <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Category")}: {t("No-especificado")}
+                  {t("Category")}: {t("No especificado")}
                 </p>
               )}
             </div>
@@ -128,8 +128,8 @@ function ProfileUserCard({
               <Icon.Briefcase color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
                 {t("Current Position")}:{" "}
-                {user.currentPosition === "" || user.currentPosition == null
-                  ? t("No-especificado")
+                {user.currentPosition == "" || user.currentPosition == null
+                  ? t("No especificado")
                   : user.currentPosition}
               </p>
             </div>
@@ -137,7 +137,7 @@ function ProfileUserCard({
               <Icon.Book color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
                 {t("Education Level")}:{" "}
-                {user.educationLevel === "" || user.educationLevel == null
+                {user.educationLevel === "" || user.educationLevel == null || user.educationLevel == "No-especificado"
                   ? t("No especificado")
                   : t(user.educationLevel)}
               </p>

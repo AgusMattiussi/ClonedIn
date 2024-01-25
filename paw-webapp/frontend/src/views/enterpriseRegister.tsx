@@ -84,17 +84,17 @@ function RegisterEnterprise() {
   const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
   const schema = yup.object().shape({
-    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string),
-    name: yup.string().required(t('Required') as string),
-    pass: yup.string().required(t('Required') as string).min(8, t('Password Min Length') as string),
+    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
+    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
     repeatPass: yup
       .string()
       .oneOf([yup.ref("pass")], t('Password Match') as string)
       .required(t('Required') as string),
     city: yup.string().max(50, t('Single Line Max Length') as string),
-    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    link: yup.string().matches(re, t('Invalid URL') as string).max(50, t('Single Line Max Length') as string),
-    aboutUs: yup.string().max(200, t('Multi Line Max Length') as string),
+    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(1000, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    link: yup.string().matches(re, t('Invalid URL') as string).max(200, t('Single Line Max Length') as string),
+    aboutUs: yup.string().max(600, t('Multi Line Max Length') as string),
   })
   
   return (

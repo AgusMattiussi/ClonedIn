@@ -79,41 +79,42 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.ListTask color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <div>{t("Job Category")}:</div>
-              {enterprise.links.category !== "No-Especificado" ? (
+              {enterprise.links.category !== null ? (
                 <div>
                   <Badge pill bg="success" className="mx-2">
-                    {enterprise.links.category == null ? t("No-especificado") : t(enterpriseCategory!.name)}
+                    {enterpriseCategory!.name == "No-Especificado" ? t("No especificado") : t(enterpriseCategory!.name)}
                   </Badge>
                 </div>
               ) : (
                 <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Job Category")}: {t("No-especificado")}
+                  {t("Job Category")}: {t("No especificado")}
                 </p>
               )}
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Quantity of employees")}: {enterprise.workers}
+                {t("Quantity of employees")}: 
+                {enterprise.workers === "" || enterprise.workers === null || enterprise.workers === "No-especificado" ? t("No especificado") : enterprise.workers}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.CalendarEvent color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Funding Year")}: {enterprise.year}
+                {t("Funding Year")}: {enterprise.year == null ? t("No especificado") : enterprise.year}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.Globe color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Website")}: {enterprise.link}
+                {t("Website")}: {enterprise.link == "" || enterprise.link == null ? t("No especificado") : enterprise.link}
               </p>
             </div>
             <div className="d-flex flex-column align-items-start my-2">
               <p className="fw-bold" style={{ marginBottom: "2px" }}>
                 {t("About Us")}
               </p>
-              <p> {enterprise.description}</p>
+              <p> {enterprise.description == "" || enterprise.description == null ? t("No especificado") : enterprise.description}</p>
             </div>
           </div>
         </div>
