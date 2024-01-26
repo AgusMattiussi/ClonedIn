@@ -58,7 +58,7 @@ function JobOfferDiscoverCard({
 
   const handleApply = async () => {
     const response = await apiRequest({
-      url: `/users/${userInfo?.id}/applications`,
+      url: `/users/${userInfo?.id}/contacts`,
       method: "POST",
       body: {
         jobOfferId: job.id,

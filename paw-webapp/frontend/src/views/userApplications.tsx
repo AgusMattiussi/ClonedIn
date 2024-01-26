@@ -27,12 +27,12 @@ function ApplicationsUser() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
+  const [filledBy, setFilledBy] = useState(FilledBy.USER.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
 
   document.title = t("Applications Page Title")
 
-  // const [searchParams, setSearchParams] = useSearchParams()
   let queryParams: Record<string, string> = {}
 
   const fetchEnterpriseInfo = useCallback(
@@ -102,14 +102,15 @@ function ApplicationsUser() {
   )
 
   const fetchNotifications = useCallback(
-    async (status: string, sortBy: string) => {
+    async (status: string, sortBy: string, filledBy: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
+      if (filledBy) queryParams.filledBy = filledBy
 
       try {
         const response = await apiRequest({
-          url: `/users/${userInfo?.id}/notifications`,
+          url: `/users/${userInfo?.id}/contacts`,
           method: "GET",
           queryParams: queryParams,
         })
@@ -154,10 +155,9 @@ function ApplicationsUser() {
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchNotifications(filterStatus, sortBy)
+      fetchNotifications(filterStatus, sortBy, filledBy)
     }
-  }, [fetchNotifications, isLoading, filterStatus, sortBy])
+  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -174,11 +174,11 @@ function ApplicationsUser() {
     queryParams.status = JobOfferStatus.CANCELLED
 
     const response = await apiRequest({
-      url: `/users/${userInfo?.id}/applications/${jobOfferToAnswerId}`,
+      url: `/users/${userInfo?.id}/contacts/${jobOfferToAnswerId}`,
       method: "PUT",
       queryParams: queryParams,
     })
-
+    console.log(response)
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
       const modalElement = document.getElementById("cancelModal")
@@ -198,7 +198,7 @@ function ApplicationsUser() {
         job={application.jobOfferInfo}
         handler={handleCancel}
         setJobOfferId={setJobOfferToAnswerId}
-        applicationsView={false}
+        applicationsView={true}
         key={index}
       />
     )

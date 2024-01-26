@@ -26,10 +26,10 @@ function EditUserForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().max(50, t('Single Line Max Length') as string),
+    name: yup.string().max(100, t('Single Line Max Length') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
-    aboutMe: yup.string().max(200, t('Multi Line Max Length') as string),
+    aboutMe: yup.string().max(600, t('Multi Line Max Length') as string),
   })
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [category, setCategory] = useState(user?.categoryInfo?.name)
