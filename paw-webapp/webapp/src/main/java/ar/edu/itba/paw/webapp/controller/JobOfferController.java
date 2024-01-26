@@ -39,8 +39,6 @@ public class JobOfferController {
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
 
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private JobOfferService jobOfferService;
     @Autowired
     protected AuthenticationManager authenticationManager;

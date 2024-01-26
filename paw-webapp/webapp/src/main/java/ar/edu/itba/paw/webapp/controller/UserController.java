@@ -57,13 +57,7 @@ public class UserController {
     private static final String ENTERPRISE = "hasAuthority('ENTERPRISE')";
 
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private UserService us;
-    @Autowired
-    private JobOfferService jobOfferService;
-    @Autowired
-    private EnterpriseService enterpriseService;
     @Autowired
     private ContactService contactService;
     @Autowired
@@ -71,34 +65,19 @@ public class UserController {
     @Autowired
     private EducationService educationService;
     @Autowired
-    private SkillService skillService;
-    @Autowired
     private UserSkillService userSkillService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    protected AuthenticationManager authenticationManager;
 
     @Context
     private UriInfo uriInfo;
 
     @Autowired
-    public UserController(final UserService userService, final CategoryService categoryService, final JobOfferService jobOfferService,
-                          final EnterpriseService enterpriseService, final ContactService contactService, final ExperienceService experienceService,
-                          final EducationService educationService, final SkillService skillService, final UserSkillService userSkillService,
-                          ImageService imageService) {
+    public UserController(final UserService userService, final ContactService contactService, final ExperienceService experienceService,
+                          final EducationService educationService, final UserSkillService userSkillService) {
         this.us = userService;
-        this.categoryService = categoryService;
-        this.jobOfferService = jobOfferService;
-        this.enterpriseService = enterpriseService;
         this.contactService = contactService;
         this.experienceService = experienceService;
         this.educationService = educationService;
-        this.skillService = skillService;
         this.userSkillService = userSkillService;
-        this.imageService = imageService;
     }
 
 
@@ -202,7 +181,7 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
                                          @PathParam("jobOfferId") @Min(1) final long jobOfferId,
-                                         @NotNull @QueryParam("newStatus") final JobOfferStatus newStatus) {
+                                         @NotNull @QueryParam("status") final JobOfferStatus newStatus) {
 
         contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);
 
