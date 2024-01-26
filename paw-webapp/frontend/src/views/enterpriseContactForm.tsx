@@ -10,6 +10,8 @@ import { useSharedAuth } from "../api/auth"
 import { useRequestApi } from "../api/apiRequest"
 import { HttpStatusCode } from "axios"
 import Loader from "../components/loader"
+import * as formik from "formik"
+import * as yup from "yup"
 
 function ContactForm() {
   const navigate = useNavigate()
@@ -55,7 +57,14 @@ function ContactForm() {
     }
   }, [apiRequest, jobOffersLoading, userInfo?.id, userName.length, userId])
 
-  const handlePost = async () => {
+  const { Formik } = formik
+
+  const schema = yup.object().shape({
+    message: yup.string().required(t('Required') as string).max(200, t('Multi Line Max Length') as string),
+  })
+
+  const handlePost = async (e: any) => {
+    const message = e.message
     const response = await apiRequest({
       url: `/enterprises/${userInfo?.id}/contacts`,
       method: "POST",
@@ -91,42 +100,57 @@ function ContactForm() {
                 <p>{t("Fill all fields")}</p>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform">
-                      <div className="form-card">
-                        <h2 className="fs-title"> {t("Message")} </h2>
-                        <Form.Group className="mb-3 mt-3" controlId="formBasicMessage">
-                          <Form.Control
-                            className="input"
-                            placeholder={t("Candidate").toString()}
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                          />
-                        </Form.Group>
-                        <div className="d-flex mb-4">
-                          <label className="area">{t("Job Offers ")}</label>
-                          {jobOffersLoading ? (
-                            <Loader />
-                          ) : (
-                            <Form.Select
-                              className="selectFrom"
-                              aria-label="Default select example"
-                              value={jobOfferId}
-                              onChange={(e) => setJobOfferId(e.target.value)}
-                            >
-                              {jobOffersList.map((jobOffer: any) => (
-                                <option key={jobOffer.id} value={jobOffer.id}>
-                                  {jobOffer.position}
-                                </option>
-                              ))}
-                            </Form.Select>
-                          )}
+                  <Formik
+                      validationSchema={schema}
+                      initialValues={{
+                        message: "",
+                      }}
+                      onSubmit={(values) => {
+                        handlePost(values)
+                      }}
+                    >
+                      {({ handleSubmit, handleChange, values, touched, errors }) => (
+                      <Form className="msform" onSubmit={handleSubmit}>
+                        <div className="form-card">
+                          <h2 className="fs-title"> {t("Message")} </h2>
+                          <Form.Group className="mb-3 mt-3" controlId="formBasicMessage">
+                            <Form.Control
+                              name="message"
+                              className="input"
+                              placeholder={t("Candidate").toString()}
+                              value={values.message}
+                              onChange={handleChange}
+                              isInvalid={!!errors.message}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.message}</Form.Control.Feedback>
+                          </Form.Group>
+                          <div className="d-flex mb-4">
+                            <label className="area">{t("Job Offers ")}</label>
+                            {jobOffersLoading ? (
+                              <Loader />
+                            ) : (
+                              <Form.Select
+                                className="selectFrom"
+                                aria-label="Default select example"
+                                value={jobOfferId}
+                                onChange={(e) => setJobOfferId(e.target.value)}
+                              >
+                                {jobOffersList.map((jobOffer: any) => (
+                                  <option key={jobOffer.id} value={jobOffer.id}>
+                                    {jobOffer.position}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <p>{t("Fields required")}</p>
-                      <Button variant="success" onClick={() => handlePost()}>
-                        <strong>{t("Contact")}</strong>
-                      </Button>
-                    </Form>
+                        <p>{t("Fields required")}</p>
+                        <Button variant="success" type="submit">
+                          <strong>{t("Contact")}</strong>
+                        </Button>
+                      </Form>
+                    )}
+                    </Formik>
                     <div className="row">
                       <div className="col mt-2 mb-2">
                         <Button onClick={() => navigate(-1)} variant="outline-secondary">

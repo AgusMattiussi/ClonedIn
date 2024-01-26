@@ -8,9 +8,9 @@ public class ContactForm {
     @Size(max=100)
     private String message;
 
-    @Min(0)
+    @Min(1)
     private long jobOfferId;
-    @Min(0)
+    @Min(1)
     private long userId;
 
     public String getMessage() {

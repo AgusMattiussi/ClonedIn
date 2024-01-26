@@ -128,10 +128,11 @@ public class EnterpriseController {
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam("position") final String position,
                                  @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
-                                 @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary) {
+                                 @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary,
+                                 @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sorting) {
 
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        id, searchTerm, position, minSalary, maxSalary, false, page, JOB_OFFERS_PER_PAGE);
+                        id, searchTerm, position, minSalary, maxSalary, sorting, false, page, JOB_OFFERS_PER_PAGE);
 
         List<JobOfferDTO> jobOfferDTOS = jobOffers.getPage().stream()
                 .map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());

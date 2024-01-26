@@ -167,7 +167,7 @@ public class UserController {
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status,
-                                    @QueryParam("filledBy") final FilledBy filledBy) {
+                                    @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy) {
 
         PaginatedResource<Contact> applications = contactService.getContactsForUser(id, filledBy, status,
                 sortBy, page, APPLICATIONS_PER_PAGE);
