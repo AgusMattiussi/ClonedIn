@@ -28,12 +28,12 @@ function NotificationsUser() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
+  const [filledBy, setFilledBy] = useState(FilledBy.ENTERPRISE.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
 
   document.title = t("Notifications Page Title")
 
-  // const [searchParams, setSearchParams] = useSearchParams()
   let queryParams: Record<string, string> = {}
 
   const fetchEnterpriseInfo = useCallback(
@@ -103,14 +103,15 @@ function NotificationsUser() {
   )
 
   const fetchNotifications = useCallback(
-    async (status: string, sortBy: string) => {
+    async (status: string, sortBy: string, filledBy: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
+      if (filledBy) queryParams.filledBy = filledBy
 
       try {
         const response = await apiRequest({
-          url: `/users/${userInfo?.id}/notifications`,
+          url: `/users/${userInfo?.id}/contacts`,
           method: "GET",
           queryParams: queryParams,
         })
@@ -155,10 +156,9 @@ function NotificationsUser() {
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchNotifications(filterStatus, sortBy)
+      fetchNotifications(filterStatus, sortBy, filledBy)
     }
-  }, [fetchNotifications, isLoading, filterStatus, sortBy])
+  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -175,7 +175,7 @@ function NotificationsUser() {
     queryParams.status = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
 
     const response = await apiRequest({
-      url: `/users/${userInfo?.id}/notifications/${jobOfferToAnswerId}`,
+      url: `/users/${userInfo?.id}/contacts/${jobOfferToAnswerId}`,
       method: "PUT",
       queryParams: queryParams,
     })
@@ -199,7 +199,7 @@ function NotificationsUser() {
         job={notification.jobOfferInfo}
         handler={handleAnswer}
         setJobOfferId={setJobOfferToAnswerId}
-        applicationsView={true}
+        applicationsView={false}
         key={index}
       />
     )

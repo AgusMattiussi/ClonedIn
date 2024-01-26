@@ -31,14 +31,13 @@ function EnterpriseInterested() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const filledBy = FilledBy.USER.toString()
+  const [filledBy, setFilledBy] = useState(FilledBy.USER.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
   const [userToAnswerId, setUserToAnswerId] = useState<any>()
 
   document.title = t("Interested Page Title")
 
-  // const [searchParams, setSearchParams] = useSearchParams()
   let queryParams: Record<string, string> = {}
 
   const fetchUserInfo = useCallback(
@@ -118,11 +117,11 @@ function EnterpriseInterested() {
         if (response.status === HttpStatusCode.Ok) {
           return response.data
         } else {
-          console.error("Error fetching category info:", response)
+          console.error("Error fetching info:", response)
           return []
         }
       } catch (error) {
-        console.error("Error fetching category info:", error)
+        console.error("Error fetching info:", error)
         return []
       }
     },
@@ -130,11 +129,11 @@ function EnterpriseInterested() {
   )
 
   const fetchContacts = useCallback(
-    async (status: string, sortBy: string) => {
+    async (status: string, sortBy: string, filledBy: string) => {
       setLoading(true)
-      queryParams.filledBy = filledBy
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
+      if (filledBy) queryParams.filledBy = filledBy
 
       try {
         const response = await apiRequest({
@@ -190,17 +189,15 @@ function EnterpriseInterested() {
       fetchJobOfferInfo,
       fetchUserInfo,
       fetchExtraInfo,
-      filledBy,
       fetchCategoryInfo,
     ],
   )
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchContacts(filterStatus, sortBy)
+      fetchContacts(filterStatus, sortBy, filledBy)
     }
-  }, [fetchContacts, isLoading, filterStatus, sortBy])
+  }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -252,7 +249,7 @@ function EnterpriseInterested() {
             {contact.userInfo?.name}
           </Link>
         </td>
-        <td>{t(contact.userInfo?.categoryInfo.name)}</td>
+        <td>{contact.userInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.userInfo!.categoryInfo.name)}</td>
         <td>
           {contact.userInfo?.skillsInfo.slice(0, 3).map((skill, index) => (
             <Badge pill bg="success" style={{ marginBottom: "0.5rem", width: "fit-content" }} key={index}>

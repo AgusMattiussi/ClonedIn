@@ -29,14 +29,13 @@ function EnterpriseContacts() {
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const filledBy = FilledBy.ENTERPRISE.toString()
+  const [filledBy, setFilledBy] = useState(FilledBy.ENTERPRISE.toString())
 
   const [jobOfferToCancelId, setJobOfferToCancelId] = useState<any>()
   const [userToCancelId, setUserToCancelId] = useState<any>()
 
   document.title = t("My Recruits Page Title")
 
-  // const [searchParams, setSearchParams] = useSearchParams()
   let queryParams: Record<string, string> = {}
 
   const fetchUserInfo = useCallback(
@@ -106,11 +105,11 @@ function EnterpriseContacts() {
   )
 
   const fetchContacts = useCallback(
-    async (status: string, sortBy: string) => {
+    async (status: string, sortBy: string, filledBy: string) => {
       setLoading(true)
-      queryParams.filledBy = filledBy
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
+      if (filledBy) queryParams.filledBy = filledBy
 
       try {
         const response = await apiRequest({
@@ -154,15 +153,14 @@ function EnterpriseContacts() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo, filledBy],
+    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
   )
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchContacts(filterStatus, sortBy)
+      fetchContacts(filterStatus, sortBy,  filledBy)
     }
-  }, [fetchContacts, isLoading, filterStatus, sortBy])
+  }, [fetchContacts, isLoading, filterStatus, sortBy,  filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -209,13 +207,13 @@ function EnterpriseContacts() {
             {contact.jobOfferInfo?.position}
           </Link>
         </td>
-        <td>{t(contact.jobOfferInfo?.categoryInfo.name)}</td>
+        <td>{contact.jobOfferInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.jobOfferInfo!.categoryInfo.name)}</td>
         <td>
           <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
             {contact.userInfo?.name}
           </Link>
         </td>
-        <td>{t(contact.userInfo?.categoryInfo.name)}</td>
+        <td>{contact.userInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.userInfo!.categoryInfo.name)}</td>
         <td>{contact.date}</td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (
