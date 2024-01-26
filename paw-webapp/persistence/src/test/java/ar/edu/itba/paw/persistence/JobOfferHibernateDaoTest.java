@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -123,7 +124,8 @@ public class JobOfferHibernateDaoTest {
     @Test
     public void testGetJobOffersListByFilters(){
         List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null,
-                testEnterprise.getId(), EMPTY_FIELD, EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true, 0 ,8);
+                testEnterprise.getId(), EMPTY_FIELD, EMPTY_FIELD, MIN_SALARY, MAX_SALARY, JobOfferSorting.DEFAULT,
+                true, 0 ,8);
 
         assertFalse(jobOfferList.isEmpty());
         assertEquals(1, jobOfferList.size());

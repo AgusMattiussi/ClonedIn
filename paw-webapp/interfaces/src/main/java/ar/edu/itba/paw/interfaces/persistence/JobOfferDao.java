@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,9 +36,10 @@ public interface JobOfferDao {
 
     List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
                                              Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
-                                             BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
+                                             BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize);
 
-    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize);
+    List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
+                                             BigDecimal maxSalary, int page, int pageSize);
 
     long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, Long enterpriseId, String searchTerm,
                           String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive);

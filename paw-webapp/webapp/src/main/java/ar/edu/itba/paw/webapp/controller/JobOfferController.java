@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
@@ -58,9 +59,10 @@ public class JobOfferController {
                                  @QueryParam("position") final String position,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
-                                 @QueryParam("enterpriseId") final Long enterpriseId) {
+                                 @QueryParam("enterpriseId") final Long enterpriseId,
+                                 @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy){
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        enterpriseId, searchTerm, position, minSalary, maxSalary, true, page, JOB_OFFERS_PER_PAGE);
+                        enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, JOB_OFFERS_PER_PAGE);
 
         if(jobOffers.isEmpty())
             return Response.noContent().build();

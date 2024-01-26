@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -143,7 +144,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
         }
     }
 
-    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary){
+    private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, JobOfferModality modality,
+                                             String term, BigDecimal minSalary, BigDecimal maxSalary){
         if(category != null)
             queryStringBuilder.append(" AND jo.category = :category");
         if(modality != null)
@@ -197,10 +199,14 @@ public class JobOfferHibernateDao implements JobOfferDao {
             query.setParameter("term", term);
     }
 
+    private static void addSorting(StringBuilder query, JobOfferSorting sortBy){
+        query.append(sortBy.getAsQuery());
+    }
+
     @Override
     public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String skillDescription,
                                                     Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
-                                                    BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
+                                                    BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize) {
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT jo FROM JobOffer jo");
 
         if(enterpriseId != null || searchTerm != null && !searchTerm.isEmpty())
@@ -214,7 +220,8 @@ public class JobOfferHibernateDao implements JobOfferDao {
         filterQueryAppendConditions(queryStringBuilder, category, modality, skillDescription, enterpriseId, searchTerm,
                 position, minSalary, maxSalary);
 
-        queryStringBuilder.append(" ORDER BY jo.available ASC");
+        if(sortBy != null)
+            addSorting(queryStringBuilder, sortBy);
 
         TypedQuery<JobOffer> query = em.createQuery(queryStringBuilder.toString(), JobOffer.class);
         filterQuerySetParameters(query, category, modality, skillDescription, enterpriseId, searchTerm, position,

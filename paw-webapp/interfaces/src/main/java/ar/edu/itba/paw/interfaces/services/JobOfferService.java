@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.math.BigDecimal;
@@ -43,7 +44,7 @@ public interface JobOfferService {
 
     PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
                                                           Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
-                                                          BigDecimal maxSalary, boolean onlyActive, int page, int pageSize);
+                                                          BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize);
 
     List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
                                              BigDecimal maxSalary, int page, int pageSize);

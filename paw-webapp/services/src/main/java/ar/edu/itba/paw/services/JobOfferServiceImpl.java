@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
+import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
@@ -130,7 +131,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
                                                                  Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
-                                                                 BigDecimal maxSalary, boolean onlyActive, int page, int pageSize) {
+                                                                 BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize) {
         Category category = categoryName != null ? categoryService.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
@@ -138,7 +139,7 @@ public class JobOfferServiceImpl implements JobOfferService {
             enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 
         List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseId,
-                searchTerm, position, minSalary, maxSalary, onlyActive, page-1, pageSize);
+                searchTerm, position, minSalary, maxSalary, sortBy != null ? sortBy : JobOfferSorting.DEFAULT, onlyActive, page-1, pageSize);
 
         long jobOffersCount = this.getJobOfferCount(category, modality, skillDescription, enterpriseId,
                         searchTerm, position, minSalary, maxSalary, onlyActive);
