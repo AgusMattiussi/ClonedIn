@@ -12,6 +12,11 @@ public final class DateHelper {
     private DateHelper() {
     }
 
+    public static void validateDate(Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo){
+        Month toMonth = monthTo != null ? Month.fromNumber(monthTo) : null;
+        validateDate(Month.fromNumber(monthFrom), yearFrom, toMonth, yearTo);
+    }
+
     public static void validateDate(Month monthFrom, Integer yearFrom, Month monthTo, Integer yearTo){
         if(yearFrom == null)
             throw new InvalidDateException("'yearFrom' cannot be null");

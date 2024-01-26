@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
 
@@ -20,16 +21,16 @@ public class Education {
     private User user;
 
     @Column(name = "mesDesde")
-    private int monthFrom;
+    private Integer monthFrom;
 
     @Column(name = "anioDesde")
-    private int yearFrom;
+    private Integer yearFrom;
 
     @Column(name = "mesHasta")
-    private int monthTo;
+    private Integer monthTo;
 
     @Column(name = "anioHasta")
-    private int yearTo;
+    private Integer yearTo;
 
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "titulo", nullable = false)
@@ -54,7 +55,7 @@ public class Education {
         this.description = description;
     }
 
-    public Education(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+    public Education(User user, Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo, String title, String institutionName, String description) {
         this(null, user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
     }
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.Month;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class EducationHibernateDao implements EducationDao {
     private EntityManager em;
 
     @Override
-    public Education add(User user, int monthFrom, int yearFrom, int monthTo, int yearTo, String title, String institutionName, String description) {
+    public Education add(User user, Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo, String title, String institutionName, String description) {
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);
         return education;

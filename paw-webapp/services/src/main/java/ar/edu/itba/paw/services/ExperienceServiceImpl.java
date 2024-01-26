@@ -32,9 +32,10 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Override
     @Transactional
-    public Experience create(long userId, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description) {
-        Month monthFrom = Month.fromString(monthFromString);
-        Month monthTo = monthToString != null ? Month.fromString(monthToString) : null;
+    public Experience create(long userId, Integer fromMonthNum, Integer yearFrom, Integer toMonthNum, Integer yearTo,
+                      String enterpriseName, String position, String description) {
+        Month monthFrom = Month.fromNumber(fromMonthNum);
+        Month monthTo = toMonthNum != null ? Month.fromNumber(toMonthNum) : null;
 
         DateHelper.validateDate(monthFrom,yearFrom, monthTo, yearTo);
 

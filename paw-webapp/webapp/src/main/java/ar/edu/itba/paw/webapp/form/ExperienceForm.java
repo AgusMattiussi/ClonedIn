@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 public class ExperienceForm {
@@ -30,13 +26,17 @@ public class ExperienceForm {
     private Integer yearFrom;
 
     @NotNull
-    private String monthFrom;
+    @Min(1)
+    @Max(12)
+    private Integer monthFrom;
 
     @Min(MIN_YEAR)
     @Max(MAX_YEAR)
     private Integer yearTo;
 
-    private String monthTo;
+    @Min(1)
+    @Max(12)
+    private Integer monthTo;
 
     public String getCompany() {
         return company;
@@ -62,19 +62,19 @@ public class ExperienceForm {
         this.jobDesc = jobDesc;
     }
 
-    public String getMonthFrom() {
+    public Integer getMonthFrom() {
         return monthFrom;
     }
 
-    public void setMonthFrom(String monthFrom) {
+    public void setMonthFrom(Integer monthFrom) {
         this.monthFrom = monthFrom;
     }
 
-    public String getMonthTo() {
+    public Integer getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(String monthTo) {
+    public void setMonthTo(Integer monthTo) {
         this.monthTo = monthTo;
     }
 

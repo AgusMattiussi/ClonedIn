@@ -32,15 +32,14 @@ public class EducationServiceImpl implements EducationService {
 
     @Override
     @Transactional
-    public Education add(long userId, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String title, String institutionName, String description) {
-        Month monthFrom = Month.fromString(monthFromString);
-        Month monthTo = Month.fromString(monthToString);
+    public Education add(long userId, Integer fromMonthNum, Integer yearFrom, Integer toMonthNum, Integer yearTo, String title,
+                  String institutionName, String description) {
 
-        DateHelper.validateDate(monthFrom, yearFrom, monthTo, yearTo);
+        DateHelper.validateDate(fromMonthNum, yearFrom, toMonthNum, yearTo);
 
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        Education education = educationDao.add(user, monthFrom.getNumber(), yearFrom, monthTo.getNumber(),
+        Education education = educationDao.add(user, fromMonthNum, yearFrom, toMonthNum,
                 yearTo, title, institutionName, description);
 
         LOGGER.debug("A new education was registered under id: {}", education.getId());

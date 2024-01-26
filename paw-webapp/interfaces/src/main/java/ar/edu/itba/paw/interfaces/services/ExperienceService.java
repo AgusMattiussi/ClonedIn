@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExperienceService {
-    Experience create(long userId, String monthFromString, Integer yearFrom, String monthToString, Integer yearTo, String enterpriseName, String position, String description);
+    Experience create(long userId, Integer fromMonthNum, Integer yearFrom, Integer toMonthNum, Integer yearTo,
+                      String enterpriseName, String position, String description);
 
     Optional<Experience> findById(long experienceId);
 
