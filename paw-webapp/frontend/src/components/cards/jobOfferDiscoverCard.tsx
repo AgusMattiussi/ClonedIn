@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 import { useSharedAuth } from "../../api/auth"
-import { UserRole } from "../../utils/constants"
+import { JobOfferAvailability, UserRole } from "../../utils/constants"
 import AcceptModal from "../modals/acceptModal"
 
 function JobOfferDiscoverCard({
@@ -144,15 +144,18 @@ function JobOfferDiscoverCard({
           <h5>{t("Description")}</h5>
         </div>
         {seeMoreView ? (
+          job.available === JobOfferAvailability.CLOSED ? (
+            <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
+              {t("Closed")}
+            </Badge>
+            ) : (
           userInfo?.role === UserRole.USER ? (
             <div>
               <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
                 {t("Apply")}
               </Button>
             </div>
-          ) : (
-            <></>
-          )
+          ) : (<></>) )
         ) : (
           <div>
             <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>

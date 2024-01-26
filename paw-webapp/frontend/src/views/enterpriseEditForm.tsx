@@ -29,13 +29,13 @@ function EditEnterpriseForm() {
   const schema = yup.object().shape({
     name: yup.string().max(50, t('Single Line Max Length') as string),
     city: yup.string().max(50, t('Single Line Max Length') as string),
-    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    link: yup.string().matches(re, t('Invalid URL') as string).max(50, t('Single Line Max Length') as string),
-    aboutUs: yup.string().max(200, t('Multi Line Max Length') as string),
+    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(1000, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    link: yup.string().matches(re, t('Invalid URL') as string).max(200, t('Single Line Max Length') as string),
+    aboutUs: yup.string().max(600, t('Multi Line Max Length') as string),
   })
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [workers, setWorkers] = useState(enterprise?.workers)
-  const [category, setCategory] = useState(enterprise?.categoryInfo.id.toString())
+  const [category, setCategory] = useState(enterprise?.categoryInfo?.name)
 
   useEffect(() => {
     const fetchEnterprise = async () => {
@@ -66,25 +66,30 @@ function EditEnterpriseForm() {
   }, [apiRequest])
 
   const handlePost = async (e: any) => {
-    // const response = await apiRequest({
-    //   url: `/enterprises/${id}`,
-    //   method: "PUT",
-    //   body: {
-    //     e.name,
-    //     e.city,
-    //     category,
-    //     workers,
-    //     e.foundingYear,
-    //     e.link,
-    //     e.aboutUs,
-    //   },
-    // })
-    // console.log(response)
-    // if (response.status === HttpStatusCode.NoContent) {
-    //   navigate(`/enterprises/${id}`)
-    // } else {
-    //   //TODO: manejar error
-    // }
+    const name = e.name
+    const city = e.city
+    const foundingYear = e.foundingYear
+    const link = e.link
+    const aboutUs = e.aboutUs
+    const response = await apiRequest({
+      url: `/enterprises/${id}`,
+      method: "PUT",
+      body: {
+        name,
+        aboutUs,
+        city,
+        category,
+        link,
+        workers,
+        foundingYear,
+      },
+    })
+    console.log(response)
+    if (response.status === HttpStatusCode.Ok) {
+      navigate(`/enterprises/${id}`)
+    } else {
+      //TODO: manejar error
+    }
   }
 
   return (
@@ -131,6 +136,7 @@ function EditEnterpriseForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
+                                name="city"
                                 className="input"
                                 placeholder={enterprise?.location}
                                 value={values.city}
@@ -192,6 +198,7 @@ function EditEnterpriseForm() {
                             </div>
                             <Form.Group className="mb-3" controlId="formBasicYear">
                               <Form.Control
+                                name="foundingYear"
                                 className="input"
                                 placeholder={''+enterprise?.year}
                                 value={values.foundingYear}
@@ -201,6 +208,7 @@ function EditEnterpriseForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control
+                                name="link"
                                 className="input"
                                 placeholder={enterprise?.website}
                                 value={values.link}
@@ -210,6 +218,7 @@ function EditEnterpriseForm() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
+                                name="aboutUs"
                                 placeholder={enterprise?.description}
                                 as="textarea"
                                 rows={3}

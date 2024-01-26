@@ -25,12 +25,12 @@ function ContactForm() {
   const [message, setMessage] = useState("")
   const [jobOffersList, setJobOffersList] = useState<any[]>([])
   const [jobOffersLoading, setJobOffersLoading] = useState(true)
-  const [jobOfferId, setJobOfferId] = useState(jobOffersList[0].id)
+  const [jobOfferId, setJobOfferId] = useState("")
 
   useEffect(() => {
     const fetchJobOffers = async () => {
       const response = await apiRequest({
-        url: `/jobOffers?enterprise=${userInfo?.id}`,
+        url: `/jobOffers?enterpriseId=${userInfo?.id}`,
         method: "GET",
       })
       if (response.status === HttpStatusCode.NoContent) {
@@ -60,7 +60,7 @@ function ContactForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    message: yup.string().required(t('Required') as string).max(200, t('Multi Line Max Length') as string),
+    message: yup.string().max(200, t('Multi Line Max Length') as string),
   })
 
   const handlePost = async (e: any) => {

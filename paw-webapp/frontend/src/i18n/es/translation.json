@@ -111,6 +111,7 @@
   "Filter By": "Filtrar por:",
   "Category": "Rubro",
   "Modality": "Modalidad",
+  "Modality*": "Modalidad*",
   "Remoto": "Remoto",
   "Presencial": "Presencial",
   "Mixto": "Mixto",
@@ -165,6 +166,7 @@
   "Interested Page Title": "Interesados | ClonedIn",
   "Applications Page Title": "Mis Postulaciones | ClonedIn",
   "Notifications Page Title": "Mis Ofertas de Trabajo | ClonedIn",
+  "Job Offer Form Page Title": "Agregar Oferta Laboral | ClonedIn",
 
   "Index Pagination First": "Inicio",
   "Index Pagination End": "Fin",

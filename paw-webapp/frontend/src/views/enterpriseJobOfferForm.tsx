@@ -25,13 +25,16 @@ function JobOfferForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    position: yup.string().required(t('Required') as string),
+    position: yup.string().required(t('Required') as string).max(50, t('Multi Line Max Length') as string),
     salary: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
-    description: yup.string().max(200, t('Multi Line Max Length') as string),
+    description: yup.string().max(5000, t('Multi Line Max Length') as string),
+    skill1: yup.string().max(50, t('Multi Line Max Length') as string),
+    skill2: yup.string().max(50, t('Multi Line Max Length') as string),
+    skill3: yup.string().max(50, t('Multi Line Max Length') as string),
+    skill4: yup.string().max(50, t('Multi Line Max Length') as string),
   })
   const [category, setCategory] = useState("No-Especificado")
-  const [modality, setModality] = useState("No-especificado")
-  const [skills, setSkills] = useState("")
+  const [modality, setModality] = useState("Remoto")
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -51,6 +54,7 @@ function JobOfferForm() {
     const jobPosition = e.position
     const jobDescription = e.description
     const salary = e.salary
+    const skills = [e.skill1, e.skill2, e.skill3, e.skill4]
     const response = await apiRequest({
       url: `/enterprises/${id}/jobOffers`,
       method: "POST",
@@ -90,6 +94,10 @@ function JobOfferForm() {
                         position: "",
                         salary: "",
                         description: "",
+                        skill1: "",
+                        skill2: "",
+                        skill3: "",
+                        skill4: "",
                       }}
                       onSubmit={(values) => {
                         handlePost(values)
@@ -125,9 +133,65 @@ function JobOfferForm() {
                               />
                               <Form.Control.Feedback type="invalid">{errors.salary}</Form.Control.Feedback>
                             </Form.Group>
+                            <div className="d-flex">
+                            <Form.Group controlId="formBasicSkill">
+                              <Form.Control
+                                name="skill1"
+                                className="input"
+                                placeholder={t("Required Skills").toString()}
+                                value={values.skill1}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.skill1}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.skill1}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicSkill">
+                              <Form.Control
+                                name="skill2"
+                                className="input"
+                                placeholder={t("Required Skills").toString()}
+                                value={values.skill2}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.skill2}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.skill2}</Form.Control.Feedback>
+                            </Form.Group>
+                            </div>
+                            <div className="d-flex mb-4">
+                            <Form.Group className="mb-3" controlId="formBasicSkill">
+                              <Form.Control
+                                name="skill3"
+                                className="input"
+                                placeholder={t("Required Skills").toString()}
+                                value={values.skill3}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.skill3}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.skill3}</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3 ml-3" controlId="formBasicSkill">
+                              <Form.Control
+                                name="skill4"
+                                className="input"
+                                placeholder={t("Required Skills").toString()}
+                                value={values.skill4}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                }}
+                                isInvalid={!!errors.skill4}
+                              />
+                              <Form.Control.Feedback type="invalid">{errors.skill4}</Form.Control.Feedback>
+                            </Form.Group>
+                            </div>
                             <div className="d-flex mb-4">
                               <label className="area mx-2 py-1" style={{ width: "100px" }}>
-                                {t("Modality")}
+                                {t("Modality*")}
                               </label>
                               <Form.Select
                                 className="selectFrom"
@@ -136,13 +200,11 @@ function JobOfferForm() {
                                 onChange={(e) => setModality(e.target.value)}
                                 style={{ width: "70%" }}
                               >
-                                <option value="No-Especificado">{t("No-especificado")}</option>
                                 <option value="Remoto">{t("Remoto")}</option>
                                 <option value="Presencial">{t("Presencial")}</option>
                                 <option value="Mixto">{t("Mixto")}</option>
                               </Form.Select>
                             </div>
-                            {/* TODO: agregar HABILIDADES REQUERIDAS CON EL INPUT DE +*/}
                             <div className="d-flex mb-4">
                               <label className="area mx-2 py-1" style={{ width: "100px" }}>
                                 {t("Job Category")}

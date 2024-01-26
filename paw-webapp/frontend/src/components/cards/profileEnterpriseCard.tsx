@@ -92,6 +92,12 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
               )}
             </div>
             <div className="d-flex justify-content-start my-2">
+              <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
+              <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
+                {t("Location")}: {enterprise.location === "" || enterprise.location == null ? t("No especificado") : enterprise.location}
+              </p>
+            </div>
+            <div className="d-flex justify-content-start my-2">
               <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
                 {t("Quantity of employees")}: 
@@ -107,7 +113,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.Globe color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Website")}: {enterprise.link == "" || enterprise.link == null ? t("No especificado") : enterprise.link}
+                {t("Website")}: {enterprise.website == "" || enterprise.website == null ? t("No especificado") : enterprise.website}
               </p>
             </div>
             <div className="d-flex flex-column align-items-start my-2">

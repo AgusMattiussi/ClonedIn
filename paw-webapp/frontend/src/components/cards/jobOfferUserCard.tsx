@@ -118,7 +118,7 @@ function JobOfferUserCard({
         <div className="d-flex flex-column">
           <h5>
             {t("Status")}
-            {": "} {job.available}
+            {": "} {t(contact.status)}
           </h5>
           {contact.status !== JobOfferStatus.PENDING ? (
             <></>
@@ -186,7 +186,7 @@ function JobOfferUserCard({
         msg={t("Cancel Application Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
-        // onConfirmClick={() => handleCancel()}
+        onConfirmClick={() => handler()}
       />
     </Card>
   )

@@ -110,6 +110,7 @@
   "Filter By": "Filter by:",
   "Category": "Category",
   "Modality": "Work Mode",
+  "Modality*": "Work Mode*",
   "Remoto": "Home office",
   "Presencial": "On site",
   "Mixto": "Mixed",
@@ -163,6 +164,8 @@
   "Interested Page Title": "Interested | ClonedIn",
   "Applications Page Title": "My Applications | ClonedIn",
   "Notifications Page Title": "My Job Offers | ClonedIn",
+  "Job Offer Form Page Title": "Add Job Offer | ClonedIn",
+  "Job Offer Page Title": "Job Offer | ClonedIn",
 
   "Index Pagination First": "First",
   "Index Pagination End": "Last",

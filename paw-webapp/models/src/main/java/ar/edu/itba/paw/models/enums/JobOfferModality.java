@@ -3,8 +3,7 @@ package ar.edu.itba.paw.models.enums;
 public enum JobOfferModality {
     REMOTE("Remoto"),
     IN_PERSON("Presencial"),
-    MIXED("Mixto"),
-    NOT_SPECIFIED("No especificado");
+    MIXED("Mixto");
 
     private final String modality;
 
