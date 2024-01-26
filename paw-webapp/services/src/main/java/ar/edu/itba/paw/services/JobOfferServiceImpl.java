@@ -55,8 +55,7 @@ public class JobOfferServiceImpl implements JobOfferService {
         Category category = categoryService.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
-        JobOfferModality modality = modalityName == null || modalityName.isEmpty() ?
-                JobOfferModality.NOT_SPECIFIED : JobOfferModality.fromString(modalityName);
+        JobOfferModality modality = JobOfferModality.fromString(modalityName);
 
         JobOffer jobOffer = this.create(enterprise, category, position, description,
                 salary, modality);

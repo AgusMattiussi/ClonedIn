@@ -38,7 +38,7 @@ public class ContactHibernateDaoTest {
     public static final String EMPTY_FIELD = "-";
     public static final String NEW_JOB_OFFER_POSITION = "position";
     public static final BigDecimal NEW_JOB_OFFER_SALARY = BigDecimal.valueOf(1000);
-    public static final String NEW_JOB_OFFER_MODALITY = JobOfferModality.NOT_SPECIFIED.getModality();
+    public static final String NEW_JOB_OFFER_MODALITY = JobOfferModality.REMOTE.getModality();
     public static final String NEW_OFFER_AVAILABILITY = JobOfferAvailability.ACTIVE.getStatus();
     public static final String NEW_OFFER_STATUS = JobOfferStatus.PENDING.getStatus();
     public static final FilledBy NEW_JOB_OFFER_FILLED_BY = FilledBy.ENTERPRISE;

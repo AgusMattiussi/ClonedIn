@@ -22,10 +22,9 @@ function ContactForm() {
 
   const { loading, apiRequest } = useRequestApi()
   const [userName, setUserName] = useState("")
-  const [message, setMessage] = useState("")
   const [jobOffersList, setJobOffersList] = useState<any[]>([])
   const [jobOffersLoading, setJobOffersLoading] = useState(true)
-  const [jobOfferId, setJobOfferId] = useState("")
+  const [jobOfferId, setJobOfferId] = useState("No-especificado")
 
   useEffect(() => {
     const fetchJobOffers = async () => {
@@ -38,6 +37,7 @@ function ContactForm() {
       } else {
         setJobOffersList(response.data)
       }
+      console.log(response)
       setJobOffersLoading(false)
     }
 
@@ -62,6 +62,14 @@ function ContactForm() {
   const schema = yup.object().shape({
     message: yup.string().max(200, t('Multi Line Max Length') as string),
   })
+
+  const handleSelect = (e: any) => {
+    if ( jobOffersList.includes(e.target.value)) {
+      setJobOfferId(e.target.value)
+    } else {
+      alert("ERROR");
+    }
+  }
 
   const handlePost = async (e: any) => {
     const message = e.message
@@ -133,8 +141,9 @@ function ContactForm() {
                                 className="selectFrom"
                                 aria-label="Default select example"
                                 value={jobOfferId}
-                                onChange={(e) => setJobOfferId(e.target.value)}
+                                onChange={(e) => handleSelect(e.target.value)}
                               >
+                                <option key="0" value="No-especificado"> {t("No-especificado")} </option>
                                 {jobOffersList.map((jobOffer: any) => (
                                   <option key={jobOffer.id} value={jobOffer.id}>
                                     {jobOffer.position}

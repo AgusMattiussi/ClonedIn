@@ -42,7 +42,7 @@ function RegisterEnterprise() {
   const handleRegister = async (e: any) => {
     let fYear = e.foundingYear
     if (fYear == '') {
-      fYear = null
+      fYear = "null"
     }
     const registered = await registerHandler(
       e.email,
@@ -93,8 +93,8 @@ function RegisterEnterprise() {
       .required(t('Required') as string),
     city: yup.string().max(50, t('Single Line Max Length') as string),
     foundingYear: yup.number().typeError(t('Invalid Number') as string).min(1000, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    link: yup.string().matches(re, t('Invalid URL') as string).max(200, t('Single Line Max Length') as string),
-    aboutUs: yup.string().max(600, t('Multi Line Max Length') as string),
+    link: yup.string().matches(re, t('Invalid URL') as string).max(200, t('Multi Line Max Length') as string),
+    aboutUs: yup.string().max(600, t('Long Line Max Length') as string),
   })
   
   return (

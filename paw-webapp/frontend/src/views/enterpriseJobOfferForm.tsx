@@ -25,13 +25,13 @@ function JobOfferForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    position: yup.string().required(t('Required') as string).max(50, t('Multi Line Max Length') as string),
-    salary: yup.number().typeError(t('Invalid Number') as string).min(0, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
-    description: yup.string().max(5000, t('Multi Line Max Length') as string),
-    skill1: yup.string().max(50, t('Multi Line Max Length') as string),
-    skill2: yup.string().max(50, t('Multi Line Max Length') as string),
-    skill3: yup.string().max(50, t('Multi Line Max Length') as string),
-    skill4: yup.string().max(50, t('Multi Line Max Length') as string),
+    position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    salary: yup.number().typeError(t('Invalid Number') as string).min(1, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
+    description: yup.string().max(5000, t('Description Max Length') as string),
+    skill1: yup.string().max(50, t('Single Line Max Length') as string),
+    skill2: yup.string().max(50, t('Single Line Max Length') as string),
+    skill3: yup.string().max(50, t('Single Line Max Length') as string),
+    skill4: yup.string().max(50, t('Single Line Max Length') as string),
   })
   const [category, setCategory] = useState("No-Especificado")
   const [modality, setModality] = useState("Remoto")

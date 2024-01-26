@@ -96,8 +96,11 @@ function ProfileUser() {
       } else {
         setExperiencesData(response.data)
       }
+      console.log(response)
       setExperiencesLoading(false)
+
     }
+    
 
     if (isUserLoading) {
       fetchUser()

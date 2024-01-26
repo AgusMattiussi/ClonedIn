@@ -31,6 +31,11 @@
 
   "Required": "Required",
   "Invalid Email": "Invalid Email",
+  "Email Max Length": "Email too long - 100 chars maximum.",
+  "Line Max Length": "100 characters maximum",
+  "Long Line Max Length": "600 characters maximum",
+  "Description Max Length": "5000 characters maximum",
+  "Password Max Length": "Password is too long - 20 chars maximum.",
   "Password Min Length": "Password is too short - 8 chars minimum.",
   "Password Match": "Passwords must match",
   "Invalid Year Max": "Year must be current year or less than current year",

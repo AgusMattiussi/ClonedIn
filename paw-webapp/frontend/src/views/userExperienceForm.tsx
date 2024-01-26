@@ -26,20 +26,23 @@ function ExperienceForm() {
   const schema = yup.object().shape({
     company: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
     position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    description: yup.string().required().max(600, t('Multi Line Max Length') as string),
+    description: yup.string().required().max(600, t('Long Line Max Length') as string),
     yearFrom: yup.number().typeError(t('Invalid Number') as string).required().min(1900, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     yearTo: yup.number().typeError(t('Invalid Number') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
     //TODO: agregar validaciones para las fechas
   })
   const [monthFrom, setMonthFrom] = useState("Enero")
-  const [monthTo, setMonthTo] = useState("")
+  const [monthTo, setMonthTo] = useState("0")
 
   const handlePost = async (e: any) => {
     const company = e.company
     const job = e.position
     const jobDesc = e.description
     const yearFrom = e.yearFrom
-    const yearTo = e.yearTo
+    let yearTo = e.yearTo
+    if (yearTo == '') {
+      yearTo = "null"
+    }
     const response = await apiRequest({
       url: `/users/${id}/experiences`,
       method: "POST",
@@ -183,7 +186,7 @@ function ExperienceForm() {
                                     value={monthTo}
                                     onChange={(e) => setMonthTo(e.target.value)}
                                   >
-                                    <option value=""> {t("No-especificado")} </option>
+                                    <option value="0"> {t("No-especificado")} </option>
                                     <option value="Enero"> {t("Enero")} </option>
                                     <option value="Febrero"> {t("Febrero")} </option>
                                     <option value="Marzo"> {t("Marzo")} </option>

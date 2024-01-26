@@ -86,7 +86,6 @@ export function useRegisterEnterprise() {
         aboutUs,
       },
     })
-    console.log(response)
     return response.status !== HttpStatusCode.BadRequest
   }
 

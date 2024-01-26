@@ -88,7 +88,7 @@ function RegisterUser() {
 
   const schema = yup.object().shape({
     email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
-    name: yup.string().required(t('Required') as string).max(100, t('Single Line Max Length') as string),
+    name: yup.string().required(t('Required') as string).max(100, t('Line Max Length') as string),
     pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
     repeatPass: yup
       .string()
@@ -96,7 +96,7 @@ function RegisterUser() {
       .required(t('Required') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
-    description: yup.string().max(600, t('Multi Line Max Length') as string),
+    description: yup.string().max(600, t('Long Line Max Length') as string),
   })
 
   return (

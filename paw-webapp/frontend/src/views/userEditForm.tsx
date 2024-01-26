@@ -12,6 +12,7 @@ import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
 import UserDto from "../utils/UserDto"
+import { educationLevels } from "../utils/constants"
 
 function EditUserForm() {
   const navigate = useNavigate()
@@ -26,10 +27,10 @@ function EditUserForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().max(100, t('Single Line Max Length') as string),
+    name: yup.string().max(100, t('Line Max Length') as string),
     location: yup.string().max(50, t('Single Line Max Length') as string),
     position: yup.string().max(50, t('Single Line Max Length') as string),
-    aboutMe: yup.string().max(600, t('Multi Line Max Length') as string),
+    aboutMe: yup.string().max(600, t('Long Line Max Length') as string),
   })
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [category, setCategory] = useState(user?.categoryInfo?.name)
@@ -84,6 +85,14 @@ function EditUserForm() {
       navigate(`/users/${id}`)
     } else {
       //TODO: manejar error
+    }
+  }
+
+  const handleEducationLevelSelect = (e: any) => {
+    if (e.target.value == "No-especificado" || educationLevels.includes(e.target.value)) {
+      setLevel(e.target.value)
+    } else {
+      alert("ERROR");
     }
   }
 
@@ -163,7 +172,7 @@ function EditUserForm() {
                                 className="selectFrom"
                                 aria-label="Default select example"
                                 value={level}
-                                onChange={(e) => setLevel(e.target.value)}
+                                onChange={handleEducationLevelSelect}
                               >
                                 <option value="No-especificado">{t("No-especificado")}</option>
                                 <option value="Primario">{t("Primario")}</option>
