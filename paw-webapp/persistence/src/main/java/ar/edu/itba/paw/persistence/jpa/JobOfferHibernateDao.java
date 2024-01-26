@@ -96,13 +96,13 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
     @Override
     public long getJobOffersCount() {
-        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo ORDER BY jo.available ASC");
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo");
         return (Long) query.getSingleResult();
     }
 
     @Override
     public long getJobOffersCountForEnterprise(Enterprise enterprise) {
-        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.enterprise = :enterprise ORDER BY jo.available ASC");
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.enterprise = :enterprise");
         query.setParameter("enterprise", enterprise);
 
         return (Long) query.getSingleResult();

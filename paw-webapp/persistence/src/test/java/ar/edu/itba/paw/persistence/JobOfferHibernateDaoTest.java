@@ -132,15 +132,15 @@ public class JobOfferHibernateDaoTest {
         assertEquals(testActiveJobOffer, jobOfferList.get(0));
     }
 
-//    @Test
-//    public void testGetJobOffersCount(){
-//        assertEquals(3, dao.getJobOffersCount());
-//    }
-// TODO: revisar test
-//    @Test
-//    public void testGetJobOffersCountForEnterprise(){
-//        assertEquals(3, dao.getJobOffersCountForEnterprise(testEnterprise));
-//    }
+    @Test
+    public void testGetJobOffersCount(){
+        assertEquals(3, dao.getJobOffersCount());
+    }
+
+    @Test
+    public void testGetJobOffersCountForEnterprise(){
+        assertEquals(3, dao.getJobOffersCountForEnterprise(testEnterprise));
+    }
 
     @Test
     public void testGetActiveJobOffersCountForEnterprise(){
