@@ -9,7 +9,7 @@ import Navigation from "../components/navbar"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
 import EnterpriseDto from "../utils/EnterpriseDto"
-import { JobOfferAvailability } from "../utils/constants"
+import { JobOfferAvailability, UserRole } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
@@ -30,6 +30,7 @@ function ProfileEnterprise() {
   const [isEnterpriseLoading, setEnterpriseLoading] = useState(true)
 
   const [jobs, setJobs] = useState<any[]>([])
+  const [userJobs, setUserJobs] = useState<any[]>([])
   const [jobsLoading, setJobsLoading] = useState(true)
 
   const [jobOfferToCloseId, setJobOfferToCloseId] = useState<number | null>(null)
@@ -49,7 +50,7 @@ function ProfileEnterprise() {
       setEnterpriseLoading(false)
     }
 
-    const fetchJobs = async () => {
+    const fetchEnterpriseJobs = async () => {
       const response = await apiRequest({
         url: `/enterprises/${id}/jobOffers`,
         method: "GET",
@@ -61,11 +62,29 @@ function ProfileEnterprise() {
       }
       setJobsLoading(false)
     }
+
+    const fetchUserJobs = async () => {
+      const response = await apiRequest({
+        url: `/jobOffers?enterpriseId=${id}`,
+        method: "GET",
+      })
+      if (response.status === HttpStatusCode.NoContent) {
+        setUserJobs([])
+      } else {
+        setUserJobs(response.data)
+      }
+        setJobsLoading(false)
+      }
+
     if (isEnterpriseLoading) {
       fetchEnterprise()
     }
     if (jobsLoading) {
-      fetchJobs()
+      if (userInfo?.role === UserRole.ENTERPRISE) {
+        fetchEnterpriseJobs()
+      } else {
+        fetchUserJobs()
+      }
     }
   }, [apiRequest, id])
 
@@ -78,7 +97,6 @@ function ProfileEnterprise() {
       method: "PUT",
       queryParams: queryParams,
     })
-
     if (response.status === HttpStatusCode.Ok) {
       setJobsLoading(true)
       const modalElement = document.getElementById("cancelModal")
@@ -92,6 +110,12 @@ function ProfileEnterprise() {
   }
 
   const enterprisesJobs = jobs.map((job) => {
+    return (
+      <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
+    )
+  })
+  
+  const usersJobs = userJobs.map((job) => {
     return (
       <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
     )
@@ -126,11 +150,19 @@ function ProfileEnterprise() {
               <></>
             )}
             <br />
-            {enterprisesJobs.length > 0 ? (
-              <div className="w-100">{enterprisesJobs}</div>
+            {userInfo?.role === UserRole.ENTERPRISE ? (
+              enterprisesJobs.length > 0 ? (
+                <div className="w-100">{enterprisesJobs}</div>
+              ) : (
+                <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
+              )
             ) : (
-              <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
-            )}
+              usersJobs.length > 0 ? (
+                <div className="w-100">{usersJobs}</div>
+              ) : (
+                <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
+              )
+            )} 
             <Pagination />
           </Col>
         </Row>

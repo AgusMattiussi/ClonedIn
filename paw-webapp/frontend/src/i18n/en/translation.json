@@ -254,5 +254,7 @@
 
   "Loading": "Loading...",
   "No users found": "No users found",
-  "No job offers found": "No job offers found"
+  "No job offers found": "No job offers found",
+
+  "Must Choose": "Must Choose a Job Offer"
 }
