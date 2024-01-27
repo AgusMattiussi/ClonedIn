@@ -54,7 +54,10 @@ function JobOfferForm() {
     const jobPosition = e.position
     const jobDescription = e.description
     const salary = e.salary
-    const skills = [e.skill1, e.skill2, e.skill3, e.skill4]
+    const skill1 = e.skill1
+    const skill2 = e.skill2
+    const skill3 = e.skill3
+    const skill4 = e.skill4
     const response = await apiRequest({
       url: `/enterprises/${id}/jobOffers`,
       method: "POST",
@@ -64,7 +67,10 @@ function JobOfferForm() {
         salary,
         category,
         modality,
-        skills,
+        skill1,
+        skill2,
+        skill3,
+        skill4,
       },
     })
     if (response.status === HttpStatusCode.Created) {
