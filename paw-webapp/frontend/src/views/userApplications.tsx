@@ -178,7 +178,6 @@ function ApplicationsUser() {
       method: "PUT",
       queryParams: queryParams,
     })
-    console.log(response)
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
       const modalElement = document.getElementById("cancelModal")

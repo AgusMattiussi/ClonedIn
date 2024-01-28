@@ -12,6 +12,7 @@ import { HttpStatusCode } from "axios"
 import Loader from "../components/loader"
 import * as formik from "formik"
 import * as yup from "yup"
+import JobOfferDto from "../utils/JobOfferDto"
 
 function ContactForm() {
   const navigate = useNavigate()
@@ -25,19 +26,22 @@ function ContactForm() {
   const [jobOffersList, setJobOffersList] = useState<any[]>([])
   const [jobOffersLoading, setJobOffersLoading] = useState(true)
   const [jobOfferId, setJobOfferId] = useState("No-especificado")
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchJobOffers = async () => {
+      let queryParams: Record<string, string> = {}
+      queryParams.onlyActive = "true"
       const response = await apiRequest({
-        url: `/jobOffers?enterpriseId=${userInfo?.id}`,
+        url: `enterprises/${userInfo?.id}/jobOffers`,
         method: "GET",
+        queryParams: queryParams,
       })
       if (response.status === HttpStatusCode.NoContent) {
         setJobOffersList([])
       } else {
         setJobOffersList(response.data)
       }
-      console.log(response)
       setJobOffersLoading(false)
     }
 
@@ -63,14 +67,6 @@ function ContactForm() {
     message: yup.string().max(200, t('Multi Line Max Length') as string),
   })
 
-  const handleSelect = (e: any) => {
-    if ( jobOffersList.includes(e.target.value)) {
-      setJobOfferId(e.target.value)
-    } else {
-      alert("ERROR");
-    }
-  }
-
   const handlePost = async (e: any) => {
     const message = e.message
     const response = await apiRequest({
@@ -82,10 +78,11 @@ function ContactForm() {
         userId,
       },
     })
+    console.log(response)
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${userId}`)
     } else {
-      // TODO: manejar error
+      setError(t("Must Choose") as string)
     }
   }
 
@@ -141,10 +138,10 @@ function ContactForm() {
                                 className="selectFrom"
                                 aria-label="Default select example"
                                 value={jobOfferId}
-                                onChange={(e) => handleSelect(e.target.value)}
+                                onChange={(e) => setJobOfferId(e.target.value)}
                               >
                                 <option key="0" value="No-especificado"> {t("No-especificado")} </option>
-                                {jobOffersList.map((jobOffer: any) => (
+                                {jobOffersList.map((jobOffer: JobOfferDto) => (
                                   <option key={jobOffer.id} value={jobOffer.id}>
                                     {jobOffer.position}
                                   </option>
@@ -152,6 +149,7 @@ function ContactForm() {
                               </Form.Select>
                             )}
                           </div>
+                          {error && <div className="error" style={{color: "red"}}>{error}</div>}
                         </div>
                         <p>{t("Fields required")}</p>
                         <Button variant="success" type="submit">
