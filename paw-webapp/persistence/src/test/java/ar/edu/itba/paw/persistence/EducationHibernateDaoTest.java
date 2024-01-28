@@ -38,12 +38,12 @@ public class EducationHibernateDaoTest {
     private static final String TEST_DESCRIPTION = "testDescription";
     public static final int NEW_MONTH_FROM = 11;
     public static final int NEW_YEAR_FROM = 2000;
-    public static final int NEW_MONTH_TO = 12;
-    public static final int NEW_YEAR_TO = 2004;
+    public static final Integer NEW_MONTH_TO = 12;
+    public static final Integer NEW_YEAR_TO = 2004;
     public static final int TEST_MONTH_FROM = 11;
     public static final int TEST_YEAR_FROM = 2011;
-    public static final int TEST_MONTH_TO = 12;
-    public static final int TEST_YEAR_TO = 2012;
+    public static final Integer TEST_MONTH_TO = 12;
+    public static final Integer TEST_YEAR_TO = 2012;
     
     @PersistenceContext
     private EntityManager em;

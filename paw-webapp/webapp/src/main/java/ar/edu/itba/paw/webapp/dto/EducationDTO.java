@@ -10,10 +10,10 @@ import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.USERS_URL;
 
 public class EducationDTO {
 
-    private int monthFrom;
-    private int yearFrom;
-    private int monthTo;
-    private int yearTo;
+    private Integer monthFrom;
+    private Integer yearFrom;
+    private Integer monthTo;
+    private Integer yearTo;
     private String title;
     private String institutionName;
     private String description;
@@ -35,35 +35,35 @@ public class EducationDTO {
         return dto;
     }
 
-    public int getMonthFrom() {
+    public Integer getMonthFrom() {
         return monthFrom;
     }
 
-    public void setMonthFrom(int monthFrom) {
+    public void setMonthFrom(Integer monthFrom) {
         this.monthFrom = monthFrom;
     }
 
-    public int getYearFrom() {
+    public Integer getYearFrom() {
         return yearFrom;
     }
 
-    public void setYearFrom(int yearFrom) {
+    public void setYearFrom(Integer yearFrom) {
         this.yearFrom = yearFrom;
     }
 
-    public int getMonthTo() {
+    public Integer getMonthTo() {
         return monthTo;
     }
 
-    public void setMonthTo(int monthTo) {
+    public void setMonthTo(Integer monthTo) {
         this.monthTo = monthTo;
     }
 
-    public int getYearTo() {
+    public Integer getYearTo() {
         return yearTo;
     }
 
-    public void setYearTo(int yearTo) {
+    public void setYearTo(Integer yearTo) {
         this.yearTo = yearTo;
     }
 

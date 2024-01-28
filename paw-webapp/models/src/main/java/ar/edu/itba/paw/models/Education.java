@@ -79,11 +79,11 @@ public class Education {
         return yearFrom;
     }
 
-    public int getMonthTo() {
+    public Integer getMonthTo() {
         return monthTo;
     }
 
-    public int getYearTo() {
+    public Integer getYearTo() {
         return yearTo;
     }
 
