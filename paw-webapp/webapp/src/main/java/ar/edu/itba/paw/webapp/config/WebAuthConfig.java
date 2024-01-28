@@ -48,20 +48,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Create and Authorize
                 .antMatchers("/auth/access-token").authenticated()
                 .antMatchers("/auth/refresh-token").anonymous()
-                .antMatchers("/test/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/users").anonymous()
-                .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
+                .antMatchers("/api/test/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/users").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/enterprises").anonymous()
                 // Users and Enterprises
                 //.antMatchers("/users/*/image").permitAll()
-                .antMatchers("/users", "/users/**").authenticated()
+                .antMatchers("/api/users", "/api/users/**").authenticated()
                 //.antMatchers("/enterprises/*/image").permitAll()
-                .antMatchers("/enterprises", "/enterprises/**").authenticated()
+                .antMatchers("/api/enterprises", "/api/enterprises/**").authenticated()
                 // Categories
-                .antMatchers("/categories").permitAll()
+                .antMatchers("/api/categories").permitAll()
                 // Skills
-                .antMatchers("/skills").permitAll()
+                .antMatchers("/api/skills").permitAll()
                 // JobOffers
-                .antMatchers("/jobOffers", "/jobOffers/**").authenticated()
+                .antMatchers("/api/jobOffers", "/api/jobOffers/**").authenticated()
                 .and().exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

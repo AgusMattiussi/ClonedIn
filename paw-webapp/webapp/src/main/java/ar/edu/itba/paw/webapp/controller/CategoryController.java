@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
-@Path("categories")
+@Path("api/categories")
 @Component
 public class CategoryController {
 

@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
-@Path("enterprises")
+@Path("api/enterprises")
 @Component
 public class EnterpriseController {
 
