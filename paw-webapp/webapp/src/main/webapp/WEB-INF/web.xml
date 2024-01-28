@@ -92,41 +92,41 @@
     <filter-name>unconditionalCacheFilter</filter-name>
     <url-pattern>/static/*</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-    <filter-name>unconditionalCacheFilter</filter-name>
-    <servlet-name>index</servlet-name>
-  </filter-mapping>
+<!--  <filter-mapping>-->
+<!--    <filter-name>unconditionalCacheFilter</filter-name>-->
+<!--    <servlet-name>index</servlet-name>-->
+<!--  </filter-mapping>-->
 
-  <servlet-mapping>
-    <servlet-name>default</servlet-name>
-    <url-pattern>/static/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>index</servlet-name>
-    <jsp-file>/index.html</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>index</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>default</servlet-name>-->
+<!--    <url-pattern>/static/*</url-pattern>-->
+<!--  </servlet-mapping>-->
+<!--  <servlet>-->
+<!--    <servlet-name>index</servlet-name>-->
+<!--    <jsp-file>/index.html</jsp-file>-->
+<!--  </servlet>-->
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>index</servlet-name>-->
+<!--    <url-pattern>/*</url-pattern>-->
+<!--  </servlet-mapping>-->
 
 
-  <error-page>
-    <!-- Forbidden directory listing -->
+  <!--<error-page>
+    &lt;!&ndash; Forbidden directory listing &ndash;&gt;
     <error-code>403</error-code>
     <location>/WEB-INF/views/403.jsp</location>
   </error-page>
 
   <error-page>
-    <!-- Missing resource -->
+    &lt;!&ndash; Missing resource &ndash;&gt;
     <error-code>404</error-code>
     <location>/WEB-INF/views/404.jsp</location>
-  </error-page>
+  </error-page>-->
 
-  <error-page>
-    <!-- Internal server Error -->
+  <!--<error-page>
+    &lt;!&ndash; Internal server Error &ndash;&gt;
     <error-code>500</error-code>
     <location>/WEB-INF/views/500.jsp</location>
-  </error-page>
+  </error-page>-->
 
 </web-app>

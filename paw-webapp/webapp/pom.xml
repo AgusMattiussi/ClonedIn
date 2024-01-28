@@ -13,7 +13,7 @@
   <packaging>war</packaging>
 
   <name>ClonedIn Webapp</name>
-  <url>http://localhost:8080/webapp_war</url>
+  <url>http://localhost:8080</url>
 
   <properties>
   </properties>
