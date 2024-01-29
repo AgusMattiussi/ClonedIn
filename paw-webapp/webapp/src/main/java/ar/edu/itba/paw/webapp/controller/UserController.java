@@ -376,7 +376,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+//    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
 //  @Produces - set dynamically
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {

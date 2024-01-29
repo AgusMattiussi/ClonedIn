@@ -96,11 +96,8 @@ function ProfileUser() {
       } else {
         setExperiencesData(response.data)
       }
-      console.log(response)
       setExperiencesLoading(false)
-
     }
-    
 
     if (isUserLoading) {
       fetchUser()
@@ -157,7 +154,7 @@ function ProfileUser() {
     const response = await apiRequest({
       url: `/users/${id}`,
       method: "PUT",
-      body: {visibility}
+      body: { visibility },
     })
     if (response.status === HttpStatusCode.Ok) {
       setUserLoading(true)

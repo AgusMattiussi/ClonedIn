@@ -48,7 +48,11 @@ function ImageProfileForm() {
       },
     })
     //TODO: manejar error
-    navigate(-1)
+    if (response.status === HttpStatusCode.Ok) {
+      navigate(-1)
+    } else {
+      console.log("Error")
+    }
   }
 
   return (
@@ -64,13 +68,13 @@ function ImageProfileForm() {
                 </h2>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform" onSubmit={handlePut}>
+                    <Form className="msform">
                       <div className="form-card">
                         <Form.Group controlId="formFile" className="mb-3">
                           <Form.Control type="file" onChange={handleFileChange} />
                         </Form.Group>
                       </div>
-                      <Button variant="success" type="submit">
+                      <Button variant="success" onClick={handlePut}>
                         <strong>{t("Upload")}</strong>
                       </Button>
                     </Form>
