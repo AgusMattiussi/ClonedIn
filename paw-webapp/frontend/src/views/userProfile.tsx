@@ -16,9 +16,16 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
+import { useGetUserData } from "../hooks/useGetUserData"
+import { usePutUserData } from "../hooks/usePutUserData"
+import { useDeleteUserData } from "../hooks/useDeleteUserData"
 
 function ProfileUser() {
   const { loading, apiRequest } = useRequestApi()
+
+  const { getUser, getUserExperiences, getUserEducations, getUserSkills } = useGetUserData()
+  const { putUserVisibility } = usePutUserData()
+  const { deleteUserSkill, deleteUserEducation, deleteUserExperience } = useDeleteUserData()
 
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [isUserLoading, setUserLoading] = useState(true)
@@ -39,12 +46,9 @@ function ProfileUser() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await apiRequest({
-        url: `/users/${id}`,
-        method: "GET",
-      })
+      const response = await getUser(id)
 
-      if (response.status === 500 || response.status === 403) {
+      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
       setUser(response.data)
@@ -52,11 +56,9 @@ function ProfileUser() {
     }
 
     const fetchSkills = async () => {
-      const response = await apiRequest({
-        url: `/users/${id}/skills`,
-        method: "GET",
-      })
-      if (response.status === 403) {
+      const response = await getUserSkills(id)
+
+      if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
       if (response.status === HttpStatusCode.NoContent) {
@@ -68,11 +70,9 @@ function ProfileUser() {
     }
 
     const fetchEducations = async () => {
-      const response = await apiRequest({
-        url: `/users/${id}/educations`,
-        method: "GET",
-      })
-      if (response.status === 403) {
+      const response = await getUserEducations(id)
+
+      if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
       if (response.status === HttpStatusCode.NoContent) {
@@ -84,11 +84,9 @@ function ProfileUser() {
     }
 
     const fetchExperiences = async () => {
-      const response = await apiRequest({
-        url: `/users/${id}/experiences`,
-        method: "GET",
-      })
-      if (response.status === 403) {
+      const response = await getUserExperiences(id)
+
+      if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
       if (response.status === HttpStatusCode.NoContent) {
@@ -117,28 +115,19 @@ function ProfileUser() {
     let response
     switch (object) {
       case "skill":
-        response = await apiRequest({
-          url: `/users/${id}/skills/${object_id}`,
-          method: "DELETE",
-        })
+        response = await deleteUserSkill(id, object_id)
         if (response.status === HttpStatusCode.Ok) {
           setSkillsLoading(true)
         }
         break
       case "education":
-        response = await apiRequest({
-          url: `/users/${id}/educations/${object_id}`,
-          method: "DELETE",
-        })
+        response = await deleteUserEducation(id, object_id)
         if (response.status === HttpStatusCode.Ok) {
           setEducationsLoading(true)
         }
         break
       case "experience":
-        response = await apiRequest({
-          url: `/users/${id}/experiences/${object_id}`,
-          method: "DELETE",
-        })
+        response = await deleteUserExperience(id, object_id)
         if (response.status === HttpStatusCode.Ok) {
           setExperiencesLoading(true)
         }
@@ -151,11 +140,8 @@ function ProfileUser() {
     if (user?.visibility === 1) visibility = "invisible"
     else visibility = "visible"
 
-    const response = await apiRequest({
-      url: `/users/${id}`,
-      method: "PUT",
-      body: { visibility },
-    })
+    const response = await putUserVisibility(id, visibility)
+
     if (response.status === HttpStatusCode.Ok) {
       setUserLoading(true)
     }
