@@ -3,9 +3,35 @@ import { useRequestApi } from "../api/apiRequest"
 export const useGetUserData = () => {
   const { apiRequest } = useRequestApi()
 
-  async function getUser(id: string | undefined) {
+  async function getUsers(queryParams: Record<string, string> = {}) {
+    const response = await apiRequest({
+      url: `/users`,
+      method: "GET",
+      queryParams: queryParams,
+    })
+    return response
+  }
+
+  async function getUserById(id: string | undefined) {
     const response = await apiRequest({
       url: `/users/${id}`,
+      method: "GET",
+    })
+    return response
+  }
+
+  async function getUserByUrl(userUrl: string) {
+    const response = await apiRequest({
+      url: userUrl,
+      method: "GET",
+    })
+    return response
+  }
+
+  //Usamos este hook para obtener info como la cantidad de años de xp de un usuario y sus skills en enterpriseInterested.tsx
+  async function getUserExtraInfo(url: string) {
+    const response = await apiRequest({
+      url: url,
       method: "GET",
     })
     return response
@@ -35,5 +61,23 @@ export const useGetUserData = () => {
     return response
   }
 
-  return { getUser, getUserExperiences, getUserEducations, getUserSkills }
+  async function getUserNotifications(id: string | undefined, queryParams: Record<string, string> = {}) {
+    const response = await apiRequest({
+      url: `/users/${id}/contacts`,
+      method: "GET",
+      queryParams: queryParams,
+    })
+    return response
+  }
+
+  return {
+    getUsers,
+    getUserById,
+    getUserByUrl,
+    getUserExtraInfo,
+    getUserExperiences,
+    getUserEducations,
+    getUserSkills,
+    getUserNotifications,
+  }
 }

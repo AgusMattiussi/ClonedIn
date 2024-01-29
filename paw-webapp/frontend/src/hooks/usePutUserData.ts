@@ -3,7 +3,7 @@ import { useRequestApi } from "../api/apiRequest"
 export const usePutUserData = () => {
   const { apiRequest } = useRequestApi()
 
-  async function putUserVisibility(id: string | undefined, visibility: string) {
+  async function modifyUserVisibility(id: string | undefined, visibility: string) {
     const response = await apiRequest({
       url: `/users/${id}`,
       method: "PUT",
@@ -12,5 +12,42 @@ export const usePutUserData = () => {
     return response
   }
 
-  return { putUserVisibility }
+  async function modifyUserInfo(
+    id: string | undefined,
+    name: string,
+    location: string,
+    position: string,
+    aboutMe: string,
+    category: string,
+    level: string,
+  ) {
+    const response = await apiRequest({
+      url: `/users/${id}`,
+      method: "PUT",
+      body: {
+        name,
+        location,
+        position,
+        aboutMe,
+        category,
+        level,
+      },
+    })
+    return response
+  }
+
+  async function answerUserContact(
+    id: string | undefined,
+    jobOfferToAnswerId: string,
+    queryParams: Record<string, string> = {},
+  ) {
+    const response = await apiRequest({
+      url: `/users/${id}/contacts/${jobOfferToAnswerId}`,
+      method: "PUT",
+      queryParams: queryParams,
+    })
+    return response
+  }
+
+  return { modifyUserVisibility, modifyUserInfo, answerUserContact }
 }

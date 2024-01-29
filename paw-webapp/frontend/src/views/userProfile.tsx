@@ -23,8 +23,8 @@ import { useDeleteUserData } from "../hooks/useDeleteUserData"
 function ProfileUser() {
   const { loading, apiRequest } = useRequestApi()
 
-  const { getUser, getUserExperiences, getUserEducations, getUserSkills } = useGetUserData()
-  const { putUserVisibility } = usePutUserData()
+  const { getUserById, getUserExperiences, getUserEducations, getUserSkills } = useGetUserData()
+  const { modifyUserVisibility } = usePutUserData()
   const { deleteUserSkill, deleteUserEducation, deleteUserExperience } = useDeleteUserData()
 
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
@@ -46,7 +46,7 @@ function ProfileUser() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await getUser(id)
+      const response = await getUserById(id)
 
       if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
@@ -140,7 +140,7 @@ function ProfileUser() {
     if (user?.visibility === 1) visibility = "invisible"
     else visibility = "visible"
 
-    const response = await putUserVisibility(id, visibility)
+    const response = await modifyUserVisibility(id, visibility)
 
     if (response.status === HttpStatusCode.Ok) {
       setUserLoading(true)
