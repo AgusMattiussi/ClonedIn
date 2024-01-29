@@ -256,5 +256,6 @@
   "No users found": "No users found",
   "No job offers found": "No job offers found",
 
-  "Must Choose": "Must Choose a Job Offer"
+  "Must Choose": "Must Choose a Job Offer",
+  "Date Validation": "From must be previous to To"
 }

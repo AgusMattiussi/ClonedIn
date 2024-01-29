@@ -187,7 +187,6 @@ function ProfileUser() {
           )}
         </div>
         <p style={{ fontSize: "10pt" }}>
-          {/* TODO: agregar condicionales si no especifico fecha */}
           {t(monthNames[education.monthFrom])} {education.yearFrom}
           {" - "}
           {t(monthNames[education.monthTo])} {education.yearTo}
@@ -213,12 +212,20 @@ function ProfileUser() {
             </Button>
           )}
         </div>
-        <p style={{ fontSize: "10pt" }}>
-          {/* TODO: agregar condicionales si no especifico fecha */}
-          {t(monthNames[experience.monthFrom])} {experience.yearFrom}
-          {" - "}
-          {t(monthNames[experience.monthTo])} {experience.yearTo}
-        </p>
+        {experience.monthTo == null || experience.monthTo == 0 || experience.yearTo == null ? (
+            <p style={{ fontSize: "10pt" }}>
+            {t(monthNames[experience.monthFrom])} {experience.yearFrom}
+            {" - "}
+            {t("Present")}
+          </p>
+          ) : (
+          <p style={{ fontSize: "10pt" }}>
+            {t(monthNames[experience.monthFrom])} {experience.yearFrom}
+            {" - "}
+            {t(monthNames[experience.monthTo])} {experience.yearTo}
+          </p>
+          )
+        }
         <p>{experience.description}</p>
         <hr />
       </div>

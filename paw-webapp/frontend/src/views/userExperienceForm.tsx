@@ -18,6 +18,7 @@ function ExperienceForm() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
   const { loading, apiRequest } = useRequestApi()
+  const [error, setError] = useState("");
 
   document.title = t("Experience Form Page Title")
 
@@ -28,11 +29,10 @@ function ExperienceForm() {
     position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
     description: yup.string().required().max(600, t('Long Line Max Length') as string),
     yearFrom: yup.number().typeError(t('Invalid Number') as string).required().min(1900, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    yearTo: yup.number().typeError(t('Invalid Number') as string).moreThan(yup.ref("yearFrom"), t('Invalid End Year') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    //TODO: agregar validaciones para las fechas
+    yearTo: yup.number().typeError(t('Invalid Number') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
   })
-  const [monthFrom, setMonthFrom] = useState("Enero")
-  const [monthTo, setMonthTo] = useState("0")
+  const [monthFrom, setMonthFrom] = useState("1")
+  const [month, setMonthTo] = useState("0")
 
   const handlePost = async (e: any) => {
     const company = e.company
@@ -43,23 +43,35 @@ function ExperienceForm() {
     if (yearTo == '') {
       yearTo = "null"
     }
-    const response = await apiRequest({
-      url: `/users/${id}/experiences`,
-      method: "POST",
-      body: {
-        company,
-        job,
-        jobDesc,
-        monthFrom,
-        yearFrom,
-        monthTo,
-        yearTo,
-      },
-    })
-    if (response.status === HttpStatusCode.Created) {
-      navigate(`/users/${id}`)
-    } else {
-      //TODO: manejar error
+    let monthTo = month
+    if (month == "0") {
+      monthTo = "null"
+    }
+    const date1 = new Date(yearFrom, parseInt(monthFrom, 10))
+    const date2 = new Date(yearTo, parseInt(monthTo, 10))
+    if (date1 > date2) {
+      setError(t("Date Validation") as string)
+    }
+    else {
+      const response = await apiRequest({
+        url: `/users/${id}/experiences`,
+        method: "POST",
+        body: {
+          company,
+          job,
+          jobDesc,
+          monthFrom,
+          yearFrom,
+          monthTo,
+          yearTo,
+        },
+      })
+      console.log(response)
+      if (response.status === HttpStatusCode.Created) {
+        navigate(`/users/${id}`)
+      } else {
+        //TODO: manejar error
+      }
     }
   }
 
@@ -143,18 +155,18 @@ function ExperienceForm() {
                                     value={monthFrom}
                                     onChange={(e) => setMonthFrom(e.target.value)}
                                   >
-                                    <option value="Enero"> {t("Enero")} </option>
-                                    <option value="Febrero"> {t("Febrero")} </option>
-                                    <option value="Marzo"> {t("Marzo")} </option>
-                                    <option value="Abril"> {t("Abril")} </option>
-                                    <option value="Mayo"> {t("Mayo")} </option>
-                                    <option value="Junio"> {t("Junio")} </option>
-                                    <option value="Julio"> {t("Julio")} </option>
-                                    <option value="Agosto"> {t("Agosto")} </option>
-                                    <option value="Septiembre"> {t("Septiembre")} </option>
-                                    <option value="Octubre"> {t("Octubre")} </option>
-                                    <option value="Noviembre"> {t("Noviembre")} </option>
-                                    <option value="Diciembre"> {t("Diciembre")} </option>
+                                    <option value="1"> {t("Enero")} </option>
+                                    <option value="2"> {t("Febrero")} </option>
+                                    <option value="3"> {t("Marzo")} </option>
+                                    <option value="4"> {t("Abril")} </option>
+                                    <option value="5"> {t("Mayo")} </option>
+                                    <option value="6"> {t("Junio")} </option>
+                                    <option value="7"> {t("Julio")} </option>
+                                    <option value="8"> {t("Agosto")} </option>
+                                    <option value="9"> {t("Septiembre")} </option>
+                                    <option value="10"> {t("Octubre")} </option>
+                                    <option value="11"> {t("Noviembre")} </option>
+                                    <option value="12"> {t("Diciembre")} </option>
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
@@ -183,22 +195,22 @@ function ExperienceForm() {
                                 <div className="col-sm-4">
                                   <Form.Select
                                     className="selectTo"
-                                    value={monthTo}
+                                    value={month}
                                     onChange={(e) => setMonthTo(e.target.value)}
                                   >
                                     <option value="0"> {t("No-especificado")} </option>
-                                    <option value="Enero"> {t("Enero")} </option>
-                                    <option value="Febrero"> {t("Febrero")} </option>
-                                    <option value="Marzo"> {t("Marzo")} </option>
-                                    <option value="Abril"> {t("Abril")} </option>
-                                    <option value="Mayo"> {t("Mayo")} </option>
-                                    <option value="Junio"> {t("Junio")} </option>
-                                    <option value="Julio"> {t("Julio")} </option>
-                                    <option value="Agosto"> {t("Agosto")} </option>
-                                    <option value="Septiembre"> {t("Septiembre")} </option>
-                                    <option value="Octubre"> {t("Octubre")} </option>
-                                    <option value="Noviembre"> {t("Noviembre")} </option>
-                                    <option value="Diciembre"> {t("Diciembre")} </option>
+                                    <option value="1"> {t("Enero")} </option>
+                                    <option value="2"> {t("Febrero")} </option>
+                                    <option value="3"> {t("Marzo")} </option>
+                                    <option value="4"> {t("Abril")} </option>
+                                    <option value="5"> {t("Mayo")} </option>
+                                    <option value="6"> {t("Junio")} </option>
+                                    <option value="7"> {t("Julio")} </option>
+                                    <option value="8"> {t("Agosto")} </option>
+                                    <option value="9"> {t("Septiembre")} </option>
+                                    <option value="10"> {t("Octubre")} </option>
+                                    <option value="11"> {t("Noviembre")} </option>
+                                    <option value="12"> {t("Diciembre")} </option>
                                   </Form.Select>
                                 </div>
                                 <div className="col-sm-4">
@@ -214,6 +226,7 @@ function ExperienceForm() {
                                 </div>
                               </div>
                             </div>
+                            {error && <div className="error" style={{color: "red"}}>{error}</div>}
                           </div>
                           <p>{t("Fields required")}</p>
                           <Button variant="success" type="submit">
