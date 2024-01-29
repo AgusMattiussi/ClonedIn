@@ -78,7 +78,6 @@ function ContactForm() {
         userId,
       },
     })
-    console.log(response)
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${userId}`)
     } else {
