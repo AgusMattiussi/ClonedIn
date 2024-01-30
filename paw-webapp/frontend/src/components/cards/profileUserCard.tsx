@@ -147,7 +147,7 @@ function ProfileUserCard({
             <div className="d-flex justify-content-start my-2">
               <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Location")}: {user.location === "" || user.location == null ? t("No especificado") : user.location}
+                {t("Location")}:{" "} {user.location === "" || user.location == null ? t("No especificado") : user.location}
               </p>
             </div>
             {inProfileView ? (

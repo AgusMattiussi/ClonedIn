@@ -257,5 +257,6 @@
   "No users found": "No se encontraron perfiles",
   "No job offers found": "No se encontraron ofertas de trabajo",
 
-  "Must Choose": "Debes elegir una oferta laboral."
+  "Must Choose": "Debes elegir una oferta laboral.",
+  "Date Validation": "Desde debe ser anterior a Hasta"
 }
