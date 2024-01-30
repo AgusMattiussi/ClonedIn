@@ -9,11 +9,15 @@ import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
 import CancelModal from "../components/modals/cancelModal"
 import Loader from "../components/loader"
-import { JobOfferStatus, SortBy, JobOfferAvailability, FilledBy } from "../utils/constants"
+import { JobOfferStatus, SortBy, FilledBy } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 
@@ -21,15 +25,20 @@ function EnterpriseContacts() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getCategoryByUrl } = useGetCategories()
+  const { getUserByUrl, getUserExtraInfo } = useGetUserData()
+  const { getEnterpriseContacts } = useGetEnterpriseData()
+  const { answerEnterpriseContact } = usePutEnterpriseData()
+  const { getJobOfferByUrl } = useGetJobOfferData()
 
   const [isLoading, setLoading] = useState(true)
   const [contacts, setContacts] = useState<ContactDto[]>([])
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const [filledBy, setFilledBy] = useState(FilledBy.ENTERPRISE.toString())
+  const [filledBy] = useState(FilledBy.ENTERPRISE.toString())
 
   const [jobOfferToCancelId, setJobOfferToCancelId] = useState<any>()
   const [userToCancelId, setUserToCancelId] = useState<any>()
@@ -41,10 +50,7 @@ function EnterpriseContacts() {
   const fetchUserInfo = useCallback(
     async (userUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: userUrl,
-          method: "GET",
-        })
+        const response = await getUserByUrl(userUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -57,16 +63,13 @@ function EnterpriseContacts() {
         return null
       }
     },
-    [apiRequest],
+    [getUserByUrl],
   )
 
   const fetchJobOfferInfo = useCallback(
     async (jobOfferUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: jobOfferUrl,
-          method: "GET",
-        })
+        const response = await getJobOfferByUrl(jobOfferUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -79,16 +82,13 @@ function EnterpriseContacts() {
         return null
       }
     },
-    [apiRequest],
+    [getJobOfferByUrl],
   )
 
   const fetchCategoryInfo = useCallback(
     async (categoryUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: categoryUrl,
-          method: "GET",
-        })
+        const response = await getCategoryByUrl(categoryUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -101,7 +101,7 @@ function EnterpriseContacts() {
         return null
       }
     },
-    [apiRequest],
+    [getCategoryByUrl],
   )
 
   const fetchContacts = useCallback(
@@ -112,11 +112,7 @@ function EnterpriseContacts() {
       if (filledBy) queryParams.filledBy = filledBy
 
       try {
-        const response = await apiRequest({
-          url: `/enterprises/${userInfo?.id}/contacts`,
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
 
         if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
@@ -153,14 +149,14 @@ function EnterpriseContacts() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
+    [getEnterpriseContacts, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
   )
 
   useEffect(() => {
     if (isLoading) {
-      fetchContacts(filterStatus, sortBy,  filledBy)
+      fetchContacts(filterStatus, sortBy, filledBy)
     }
-  }, [fetchContacts, isLoading, filterStatus, sortBy,  filledBy])
+  }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -181,11 +177,7 @@ function EnterpriseContacts() {
     const queryParams: Record<string, string> = {}
     queryParams.status = JobOfferStatus.CANCELLED
 
-    const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/contacts/${jobOfferToCancelId}/${userToCancelId}`,
-      method: "PUT",
-      queryParams: queryParams,
-    })
+    const response = await answerEnterpriseContact(userInfo?.id, jobOfferToCancelId, userToCancelId, queryParams)
 
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
@@ -207,13 +199,21 @@ function EnterpriseContacts() {
             {contact.jobOfferInfo?.position}
           </Link>
         </td>
-        <td>{contact.jobOfferInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.jobOfferInfo!.categoryInfo.name)}</td>
+        <td>
+          {contact.jobOfferInfo?.categoryInfo.name == "No-Especificado"
+            ? t("No especificado")
+            : t(contact.jobOfferInfo!.categoryInfo.name)}
+        </td>
         <td>
           <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
             {contact.userInfo?.name}
           </Link>
         </td>
-        <td>{contact.userInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.userInfo!.categoryInfo.name)}</td>
+        <td>
+          {contact.userInfo?.categoryInfo.name == "No-Especificado"
+            ? t("No especificado")
+            : t(contact.userInfo!.categoryInfo.name)}
+        </td>
         <td>{contact.date}</td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (

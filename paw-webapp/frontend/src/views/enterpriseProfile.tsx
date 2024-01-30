@@ -13,7 +13,9 @@ import { JobOfferAvailability, UserRole } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -24,7 +26,9 @@ function ProfileEnterprise() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
 
-  const { loading, apiRequest } = useRequestApi()
+  const { getEnterpriseById, getEnterpriseJobOffers } = useGetEnterpriseData()
+  const { getUserJobs } = useGetJobOfferData()
+  const { closeJobOffer } = usePutEnterpriseData()
 
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [isEnterpriseLoading, setEnterpriseLoading] = useState(true)
@@ -37,10 +41,7 @@ function ProfileEnterprise() {
 
   useEffect(() => {
     const fetchEnterprise = async () => {
-      const response = await apiRequest({
-        url: `/enterprises/${id}/`,
-        method: "GET",
-      })
+      const response = await getEnterpriseById(id)
 
       if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
@@ -51,10 +52,8 @@ function ProfileEnterprise() {
     }
 
     const fetchEnterpriseJobs = async () => {
-      const response = await apiRequest({
-        url: `/enterprises/${id}/jobOffers`,
-        method: "GET",
-      })
+      const response = await getEnterpriseJobOffers(id)
+
       if (response.status === HttpStatusCode.NoContent) {
         setJobs([])
       } else {
@@ -64,17 +63,15 @@ function ProfileEnterprise() {
     }
 
     const fetchUserJobs = async () => {
-      const response = await apiRequest({
-        url: `/jobOffers?enterpriseId=${id}`,
-        method: "GET",
-      })
+      const response = await getUserJobs(id)
+
       if (response.status === HttpStatusCode.NoContent) {
         setUserJobs([])
       } else {
         setUserJobs(response.data)
       }
-        setJobsLoading(false)
-      }
+      setJobsLoading(false)
+    }
 
     if (isEnterpriseLoading) {
       fetchEnterprise()
@@ -86,17 +83,23 @@ function ProfileEnterprise() {
         fetchUserJobs()
       }
     }
-  }, [apiRequest, id])
+  }, [
+    getEnterpriseById,
+    getEnterpriseJobOffers,
+    getUserJobs,
+    id,
+    isEnterpriseLoading,
+    jobsLoading,
+    navigate,
+    userInfo?.role,
+  ])
 
   const handleClose = async () => {
     const queryParams: Record<string, string> = {}
     queryParams.availability = JobOfferAvailability.CLOSED
 
-    const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCloseId}`,
-      method: "PUT",
-      queryParams: queryParams,
-    })
+    const response = await closeJobOffer(id, jobOfferToCloseId, queryParams)
+
     if (response.status === HttpStatusCode.Ok) {
       setJobsLoading(true)
       const modalElement = document.getElementById("cancelModal")
@@ -114,7 +117,7 @@ function ProfileEnterprise() {
       <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
     )
   })
-  
+
   const usersJobs = userJobs.map((job) => {
     return (
       <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
@@ -156,13 +159,11 @@ function ProfileEnterprise() {
               ) : (
                 <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
               )
+            ) : usersJobs.length > 0 ? (
+              <div className="w-100">{usersJobs}</div>
             ) : (
-              usersJobs.length > 0 ? (
-                <div className="w-100">{usersJobs}</div>
-              ) : (
-                <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
-              )
-            )} 
+              <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
+            )}
             <Pagination />
           </Col>
         </Row>

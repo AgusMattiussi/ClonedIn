@@ -7,7 +7,7 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePutImage } from "../hooks/usePutImage"
 import { HttpStatusCode } from "axios"
 
 function ImageProfileForm() {
@@ -15,7 +15,7 @@ function ImageProfileForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { putImage } = usePutImage()
   const [imageFile, setImageFile] = useState(null)
 
   document.title = t("Image Form Page Title")
@@ -39,19 +39,13 @@ function ImageProfileForm() {
       requestUrl = `/users/${id}/image`
     }
 
-    const response = await apiRequest({
-      url: requestUrl,
-      method: "PUT",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    //TODO: manejar error
+    const response = await putImage(requestUrl, formData)
+
     if (response.status === HttpStatusCode.Ok) {
       navigate(-1)
     } else {
-      console.log("Error")
+      //TODO: manejar error
+      console.log("Error uploading image")
     }
   }
 

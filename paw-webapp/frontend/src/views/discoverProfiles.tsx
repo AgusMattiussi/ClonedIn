@@ -11,7 +11,8 @@ import Pagination from "../components/pagination"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
 
@@ -19,8 +20,10 @@ function DiscoverProfiles() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getUsers } = useGetUserData()
+  const { getCategories } = useGetCategories()
 
   const [isLoading, setLoading] = useState(true)
   const [users, setUsers] = useState<any[]>([])
@@ -57,13 +60,9 @@ function DiscoverProfiles() {
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
 
       try {
-        const response = await apiRequest({
-          url: "/users",
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getUsers(queryParams)
 
-        if (response.status === 500) {
+        if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
         }
 
@@ -78,22 +77,19 @@ function DiscoverProfiles() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate],
+    [getUsers, queryParams, navigate],
   )
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   useEffect(() => {
     if (isLoading) {
@@ -101,7 +97,6 @@ function DiscoverProfiles() {
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears)
     }
   }, [
-    apiRequest,
     categoryName,
     educationLevel,
     searchTerm,
@@ -134,9 +129,7 @@ function DiscoverProfiles() {
 
   //TODO: ordenamiento
   const usersList = users.map((user) => {
-    return (
-        <ProfileUserCard user={user} />
-    )
+    return <ProfileUserCard user={user} />
   })
 
   return (

@@ -33,7 +33,7 @@ export const usePostEnterpriseData = () => {
     return response
   }
 
-  async function addContact(id: string | undefined, message: string, jobOfferId: string, userId: string) {
+  async function addContact(id: string | undefined, message: string, jobOfferId: string, userId: string | undefined) {
     const response = await apiRequest({
       url: `/enterprises/${id}/contacts`,
       method: "POST",
