@@ -79,7 +79,7 @@ public class JwtHelper {
                 extractTokenType(token) == JwtType.ACCESS_TOKEN;
     }
 
-    public boolean isAccessTokenValid(String token){
+    public boolean isAccessTokenValid(String token) throws ExpiredJwtException {
         return !isTokenExpired(token) &&
                 extractTokenType(token) == JwtType.ACCESS_TOKEN;
     }
@@ -95,10 +95,15 @@ public class JwtHelper {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            LOGGER.warn("Token expired: {}", e.getMessage());
+            return true;
+        }
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws ExpiredJwtException{
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }

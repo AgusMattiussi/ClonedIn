@@ -2,7 +2,9 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.CustomAuthenticationEntryPoint;
-import ar.edu.itba.paw.webapp.auth.JwtAuthenticationFilter;
+import ar.edu.itba.paw.webapp.filter.ExceptionHandlerFilter;
+import ar.edu.itba.paw.webapp.filter.RefreshTokenFilter;
+import ar.edu.itba.paw.webapp.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,13 +25,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.CorsFilter;
+
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security", "ar.edu.itba.paw.webapp.filter"})
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,6 +40,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private AuthUserDetailsService userDetailsService;
+    @Autowired
+    private ExceptionHandlerFilter exceptionHandlerFilter;
+    @Autowired
+    private RefreshTokenFilter refreshTokenFilter;
 
 
     @Override
@@ -65,6 +72,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, CorsFilter.class)
+                .addFilterBefore(refreshTokenFilter, CorsFilter.class)
                 .csrf().disable();
     }
 

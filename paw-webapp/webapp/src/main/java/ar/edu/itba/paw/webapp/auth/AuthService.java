@@ -13,8 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
-import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.AUTH_URL;
-import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.LOCALHOST;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
 @Service
 public class AuthService {
@@ -44,8 +43,7 @@ public class AuthService {
         String refreshToken = generateRefreshToken(userDetails, ip);
         Date expiry = jwtHelper.extractExpiration(refreshToken);
 
-        // TODO: Actualizar path y domain
-        return new NewCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, AUTH_URL, LOCALHOST, 1,
+        return new NewCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, "/", DOMAIN, 1,
                 null, (int) REFRESH_EXPIRATION_TIME_MILLIS/1000, expiry, false, true);
     }
 
