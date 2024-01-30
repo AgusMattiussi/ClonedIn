@@ -12,22 +12,31 @@ import { FilledBy, SortBy, JobOfferStatus } from "../utils/constants"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePutUserData } from "../hooks/usePutUserData"
+import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
 import { useNavigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 function ApplicationsUser() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getUserContacts } = useGetUserData()
+  const { getCategoryByUrl } = useGetCategories()
+  const { getEnterpriseByUrl } = useGetEnterpriseData()
+  const { getJobOfferByUrl } = useGetJobOfferData()
+  const { answerUserContact } = usePutUserData()
 
   const [isLoading, setLoading] = useState(true)
   const [applications, setApplications] = useState<ContactDto[]>([])
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const [filledBy, setFilledBy] = useState(FilledBy.USER.toString())
+  const [filledBy] = useState(FilledBy.USER.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
 
@@ -38,10 +47,7 @@ function ApplicationsUser() {
   const fetchEnterpriseInfo = useCallback(
     async (enterpriseUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: enterpriseUrl,
-          method: "GET",
-        })
+        const response = await getEnterpriseByUrl(enterpriseUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -54,16 +60,13 @@ function ApplicationsUser() {
         return null
       }
     },
-    [apiRequest],
+    [getEnterpriseByUrl],
   )
 
   const fetchJobOfferInfo = useCallback(
     async (jobOfferUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: jobOfferUrl,
-          method: "GET",
-        })
+        const response = await getJobOfferByUrl(jobOfferUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -76,16 +79,13 @@ function ApplicationsUser() {
         return null
       }
     },
-    [apiRequest],
+    [getJobOfferByUrl],
   )
 
   const fetchCategoryInfo = useCallback(
     async (categoryUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: categoryUrl,
-          method: "GET",
-        })
+        const response = await getCategoryByUrl(categoryUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -98,10 +98,10 @@ function ApplicationsUser() {
         return null
       }
     },
-    [apiRequest],
+    [getCategoryByUrl],
   )
 
-  const fetchNotifications = useCallback(
+  const fetchApplications = useCallback(
     async (status: string, sortBy: string, filledBy: string) => {
       setLoading(true)
       if (status) queryParams.status = status
@@ -109,11 +109,7 @@ function ApplicationsUser() {
       if (filledBy) queryParams.filledBy = filledBy
 
       try {
-        const response = await apiRequest({
-          url: `/users/${userInfo?.id}/contacts`,
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getUserContacts(userInfo?.id, queryParams)
 
         if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
@@ -150,14 +146,14 @@ function ApplicationsUser() {
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchEnterpriseInfo, fetchCategoryInfo],
+    [getUserContacts, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchEnterpriseInfo, fetchCategoryInfo],
   )
 
   useEffect(() => {
     if (isLoading) {
-      fetchNotifications(filterStatus, sortBy, filledBy)
+      fetchApplications(filterStatus, sortBy, filledBy)
     }
-  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy])
+  }, [fetchApplications, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -173,11 +169,8 @@ function ApplicationsUser() {
     const queryParams: Record<string, string> = {}
     queryParams.status = JobOfferStatus.CANCELLED
 
-    const response = await apiRequest({
-      url: `/users/${userInfo?.id}/contacts/${jobOfferToAnswerId}`,
-      method: "PUT",
-      queryParams: queryParams,
-    })
+    const response = await answerUserContact(userInfo?.id, jobOfferToAnswerId, queryParams)
+
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
       const modalElement = document.getElementById("cancelModal")

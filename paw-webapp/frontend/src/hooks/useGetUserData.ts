@@ -61,7 +61,7 @@ export const useGetUserData = () => {
     return response
   }
 
-  async function getUserNotifications(id: string | undefined, queryParams: Record<string, string> = {}) {
+  async function getUserContacts(id: string | undefined, queryParams: Record<string, string> = {}) {
     const response = await apiRequest({
       url: `/users/${id}/contacts`,
       method: "GET",
@@ -78,6 +78,6 @@ export const useGetUserData = () => {
     getUserExperiences,
     getUserEducations,
     getUserSkills,
-    getUserNotifications,
+    getUserContacts,
   }
 }

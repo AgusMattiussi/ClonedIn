@@ -7,7 +7,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePostUserData } from "../hooks/usePostUserData"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -17,19 +17,34 @@ function EducationForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
-  const [error, setError] = useState("");
+  const { addEducation } = usePostUserData()
+  const [error, setError] = useState("")
 
   document.title = t("Education Form Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    college: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    degree: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    comment: yup.string().max(200, t('Multi Line Max Length') as string),
-    yearFrom: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).min(1900, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    yearTo: yup.number().typeError(t('Invalid Number') as string).required(t('Required') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    college: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    degree: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    comment: yup.string().max(200, t("Multi Line Max Length") as string),
+    yearFrom: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .required(t("Required") as string)
+      .min(1900, t("Invalid Year Min") as string)
+      .max(new Date().getFullYear(), t("Invalid Year Max") as string),
+    yearTo: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .required(t("Required") as string)
+      .max(new Date().getFullYear(), t("Invalid Year Max") as string),
   })
   const [monthFrom, setMonthFrom] = useState("1")
   const [monthTo, setMonthTo] = useState("1")
@@ -44,21 +59,8 @@ function EducationForm() {
     const date2 = new Date(yearTo, parseInt(monthTo, 10))
     if (date1 > date2) {
       setError(t("Date Validation") as string)
-    }
-    else {
-      const response = await apiRequest({
-        url: `/users/${id}/educations`,
-        method: "POST",
-        body: {
-          college,
-          degree,
-          comment,
-          monthFrom,
-          yearFrom,
-          monthTo,
-          yearTo,
-        },
-      })
+    } else {
+      const response = await addEducation(id, college, degree, comment, monthFrom, yearFrom, monthTo, yearTo)
       if (response.status === HttpStatusCode.Created) {
         navigate(`/users/${id}`)
       } else {
@@ -207,7 +209,11 @@ function EducationForm() {
                                 </div>
                               </div>
                             </div>
-                            {error && <div className="error" style={{color: "red"}}>{error}</div>}
+                            {error && (
+                              <div className="error" style={{ color: "red" }}>
+                                {error}
+                              </div>
+                            )}
                           </div>
                           <p>{t("Fields required")}</p>
                           <Button variant="success" type="submit">

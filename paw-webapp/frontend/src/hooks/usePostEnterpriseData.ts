@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePost = () => {
+export const usePostEnterpriseData = () => {
   const { apiRequest } = useRequestApi()
 
   async function addJobOffer(

@@ -7,7 +7,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePostUserData } from "../hooks/usePostUserData"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -17,19 +17,36 @@ function ExperienceForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
-  const [error, setError] = useState("");
+  const { addExperience } = usePostUserData()
+  const [error, setError] = useState("")
 
   document.title = t("Experience Form Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    company: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    description: yup.string().required().max(600, t('Long Line Max Length') as string),
-    yearFrom: yup.number().typeError(t('Invalid Number') as string).required().min(1900, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    yearTo: yup.number().typeError(t('Invalid Number') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
+    company: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    position: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    description: yup
+      .string()
+      .required()
+      .max(600, t("Long Line Max Length") as string),
+    yearFrom: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .required()
+      .min(1900, t("Invalid Year Min") as string)
+      .max(new Date().getFullYear(), t("Invalid Year Max") as string),
+    yearTo: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .max(new Date().getFullYear(), t("Invalid Year Max") as string),
   })
   const [monthFrom, setMonthFrom] = useState("1")
   const [month, setMonthTo] = useState("0")
@@ -40,7 +57,7 @@ function ExperienceForm() {
     const jobDesc = e.description
     const yearFrom = e.yearFrom
     let yearTo = e.yearTo
-    if (yearTo == '') {
+    if (yearTo == "") {
       yearTo = "null"
     }
     let monthTo = month
@@ -51,22 +68,8 @@ function ExperienceForm() {
     const date2 = new Date(yearTo, parseInt(monthTo, 10))
     if (date1 > date2) {
       setError(t("Date Validation") as string)
-    }
-    else {
-      const response = await apiRequest({
-        url: `/users/${id}/experiences`,
-        method: "POST",
-        body: {
-          company,
-          job,
-          jobDesc,
-          monthFrom,
-          yearFrom,
-          monthTo,
-          yearTo,
-        },
-      })
-      console.log(response)
+    } else {
+      const response = await addExperience(id, company, job, jobDesc, monthFrom, yearFrom, monthTo, yearTo)
       if (response.status === HttpStatusCode.Created) {
         navigate(`/users/${id}`)
       } else {
@@ -226,7 +229,11 @@ function ExperienceForm() {
                                 </div>
                               </div>
                             </div>
-                            {error && <div className="error" style={{color: "red"}}>{error}</div>}
+                            {error && (
+                              <div className="error" style={{ color: "red" }}>
+                                {error}
+                              </div>
+                            )}
                           </div>
                           <p>{t("Fields required")}</p>
                           <Button variant="success" type="submit">

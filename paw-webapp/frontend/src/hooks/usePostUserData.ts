@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePost = () => {
+export const usePostUserData = () => {
   const { apiRequest } = useRequestApi()
 
   async function addSkill(id: string | undefined, skill: string) {

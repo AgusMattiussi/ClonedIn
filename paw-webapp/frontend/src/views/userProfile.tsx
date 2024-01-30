@@ -13,7 +13,6 @@ import { monthNames } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { useRequestApi } from "../api/apiRequest"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
 import { useGetUserData } from "../hooks/useGetUserData"
@@ -21,8 +20,6 @@ import { usePutUserData } from "../hooks/usePutUserData"
 import { useDeleteUserData } from "../hooks/useDeleteUserData"
 
 function ProfileUser() {
-  const { loading, apiRequest } = useRequestApi()
-
   const { getUserById, getUserExperiences, getUserEducations, getUserSkills } = useGetUserData()
   const { modifyUserVisibility } = usePutUserData()
   const { deleteUserSkill, deleteUserEducation, deleteUserExperience } = useDeleteUserData()
@@ -109,7 +106,18 @@ function ProfileUser() {
     if (skillsLoading) {
       fetchSkills()
     }
-  }, [apiRequest, id])
+  }, [
+    isUserLoading,
+    experiencesLoading,
+    educationsLoading,
+    skillsLoading,
+    getUserById,
+    getUserExperiences,
+    getUserEducations,
+    getUserSkills,
+    id,
+    navigate,
+  ])
 
   const handleDelete = async (object: string, object_id: number) => {
     let response
@@ -213,19 +221,18 @@ function ProfileUser() {
           )}
         </div>
         {experience.monthTo == null || experience.monthTo == 0 || experience.yearTo == null ? (
-            <p style={{ fontSize: "10pt" }}>
+          <p style={{ fontSize: "10pt" }}>
             {t(monthNames[experience.monthFrom])} {experience.yearFrom}
             {" - "}
             {t("Present")}
           </p>
-          ) : (
+        ) : (
           <p style={{ fontSize: "10pt" }}>
             {t(monthNames[experience.monthFrom])} {experience.yearFrom}
             {" - "}
             {t(monthNames[experience.monthTo])} {experience.yearTo}
           </p>
-          )
-        }
+        )}
         <p>{experience.description}</p>
         <hr />
       </div>

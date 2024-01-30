@@ -18,8 +18,8 @@ export const usePutUserData = () => {
     location: string,
     position: string,
     aboutMe: string,
-    category: string,
-    level: string,
+    category: string | undefined,
+    level: string | undefined,
   ) {
     const response = await apiRequest({
       url: `/users/${id}`,
