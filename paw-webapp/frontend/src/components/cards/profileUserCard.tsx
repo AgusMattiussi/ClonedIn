@@ -26,7 +26,7 @@ function ProfileUserCard({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { apiRequest } = useRequestApi()
   const { id } = useParams()
 
   const [loadingData, setLoadingData] = useState(true)
@@ -70,7 +70,11 @@ function ProfileUserCard({
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
-          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+          {imageUrl === "" ? (
+            <div className="spinner-border" role="status" />
+          ) : (
+            <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+          )}
         </Link>
       ) : (
         <>
@@ -147,7 +151,7 @@ function ProfileUserCard({
             <div className="d-flex justify-content-start my-2">
               <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Location")}:{" "} {user.location === "" || user.location == null ? t("No especificado") : user.location}
+                {t("Location")}: {user.location === "" || user.location == null ? t("No especificado") : user.location}
               </p>
             </div>
             {inProfileView ? (
