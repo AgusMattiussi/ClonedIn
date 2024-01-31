@@ -1,8 +1,6 @@
-import { useState } from "react"
-
 import jwtDecode from "jwt-decode"
+import { useState } from "react"
 import { useBetween } from "use-between"
-
 import { UserRole } from "../utils/constants"
 
 export interface UserInfo {
@@ -53,7 +51,8 @@ const useAuth = () => {
   }
 
   const handleLogout = () => {
-    setAccessToken(null)
+    localStorage.removeItem("accessToken")
+    setUserInfo(null)
   }
 
   return {
@@ -62,6 +61,7 @@ const useAuth = () => {
     getRefreshToken,
     isTokenExpired,
     userInfo,
+    setUserInfo,
     handleLogout,
   }
 }

@@ -10,6 +10,7 @@ import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useMemo, useState } from "react"
+import { HttpStatusCode } from "axios"
 
 function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
           ])
 
           setEnterpriseCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {
@@ -45,7 +46,11 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
-      <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+      {imageUrl === "" ? (
+        <div className="spinner-border" role="status" />
+      ) : (
+        <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+      )}
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
