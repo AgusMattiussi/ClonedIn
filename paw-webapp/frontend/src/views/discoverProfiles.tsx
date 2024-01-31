@@ -34,6 +34,9 @@ function DiscoverProfiles() {
   const [categoryName, setCategoryName] = useState("")
 
   const [educationLevel, setEducationLevel] = useState("")
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [minExpYears, setMinExpYears] = useState("")
   const [maxExpYears, setMaxExpYears] = useState("")
@@ -50,6 +53,7 @@ function DiscoverProfiles() {
       searchTerm: string,
       minExpYears: string,
       maxExpYears: string,
+      page: string,
     ) => {
       setLoading(true)
 
@@ -58,6 +62,7 @@ function DiscoverProfiles() {
       if (searchTerm) queryParams.searchTerm = searchTerm
       if (minExpYears) queryParams.minExpYears = minExpYears
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
+      if (page) queryParams.page = page
 
       try {
         const response = await getUsers(queryParams)
@@ -65,14 +70,14 @@ function DiscoverProfiles() {
         if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
         }
-
         if (response.status === HttpStatusCode.NoContent) {
           setUsers([])
         } else {
           setUsers(response.data)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
-        // Handle error as needed
         console.error("Error fetching users:", error)
       }
       setLoading(false)
@@ -93,8 +98,7 @@ function DiscoverProfiles() {
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears)
+      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page)
     }
   }, [
     categoryName,
@@ -110,6 +114,12 @@ function DiscoverProfiles() {
 
   const handleSearch = () => {
     console.log("Search")
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -282,7 +292,7 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Pagination />
+                  <Pagination pages={totalPages} setter={handlePage}/>
                 </div>
               </Container>
             </Row>

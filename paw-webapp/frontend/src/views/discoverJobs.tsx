@@ -29,6 +29,9 @@ function DiscoverJobs() {
   const [jobs, setJobs] = useState<any[]>([])
 
   const [searchTerm, setSearchTerm] = useState("")
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [categoryList, setCategoryList] = useState([])
   const [categoryName, setCategoryName] = useState("")
@@ -44,7 +47,7 @@ function DiscoverJobs() {
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string) => {
+    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string,) => {
       setLoading(true)
 
       if (categoryName) queryParams.categoryName = categoryName
@@ -52,6 +55,7 @@ function DiscoverJobs() {
       if (searchTerm) queryParams.searchTerm = searchTerm
       if (minSalary) queryParams.minSalary = minSalary
       if (maxSalary) queryParams.maxSalary = maxSalary
+      if (page) queryParams.page = page
 
       try {
         const response = await getJobOffers(queryParams)
@@ -64,6 +68,8 @@ function DiscoverJobs() {
           setJobs([])
         } else {
           setJobs(response.data)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -86,12 +92,18 @@ function DiscoverJobs() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary)
+      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page)
     }
   }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, setSearchParams, queryParams])
 
   const handleSearch = () => {
     console.log("Search")
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -249,7 +261,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                <Pagination />
+                <Pagination pages={totalPages} setter={handlePage}/>
               </Container>
             </Row>
           </Col>
