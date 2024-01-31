@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class AlreadyAppliedException extends ClonedInException{
 
-    private static final Response.Status STATUS = Response.Status.CONFLICT;
+    private static final int STATUS = Response.Status.CONFLICT.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Already applied";
     private static final String DETAILS = "The user with id %s has already applied to the job offer with id %s.";
 
@@ -18,7 +18,7 @@ public class AlreadyAppliedException extends ClonedInException{
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 

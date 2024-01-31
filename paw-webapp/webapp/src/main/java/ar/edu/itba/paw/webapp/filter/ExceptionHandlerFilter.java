@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.filter;
 
+import ar.edu.itba.paw.models.exceptions.ClonedInException;
 import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,20 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (RuntimeException e) {
-            ObjectMapper mapper = new ObjectMapper();
-
-            ErrorDTO errorDTO = new ErrorDTO(e.getClass(), "Filter Exception", e.getMessage());
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            mapper.writeValue(response.getWriter(), errorDTO);
+        } catch (ClonedInException e) {
+            writeErrorResponse(e, response, e.getHttpStatus(), e.getDetails());
+        }
+        catch (RuntimeException e) {
+            writeErrorResponse(e, response, HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
+    private void writeErrorResponse(Exception e, HttpServletResponse response, int status, String message) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ErrorDTO errorDTO = new ErrorDTO(e.getClass(), message, message);
+        response.setStatus(status);
+        mapper.writeValue(response.getWriter(), errorDTO);
+    }
 
 }

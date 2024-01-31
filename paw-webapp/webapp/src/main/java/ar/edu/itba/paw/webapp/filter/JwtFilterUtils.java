@@ -2,14 +2,13 @@ package ar.edu.itba.paw.webapp.filter;
 
 import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.models.enums.AuthType;
+import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
 import ar.edu.itba.paw.webapp.auth.AuthService;
 import ar.edu.itba.paw.webapp.auth.AuthTypeWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtHelper;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,11 +72,10 @@ public class JwtFilterUtils {
     public void accessTokenAuthentication(String authHeader, HttpServletRequest request) {
         String jwt = authHeader.substring(7); // "Bearer ".length()
 
-        if (jwtHelper.isAccessTokenValid(jwt)) {
-            setAuthentication(request, jwt, AuthType.JWT_ACCESS_TOKEN);
-        } else {
+        if (!jwtHelper.isAccessTokenValid(jwt))
             throw new InsufficientAuthenticationException("Invalid access token");
-        }
+
+        setAuthentication(request, jwt, AuthType.JWT_ACCESS_TOKEN);
     }
 
     public String basicAuthentication(String authHeader, HttpServletRequest request){
@@ -98,13 +96,14 @@ public class JwtFilterUtils {
 
     public String refreshTokenAuthentication(HttpServletRequest request, String refreshToken){
         String ip = request.getRemoteAddr();
-        if(jwtHelper.isRefreshTokenValid(refreshToken, ip)){
-            setAuthentication(request, refreshToken, AuthType.JWT_REFRESH_TOKEN);
-        }
+
+        if(!jwtHelper.isRefreshTokenValid(refreshToken, ip))
+            throw new InvalidRefreshTokenException();
+
         return setAuthentication(request, refreshToken, AuthType.JWT_REFRESH_TOKEN);
     }
 
-    public String getRefreshTokenCookie(HttpServletRequest request){
+    public String getRefreshTokenFromCookie(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if(cookies == null)
             return null;

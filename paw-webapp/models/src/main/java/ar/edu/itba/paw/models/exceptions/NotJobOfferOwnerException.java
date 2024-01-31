@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class NotJobOfferOwnerException extends ClonedInException {
 
-    private static final Response.Status STATUS = Response.Status.FORBIDDEN;
+    private static final int STATUS = Response.Status.FORBIDDEN.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Enterprise is not the owner of the job offer";
     private static final String DETAILS = "The enterprise with id '%d' is not the owner of the job offer with id '%d'";
 
@@ -18,7 +18,7 @@ public class NotJobOfferOwnerException extends ClonedInException {
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

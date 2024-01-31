@@ -8,6 +8,6 @@ public interface ClonedInMappeableException {
 
     String getDetails();
 
-    Response.Status getHttpStatus();
+    int getHttpStatus();
 
 }

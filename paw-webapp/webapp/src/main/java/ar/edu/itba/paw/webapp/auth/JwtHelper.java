@@ -37,16 +37,6 @@ public class JwtHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelper.class);
 
-    /*public String generateToken(UserDetails userDetails){
-        return Jwts
-                .builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }*/
-
 
     public String generateAccessToken(CustomUserDetails userDetails){
         return generateTokenBuilder(userDetails, ACCESS_EXPIRATION_TIME_MILLIS, JwtType.ACCESS_TOKEN)

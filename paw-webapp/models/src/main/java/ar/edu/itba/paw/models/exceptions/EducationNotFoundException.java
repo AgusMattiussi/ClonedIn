@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class EducationNotFoundException extends ClonedInException {
 
-    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final int STATUS = Response.Status.NOT_FOUND.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Education not found";
     private static final String DETAILS = "The education with id %d was not found";
 
@@ -18,7 +18,7 @@ public class EducationNotFoundException extends ClonedInException {
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

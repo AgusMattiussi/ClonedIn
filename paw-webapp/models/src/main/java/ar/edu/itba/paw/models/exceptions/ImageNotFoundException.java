@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 public class ImageNotFoundException extends ClonedInException {
 
-    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final int STATUS = Response.Status.NOT_FOUND.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Image not found";
     private static final String DETAILS = "The image for the %s with id '%d' was not found or does not exist";
 
@@ -20,7 +20,7 @@ public class ImageNotFoundException extends ClonedInException {
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }
