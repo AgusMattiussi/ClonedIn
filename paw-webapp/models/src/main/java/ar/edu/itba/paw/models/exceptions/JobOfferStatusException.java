@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 
 public class JobOfferStatusException extends ClonedInException {
 
-    private static final Response.Status STATUS = Response.Status.CONFLICT;
+    private static final int STATUS = Response.Status.CONFLICT.getStatusCode();
     private static final String DETAILS = "Could not change status to '%s' for job offer with id %d, including user with id %d." +
             " Maybe new status is incompatible with current status or the user is not in a valid application for the job offer.";
 
@@ -33,7 +33,7 @@ public class JobOfferStatusException extends ClonedInException {
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

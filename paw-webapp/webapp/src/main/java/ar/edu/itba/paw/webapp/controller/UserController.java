@@ -381,7 +381,9 @@ public class UserController {
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 
-        Image profileImage = us.getProfileImage(id).orElseThrow(() -> new ImageNotFoundException(id, Role.USER));
+        Image profileImage = us.getProfileImage(id).orElse(null);
+        if(profileImage == null)
+            return Response.noContent().build();
 
         return Response.ok(profileImage.getBytes())
                 .type(profileImage.getMimeType()) // @Produces

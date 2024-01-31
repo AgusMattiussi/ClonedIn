@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class HiddenProfileException extends ClonedInException{
 
-    private static final Response.Status STATUS = Response.Status.FORBIDDEN;
+    private static final int STATUS = Response.Status.FORBIDDEN.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Profile is hidden";
     private static final String DETAILS = "User '%s' has hidden their profile";
 
@@ -18,7 +18,7 @@ public class HiddenProfileException extends ClonedInException{
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 

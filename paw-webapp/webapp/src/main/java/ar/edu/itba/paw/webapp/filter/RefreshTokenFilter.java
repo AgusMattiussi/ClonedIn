@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.filter;
 
+import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -28,9 +29,9 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             if(e.getClass() != ExpiredJwtException.class && e.getClass() != InsufficientAuthenticationException.class)
                 throw e;
 
-            String refreshToken = jwtFilterUtils.getRefreshTokenCookie(request);
+            String refreshToken = jwtFilterUtils.getRefreshTokenFromCookie(request);
             if(refreshToken == null)
-                throw e;
+                throw new InvalidRefreshTokenException();
 
             String email = jwtFilterUtils.refreshTokenAuthentication(request, refreshToken);
             jwtFilterUtils.addTokens(request, response, email);
