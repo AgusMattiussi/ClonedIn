@@ -39,6 +39,12 @@ function ProfileEnterprise() {
 
   const [jobOfferToCloseId, setJobOfferToCloseId] = useState<number | null>(null)
 
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
+
+  let queryParams: Record<string, string> = {}
+
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await getEnterpriseById(id)
@@ -46,29 +52,36 @@ function ProfileEnterprise() {
       if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
-
       setEnterprise(response.data)
       setEnterpriseLoading(false)
     }
 
-    const fetchEnterpriseJobs = async () => {
-      const response = await getEnterpriseJobOffers(id)
+    const fetchEnterpriseJobs = async (page: string) => {
+      if (page) queryParams.page = page
+
+      const response = await getEnterpriseJobOffers(id, queryParams)
 
       if (response.status === HttpStatusCode.NoContent) {
         setJobs([])
       } else {
         setJobs(response.data)
+        setTotalPages(response.headers["x-total-pages"] as string)
+        setLinks(response.headers.link as string)
       }
       setJobsLoading(false)
     }
 
-    const fetchUserJobs = async () => {
-      const response = await getUserJobs(id)
+    const fetchUserJobs = async (page: string) => {
+      if (page) queryParams.page = page
+
+      const response = await getUserJobs(id, queryParams)
 
       if (response.status === HttpStatusCode.NoContent) {
         setUserJobs([])
       } else {
         setUserJobs(response.data)
+        setTotalPages(response.headers["x-total-pages"] as string)
+        setLinks(response.headers.link as string)
       }
       setJobsLoading(false)
     }
@@ -78,9 +91,9 @@ function ProfileEnterprise() {
     }
     if (jobsLoading) {
       if (userInfo?.role === UserRole.ENTERPRISE) {
-        fetchEnterpriseJobs()
+        fetchEnterpriseJobs(page)
       } else {
-        fetchUserJobs()
+        fetchUserJobs(page)
       }
     }
   }, [
@@ -110,6 +123,12 @@ function ProfileEnterprise() {
         modalBackdrop.remove()
       }
     }
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
+    setJobsLoading(true)
   }
 
   const enterprisesJobs = jobs.map((job) => {
@@ -164,7 +183,7 @@ function ProfileEnterprise() {
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            <Pagination />
+            <Pagination pages={totalPages} setter={handlePage}/>
           </Col>
         </Row>
       </Container>

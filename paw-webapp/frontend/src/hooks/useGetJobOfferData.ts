@@ -28,10 +28,11 @@ export const useGetJobOfferData = () => {
     return response
   }
 
-  async function getUserJobs(id: string | undefined) {
+  async function getUserJobs(id: string | undefined, queryParams: Record<string, string> = {}) {
     const response = await apiRequest({
       url: `/jobOffers?enterpriseId=${id}`,
       method: "GET",
+      queryParams: queryParams,
     })
     return response
   }
