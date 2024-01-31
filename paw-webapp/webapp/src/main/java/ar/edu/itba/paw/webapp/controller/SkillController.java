@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -29,6 +30,7 @@ public class SkillController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkillController.class);
     private static final int SKILLS_BY_PAGE = 20;
+    private static final String S_SKILLS_BY_PAGE = "20";
 
     @Context
     private UriInfo uriInfo;
@@ -37,8 +39,10 @@ public class SkillController {
 
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
-    public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final PaginatedResource<Skill> skills = skillService.getAllSkills(page, SKILLS_BY_PAGE);
+    public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                               @QueryParam("pageSize") @DefaultValue(S_SKILLS_BY_PAGE)
+                                        @Min(1) @Max(2*SKILLS_BY_PAGE) final int pageSize) {
+        final PaginatedResource<Skill> skills = skillService.getAllSkills(page, pageSize);
 
         if (skills.isEmpty())
             return Response.noContent().build();

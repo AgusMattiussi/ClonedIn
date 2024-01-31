@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,14 +38,16 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 @Component
 public class UserController {
 
-    private static final int PAGE_SIZE = 10;
-    private static final int JOB_OFFERS_PER_PAGE = 3;
     private static final int APPLICATIONS_PER_PAGE = 5;
-    private static final int NOTIFICATIONS_PER_PAGE = 5;
+    private static final String S_APPLICATIONS_PER_PAGE = "5";
     private static final int EXPERIENCES_PER_PAGE = 3;
+    private static final String S_EXPERIENCES_PER_PAGE = "3";
     private static final int USERS_PER_PAGE = 12;
+    private static final String S_USERS_PER_PAGE = "12";
     private static final int EDUCATIONS_PER_PAGE = 3;
+    private static final String S_EDUCATIONS_PER_PAGE = "3";
     private static final int SKILLS_PER_PAGE = 10;
+    private static final String S_SKILLS_PER_PAGE = "10";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -85,6 +88,8 @@ public class UserController {
     @Produces(ClonedInMediaType.USER_LIST_V1)
     @PreAuthorize(ENTERPRISE)
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                              @QueryParam("pageSize") @DefaultValue(S_USERS_PER_PAGE)
+                                        @Min(1) @Max(2*USERS_PER_PAGE) final int pageSize,
                               @QueryParam("categoryName") final String categoryName,
                               @QueryParam("educationLevel") final EducationLevel educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
@@ -94,7 +99,7 @@ public class UserController {
                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
         final PaginatedResource<User> users = us.getUsersListByFilters(categoryName, educationLevel, searchTerm, minExpYears,
-                maxExpYears, location, skillDescription, page, USERS_PER_PAGE);
+                maxExpYears, location, skillDescription, page, pageSize);
 
         if (users.isEmpty())
             return Response.noContent().build();
@@ -144,12 +149,14 @@ public class UserController {
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("pageSize") @DefaultValue(S_APPLICATIONS_PER_PAGE)
+                                        @Min(1) @Max(2*APPLICATIONS_PER_PAGE) final int pageSize,
                                     @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy) {
 
         PaginatedResource<Contact> applications = contactService.getContactsForUser(id, filledBy, status,
-                sortBy, page, APPLICATIONS_PER_PAGE);
+                sortBy, page, pageSize);
 
         if(applications.isEmpty())
             return Response.noContent().build();
@@ -252,7 +259,9 @@ public class UserController {
     @Produces(ClonedInMediaType.EDUCATION_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getEducations(@PathParam("id") @Min(1) final long id,
-                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
+                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                  @QueryParam("pageSize") @DefaultValue(S_EDUCATIONS_PER_PAGE)
+                                        @Min(1) @Max(2*EDUCATIONS_PER_PAGE) final int pageSize) {
 
         PaginatedResource<Education> educations = educationService.findByUser(id, page, EDUCATIONS_PER_PAGE);
 
@@ -309,7 +318,9 @@ public class UserController {
     @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getSkills(@PathParam("id") @Min(1) final long id,
-                              @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
+                              @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                              @QueryParam("pageSize") @DefaultValue(S_SKILLS_PER_PAGE)
+                                        @Min(1) @Max(2*SKILLS_PER_PAGE) final int pageSize) {
 
         PaginatedResource<Skill> skills = userSkillService.getSkillsForUser(id, page, SKILLS_PER_PAGE);
 

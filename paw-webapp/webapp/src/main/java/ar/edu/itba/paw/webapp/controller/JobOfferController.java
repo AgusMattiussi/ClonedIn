@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -33,6 +34,7 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 public class JobOfferController {
 
     private static final int JOB_OFFERS_PER_PAGE = 5;
+    private static final String S_JOB_OFFERS_PER_PAGE = "5";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
@@ -50,6 +52,8 @@ public class JobOfferController {
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
     @PreAuthorize("hasAuthority('USER')")
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                 @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_PER_PAGE)
+                                        @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
                                  @QueryParam("categoryName") final String categoryName,
                                  @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
                                  @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary,
@@ -60,7 +64,7 @@ public class JobOfferController {
                                  @QueryParam("enterpriseId") final Long enterpriseId,
                                  @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy){
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, JOB_OFFERS_PER_PAGE);
+                        enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, pageSize);
 
         if(jobOffers.isEmpty())
             return Response.noContent().build();
