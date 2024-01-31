@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode"
 import Button from "react-bootstrap/Button"
 import * as Icon from "react-bootstrap-icons"
 import Header from "../components/header"
@@ -8,18 +9,15 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useLogin } from "../api/authService"
-import * as formik from "formik"
-import * as yup from "yup"
-import { useSharedAuth } from "../api/auth"
+import { UserInfo } from "../api/auth"
 import { UserRole } from "../utils/constants"
 
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("");
+  const [error, setError] = useState("")
   const [passwordVisibility, setPasswordVisibility] = useState(false)
-  const { loading, loginHandler } = useLogin()
-  const { userInfo } = useSharedAuth()
+  const { loginHandler } = useLogin()
 
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -34,10 +32,14 @@ function Login() {
     e.preventDefault()
     const logged = await loginHandler(email, password)
     if (logged) {
-      if (userInfo?.role === UserRole.USER) {
-        navigate("/jobOffers")
-      } else {
-        navigate("/users")
+      const token = localStorage.getItem("accessToken")
+      if (token) {
+        const jwtDecoded: UserInfo = jwtDecode(token)
+        if (jwtDecoded["role"] === UserRole.USER) {
+          navigate("/jobOffers")
+        } else if (jwtDecoded["role"] === UserRole.ENTERPRISE) {
+          navigate("/users")
+        }
       }
     } else {
       console.log("Not logged in")
@@ -83,7 +85,11 @@ function Login() {
                             {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                           </Button>
                         </Form.Group>
-                        {error && <div className="error" style={{color: "red"}}>{error}</div>}
+                        {error && (
+                          <div className="error" style={{ color: "red" }}>
+                            {error}
+                          </div>
+                        )}
                       </div>
                       <Button variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
