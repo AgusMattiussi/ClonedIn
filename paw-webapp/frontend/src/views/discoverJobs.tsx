@@ -15,6 +15,7 @@ import { useSharedAuth } from "../api/auth"
 import { useGetCategories } from "../hooks/useGetCategories"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { HttpStatusCode } from "axios"
+import { SortBy } from "../utils/constants"
 
 function DiscoverJobs() {
   const navigate = useNavigate()
@@ -44,10 +45,11 @@ function DiscoverJobs() {
   document.title = t("Discover Jobs") + " | ClonedIn"
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string) => {
+    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string, sortBy: string,) => {
       setLoading(true)
 
       if (categoryName) queryParams.categoryName = categoryName
@@ -56,6 +58,7 @@ function DiscoverJobs() {
       if (minSalary) queryParams.minSalary = minSalary
       if (maxSalary) queryParams.maxSalary = maxSalary
       if (page) queryParams.page = page
+      if (sortBy) queryParams.sortBy = sortBy
 
       try {
         const response = await getJobOffers(queryParams)
@@ -92,7 +95,7 @@ function DiscoverJobs() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page)
+      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
   }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, setSearchParams, queryParams])
 
@@ -104,6 +107,11 @@ function DiscoverJobs() {
   const handlePage = (pageNumber: string) => {
     console.log("Page")
     setPage(pageNumber)
+    setLoading(true)
+  }
+
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy.toString())
     setLoading(true)
   }
 
@@ -237,9 +245,25 @@ function DiscoverJobs() {
               </div>
             </Row>
           </Col>
-          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
-            <Row>
-              <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+          <Col className="d-flex flex-column mt-2 mr-2 mb-2">
+            <Row className="my-2">
+            <div className="d-flex justify-content-between">
+                <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+                <div style={{ width: "200px" }}>
+                  <Form.Select
+                    className="px-3"
+                    aria-label="Sort by select"
+                    value={sortBy}
+                    onChange={(e) => handleSort(e.target.value)}
+                  >
+                    <option value={SortBy.DEFAULT}> {t("Order By")} </option>
+                    <option value={SortBy.SALARY_DESC}> {t("Higer Salary")} </option>
+                    <option value={SortBy.SALARY_ASC}> {t("Lower Salary")} </option>
+                    <option value={SortBy.OLDEST}> {t("Date asc")} </option>
+                    <option value={SortBy.RECENT}> {t("Date desc")} </option>
+                  </Form.Select>
+                </div>
+              </div>
             </Row>
             <Row className="w-100">
               <Container

@@ -33,6 +33,11 @@ export enum SortBy {
   DATE_ASC = "dateAsc",
   DATE_DESC = "dateDesc",
   YEARS_OF_EXPERIENCE = "yearsOfExperience",
+  DEFAULT = "predeterminado",
+  RECENT = "recientes",
+  OLDEST = "antiguas",
+  SALARY_ASC = "salarioAsc",
+  SALARY_DESC = "salarioDesc",
 }
 
 export const AUTHORIZATION_HEADER = "x-access-token"

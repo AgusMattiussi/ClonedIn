@@ -49,6 +49,9 @@
   "Invalid Salary Min": "Salario debe ser un valor positivo",
   "Invalid Salary Max": "Salario debe ser menor a 1000000000",
 
+  "Higer Salary": "Mayor salario",
+  "Lower Salary": "Menor salario",
+
   "No-especificado": "Selecciona",
   "Primario": "Primario",
   "Secundario": "Secundario",
