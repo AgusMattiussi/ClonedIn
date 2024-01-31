@@ -47,7 +47,7 @@ function DiscoverJobs() {
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string,) => {
+    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string) => {
       setLoading(true)
 
       if (categoryName) queryParams.categoryName = categoryName

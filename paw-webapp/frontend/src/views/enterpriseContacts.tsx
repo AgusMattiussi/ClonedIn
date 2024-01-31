@@ -39,6 +39,9 @@ function EnterpriseContacts() {
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const [filledBy] = useState(FilledBy.ENTERPRISE.toString())
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [jobOfferToCancelId, setJobOfferToCancelId] = useState<any>()
   const [userToCancelId, setUserToCancelId] = useState<any>()
@@ -105,11 +108,12 @@ function EnterpriseContacts() {
   )
 
   const fetchContacts = useCallback(
-    async (status: string, sortBy: string, filledBy: string) => {
+    async (status: string, sortBy: string, filledBy: string, page: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
       if (filledBy) queryParams.filledBy = filledBy
+      if (page) queryParams.page = page
 
       try {
         const response = await getEnterpriseContacts(userInfo?.id, queryParams)
@@ -143,6 +147,8 @@ function EnterpriseContacts() {
             }),
           )
           setContacts(contactsData)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -154,12 +160,18 @@ function EnterpriseContacts() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchContacts(filterStatus, sortBy, filledBy)
+      fetchContacts(filterStatus, sortBy, filledBy, page)
     }
   }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -348,7 +360,7 @@ function EnterpriseContacts() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              <Pagination />
+              <Pagination pages={totalPages} setter={handlePage}/>
             </Row>
           </Col>
         </Row>

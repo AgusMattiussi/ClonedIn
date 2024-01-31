@@ -39,6 +39,9 @@ function ApplicationsUser() {
   const [filledBy] = useState(FilledBy.USER.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   document.title = t("Applications Page Title")
 
@@ -102,11 +105,12 @@ function ApplicationsUser() {
   )
 
   const fetchApplications = useCallback(
-    async (status: string, sortBy: string, filledBy: string) => {
+    async (status: string, sortBy: string, filledBy: string, page:string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
       if (filledBy) queryParams.filledBy = filledBy
+      if (page) queryParams.page = page
 
       try {
         const response = await getUserContacts(userInfo?.id, queryParams)
@@ -140,6 +144,8 @@ function ApplicationsUser() {
             }),
           )
           setApplications(contactsData)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -151,7 +157,7 @@ function ApplicationsUser() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchApplications(filterStatus, sortBy, filledBy)
+      fetchApplications(filterStatus, sortBy, filledBy, page)
     }
   }, [fetchApplications, isLoading, filterStatus, sortBy, filledBy])
 
@@ -162,6 +168,12 @@ function ApplicationsUser() {
 
   const handleSort = (sortBy: string) => {
     setSortBy(sortBy.toString())
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -294,7 +306,7 @@ function ApplicationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination />
+                <Pagination pages={totalPages} setter={handlePage}/>
               </Container>
             </Row>
           </Col>

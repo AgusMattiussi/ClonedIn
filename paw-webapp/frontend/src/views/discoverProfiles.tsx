@@ -53,7 +53,7 @@ function DiscoverProfiles() {
       searchTerm: string,
       minExpYears: string,
       maxExpYears: string,
-      page: string,
+      page: string
     ) => {
       setLoading(true)
 

@@ -40,6 +40,9 @@ function NotificationsUser() {
   const [filledBy] = useState(FilledBy.ENTERPRISE.toString())
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   document.title = t("Notifications Page Title")
 
@@ -100,11 +103,12 @@ function NotificationsUser() {
   )
 
   const fetchNotifications = useCallback(
-    async (status: string, sortBy: string, filledBy: string) => {
+    async (status: string, sortBy: string, filledBy: string, page:string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
       if (filledBy) queryParams.filledBy = filledBy
+      if (page) queryParams.page = page
 
       try {
         const response = await getUserContacts(userInfo?.id, queryParams)
@@ -138,6 +142,8 @@ function NotificationsUser() {
             }),
           )
           setNotifications(contactsData)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -149,7 +155,7 @@ function NotificationsUser() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchNotifications(filterStatus, sortBy, filledBy)
+      fetchNotifications(filterStatus, sortBy, filledBy, page)
     }
   }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy])
 
@@ -160,6 +166,12 @@ function NotificationsUser() {
 
   const handleSort = (sortBy: string) => {
     setSortBy(sortBy.toString())
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -292,7 +304,7 @@ function NotificationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination />
+                <Pagination pages={totalPages} setter={handlePage}/>
               </Container>
             </Row>
           </Col>
