@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useLogin } from "../api/authService"
-import { UserInfo } from "../api/auth"
+import { UserInfo, useSharedAuth } from "../api/auth"
 import { UserRole } from "../utils/constants"
 
 function Login() {
@@ -18,6 +18,7 @@ function Login() {
   const [error, setError] = useState("")
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const { loginHandler } = useLogin()
+  const { handleLogout } = useSharedAuth()
 
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    handleLogout()
     const logged = await loginHandler(email, password)
     if (logged) {
       const token = localStorage.getItem("accessToken")
