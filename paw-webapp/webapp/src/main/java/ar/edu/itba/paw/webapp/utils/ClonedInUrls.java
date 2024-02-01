@@ -3,8 +3,9 @@ package ar.edu.itba.paw.webapp.utils;
 public final class ClonedInUrls {
 
     //TODO: Actualizar para deployar
-    public static final String BASE_URL = "webapp_war/";
-    public static final String FULL_BASE_URL = "http://localhost:8080/webapp_war/";
+    //public static final String BASE_URL = "paw-2022b-4/api/";
+    public static final String BASE_URL = "api/";
+    public static final String FULL_BASE_URL = "http://localhost:8080/";
     public static final String DOMAIN = "localhost";
 
     public static final String CATEGORIES_URL = BASE_URL + "categories";

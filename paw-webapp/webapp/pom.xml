@@ -13,7 +13,7 @@
   <packaging>war</packaging>
 
   <name>ClonedIn Webapp</name>
-  <url>http://localhost:8080/webapp_war</url>
+  <url>http://localhost:8080</url>
 
   <properties>
   </properties>
@@ -205,20 +205,5 @@
     </dependency>
 
   </dependencies>
-
-  <build>
-    <finalName>webapp</finalName>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.2.2</version>
-          <configuration>
-            <packagingExcludes>**/logback-test.xml</packagingExcludes>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 
 </project>

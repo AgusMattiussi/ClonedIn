@@ -34,6 +34,10 @@
     <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
     <jersey.version>3.0-SNAPSHOT</jersey.version>
     <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
+    <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
+    <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+    <node.version>v16.14.2</node.version>
+    <npm.version>8.5.0</npm.version>
   </properties>
 
   <repositories>
@@ -356,10 +360,17 @@
         <version>${jersey.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
   <modules>
+    <module>frontend</module>
     <module>webapp</module>
     <module>services</module>
     <module>models</module>
@@ -417,8 +428,32 @@
            <artifactId>maven-project-info-reports-plugin</artifactId>
            <version>3.0.0</version>
          </plugin>
+
+         <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${maven-war-plugin.version}</version>
+        <configuration>
+          <packagingExcludes>**/logback-test.xml</packagingExcludes>
+          <webResources>
+            <resource>
+              <directory>../frontend/build</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
        </plugins>
      </pluginManagement>
   </build>
+
+
 
 </project>

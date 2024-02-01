@@ -34,7 +34,7 @@ import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 
-@Path("users")
+@Path("api/users")
 @Component
 public class UserController {
 

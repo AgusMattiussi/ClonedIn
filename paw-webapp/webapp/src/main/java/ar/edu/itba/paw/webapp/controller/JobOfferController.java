@@ -29,7 +29,7 @@ import javax.ws.rs.GET;
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
-@Path("jobOffers")
+@Path("api/jobOffers")
 @Component
 public class JobOfferController {
 

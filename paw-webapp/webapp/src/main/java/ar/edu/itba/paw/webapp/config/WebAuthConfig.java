@@ -53,22 +53,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().authorizeRequests()
                 // Create and Authorize
-                .antMatchers("/auth/access-token").authenticated()
-                .antMatchers("/auth/refresh-token").anonymous()
-                .antMatchers("/test/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/users").anonymous()
-                .antMatchers(HttpMethod.POST, "/enterprises").anonymous()
+                .antMatchers("/api/auth/access-token").authenticated()
+                .antMatchers("/api/auth/refresh-token").anonymous()
+                .antMatchers("/api/test/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/users").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/enterprises").anonymous()
                 // Users and Enterprises
-                .antMatchers("/users/*/image").permitAll()
-                .antMatchers("/users", "/users/**").authenticated()
-                .antMatchers("/enterprises/*/image").permitAll()
-                .antMatchers("/enterprises", "/enterprises/**").authenticated()
+                .antMatchers("/api/users/*/image").permitAll()
+                .antMatchers("/api/users", "/api/users/**").authenticated()
+                .antMatchers("/api/enterprises/*/image").permitAll()
+                .antMatchers("/api/enterprises", "/api/enterprises/**").authenticated()
                 // Categories
-                .antMatchers("/categories").permitAll()
+                .antMatchers("/api/categories").permitAll()
                 // Skills
-                .antMatchers("/skills").permitAll()
+                .antMatchers("/api/skills").permitAll()
                 // JobOffers
-                .antMatchers("/jobOffers", "/jobOffers/**").authenticated()
+                .antMatchers("/api/jobOffers", "/api/jobOffers/**").authenticated()
                 .and().exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -87,7 +87,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // React Frontend
+        cors.setAllowedOrigins(Collections.singletonList("*")); //Collections.singletonList("http://localhost:3000")); // React Frontend
         cors.setAllowedMethods(Collections.singletonList("*"));
         cors.setAllowedHeaders(Collections.singletonList("*"));
         cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token"));
