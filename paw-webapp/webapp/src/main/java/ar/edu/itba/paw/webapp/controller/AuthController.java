@@ -16,7 +16,7 @@ import javax.ws.rs.core.*;
 
 import org.springframework.web.util.WebUtils;
 
-@Path("auth")
+@Path("api/auth")
 @Component
 public class AuthController {
 
