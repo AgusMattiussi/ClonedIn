@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Buffer } from "buffer"
 import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios"
 import { useNavigate } from "react-router-dom"
-import { BASE_URL, AUTHORIZATION_HEADER } from "../utils/constants"
+import { BASE_URL, AUTHORIZATION_HEADER, CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN } from "../utils/constants"
 import { useSharedAuth } from "./auth"
 
 export interface BasicCredentials {
@@ -67,6 +67,10 @@ export const useRequestApi = () => {
 
       if (response.headers[AUTHORIZATION_HEADER]) {
         setAccessToken(response.headers[AUTHORIZATION_HEADER])
+      }
+
+      if (response.status === CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN) {
+        navigate("/login")
       }
 
       return response
