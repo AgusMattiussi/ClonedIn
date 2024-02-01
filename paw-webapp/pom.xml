@@ -360,16 +360,22 @@
         <version>${jersey.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
   <modules>
+    <module>frontend</module>
     <module>webapp</module>
     <module>services</module>
     <module>models</module>
     <module>interfaces</module>
     <module>persistence</module>
-    <module>frontend</module>
   </modules>
 
    <build>
@@ -422,11 +428,8 @@
            <artifactId>maven-project-info-reports-plugin</artifactId>
            <version>3.0.0</version>
          </plugin>
-       </plugins>
-     </pluginManagement>
 
-     <plugins>
-      <plugin>
+         <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -447,8 +450,10 @@
           </webResources>
         </configuration>
       </plugin>
-    </plugins>
-
+       </plugins>
+     </pluginManagement>
   </build>
+
+
 
 </project>

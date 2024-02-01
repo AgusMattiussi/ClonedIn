@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app id="PAW" version="2.4"
         xmlns="http://java.sun.com/xml/ns/j2ee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,7 +41,7 @@
 
   <filter-mapping>
     <filter-name>EncodingFilter</filter-name>
-    <url-pattern>*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -50,7 +51,7 @@
 
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -59,6 +60,7 @@
     <init-param>
       <param-name>jersey.config.server.provider.packages</param-name>
       <param-value>
+        ar.edu.itba.paw.webapp.config,
         ar.edu.itba.paw.webapp.controller,
         ar.edu.itba.paw.webapp.mappers,
       </param-value>
@@ -80,7 +82,7 @@
 
   <filter-mapping>
     <filter-name>jersey</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <!-- Unconditional Cache Filter -->

@@ -46,8 +46,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl().disable()
                 .and().authorizeRequests()
                 // Create and Authorize
-                .antMatchers("/auth/access-token").authenticated()
-                .antMatchers("/auth/refresh-token").anonymous()
+                .antMatchers("/api/auth/access-token").authenticated()
+                .antMatchers("/api/auth/refresh-token").anonymous()
                 .antMatchers("/api/test/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/enterprises").anonymous()
@@ -78,7 +78,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // React Frontend
+        cors.setAllowedOrigins(Collections.singletonList("*")); //Collections.singletonList("http://localhost:3000")); // React Frontend
         cors.setAllowedMethods(Collections.singletonList("*"));
         cors.setAllowedHeaders(Collections.singletonList("*"));
         cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token"));

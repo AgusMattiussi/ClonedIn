@@ -4,7 +4,9 @@ public final class ClonedInUrls {
 
     public static final String LOCALHOST = "localhost";
 
-    public static final String BASE_URL = "paw-2022b-4/api/";
+    //public static final String BASE_URL = "paw-2022b-4/api/";
+    public static final String BASE_URL = "api/";
+
     public static final String CATEGORIES_URL = BASE_URL + "categories";
     public static final String JOB_OFFERS_URL = BASE_URL + "jobOffers";
     public static final String USERS_URL = BASE_URL + "users";

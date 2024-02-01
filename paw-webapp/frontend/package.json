@@ -34,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && sed -i \"\" -e 's/.\\{15\\}/&<%@ page session=\"false\" %>/' ./build/index.html\n",
-    "build-java": "react-scripts build && echo '<%@ page session=\"false\" %> ' > ./build/.tmp && cat ./build/index.html >> ./build/.tmp && cp ./build/.tmp ./build/index.html && rm ./build/.tmp ",
+    "build-windows": "react-scripts build --verbose && echo ^<%@ page session=\"false\" ^%^> ^ > .\\build\\.tmp && type .\\build\\index.html >> .\\build\\.tmp && copy .\\build\\.tmp .\\build\\index.html && del .\\build\\.tmp",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -64,5 +64,6 @@
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
     }
-  }
+  },
+  "homepage": "http://localhost:8080"
 }

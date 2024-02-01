@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8080/webapp_war/api"
+export const BASE_URL = "http://localhost:8080/api"
 //export const BASE_URL = "http://pawserver.it.itba.edu.ar/paw-2022b-4/api"
 
 export enum UserRole {
