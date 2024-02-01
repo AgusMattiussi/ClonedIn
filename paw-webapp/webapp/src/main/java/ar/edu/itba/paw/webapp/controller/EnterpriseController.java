@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,9 +37,12 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 @Component
 public class EnterpriseController {
 
-    public static final int ENTERPRISES_PER_PAGE = 15;
+    private static final int ENTERPRISES_PER_PAGE = 15;
+    private static final String S_ENTERPRISES_BY_PAGE = "15";
     private static final int CONTACTS_PER_PAGE = 10;
+    private static final String S_CONTACTS_BY_PAGE = "10";
     private static final int JOB_OFFERS_PER_PAGE = 5;
+    private static final String S_JOB_OFFERS_BY_PAGE = "5";
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
@@ -59,6 +63,8 @@ public class EnterpriseController {
     @Produces(ClonedInMediaType.ENTERPRISE_LIST_V1)
     @PreAuthorize("hasAuthority('USER')")
     public Response getEnterprises(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                   @QueryParam("pageSize") @DefaultValue(S_ENTERPRISES_BY_PAGE)
+                                        @Min(1) @Max(2*ENTERPRISES_PER_PAGE) final int pageSize,
                                    @QueryParam("categoryName") final String categoryName,
                                    @QueryParam("location") final String location,
                                    @QueryParam("workers") final EmployeeRanges workers,
@@ -66,7 +72,7 @@ public class EnterpriseController {
                                    @QueryParam("searchTerm") final String searchTerm) {
 
         PaginatedResource<Enterprise> enterprises = enterpriseService.getEnterpriseListByFilters(categoryName, location,
-                workers, enterpriseName, searchTerm, page, ENTERPRISES_PER_PAGE);
+                workers, enterpriseName, searchTerm, page, pageSize);
 
         if(enterprises.isEmpty())
             return Response.noContent().build();
@@ -122,6 +128,8 @@ public class EnterpriseController {
     @PreAuthorize(PROFILE_OWNER)
     public Response getJobOffers(@PathParam("id") @Min(1) final long id,
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                 @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_BY_PAGE)
+                                        @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
                                  @QueryParam("category") final String categoryName,
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
@@ -133,7 +141,7 @@ public class EnterpriseController {
                                  @QueryParam("onlyActive") @DefaultValue("false") final boolean onlyActive) {
 
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        id, searchTerm, position, minSalary, maxSalary, sorting, onlyActive, page, JOB_OFFERS_PER_PAGE);
+                        id, searchTerm, position, minSalary, maxSalary, sorting, onlyActive, page, pageSize);
 
         List<JobOfferDTO> jobOfferDTOS = jobOffers.getPage().stream()
                 .map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
@@ -190,6 +198,8 @@ public class EnterpriseController {
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("pageSize") @DefaultValue(S_CONTACTS_BY_PAGE)
+                                        @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
@@ -197,7 +207,7 @@ public class EnterpriseController {
                                     @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
         PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, jobOfferId, userId, filledBy,
-                status, sortBy, page, CONTACTS_PER_PAGE);
+                status, sortBy, page, pageSize);
 
         if(contacts.isEmpty())
             return Response.noContent().build();
@@ -233,11 +243,13 @@ public class EnterpriseController {
     public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
                                     @PathParam("joid") @Min(1) final long joid,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                    @QueryParam("pageSize") @DefaultValue(S_CONTACTS_BY_PAGE)
+                                        @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
                                     @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
         PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, joid, null, filledBy,
-                status, sortBy, page, CONTACTS_PER_PAGE);
+                status, sortBy, page, pageSize);
 
         if(contacts.isEmpty())
             return Response.noContent().build();
@@ -292,7 +304,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/image")
 //  @Produces - set dynamically
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
+//    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
         if(profileImage == null)

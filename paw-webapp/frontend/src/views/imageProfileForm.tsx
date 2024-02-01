@@ -7,7 +7,7 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePutImage } from "../hooks/usePutImage"
 import { HttpStatusCode } from "axios"
 
 function ImageProfileForm() {
@@ -15,7 +15,7 @@ function ImageProfileForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { putImage } = usePutImage()
   const [imageFile, setImageFile] = useState(null)
 
   document.title = t("Image Form Page Title")
@@ -39,16 +39,14 @@ function ImageProfileForm() {
       requestUrl = `/users/${id}/image`
     }
 
-    const response = await apiRequest({
-      url: requestUrl,
-      method: "PUT",
-      body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    //TODO: manejar error
-    navigate(-1)
+    const response = await putImage(requestUrl, formData)
+
+    if (response.status === HttpStatusCode.Ok) {
+      navigate(-1)
+    } else {
+      //TODO: manejar error
+      console.log("Error uploading image")
+    }
   }
 
   return (
@@ -64,13 +62,13 @@ function ImageProfileForm() {
                 </h2>
                 <div className="row">
                   <div className="col-md-12 mx-0">
-                    <Form className="msform" onSubmit={handlePut}>
+                    <Form className="msform">
                       <div className="form-card">
                         <Form.Group controlId="formFile" className="mb-3">
                           <Form.Control type="file" onChange={handleFileChange} />
                         </Form.Group>
                       </div>
-                      <Button variant="success" type="submit">
+                      <Button variant="success" onClick={handlePut}>
                         <strong>{t("Upload")}</strong>
                       </Button>
                     </Form>

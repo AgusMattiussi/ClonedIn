@@ -26,7 +26,7 @@ function ProfileUserCard({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { apiRequest } = useRequestApi()
   const { id } = useParams()
 
   const [loadingData, setLoadingData] = useState(true)
@@ -60,26 +60,32 @@ function ProfileUserCard({
 
   const userSkillsList = skillsData.map((skill, index) => {
     return (
-      <Badge key={index} pill bg="success" className="mx-2" >
+      <Badge key={index} pill bg="success" className="mx-2">
         {skill.description}
       </Badge>
     )
   })
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem"}}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
-          <Card.Img variant="top" src={imageUrl} />
+          {imageUrl === "" ? (
+            <div className="spinner-border" role="status" />
+          ) : (
+            <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+          )}
         </Link>
       ) : (
-        <><Card.Img variant="top" src={imageUrl} />
+        <>
+          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
           <Button type="button" variant="success" onClick={() => navigate(`image`)}>
             <div className="d-flex align-items-center justify-content-center">
               <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
               {t("Edit Profile Picture")}
             </div>
-          </Button></>
+          </Button>
+        </>
       )}
       <Card.Body style={{ alignContent: "left", alignItems: "left" }}>
         <div className="d-flex justify-content-around align-items-center">

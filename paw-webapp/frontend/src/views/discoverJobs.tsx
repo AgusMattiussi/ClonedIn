@@ -6,26 +6,33 @@ import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { useState, useEffect, useCallback } from "react"
-import { useRequestApi } from "../api/apiRequest"
-import { useTranslation } from "react-i18next"
-import { useSharedAuth } from "../api/auth"
-import { HttpStatusCode } from "axios"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { useState, useEffect, useCallback } from "react"
+import { useTranslation } from "react-i18next"
+import { useSharedAuth } from "../api/auth"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { HttpStatusCode } from "axios"
+import { SortBy } from "../utils/constants"
 
 function DiscoverJobs() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getCategories } = useGetCategories()
+  const { getJobOffers } = useGetJobOfferData()
 
   const [isLoading, setLoading] = useState(true)
   const [jobs, setJobs] = useState<any[]>([])
 
   const [searchTerm, setSearchTerm] = useState("")
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [categoryList, setCategoryList] = useState([])
   const [categoryName, setCategoryName] = useState("")
@@ -38,16 +45,11 @@ function DiscoverJobs() {
   document.title = t("Discover Jobs") + " | ClonedIn"
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (
-      categoryName: string,
-      modality: string,
-      searchTerm: string, 
-      minSalary: string,
-      maxSalary: string
-    ) => {
+    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string, sortBy: string,) => {
       setLoading(true)
 
       if (categoryName) queryParams.categoryName = categoryName
@@ -55,13 +57,11 @@ function DiscoverJobs() {
       if (searchTerm) queryParams.searchTerm = searchTerm
       if (minSalary) queryParams.minSalary = minSalary
       if (maxSalary) queryParams.maxSalary = maxSalary
+      if (page) queryParams.page = page
+      if (sortBy) queryParams.sortBy = sortBy
 
       try {
-        const response = await apiRequest({
-          url: "/jobOffers",
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getJobOffers(queryParams)
 
         if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
@@ -71,48 +71,47 @@ function DiscoverJobs() {
           setJobs([])
         } else {
           setJobs(response.data)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate],
+    [getJobOffers, queryParams, navigate],
   )
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   useEffect(() => {
     if (isLoading) {
-      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary)
+      fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
-  }, [
-    apiRequest,
-    categoryName,
-    modality,
-    searchTerm,
-    minSalary,
-    maxSalary,
-    isLoading,
-    fetchJobs,
-    setSearchParams,
-    queryParams
-  ])
+  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, setSearchParams, queryParams])
 
   const handleSearch = () => {
     console.log("Search")
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
+    setLoading(true)
+  }
+
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy.toString())
     setLoading(true)
   }
 
@@ -130,7 +129,6 @@ function DiscoverJobs() {
     setLoading(true)
   }
 
-  
   const jobsList = jobs.map((job) => {
     return <JobOfferDiscoverCard job={job} key={job.id} />
   })
@@ -247,9 +245,25 @@ function DiscoverJobs() {
               </div>
             </Row>
           </Col>
-          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
-            <Row>
-              <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+          <Col className="d-flex flex-column mt-2 mr-2 mb-2">
+            <Row className="my-2">
+            <div className="d-flex justify-content-between">
+                <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
+                <div style={{ width: "200px" }}>
+                  <Form.Select
+                    className="px-3"
+                    aria-label="Sort by select"
+                    value={sortBy}
+                    onChange={(e) => handleSort(e.target.value)}
+                  >
+                    <option value={SortBy.DEFAULT}> {t("Order By")} </option>
+                    <option value={SortBy.SALARY_DESC}> {t("Higer Salary")} </option>
+                    <option value={SortBy.SALARY_ASC}> {t("Lower Salary")} </option>
+                    <option value={SortBy.OLDEST}> {t("Date asc")} </option>
+                    <option value={SortBy.RECENT}> {t("Date desc")} </option>
+                  </Form.Select>
+                </div>
+              </div>
             </Row>
             <Row className="w-100">
               <Container
@@ -271,7 +285,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                <Pagination />
+                <Pagination pages={totalPages} setter={handlePage}/>
               </Container>
             </Row>
           </Col>

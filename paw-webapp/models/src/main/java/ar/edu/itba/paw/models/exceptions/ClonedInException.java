@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class ClonedInException extends RuntimeException implements ClonedInMappeableException{
 
-    private static final Response.Status STATUS = Response.Status.INTERNAL_SERVER_ERROR;
+    private static final int STATUS = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
     private static final String SIMPLE_MESSAGE = "ClonedInException";
 
     protected ClonedInException(String message) {
@@ -22,7 +22,7 @@ public class ClonedInException extends RuntimeException implements ClonedInMappe
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

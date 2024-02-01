@@ -11,7 +11,8 @@ import Pagination from "../components/pagination"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
 
@@ -19,8 +20,10 @@ function DiscoverProfiles() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getUsers } = useGetUserData()
+  const { getCategories } = useGetCategories()
 
   const [isLoading, setLoading] = useState(true)
   const [users, setUsers] = useState<any[]>([])
@@ -31,6 +34,9 @@ function DiscoverProfiles() {
   const [categoryName, setCategoryName] = useState("")
 
   const [educationLevel, setEducationLevel] = useState("")
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [minExpYears, setMinExpYears] = useState("")
   const [maxExpYears, setMaxExpYears] = useState("")
@@ -47,6 +53,7 @@ function DiscoverProfiles() {
       searchTerm: string,
       minExpYears: string,
       maxExpYears: string,
+      page: string
     ) => {
       setLoading(true)
 
@@ -55,53 +62,45 @@ function DiscoverProfiles() {
       if (searchTerm) queryParams.searchTerm = searchTerm
       if (minExpYears) queryParams.minExpYears = minExpYears
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
+      if (page) queryParams.page = page
 
       try {
-        const response = await apiRequest({
-          url: "/users",
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getUsers(queryParams)
 
-        if (response.status === 500) {
+        if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
         }
-
         if (response.status === HttpStatusCode.NoContent) {
           setUsers([])
         } else {
           setUsers(response.data)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
-        // Handle error as needed
         console.error("Error fetching users:", error)
       }
       setLoading(false)
     },
-    [apiRequest, queryParams, navigate],
+    [getUsers, queryParams, navigate],
   )
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   useEffect(() => {
     if (isLoading) {
-      // setSearchParams(queryParams)
-      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears)
+      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page)
     }
   }, [
-    apiRequest,
     categoryName,
     educationLevel,
     searchTerm,
@@ -115,6 +114,12 @@ function DiscoverProfiles() {
 
   const handleSearch = () => {
     console.log("Search")
+    setLoading(true)
+  }
+
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
     setLoading(true)
   }
 
@@ -134,9 +139,7 @@ function DiscoverProfiles() {
 
   //TODO: ordenamiento
   const usersList = users.map((user) => {
-    return (
-        <ProfileUserCard user={user} />
-    )
+    return <ProfileUserCard user={user} />
   })
 
   return (
@@ -289,7 +292,7 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Pagination />
+                  <Pagination pages={totalPages} setter={handlePage}/>
                 </div>
               </Container>
             </Row>

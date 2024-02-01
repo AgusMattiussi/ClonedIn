@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePostUserData } from "../hooks/usePostUserData"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -16,25 +16,22 @@ function SkillsForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { addSkill } = usePostUserData()
 
   document.title = t("Skills Form Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    skill: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
+    skill: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
   })
 
   const handlePost = async (e: any) => {
     const skill = e.skill
-    const response = await apiRequest({
-      url: `/users/${id}/skills`,
-      method: "POST",
-      body: {
-        skill,
-      },
-    })
+    const response = await addSkill(id, skill)
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${id}`)
     } else {

@@ -13,7 +13,9 @@ import { JobOfferAvailability, UserRole } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -24,7 +26,9 @@ function ProfileEnterprise() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
 
-  const { loading, apiRequest } = useRequestApi()
+  const { getEnterpriseById, getEnterpriseJobOffers } = useGetEnterpriseData()
+  const { getUserJobs } = useGetJobOfferData()
+  const { closeJobOffer } = usePutEnterpriseData()
 
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [isEnterpriseLoading, setEnterpriseLoading] = useState(true)
@@ -35,68 +39,80 @@ function ProfileEnterprise() {
 
   const [jobOfferToCloseId, setJobOfferToCloseId] = useState<number | null>(null)
 
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
+
+  let queryParams: Record<string, string> = {}
+
   useEffect(() => {
     const fetchEnterprise = async () => {
-      const response = await apiRequest({
-        url: `/enterprises/${id}/`,
-        method: "GET",
-      })
+      const response = await getEnterpriseById(id)
 
       if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
-
       setEnterprise(response.data)
       setEnterpriseLoading(false)
     }
 
-    const fetchEnterpriseJobs = async () => {
-      const response = await apiRequest({
-        url: `/enterprises/${id}/jobOffers`,
-        method: "GET",
-      })
+    const fetchEnterpriseJobs = async (page: string) => {
+      if (page) queryParams.page = page
+
+      const response = await getEnterpriseJobOffers(id, queryParams)
+
       if (response.status === HttpStatusCode.NoContent) {
         setJobs([])
       } else {
         setJobs(response.data)
+        setTotalPages(response.headers["x-total-pages"] as string)
+        setLinks(response.headers.link as string)
       }
       setJobsLoading(false)
     }
 
-    const fetchUserJobs = async () => {
-      const response = await apiRequest({
-        url: `/jobOffers?enterpriseId=${id}`,
-        method: "GET",
-      })
+    const fetchUserJobs = async (page: string) => {
+      if (page) queryParams.page = page
+
+      const response = await getUserJobs(id, queryParams)
+
       if (response.status === HttpStatusCode.NoContent) {
         setUserJobs([])
       } else {
         setUserJobs(response.data)
+        setTotalPages(response.headers["x-total-pages"] as string)
+        setLinks(response.headers.link as string)
       }
-        setJobsLoading(false)
-      }
+      setJobsLoading(false)
+    }
 
     if (isEnterpriseLoading) {
       fetchEnterprise()
     }
     if (jobsLoading) {
       if (userInfo?.role === UserRole.ENTERPRISE) {
-        fetchEnterpriseJobs()
+        fetchEnterpriseJobs(page)
       } else {
-        fetchUserJobs()
+        fetchUserJobs(page)
       }
     }
-  }, [apiRequest, id])
+  }, [
+    getEnterpriseById,
+    getEnterpriseJobOffers,
+    getUserJobs,
+    id,
+    isEnterpriseLoading,
+    jobsLoading,
+    navigate,
+    userInfo?.role,
+  ])
 
   const handleClose = async () => {
     const queryParams: Record<string, string> = {}
     queryParams.availability = JobOfferAvailability.CLOSED
 
-    const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/jobOffers/${jobOfferToCloseId}`,
-      method: "PUT",
-      queryParams: queryParams,
-    })
+    const response = await closeJobOffer(id, jobOfferToCloseId, queryParams)
+
     if (response.status === HttpStatusCode.Ok) {
       setJobsLoading(true)
       const modalElement = document.getElementById("cancelModal")
@@ -109,12 +125,18 @@ function ProfileEnterprise() {
     }
   }
 
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
+    setJobsLoading(true)
+  }
+
   const enterprisesJobs = jobs.map((job) => {
     return (
       <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
     )
   })
-  
+
   const usersJobs = userJobs.map((job) => {
     return (
       <JobOfferEnterpriseCard job={job} key={job.id} handleClose={handleClose} setJobOfferId={setJobOfferToCloseId} />
@@ -156,14 +178,12 @@ function ProfileEnterprise() {
               ) : (
                 <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
               )
+            ) : usersJobs.length > 0 ? (
+              <div className="w-100">{usersJobs}</div>
             ) : (
-              usersJobs.length > 0 ? (
-                <div className="w-100">{usersJobs}</div>
-              ) : (
-                <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
-              )
-            )} 
-            <Pagination />
+              <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
+            )}
+            <Pagination pages={totalPages} setter={handlePage}/>
           </Col>
         </Row>
       </Container>

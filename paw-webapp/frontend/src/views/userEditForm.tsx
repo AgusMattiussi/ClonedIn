@@ -3,34 +3,40 @@ import Navigation from "../components/navbar"
 import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
+import UserDto from "../utils/UserDto"
+import { educationLevels } from "../utils/constants"
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { usePutUserData } from "../hooks/usePutUserData"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
-import UserDto from "../utils/UserDto"
-import { educationLevels } from "../utils/constants"
 
 function EditUserForm() {
   const navigate = useNavigate()
-  const [categoryList, setCategoryList] = useState([])
+
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { getUserById } = useGetUserData()
+  const { getCategories } = useGetCategories()
+  const { modifyUserInfo } = usePutUserData()
+
+  const [categoryList, setCategoryList] = useState([])
 
   document.title = t("Edit Page Title")
 
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    name: yup.string().max(100, t('Line Max Length') as string),
-    location: yup.string().max(50, t('Single Line Max Length') as string),
-    position: yup.string().max(50, t('Single Line Max Length') as string),
-    aboutMe: yup.string().max(600, t('Long Line Max Length') as string),
+    name: yup.string().max(100, t("Line Max Length") as string),
+    location: yup.string().max(50, t("Single Line Max Length") as string),
+    position: yup.string().max(50, t("Single Line Max Length") as string),
+    aboutMe: yup.string().max(600, t("Long Line Max Length") as string),
   })
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [category, setCategory] = useState(user?.categoryInfo?.name)
@@ -38,11 +44,8 @@ function EditUserForm() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await apiRequest({
-        url: `/users/${id}`,
-        method: "GET",
-      })
-      if (response.status === 500 || response.status === 403) {
+      const response = await getUserById(id)
+      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
       if (response.status === HttpStatusCode.Ok) {
@@ -51,10 +54,7 @@ function EditUserForm() {
     }
 
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
@@ -62,25 +62,14 @@ function EditUserForm() {
       fetchCategories()
       fetchUser()
     }
-  }, [apiRequest])
+  }, [id, categoryList.length, getUserById, getCategories, navigate])
 
   const handlePost = async (e: any) => {
     const name = e.name
     const location = e.location
     const position = e.position
     const aboutMe = e.aboutMe
-    const response = await apiRequest({
-      url: `/users/${id}`,
-      method: "PUT",
-      body: {
-        name,
-        location,
-        position,
-        aboutMe,
-        category,
-        level,
-      },
-    })
+    const response = await modifyUserInfo(id, name, location, position, aboutMe, category, level)
     if (response.status === HttpStatusCode.Ok) {
       navigate(`/users/${id}`)
     } else {
@@ -89,10 +78,10 @@ function EditUserForm() {
   }
 
   const handleEducationLevelSelect = (e: any) => {
-    if (e.target.value == "No-especificado" || educationLevels.includes(e.target.value)) {
+    if (e.target.value === "No-especificado" || educationLevels.includes(e.target.value)) {
       setLevel(e.target.value)
     } else {
-      alert("ERROR");
+      alert("ERROR")
     }
   }
 

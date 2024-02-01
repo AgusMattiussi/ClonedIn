@@ -7,8 +7,10 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -27,6 +29,7 @@ public class CategoryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryController.class);
     private static final int CATEGORIES_BY_PAGE = 20;
+    private static final String S_CATEGORIES_BY_PAGE = "20";
 
     @Context
     private UriInfo uriInfo;
@@ -35,8 +38,10 @@ public class CategoryController {
 
     @GET
     @Produces(ClonedInMediaType.CATEGORY_LIST_V1)
-    public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
-        final PaginatedResource<Category> categories = categoryService.getAllCategories(page, CATEGORIES_BY_PAGE);
+    public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                   @QueryParam("pageSize") @DefaultValue(S_CATEGORIES_BY_PAGE)
+                                        @Min(1) @Max(2*CATEGORIES_BY_PAGE) final int pageSize) {
+        final PaginatedResource<Category> categories = categoryService.getAllCategories(page, pageSize);
 
         if (categories.getPage().isEmpty())
             return Response.noContent().build();

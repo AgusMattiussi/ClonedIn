@@ -34,9 +34,16 @@ export enum SortBy {
   DATE_ASC = "dateAsc",
   DATE_DESC = "dateDesc",
   YEARS_OF_EXPERIENCE = "yearsOfExperience",
+  DEFAULT = "predeterminado",
+  RECENT = "recientes",
+  OLDEST = "antiguas",
+  SALARY_ASC = "salarioAsc",
+  SALARY_DESC = "salarioDesc",
 }
 
 export const AUTHORIZATION_HEADER = "x-access-token"
+
+export const CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN = 603
 
 export const monthNames = [
   "No-especificado",

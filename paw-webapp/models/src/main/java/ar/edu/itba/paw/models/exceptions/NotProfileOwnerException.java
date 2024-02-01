@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class NotProfileOwnerException extends ClonedInException{
 
-    private static final Response.Status STATUS = Response.Status.FORBIDDEN;
+    private static final int STATUS = Response.Status.FORBIDDEN.getStatusCode();
     private static final String SIMPLE_MESSAGE = "User is not the profile owner";
     private static final String DETAILS = "The user with id %d is not the owner of this profile";
 
@@ -18,7 +18,7 @@ public class NotProfileOwnerException extends ClonedInException{
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

@@ -59,7 +59,8 @@ public class AuthController {
         Cookie refreshTokenCookie = WebUtils.getCookie(request, "ClonedInRefreshToken");
         if(refreshTokenCookie == null){
             // TODO: Devolver un mejor error
-            LOGGER.warn("An user (IP: {}) tried to refresh the JWT tokens without a refresh token cookie. ", request.getRemoteAddr());
+            LOGGER.warn("An user (IP: {}) tried to refresh the JWT tokens without a refresh token cookie. ",
+                    request.getRemoteAddr());
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 

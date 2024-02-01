@@ -7,17 +7,19 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { usePostEnterpriseData } from "../hooks/usePostEnterpriseData"
+import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
-import { useRequestApi } from "../api/apiRequest"
-import { HttpStatusCode } from "axios"
 
 function JobOfferForm() {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+  const { getCategories } = useGetCategories()
+  const { addJobOffer } = usePostEnterpriseData()
   const [categoryList, setCategoryList] = useState([])
 
   document.title = t("Job Offer Page Title")
@@ -25,30 +27,34 @@ function JobOfferForm() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    position: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    salary: yup.number().typeError(t('Invalid Number') as string).min(1, t('Invalid Salary Min') as string).max(1000000000, t('Invalid Salary Max') as string),
-    description: yup.string().max(5000, t('Description Max Length') as string),
-    skill1: yup.string().max(50, t('Single Line Max Length') as string),
-    skill2: yup.string().max(50, t('Single Line Max Length') as string),
-    skill3: yup.string().max(50, t('Single Line Max Length') as string),
-    skill4: yup.string().max(50, t('Single Line Max Length') as string),
+    position: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    salary: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .min(1, t("Invalid Salary Min") as string)
+      .max(1000000000, t("Invalid Salary Max") as string),
+    description: yup.string().max(5000, t("Description Max Length") as string),
+    skill1: yup.string().max(50, t("Single Line Max Length") as string),
+    skill2: yup.string().max(50, t("Single Line Max Length") as string),
+    skill3: yup.string().max(50, t("Single Line Max Length") as string),
+    skill4: yup.string().max(50, t("Single Line Max Length") as string),
   })
   const [category, setCategory] = useState("No-Especificado")
   const [modality, setModality] = useState("Remoto")
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   const handlePost = async (e: any) => {
     const jobPosition = e.position
@@ -58,21 +64,18 @@ function JobOfferForm() {
     const skill2 = e.skill2
     const skill3 = e.skill3
     const skill4 = e.skill4
-    const response = await apiRequest({
-      url: `/enterprises/${id}/jobOffers`,
-      method: "POST",
-      body: {
-        jobPosition,
-        jobDescription,
-        salary,
-        category,
-        modality,
-        skill1,
-        skill2,
-        skill3,
-        skill4,
-      },
-    })
+    const response = await addJobOffer(
+      id,
+      jobPosition,
+      jobDescription,
+      salary,
+      category,
+      modality,
+      skill1,
+      skill2,
+      skill3,
+      skill4,
+    )
     if (response.status === HttpStatusCode.Created) {
       navigate(`/enterprises/${id}`)
     } else {
@@ -140,60 +143,60 @@ function JobOfferForm() {
                               <Form.Control.Feedback type="invalid">{errors.salary}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex">
-                            <Form.Group controlId="formBasicSkill">
-                              <Form.Control
-                                name="skill1"
-                                className="input"
-                                placeholder={t("Required Skills").toString()}
-                                value={values.skill1}
-                                onChange={(e) => {
-                                  handleChange(e)
-                                }}
-                                isInvalid={!!errors.skill1}
-                              />
-                              <Form.Control.Feedback type="invalid">{errors.skill1}</Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group controlId="formBasicSkill">
-                              <Form.Control
-                                name="skill2"
-                                className="input"
-                                placeholder={t("Required Skills").toString()}
-                                value={values.skill2}
-                                onChange={(e) => {
-                                  handleChange(e)
-                                }}
-                                isInvalid={!!errors.skill2}
-                              />
-                              <Form.Control.Feedback type="invalid">{errors.skill2}</Form.Control.Feedback>
-                            </Form.Group>
+                              <Form.Group controlId="formBasicSkill">
+                                <Form.Control
+                                  name="skill1"
+                                  className="input"
+                                  placeholder={t("Required Skills").toString()}
+                                  value={values.skill1}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                  }}
+                                  isInvalid={!!errors.skill1}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.skill1}</Form.Control.Feedback>
+                              </Form.Group>
+                              <Form.Group controlId="formBasicSkill">
+                                <Form.Control
+                                  name="skill2"
+                                  className="input"
+                                  placeholder={t("Required Skills").toString()}
+                                  value={values.skill2}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                  }}
+                                  isInvalid={!!errors.skill2}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.skill2}</Form.Control.Feedback>
+                              </Form.Group>
                             </div>
                             <div className="d-flex mb-4">
-                            <Form.Group className="mb-3" controlId="formBasicSkill">
-                              <Form.Control
-                                name="skill3"
-                                className="input"
-                                placeholder={t("Required Skills").toString()}
-                                value={values.skill3}
-                                onChange={(e) => {
-                                  handleChange(e)
-                                }}
-                                isInvalid={!!errors.skill3}
-                              />
-                              <Form.Control.Feedback type="invalid">{errors.skill3}</Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3 ml-3" controlId="formBasicSkill">
-                              <Form.Control
-                                name="skill4"
-                                className="input"
-                                placeholder={t("Required Skills").toString()}
-                                value={values.skill4}
-                                onChange={(e) => {
-                                  handleChange(e)
-                                }}
-                                isInvalid={!!errors.skill4}
-                              />
-                              <Form.Control.Feedback type="invalid">{errors.skill4}</Form.Control.Feedback>
-                            </Form.Group>
+                              <Form.Group className="mb-3" controlId="formBasicSkill">
+                                <Form.Control
+                                  name="skill3"
+                                  className="input"
+                                  placeholder={t("Required Skills").toString()}
+                                  value={values.skill3}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                  }}
+                                  isInvalid={!!errors.skill3}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.skill3}</Form.Control.Feedback>
+                              </Form.Group>
+                              <Form.Group className="mb-3 ml-3" controlId="formBasicSkill">
+                                <Form.Control
+                                  name="skill4"
+                                  className="input"
+                                  placeholder={t("Required Skills").toString()}
+                                  value={values.skill4}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                  }}
+                                  isInvalid={!!errors.skill4}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.skill4}</Form.Control.Feedback>
+                              </Form.Group>
                             </div>
                             <div className="d-flex mb-4">
                               <label className="area mx-2 py-1" style={{ width: "100px" }}>

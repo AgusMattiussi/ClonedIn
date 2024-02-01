@@ -5,7 +5,7 @@ import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import Loader from "../components/loader"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -15,16 +15,14 @@ function JobOffer() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
 
-  const { loading, apiRequest } = useRequestApi()
+  const { getJobOfferById } = useGetJobOfferData()
+
   const [job, setJob] = useState<JobOfferDto>({} as JobOfferDto)
   const [isJobLoading, setJobLoading] = useState(true)
 
   useEffect(() => {
     const fetchJob = async () => {
-      const response = await apiRequest({
-        url: `/jobOffers/${id}`,
-        method: "GET",
-      })
+      const response = await getJobOfferById(id)
 
       if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
@@ -34,7 +32,7 @@ function JobOffer() {
       setJobLoading(false)
     }
     if (isJobLoading) fetchJob()
-  }, [apiRequest, id, navigate, isJobLoading])
+  }, [getJobOfferById, id, navigate, isJobLoading])
 
   document.title = job?.position + " | ClonedIn"
 

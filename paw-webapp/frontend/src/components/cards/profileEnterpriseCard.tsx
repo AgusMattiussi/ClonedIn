@@ -10,6 +10,7 @@ import { useRequestApi } from "../../api/apiRequest"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useMemo, useState } from "react"
+import { HttpStatusCode } from "axios"
 
 function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
           ])
 
           setEnterpriseCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === 200 ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
           setLoadingData(false)
         }
       } catch (error) {
@@ -45,7 +46,11 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
-      <Card.Img variant="top" src={imageUrl} />
+      {imageUrl === "" ? (
+        <div className="spinner-border" role="status" />
+      ) : (
+        <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+      )}
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>
           <div className="d-flex align-items-center justify-content-center">
@@ -82,7 +87,9 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
               {enterprise.links.category !== null ? (
                 <div>
                   <Badge pill bg="success" className="mx-2">
-                    {enterpriseCategory!.name == "No-Especificado" ? t("No especificado") : t(enterpriseCategory!.name)}
+                    {enterpriseCategory!.name === "No-Especificado"
+                      ? t("No especificado")
+                      : t(enterpriseCategory!.name)}
                   </Badge>
                 </div>
               ) : (
@@ -94,14 +101,17 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.GeoAltFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Location")}: {enterprise.location === "" || enterprise.location == null ? t("No especificado") : enterprise.location}
+                {t("Location")}:{" "}
+                {enterprise.location === "" || enterprise.location == null ? t("No especificado") : enterprise.location}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
               <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Quantity of employees")}: 
-                {enterprise.workers === "" || enterprise.workers === null || enterprise.workers === "No-especificado" ? t("No especificado") : enterprise.workers}
+                {t("Quantity of employees")}:
+                {enterprise.workers === "" || enterprise.workers === null || enterprise.workers === "No-especificado"
+                  ? t("No especificado")
+                  : enterprise.workers}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">
@@ -113,14 +123,20 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.Globe color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Website")}: {enterprise.website == "" || enterprise.website == null ? t("No especificado") : enterprise.website}
+                {t("Website")}:{" "}
+                {enterprise.website === "" || enterprise.website == null ? t("No especificado") : enterprise.website}
               </p>
             </div>
             <div className="d-flex flex-column align-items-start my-2">
               <p className="fw-bold" style={{ marginBottom: "2px" }}>
                 {t("About Us")}
               </p>
-              <p> {enterprise.description == "" || enterprise.description == null ? t("No especificado") : enterprise.description}</p>
+              <p>
+                {" "}
+                {enterprise.description === "" || enterprise.description == null
+                  ? t("No especificado")
+                  : enterprise.description}
+              </p>
             </div>
           </div>
         </div>

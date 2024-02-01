@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class SkillNotFoundException extends ClonedInException{
 
-    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final int STATUS = Response.Status.NOT_FOUND.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Skill not found";
     private static final String DETAILS = "The skill with id %d was not found or does not exist";
 
@@ -18,7 +18,7 @@ public class SkillNotFoundException extends ClonedInException{
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }

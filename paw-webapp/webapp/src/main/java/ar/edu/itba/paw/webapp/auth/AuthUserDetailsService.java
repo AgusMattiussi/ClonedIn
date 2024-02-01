@@ -20,9 +20,6 @@ import java.util.Optional;
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
 
-    private static final GrantedAuthority USER_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.USER.name());
-    private static final GrantedAuthority ENTERPRISE_SIMPLE_GRANTED_AUTHORITY  = new SimpleGrantedAuthority(Role.ENTERPRISE.name());
-
     @Autowired
     private UserService us;
     @Autowired
@@ -34,8 +31,6 @@ public class AuthUserDetailsService implements UserDetailsService {
         this.es = es;
     }
 
-    //public AuthUserDetailsService(){};
-
     // Username = email
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
@@ -46,27 +41,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         }
         
         // Puede ser empresa. Si no, no existe el usuario
-        final Enterprise enterprise = es.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("No user by the email '%s'", email)));
-        return enterprise;
-    }
-    
-
-    public boolean isUser(Authentication loggedUser){
-        return loggedUser.getAuthorities().contains(USER_SIMPLE_GRANTED_AUTHORITY);
-    }
-
-    public boolean isEnterprise(Authentication loggedUser){
-        return loggedUser.getAuthorities().contains(ENTERPRISE_SIMPLE_GRANTED_AUTHORITY);
-    }
-
-    //TODO: idFromEmail()
-    public long getLoggedUserId(Authentication loggedUser){
-        if(isUser(loggedUser)) {
-            User user = us.findByEmail(loggedUser.getName()).orElseThrow(() -> new UserNotFoundException(loggedUser.getName()));
-            return user.getId();
-        } else {
-            Enterprise enterprise = es.findByEmail(loggedUser.getName()).orElseThrow(() -> new UserNotFoundException(loggedUser.getName()));
-            return enterprise.getId();
-        }
+        return es.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("No user by the email '%s'", email)));
     }
 }

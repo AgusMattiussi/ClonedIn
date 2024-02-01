@@ -105,7 +105,7 @@ function JobOfferDiscoverCard({
         <span>
           <h5 className="pt-2">
             <Badge pill bg="success">
-              {job.links.category == null ? t("No-especificado") : t(jobCategory!.name)}
+              {jobCategory!.name == "No-Especificado" ? t("No especificado") : t(jobCategory!.name)}
             </Badge>
           </h5>
         </span>

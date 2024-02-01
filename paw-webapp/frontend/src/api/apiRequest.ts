@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Buffer } from "buffer"
 import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios"
 import { useNavigate } from "react-router-dom"
-import { BASE_URL, AUTHORIZATION_HEADER } from "../utils/constants"
+import { BASE_URL, AUTHORIZATION_HEADER, CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN } from "../utils/constants"
 import { useSharedAuth } from "./auth"
 
 export interface BasicCredentials {
@@ -23,7 +23,7 @@ export interface ApiRequestInput {
 export const useRequestApi = () => {
   const [loading, setLoading] = useState(false)
 
-  const { getAccessToken, setAccessToken, isTokenExpired, getRefreshToken } = useSharedAuth()
+  const { getAccessToken, setAccessToken } = useSharedAuth()
 
   const navigate = useNavigate()
 
@@ -35,39 +35,9 @@ export const useRequestApi = () => {
 
   async function apiRequest(input: ApiRequestInput): Promise<AxiosResponse> {
     const accessToken = getAccessToken()
-    // const refreshToken = getRefreshToken()
-
-    // const isAccessTokenExpired = isTokenExpired(accessToken?.replace(/"/g, "") || "")
-
-    // if (isAccessTokenExpired && refreshToken) {
-    //   try {
-    //     const refreshResponse = await api.post("auth/refresh-tokens", {
-    //       headers: { Cookie: `ClonedInRefreshToken=${refreshToken}` },
-    //     })
-
-    //     if (refreshResponse.headers[AUTHORIZATION_HEADER]) {
-    //       setAccessToken(refreshResponse.headers[AUTHORIZATION_HEADER])
-    //     }
-    //   } catch (refreshError) {
-    //     // Handle error when refresh token is invalid or expired
-    //     navigate("/login", {
-    //       state: { from: window.location.pathname.substring(13) },
-    //     })
-    //     throw new Error("Unable to refresh token. Please login again")
-    //   }
-    // }
 
     const { url, method, requiresAuth, credentials } = input
     let { headers, body } = input
-
-    if (requiresAuth) {
-      if (!accessToken && !credentials) {
-        navigate("/login", {
-          state: { from: window.location.pathname.substring(13) },
-        })
-        throw new Error("No auth token or credentials. Please login")
-      }
-    }
 
     if (credentials) {
       const encodedBasic = Buffer.from(`${credentials?.username}:${credentials?.password}`).toString("base64")
@@ -97,6 +67,10 @@ export const useRequestApi = () => {
 
       if (response.headers[AUTHORIZATION_HEADER]) {
         setAccessToken(response.headers[AUTHORIZATION_HEADER])
+      }
+
+      if (response.status === CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN) {
+        navigate("/login")
       }
 
       return response

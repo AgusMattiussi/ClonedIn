@@ -11,11 +11,15 @@ import Pagination from "../components/pagination"
 import AcceptModal from "../components/modals/acceptModal"
 import RejectModal from "../components/modals/rejectModal"
 import Loader from "../components/loader"
-import { JobOfferStatus, SortBy, JobOfferAvailability, FilledBy } from "../utils/constants"
+import { JobOfferStatus, SortBy, FilledBy } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
+import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
+import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 
@@ -23,15 +27,23 @@ function EnterpriseInterested() {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
+
+  const { getCategoryByUrl } = useGetCategories()
+  const { getUserByUrl, getUserExtraInfo } = useGetUserData()
+  const { getEnterpriseContacts } = useGetEnterpriseData()
+  const { answerEnterpriseContact } = usePutEnterpriseData()
+  const { getJobOfferByUrl } = useGetJobOfferData()
 
   const [isLoading, setLoading] = useState(true)
   const [contacts, setContacts] = useState<ContactDto[]>([])
 
   const [filterStatus, setFilterStatus] = useState("")
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
-  const [filledBy, setFilledBy] = useState(FilledBy.USER.toString())
+  const [filledBy] = useState(FilledBy.USER.toString())
+  const [totalPages, setTotalPages] = useState("")
+  const [links, setLinks] = useState("")
+  const [page, setPage] = useState("1")
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
   const [userToAnswerId, setUserToAnswerId] = useState<any>()
@@ -43,10 +55,7 @@ function EnterpriseInterested() {
   const fetchUserInfo = useCallback(
     async (userUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: userUrl,
-          method: "GET",
-        })
+        const response = await getUserByUrl(userUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -59,16 +68,13 @@ function EnterpriseInterested() {
         return null
       }
     },
-    [apiRequest],
+    [getUserByUrl],
   )
 
   const fetchJobOfferInfo = useCallback(
     async (jobOfferUrl: string) => {
       try {
-        const response = await apiRequest({
-          url: jobOfferUrl,
-          method: "GET",
-        })
+        const response = await getJobOfferByUrl(jobOfferUrl)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -81,16 +87,13 @@ function EnterpriseInterested() {
         return null
       }
     },
-    [apiRequest],
+    [getJobOfferByUrl],
   )
 
   const fetchCategoryInfo = useCallback(
     async (url: string) => {
       try {
-        const response = await apiRequest({
-          url: url,
-          method: "GET",
-        })
+        const response = await getCategoryByUrl(url)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -103,16 +106,13 @@ function EnterpriseInterested() {
         return null
       }
     },
-    [apiRequest],
+    [getCategoryByUrl],
   )
 
   const fetchExtraInfo = useCallback(
     async (url: string) => {
       try {
-        const response = await apiRequest({
-          url: url,
-          method: "GET",
-        })
+        const response = await getUserExtraInfo(url)
 
         if (response.status === HttpStatusCode.Ok) {
           return response.data
@@ -125,22 +125,19 @@ function EnterpriseInterested() {
         return []
       }
     },
-    [apiRequest],
+    [getUserExtraInfo],
   )
 
   const fetchContacts = useCallback(
-    async (status: string, sortBy: string, filledBy: string) => {
+    async (status: string, sortBy: string, filledBy: string, page: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
       if (filledBy) queryParams.filledBy = filledBy
+      if (page) queryParams.page = page
 
       try {
-        const response = await apiRequest({
-          url: `/enterprises/${userInfo?.id}/contacts`,
-          method: "GET",
-          queryParams: queryParams,
-        })
+        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
 
         if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/403")
@@ -175,6 +172,8 @@ function EnterpriseInterested() {
             }),
           )
           setContacts(contactsData)
+          setTotalPages(response.headers["x-total-pages"] as string)
+          setLinks(response.headers.link as string)
         }
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -182,7 +181,7 @@ function EnterpriseInterested() {
       setLoading(false)
     },
     [
-      apiRequest,
+      getEnterpriseContacts,
       queryParams,
       navigate,
       userInfo?.id,
@@ -195,7 +194,7 @@ function EnterpriseInterested() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchContacts(filterStatus, sortBy, filledBy)
+      fetchContacts(filterStatus, sortBy, filledBy, page)
     }
   }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy])
 
@@ -214,15 +213,17 @@ function EnterpriseInterested() {
     setUserToAnswerId(userId)
   }
 
+  const handlePage = (pageNumber: string) => {
+    console.log("Page")
+    setPage(pageNumber)
+    setLoading(true)
+  }
+
   const handleAnswer = async (answer: string) => {
     const queryParams: Record<string, string> = {}
     queryParams.status = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
 
-    const response = await apiRequest({
-      url: `/enterprises/${userInfo?.id}/contacts/${jobOfferToAnswerId}/${userToAnswerId}`,
-      method: "PUT",
-      queryParams: queryParams,
-    })
+    const response = await answerEnterpriseContact(userInfo?.id, jobOfferToAnswerId, userToAnswerId, queryParams)
 
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
@@ -249,7 +250,11 @@ function EnterpriseInterested() {
             {contact.userInfo?.name}
           </Link>
         </td>
-        <td>{contact.userInfo?.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.userInfo!.categoryInfo.name)}</td>
+        <td>
+          {contact.userInfo?.categoryInfo.name == "No-Especificado"
+            ? t("No especificado")
+            : t(contact.userInfo!.categoryInfo.name)}
+        </td>
         <td>
           {contact.userInfo?.skillsInfo.slice(0, 3).map((skill, index) => (
             <Badge pill bg="success" style={{ marginBottom: "0.5rem", width: "fit-content" }} key={index}>
@@ -406,7 +411,7 @@ function EnterpriseInterested() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              <Pagination />
+              <Pagination pages={totalPages} setter={handlePage}/>
             </Row>
           </Col>
         </Row>

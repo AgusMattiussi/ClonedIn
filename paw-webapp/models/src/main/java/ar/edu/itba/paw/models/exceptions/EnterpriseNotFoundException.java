@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 
 public class EnterpriseNotFoundException extends ClonedInException{
 
-    private static final Response.Status STATUS = Response.Status.NOT_FOUND;
+    private static final int STATUS = Response.Status.NOT_FOUND.getStatusCode();
     private static final String SIMPLE_MESSAGE = "Enterprise not found";
     private static final String DETAILS_WITH_ID = "The enterprise with id %s was not found or does not exist.";
     private static final String DETAILS_WITH_NAME = "The enterprise with name '%s' was not found or does not exist.";
@@ -23,7 +23,7 @@ public class EnterpriseNotFoundException extends ClonedInException{
     }
 
     @Override
-    public Response.Status getHttpStatus() {
+    public int getHttpStatus() {
         return STATUS;
     }
 }
