@@ -16,7 +16,7 @@ import { useSharedAuth } from "../api/auth"
 import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
-import { useNavigate, useParams } from "react-router-dom"
+import { createSearchParams, useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
 function ProfileEnterprise() {
@@ -40,7 +40,6 @@ function ProfileEnterprise() {
   const [jobOfferToCloseId, setJobOfferToCloseId] = useState<number | null>(null)
 
   const [totalPages, setTotalPages] = useState("")
-  const [links, setLinks] = useState("")
   const [page, setPage] = useState("1")
 
   let queryParams: Record<string, string> = {}
@@ -66,7 +65,6 @@ function ProfileEnterprise() {
       } else {
         setJobs(response.data)
         setTotalPages(response.headers["x-total-pages"] as string)
-        setLinks(response.headers.link as string)
       }
       setJobsLoading(false)
     }
@@ -81,7 +79,6 @@ function ProfileEnterprise() {
       } else {
         setUserJobs(response.data)
         setTotalPages(response.headers["x-total-pages"] as string)
-        setLinks(response.headers.link as string)
       }
       setJobsLoading(false)
     }
@@ -129,6 +126,9 @@ function ProfileEnterprise() {
     console.log("Page")
     setPage(pageNumber)
     setJobsLoading(true)
+    navigate({  
+      search: createSearchParams({ page: pageNumber }).toString() 
+    });
   }
 
   const enterprisesJobs = jobs.map((job) => {

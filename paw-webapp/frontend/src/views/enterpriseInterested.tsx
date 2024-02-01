@@ -20,7 +20,7 @@ import { useGetUserData } from "../hooks/useGetUserData"
 import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
-import { useNavigate, useSearchParams, Link } from "react-router-dom"
+import { useNavigate, useSearchParams, Link, createSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 
 function EnterpriseInterested() {
@@ -42,7 +42,6 @@ function EnterpriseInterested() {
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const [filledBy] = useState(FilledBy.USER.toString())
   const [totalPages, setTotalPages] = useState("")
-  const [links, setLinks] = useState("")
   const [page, setPage] = useState("1")
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
@@ -173,8 +172,16 @@ function EnterpriseInterested() {
           )
           setContacts(contactsData)
           setTotalPages(response.headers["x-total-pages"] as string)
-          setLinks(response.headers.link as string)
         }
+        navigate({  
+          search: createSearchParams({ 
+            page: page,
+            status: status,
+            filledBy: filledBy,
+            sortBy: sortBy
+          }).toString() 
+        });
+        setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
       }

@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
@@ -31,7 +31,6 @@ function DiscoverJobs() {
 
   const [searchTerm, setSearchTerm] = useState("")
   const [totalPages, setTotalPages] = useState("")
-  const [links, setLinks] = useState("")
   const [page, setPage] = useState("1")
 
   const [categoryList, setCategoryList] = useState([])
@@ -72,8 +71,19 @@ function DiscoverJobs() {
         } else {
           setJobs(response.data)
           setTotalPages(response.headers["x-total-pages"] as string)
-          setLinks(response.headers.link as string)
         }
+        navigate({  
+          search: createSearchParams({ 
+            page: page,
+            categoryName: categoryName,
+            modality: modality,
+            searchTerm: searchTerm,
+            minSalary: minSalary,
+            maxSalary: maxSalary,
+            sortBy: sortBy
+          }).toString() 
+        });
+        setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
       }

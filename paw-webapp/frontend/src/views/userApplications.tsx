@@ -17,7 +17,7 @@ import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
 import { useGetCategories } from "../hooks/useGetCategories"
 import { useGetUserData } from "../hooks/useGetUserData"
-import { useNavigate } from "react-router-dom"
+import { createSearchParams, useNavigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 function ApplicationsUser() {
   const navigate = useNavigate()
@@ -40,7 +40,6 @@ function ApplicationsUser() {
 
   const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
   const [totalPages, setTotalPages] = useState("")
-  const [links, setLinks] = useState("")
   const [page, setPage] = useState("1")
 
   document.title = t("Applications Page Title")
@@ -145,8 +144,16 @@ function ApplicationsUser() {
           )
           setApplications(contactsData)
           setTotalPages(response.headers["x-total-pages"] as string)
-          setLinks(response.headers.link as string)
         }
+        navigate({  
+          search: createSearchParams({ 
+            page: page,
+            status: status,
+            filledBy: filledBy,
+            sortBy: sortBy
+          }).toString() 
+        });
+        setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
       }

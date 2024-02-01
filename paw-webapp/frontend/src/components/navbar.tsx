@@ -34,16 +34,16 @@ function Navigation({ role }: { role: UserRole }) {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" onClick={() => navigate("/users")}>
+              <Nav.Link className="nav-item" href={"/users"}>
                 {t("Discover Profiles")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" href={`/enterprises/${userInfo?.id}`}>
                 {t("My Job Offers")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}/contacts`)}>
+              <Nav.Link className="nav-item" href={`/enterprises/${userInfo?.id}/contacts`}>
                 {t("My Recruits")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/enterprises/${userInfo?.id}/interested`)}>
+              <Nav.Link className="nav-item" href={`/enterprises/${userInfo?.id}/interested`}>
                 {t("Interested")}
               </Nav.Link>
             </Nav>
@@ -61,16 +61,16 @@ function Navigation({ role }: { role: UserRole }) {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="nav-item" onClick={() => navigate("/jobOffers")}>
+              <Nav.Link className="nav-item" href={"/jobOffers"}>
                 {t("Discover Jobs")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}`)}>
+              <Nav.Link className="nav-item" href={`/users/${userInfo?.id}`}>
                 {t("My Profile")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}/notifications`)}>
+              <Nav.Link className="nav-item" href={`/users/${userInfo?.id}/notifications`}>
                 {t("Job Offers")}
               </Nav.Link>
-              <Nav.Link className="nav-item" onClick={() => navigate(`/users/${userInfo?.id}/applications`)}>
+              <Nav.Link className="nav-item" href={`/users/${userInfo?.id}/applications`}>
                 {t("My Applications")}
               </Nav.Link>
             </Nav>

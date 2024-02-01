@@ -14,13 +14,13 @@ export default function Pagination({ setter, pages }: { setter: any; pages: stri
     <nav className="d-flex justify-content-center align-items-center">
       <MDBPagination className="mb-0">
         <MDBPaginationItem onClick={() => setter("1")}>
-          <MDBPaginationLink tabIndex={-1} aria-disabled="true">
+          <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
             {t("Index Pagination First")}
           </MDBPaginationLink>
         </MDBPaginationItem>
         {paginationNumbers.map((pageNumber) => (
           <MDBPaginationItem onClick={() => setter(pageNumber)}>
-          <MDBPaginationLink style={{ textDecoration: "none", color: "black", fontWeight: "bold" }}>
+          <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
             {pageNumber}
           </MDBPaginationLink>
         </MDBPaginationItem>
