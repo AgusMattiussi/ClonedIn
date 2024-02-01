@@ -133,16 +133,6 @@ public class UserController {
     }
 
 
-    // TODO: Esto deberia estar validado por un mail de confirmacion
-    /*@DELETE
-    @Path("/{id}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response deleteById(@PathParam("id") final long id) {
-        us.delete(id);
-        return Response.noContent().build();
-    }*/
-
-
     @GET
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)

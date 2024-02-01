@@ -121,7 +121,6 @@ public class UserDTO {
         }
 
         public UserDTOLinks(final UriInfo uriInfo, final User user) {
-            //TODO: Revisar si hace falta eliminar el webapp_war para deployar
             final UriBuilder userUriBuilder = uriInfo.getBaseUriBuilder()
                     .replacePath(USERS_URL)
                     .path(String.valueOf(user.getId()));

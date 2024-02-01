@@ -275,7 +275,6 @@ public class EnterpriseController {
         return Response.ok(contactDTO).build();
     }
 
-    //TODO: Evaluar que se puede hacer en cada caso, segun FilledBy
     @PUT
     @Path("/{id}/contacts/{joid}/{userId}")
     @PreAuthorize(JOB_OFFER_OWNER)
@@ -304,7 +303,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/image")
 //  @Produces - set dynamically
-//    @PreAuthorize(USER_OR_PROFILE_OWNER)
+//  @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
         if(profileImage == null)

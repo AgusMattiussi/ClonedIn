@@ -148,7 +148,6 @@ public class UserHibernateDaoTest {
         assertEquals(testUser, userList.get(0));
     }
 
-//   FIXME: Esta hasheada?
     @Test
     public void testChangePassword(){
         userDao.changePassword(testUser.getEmail(), CHANGED_PASSWORD);

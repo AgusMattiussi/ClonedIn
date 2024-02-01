@@ -3,11 +3,12 @@ package ar.edu.itba.paw.webapp.filter;
 import ar.edu.itba.paw.models.CustomUserDetails;
 import ar.edu.itba.paw.models.enums.AuthType;
 import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
-import ar.edu.itba.paw.webapp.auth.AuthService;
 import ar.edu.itba.paw.webapp.auth.AuthTypeWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtHelper;
+import ar.edu.itba.paw.webapp.utils.ClonedInUrls;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +24,11 @@ import javax.ws.rs.core.NewCookie;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Optional;
+
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.DOMAIN;
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.REFRESH_TOKEN_COOKIE;
 
 @Component
 public class JwtFilterUtils {
@@ -32,13 +37,13 @@ public class JwtFilterUtils {
     public static final String AUTH_HEADER_BASIC = "Basic ";
     public static final String ACCESS_TOKEN_HEADER = "X-Access-Token";
 
+    @Value("${jwt.refresh-token.expiration}")
+    private long REFRESH_EXPIRATION_TIME_MILLIS;
+
     @Autowired
     private JwtHelper jwtHelper;
     @Autowired
     private UserDetailsService userDetailsService;
-    @Autowired
-    private AuthService authService;
-
 
     public JwtFilterUtils(JwtHelper jwtHelper, AuthUserDetailsService userDetailsService) {
         this.jwtHelper = jwtHelper;
@@ -47,8 +52,8 @@ public class JwtFilterUtils {
 
     public void addTokens(HttpServletRequest request, HttpServletResponse response, String email){
         CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
-        String accessToken = authService.generateAccessToken(user);
-        NewCookie refreshTokenCookie = authService.generateRefreshTokenCookie(user, request.getRemoteAddr());
+        String accessToken = jwtHelper.generateAccessToken(user);
+        NewCookie refreshTokenCookie = this.generateRefreshTokenCookie(user, request.getRemoteAddr());
 
         response.addHeader(ACCESS_TOKEN_HEADER, accessToken);
         // We set the cookie header manually, since we need an HTTP Only cookie and javax.servlet.http.Cookie
@@ -109,7 +114,7 @@ public class JwtFilterUtils {
             return null;
 
         Optional<Cookie> refreshTokenCooie =  Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("ClonedInRefreshToken"))
+                .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE))
                 .findFirst();
 
         if (refreshTokenCooie.isPresent()){
@@ -117,4 +122,13 @@ public class JwtFilterUtils {
         }
         return null;
     }
+
+    public NewCookie generateRefreshTokenCookie(CustomUserDetails userDetails, String ip){
+        String refreshToken = jwtHelper.generateRefreshToken(userDetails, ip);
+        Date expiry = jwtHelper.extractExpiration(refreshToken);
+
+        return new NewCookie(REFRESH_TOKEN_COOKIE, refreshToken, "/", DOMAIN, 1,
+                null, (int) REFRESH_EXPIRATION_TIME_MILLIS/1000, expiry, false, true);
+    }
+
 }
