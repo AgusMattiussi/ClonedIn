@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -196,6 +198,7 @@ public class EnterpriseController {
     @Path("/{id}/contacts")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
+    @Transactional
     public Response getContacts(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("pageSize") @DefaultValue(S_CONTACTS_BY_PAGE)
@@ -213,7 +216,7 @@ public class EnterpriseController {
             return Response.noContent().build();
 
         List<ContactDTO> contactDTOList = contacts.getPage().stream()
-                .map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+                .map(c -> ContactDTO.fromContact(uriInfo, c, true)).collect(Collectors.toList());
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOList) {}), page,
                 contacts.getMaxPages());
@@ -240,6 +243,7 @@ public class EnterpriseController {
     @Path("/{id}/contacts/{joid}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)
+    @Transactional
     public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
                                     @PathParam("joid") @Min(1) final long joid,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
@@ -255,7 +259,7 @@ public class EnterpriseController {
             return Response.noContent().build();
 
         List<ContactDTO> contactDTOs = contacts.getPage().stream()
-                .map(c -> ContactDTO.fromContact(uriInfo, c)).collect(Collectors.toList());
+                .map(c -> ContactDTO.fromContact(uriInfo, c, true)).collect(Collectors.toList());
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 contacts.getMaxPages());
@@ -265,11 +269,12 @@ public class EnterpriseController {
     @Path("/{id}/contacts/{joid}/{userId}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)
+    @Transactional
     public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
                                     @PathParam("joid") @Min(1) final long joid,
                                     @PathParam("userId") @Min(1) final long userId) {
 
-        ContactDTO contactDTO = contactService.findByPrimaryKey(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c))
+        ContactDTO contactDTO = contactService.findByPrimaryKey(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c, true))
                 .orElseThrow(() -> new ContactNotFoundException(userId, joid));
 
         return Response.ok(contactDTO).build();

@@ -16,14 +16,22 @@ public class ContactDTO {
     private String filledBy;
     private String date;
     private ContactDTOLinks links;
+    private String userName;
+    private Integer userYearsOfExp;
 
-    public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact) {
+
+    public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact, boolean preFetchUserInfo) {
         final ContactDTO dto = new ContactDTO();
         dto.status = contact.getStatus();
         dto.filledBy = FilledBy.fromInt(contact.getFilledBy()).getAsString();
         dto.date = contact.getDate();
 
-        dto.links = new ContactDTOLinks(uriInfo, contact);
+        if(preFetchUserInfo) {
+            dto.userName = contact.getUser().getName();
+            dto.userYearsOfExp = contact.getUser().getYearsOfExperience();
+        }
+
+        dto.links = new ContactDTOLinks(uriInfo, contact, preFetchUserInfo);
 
         return dto;
     }
@@ -61,15 +69,32 @@ public class ContactDTO {
         this.links = links;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getUserYearsOfExp() {
+        return userYearsOfExp;
+    }
+
+    public void setUserYearsOfExp(Integer userYearsOfExp) {
+        this.userYearsOfExp = userYearsOfExp;
+    }
+
     public static class ContactDTOLinks {
         private URI user;
         private URI enterprise;
         private URI jobOffer;
+        private URI userCategory;
 
         public ContactDTOLinks() {
         }
 
-        public ContactDTOLinks(UriInfo uriInfo, Contact contact) {
+        public ContactDTOLinks(UriInfo uriInfo, Contact contact, boolean preFetchUserInfo) {
             UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
                     .path(contact.getUser().getId().toString());
@@ -84,6 +109,14 @@ public class ContactDTO {
                     .replacePath(JOB_OFFERS_URL)
                     .path(contact.getJobOffer().getId().toString());
             this.jobOffer = jobOfferUriBuilder.build();
+
+            if(preFetchUserInfo) {
+                Long categoryId = contact.getUser().getCategory().getId();
+                final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+                        .replacePath(CATEGORIES_URL)
+                        .path(categoryId.toString());
+                this.userCategory = categoryUriBuilder.build();
+            }
         }
 
         public URI getUser() {
@@ -108,6 +141,14 @@ public class ContactDTO {
 
         public void setJobOffer(URI jobOffer) {
             this.jobOffer = jobOffer;
+        }
+
+        public URI getUserCategory() {
+            return userCategory;
+        }
+
+        public void setUserCategory(URI userCategory) {
+            this.userCategory = userCategory;
         }
     }
 }

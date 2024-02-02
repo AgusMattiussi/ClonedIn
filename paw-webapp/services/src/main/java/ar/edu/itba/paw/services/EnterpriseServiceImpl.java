@@ -58,6 +58,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Optional<Enterprise> findById(long enterpriseId) {
         return enterpriseDao.findById(enterpriseId);
     }

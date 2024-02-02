@@ -152,7 +152,7 @@ public class UserController {
             return Response.noContent().build();
 
         List<ContactDTO> contactDTOs = applications.getPage().stream()
-                .map(contact -> ContactDTO.fromContact(uriInfo, contact)).collect(Collectors.toList());
+                .map(contact -> ContactDTO.fromContact(uriInfo, contact, false)).collect(Collectors.toList());
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 applications.getMaxPages());
