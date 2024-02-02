@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+//TODO: ELIMNARRRRR
 @Path("api/test")
 @Component
 public class TestController {

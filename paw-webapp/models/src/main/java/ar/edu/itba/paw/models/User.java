@@ -213,9 +213,9 @@ public class User implements CustomUserDetails {
 
     public int getYearsOfExperience() {
         int result = 0;
-        int currentYear=2022;
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         
-        for (Experience experience : getExperiences()) {
+        for (Experience experience : this.experiences) {
             result += (experience.getYearTo() == null ? currentYear : experience.getYearTo()) - experience.getYearFrom();
         }
 

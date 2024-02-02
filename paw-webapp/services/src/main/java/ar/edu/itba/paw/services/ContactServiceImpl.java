@@ -38,6 +38,7 @@ public class ContactServiceImpl implements ContactService {
     private EmailService emailService;
 
     @Override
+    @Transactional
     public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
         return contactDao.findByPrimaryKey(userID, jobOfferID);
     }
