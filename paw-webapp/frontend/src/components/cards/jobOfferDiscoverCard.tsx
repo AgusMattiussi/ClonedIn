@@ -33,6 +33,7 @@ function JobOfferDiscoverCard({
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
   const [skillsData, setSkillsData] = useState<SkillDto[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +68,17 @@ function JobOfferDiscoverCard({
 
     if (response.status === HttpStatusCode.Created) {
       setLoadingData(true)
+      const modalElement = document.getElementById("acceptModal")
+      modalElement?.classList.remove("show")
+      document.body.classList.remove("modal-open")
+      const modalBackdrop = document.querySelector(".modal-backdrop")
+      if (modalBackdrop) {
+        modalBackdrop.remove()
+      }
+      navigate(`/users/${userInfo?.id}/applications`)
+    }
+    else if (response.status === HttpStatusCode.Conflict) { 
+      setError(t("ContactedOrAppliedUser") as string)
       const modalElement = document.getElementById("acceptModal")
       modalElement?.classList.remove("show")
       document.body.classList.remove("modal-open")
@@ -154,6 +166,11 @@ function JobOfferDiscoverCard({
               <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
                 {t("Apply")}
               </Button>
+              {error && (
+                <div className="error" style={{ color: "red" }}>
+                  {error}
+                </div>
+              )}
             </div>
           ) : (<></>) )
         ) : (

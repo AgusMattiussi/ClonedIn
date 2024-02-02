@@ -147,6 +147,8 @@
   "Description": "Description",
   "Contacted": "Contacted",
   "ContactedOrApplied": "Contacted/Applied",
+  "ContactedOrAppliedEnterprise": "You've already contacted this user / This user has already applied",
+  "ContactedOrAppliedUser": "You've already applied to this job offer/ You've already been contacted for this job offer",
   "View More": "View more",
   "Apply": "Apply",
   "Date": "Date",
