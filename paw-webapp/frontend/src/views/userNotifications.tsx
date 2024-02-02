@@ -164,7 +164,7 @@ function NotificationsUser() {
     if (isLoading) {
       fetchNotifications(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy, page])
+  }, [])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)

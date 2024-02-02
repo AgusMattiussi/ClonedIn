@@ -167,7 +167,7 @@ function ApplicationsUser() {
     if (isLoading) {
       fetchApplications(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchApplications, isLoading, filterStatus, sortBy, filledBy, page])
+  }, [])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)

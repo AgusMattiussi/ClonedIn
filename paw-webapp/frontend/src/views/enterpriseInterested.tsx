@@ -4,7 +4,6 @@ import Col from "react-bootstrap/esm/Col"
 import Navigation from "../components/navbar"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
-import Badge from "react-bootstrap/Badge"
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit"
 import ContactDto from "../utils/ContactDto"
 import Pagination from "../components/pagination"
@@ -16,7 +15,6 @@ import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetUserData } from "../hooks/useGetUserData"
 import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
@@ -30,7 +28,6 @@ function EnterpriseInterested() {
   const { userInfo } = useSharedAuth()
 
   const { getCategoryByUrl } = useGetCategories()
-  const { getUserByUrl, getUserExtraInfo } = useGetUserData()
   const { getEnterpriseContacts } = useGetEnterpriseData()
   const { answerEnterpriseContact } = usePutEnterpriseData()
   const { getJobOfferByUrl } = useGetJobOfferData()
@@ -50,25 +47,6 @@ function EnterpriseInterested() {
   document.title = t("Interested Page Title")
 
   let queryParams: Record<string, string> = {}
-
-  const fetchUserInfo = useCallback(
-    async (userUrl: string) => {
-      try {
-        const response = await getUserByUrl(userUrl)
-
-        if (response.status === HttpStatusCode.Ok) {
-          return response.data
-        } else {
-          console.error("Error fetching user info:", response)
-          return null
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error)
-        return null
-      }
-    },
-    [getUserByUrl],
-  )
 
   const fetchJobOfferInfo = useCallback(
     async (jobOfferUrl: string) => {
@@ -108,96 +86,55 @@ function EnterpriseInterested() {
     [getCategoryByUrl],
   )
 
-  const fetchExtraInfo = useCallback(
-    async (url: string) => {
-      try {
-        const response = await getUserExtraInfo(url)
+  const fetchContacts = useCallback(async (status: string, sortBy: string, filledBy: string, page: string) => {
+    setLoading(true)
+    if (status) queryParams.status = status
+    if (sortBy) queryParams.sortBy = sortBy
+    if (filledBy) queryParams.filledBy = filledBy
+    if (page) queryParams.page = page
 
-        if (response.status === HttpStatusCode.Ok) {
-          return response.data
-        } else {
-          console.error("Error fetching info:", response)
-          return []
-        }
-      } catch (error) {
-        console.error("Error fetching info:", error)
-        return []
+    try {
+      const response = await getEnterpriseContacts(userInfo?.id, queryParams)
+
+      if (response.status === HttpStatusCode.InternalServerError) {
+        navigate("/403")
       }
-    },
-    [getUserExtraInfo],
-  )
 
-  const fetchContacts = useCallback(
-    async (status: string, sortBy: string, filledBy: string, page: string) => {
-      setLoading(true)
-      if (status) queryParams.status = status
-      if (sortBy) queryParams.sortBy = sortBy
-      if (filledBy) queryParams.filledBy = filledBy
-      if (page) queryParams.page = page
-
-      try {
-        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
-
-        if (response.status === HttpStatusCode.InternalServerError) {
-          navigate("/403")
-        }
-
-        if (response.status === HttpStatusCode.NoContent) {
-          setContacts([])
-        } else {
-          const contactsData = await Promise.all(
-            response.data.map(async (contact: ContactDto) => {
-              const userInfo = await fetchUserInfo(contact.links.user)
-              const userCategoryInfo = await fetchCategoryInfo(userInfo.links.category)
-              const userExperienceInfo = await fetchExtraInfo(userInfo.links.experiences)
-              const userSkillsInfo = await fetchExtraInfo(userInfo.links.skills)
-
-              const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
-              const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
-
-              return {
-                ...contact,
-                userInfo: {
-                  ...userInfo,
-                  categoryInfo: userCategoryInfo,
-                  experienceInfo: userExperienceInfo,
-                  skillsInfo: userSkillsInfo,
-                },
-                jobOfferInfo: {
-                  ...jobOfferInfo,
-                  categoryInfo: jobOfferCategoryInfo,
-                },
-              }
-            }),
-          )
-          setContacts(contactsData)
-          setTotalPages(response.headers["x-total-pages"] as string)
-        }
-        navigate({
-          search: createSearchParams({
-            page: page,
-            status: status,
-            filledBy: filledBy,
-            sortBy: sortBy,
-          }).toString(),
-        })
-        setPage("1")
-      } catch (error) {
-        console.error("Error fetching jobs:", error)
+      if (response.status === HttpStatusCode.NoContent) {
+        setContacts([])
+      } else {
+        const contactsData = await Promise.all(
+          response.data.map(async (contact: ContactDto) => {
+            const userCategoryInfo = await fetchCategoryInfo(contact.links.userCategory)
+            const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
+            const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
+            return {
+              ...contact,
+              categoryInfo: userCategoryInfo,
+              jobOfferInfo: {
+                ...jobOfferInfo,
+                categoryInfo: jobOfferCategoryInfo,
+              },
+            }
+          }),
+        )
+        setContacts(contactsData)
+        setTotalPages(response.headers["x-total-pages"] as string)
       }
-      setLoading(false)
-    },
-    [
-      getEnterpriseContacts,
-      queryParams,
-      navigate,
-      userInfo?.id,
-      fetchJobOfferInfo,
-      fetchUserInfo,
-      fetchExtraInfo,
-      fetchCategoryInfo,
-    ],
-  )
+      navigate({
+        search: createSearchParams({
+          page: page,
+          status: status,
+          filledBy: filledBy,
+          sortBy: sortBy,
+        }).toString(),
+      })
+      setPage("1")
+    } catch (error) {
+      console.error("Error fetching jobs:", error)
+    }
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
     if (isLoading) {
@@ -221,7 +158,6 @@ function EnterpriseInterested() {
   }
 
   const handlePage = (pageNumber: string) => {
-    console.log("Page")
     setPage(pageNumber)
     setLoading(true)
   }
@@ -253,23 +189,12 @@ function EnterpriseInterested() {
           </Link>
         </td>
         <td>
-          <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
-            {contact.userInfo?.name}
+          <Link to={`/users/${contact.userId}`} style={{ textDecoration: "none" }}>
+            {contact.userName}
           </Link>
         </td>
-        <td>
-          {contact.userInfo?.categoryInfo.name == "No-Especificado"
-            ? t("No especificado")
-            : t(contact.userInfo!.categoryInfo.name)}
-        </td>
-        <td>
-          {contact.userInfo?.skillsInfo.slice(0, 3).map((skill, index) => (
-            <Badge pill bg="success" style={{ marginBottom: "0.5rem", width: "fit-content" }} key={index}>
-              {skill.description}
-            </Badge>
-          ))}
-        </td>
-        <td>{contact.userInfo?.experienceInfo.length}</td>
+        <td>{contact.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.categoryInfo.name)}</td>
+        <td>{contact.userYearsOfExp}</td>
         <td>{contact.date}</td>
         <td>{t(contact.status)}</td>
         <td>
@@ -391,7 +316,6 @@ function EnterpriseInterested() {
                     <th scope="col">{t("Job Offer")}</th>
                     <th scope="col">{t("Name")}</th>
                     <th scope="col">{t("Category")}</th>
-                    <th scope="col">{t("Skills")}</th>
                     <th scope="col">{t("Years Of Experience")}</th>
                     <th scope="col">{t("Date")}</th>
                     <th scope="col">{t("Status")}</th>

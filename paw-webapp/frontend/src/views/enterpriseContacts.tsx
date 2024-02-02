@@ -14,7 +14,6 @@ import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetUserData } from "../hooks/useGetUserData"
 import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
@@ -28,7 +27,6 @@ function EnterpriseContacts() {
   const { userInfo } = useSharedAuth()
 
   const { getCategoryByUrl } = useGetCategories()
-  const { getUserByUrl } = useGetUserData()
   const { getEnterpriseContacts } = useGetEnterpriseData()
   const { answerEnterpriseContact } = usePutEnterpriseData()
   const { getJobOfferByUrl } = useGetJobOfferData()
@@ -48,25 +46,6 @@ function EnterpriseContacts() {
   document.title = t("My Recruits Page Title")
 
   let queryParams: Record<string, string> = {}
-
-  const fetchUserInfo = useCallback(
-    async (userUrl: string) => {
-      try {
-        const response = await getUserByUrl(userUrl)
-
-        if (response.status === HttpStatusCode.Ok) {
-          return response.data
-        } else {
-          console.error("Error fetching user info:", response)
-          return null
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error)
-        return null
-      }
-    },
-    [getUserByUrl],
-  )
 
   const fetchJobOfferInfo = useCallback(
     async (jobOfferUrl: string) => {
@@ -106,64 +85,57 @@ function EnterpriseContacts() {
     [getCategoryByUrl],
   )
 
-  const fetchContacts = useCallback(
-    async (status: string, sortBy: string, filledBy: string, page: string) => {
-      setLoading(true)
-      if (status) queryParams.status = status
-      if (sortBy) queryParams.sortBy = sortBy
-      if (filledBy) queryParams.filledBy = filledBy
-      if (page) queryParams.page = page
+  const fetchContacts = useCallback(async (status: string, sortBy: string, filledBy: string, page: string) => {
+    setLoading(true)
+    if (status) queryParams.status = status
+    if (sortBy) queryParams.sortBy = sortBy
+    if (filledBy) queryParams.filledBy = filledBy
+    if (page) queryParams.page = page
 
-      try {
-        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
+    try {
+      const response = await getEnterpriseContacts(userInfo?.id, queryParams)
 
-        if (response.status === HttpStatusCode.InternalServerError) {
-          navigate("/403")
-        }
-
-        if (response.status === HttpStatusCode.NoContent) {
-          setContacts([])
-        } else {
-          const contactsData = await Promise.all(
-            response.data.map(async (contact: ContactDto) => {
-              const userInfo = await fetchUserInfo(contact.links.user)
-              const userCategoryInfo = await fetchCategoryInfo(userInfo.links.category)
-
-              const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
-              const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
-
-              return {
-                ...contact,
-                userInfo: {
-                  ...userInfo,
-                  categoryInfo: userCategoryInfo,
-                },
-                jobOfferInfo: {
-                  ...jobOfferInfo,
-                  categoryInfo: jobOfferCategoryInfo,
-                },
-              }
-            }),
-          )
-          setContacts(contactsData)
-          setTotalPages(response.headers["x-total-pages"] as string)
-        }
-        navigate({
-          search: createSearchParams({
-            page: page,
-            status: status,
-            filledBy: filledBy,
-            sortBy: sortBy,
-          }).toString(),
-        })
-        setPage("1")
-      } catch (error) {
-        console.error("Error fetching jobs:", error)
+      if (response.status === HttpStatusCode.InternalServerError) {
+        navigate("/403")
       }
-      setLoading(false)
-    },
-    [getEnterpriseContacts, queryParams, navigate, userInfo?.id, fetchJobOfferInfo, fetchUserInfo, fetchCategoryInfo],
-  )
+
+      if (response.status === HttpStatusCode.NoContent) {
+        setContacts([])
+      } else {
+        const contactsData = await Promise.all(
+          response.data.map(async (contact: ContactDto) => {
+            const userCategoryInfo = await fetchCategoryInfo(contact.links.userCategory)
+
+            const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
+            const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
+
+            return {
+              ...contact,
+              categoryInfo: userCategoryInfo,
+              jobOfferInfo: {
+                ...jobOfferInfo,
+                categoryInfo: jobOfferCategoryInfo,
+              },
+            }
+          }),
+        )
+        setContacts(contactsData)
+        setTotalPages(response.headers["x-total-pages"] as string)
+      }
+      navigate({
+        search: createSearchParams({
+          page: page,
+          status: status,
+          filledBy: filledBy,
+          sortBy: sortBy,
+        }).toString(),
+      })
+      setPage("1")
+    } catch (error) {
+      console.error("Error fetching jobs:", error)
+    }
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
     if (isLoading) {
@@ -224,15 +196,11 @@ function EnterpriseContacts() {
             : t(contact.jobOfferInfo!.categoryInfo.name)}
         </td>
         <td>
-          <Link to={`/users/${contact.userInfo?.id}`} style={{ textDecoration: "none" }}>
-            {contact.userInfo?.name}
+          <Link to={`/users/${contact.userId}`} style={{ textDecoration: "none" }}>
+            {contact.userName}
           </Link>
         </td>
-        <td>
-          {contact.userInfo?.categoryInfo.name == "No-Especificado"
-            ? t("No especificado")
-            : t(contact.userInfo!.categoryInfo.name)}
-        </td>
+        <td>{contact.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.categoryInfo.name)}</td>
         <td>{contact.date}</td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (
