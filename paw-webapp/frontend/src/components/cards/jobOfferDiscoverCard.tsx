@@ -9,7 +9,7 @@ import JobOfferDto from "../../utils/JobOfferDto"
 import { useTranslation } from "react-i18next"
 import { useRequestApi } from "../../api/apiRequest"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams, Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 import { useSharedAuth } from "../../api/auth"
 import { JobOfferAvailability, UserRole } from "../../utils/constants"
@@ -17,11 +17,9 @@ import AcceptModal from "../modals/acceptModal"
 
 function JobOfferDiscoverCard({
   seeMoreView,
-  contacted,
   job,
 }: {
   seeMoreView: boolean
-  contacted: boolean
   job: JobOfferDto
 }) {
   const navigate = useNavigate()
@@ -141,15 +139,6 @@ function JobOfferDiscoverCard({
             {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
           </div>
         </div>
-        {contacted ? (
-          <div className="d-flex flex-column">
-            <h5>
-              <Badge bg="secondary">{t("ContactedOrApplied")}</Badge>
-            </h5>
-          </div>
-        ) : (
-          <div className="d-flex flex-column"></div>
-        )}
       </div>
       <div className="d-flex justify-content-between px-3">
         <div className="d-flex flex-column">
@@ -206,7 +195,6 @@ function JobOfferDiscoverCard({
 }
 
 JobOfferDiscoverCard.defaultProps = {
-  contacted: false,
   seeMoreView: false,
 }
 

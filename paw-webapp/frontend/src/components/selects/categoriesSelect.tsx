@@ -12,7 +12,6 @@ function CategoriesSelect() {
   const { loading, apiRequest } = useRequestApi()
   const [categoryList, setCategoryList] = useState([])
   const [category, setCategory] = useState("")
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -21,7 +20,6 @@ function CategoriesSelect() {
         method: "GET",
       })
       setCategoryList(response.data)
-      setError(null)
     }
 
     if (categoryList.length === 0) {

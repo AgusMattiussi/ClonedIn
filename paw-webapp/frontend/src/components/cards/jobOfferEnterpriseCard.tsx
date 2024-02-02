@@ -14,14 +14,10 @@ import { Link, useNavigate } from "react-router-dom"
 import { useSharedAuth } from "../../api/auth"
 
 function JobOfferEnterpriseCard({
-  status,
-  contacted,
   job,
   handleClose,
   setJobOfferId,
 }: {
-  status: any
-  contacted: boolean
   job: any
   handleClose: any
   setJobOfferId: any
@@ -161,11 +157,6 @@ function JobOfferEnterpriseCard({
       </div>
     </Card>
   )
-}
-
-JobOfferEnterpriseCard.defaultProps = {
-  contacted: false,
-  status: "closed",
 }
 
 export default JobOfferEnterpriseCard

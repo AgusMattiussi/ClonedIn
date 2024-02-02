@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 function EnterpriseSortBySelect() {
   const { t } = useTranslation()
