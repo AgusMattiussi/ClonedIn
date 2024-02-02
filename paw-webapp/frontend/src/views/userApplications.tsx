@@ -19,6 +19,7 @@ import { useGetCategories } from "../hooks/useGetCategories"
 import { useGetUserData } from "../hooks/useGetUserData"
 import { createSearchParams, useNavigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
+
 function ApplicationsUser() {
   const navigate = useNavigate()
 
@@ -104,7 +105,7 @@ function ApplicationsUser() {
   )
 
   const fetchApplications = useCallback(
-    async (status: string, sortBy: string, filledBy: string, page:string) => {
+    async (status: string, sortBy: string, filledBy: string, page: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
@@ -145,14 +146,14 @@ function ApplicationsUser() {
           setApplications(contactsData)
           setTotalPages(response.headers["x-total-pages"] as string)
         }
-        navigate({  
-          search: createSearchParams({ 
+        navigate({
+          search: createSearchParams({
             page: page,
             status: status,
             filledBy: filledBy,
-            sortBy: sortBy
-          }).toString() 
-        });
+            sortBy: sortBy,
+          }).toString(),
+        })
         setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -166,7 +167,7 @@ function ApplicationsUser() {
     if (isLoading) {
       fetchApplications(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchApplications, isLoading, filterStatus, sortBy, filledBy])
+  }, [fetchApplications, isLoading, filterStatus, sortBy, filledBy, page])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -313,7 +314,7 @@ function ApplicationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination pages={totalPages} setter={handlePage}/>
+                <Pagination pages={totalPages} setter={handlePage} />
               </Container>
             </Row>
           </Col>

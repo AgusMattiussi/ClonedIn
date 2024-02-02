@@ -102,6 +102,8 @@ function ProfileEnterprise() {
     jobsLoading,
     navigate,
     userInfo?.role,
+    page,
+    queryParams,
   ])
 
   const handleClose = async () => {
@@ -126,9 +128,9 @@ function ProfileEnterprise() {
     console.log("Page")
     setPage(pageNumber)
     setJobsLoading(true)
-    navigate({  
-      search: createSearchParams({ page: pageNumber }).toString() 
-    });
+    navigate({
+      search: createSearchParams({ page: pageNumber }).toString(),
+    })
   }
 
   const enterprisesJobs = jobs.map((job) => {
@@ -183,7 +185,7 @@ function ProfileEnterprise() {
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            <Pagination pages={totalPages} setter={handlePage}/>
+            <Pagination pages={totalPages} setter={handlePage} />
           </Col>
         </Row>
       </Container>

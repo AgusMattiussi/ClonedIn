@@ -52,7 +52,7 @@ function DiscoverProfiles() {
       searchTerm: string,
       minExpYears: string,
       maxExpYears: string,
-      page: string
+      page: string,
     ) => {
       setLoading(true)
 
@@ -75,16 +75,16 @@ function DiscoverProfiles() {
           setUsers(response.data)
           setTotalPages(response.headers["x-total-pages"] as string)
         }
-        navigate({  
-          search: createSearchParams({ 
+        navigate({
+          search: createSearchParams({
             page: page,
             categoryName: categoryName,
             educationLevel: educationLevel,
             searchTerm: searchTerm,
             minExpYears: minExpYears,
-            maxExpYears: maxExpYears
-          }).toString() 
-        });
+            maxExpYears: maxExpYears,
+          }).toString(),
+        })
         setPage("1")
       } catch (error) {
         console.error("Error fetching users:", error)
@@ -119,6 +119,7 @@ function DiscoverProfiles() {
     fetchUsers,
     setSearchParams,
     queryParams,
+    page,
   ])
 
   const handleSearch = () => {
@@ -301,7 +302,7 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Pagination pages={totalPages} setter={handlePage}/>
+                  <Pagination pages={totalPages} setter={handlePage} />
                 </div>
               </Container>
             </Row>

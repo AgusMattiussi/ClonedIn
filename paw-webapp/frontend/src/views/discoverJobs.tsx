@@ -48,7 +48,15 @@ function DiscoverJobs() {
   let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
-    async (categoryName: string, modality: string, searchTerm: string, minSalary: string, maxSalary: string, page: string, sortBy: string,) => {
+    async (
+      categoryName: string,
+      modality: string,
+      searchTerm: string,
+      minSalary: string,
+      maxSalary: string,
+      page: string,
+      sortBy: string,
+    ) => {
       setLoading(true)
 
       if (categoryName) queryParams.categoryName = categoryName
@@ -72,17 +80,17 @@ function DiscoverJobs() {
           setJobs(response.data)
           setTotalPages(response.headers["x-total-pages"] as string)
         }
-        navigate({  
-          search: createSearchParams({ 
+        navigate({
+          search: createSearchParams({
             page: page,
             categoryName: categoryName,
             modality: modality,
             searchTerm: searchTerm,
             minSalary: minSalary,
             maxSalary: maxSalary,
-            sortBy: sortBy
-          }).toString() 
-        });
+            sortBy: sortBy,
+          }).toString(),
+        })
         setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -107,7 +115,19 @@ function DiscoverJobs() {
     if (isLoading) {
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
-  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, setSearchParams, queryParams])
+  }, [
+    categoryName,
+    modality,
+    searchTerm,
+    minSalary,
+    maxSalary,
+    isLoading,
+    fetchJobs,
+    setSearchParams,
+    queryParams,
+    page,
+    sortBy,
+  ])
 
   const handleSearch = () => {
     console.log("Search")
@@ -257,7 +277,7 @@ function DiscoverJobs() {
           </Col>
           <Col className="d-flex flex-column mt-2 mr-2 mb-2">
             <Row className="my-2">
-            <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between">
                 <h3 style={{ textAlign: "left" }}>{t("Discover Jobs")}</h3>
                 <div style={{ width: "200px" }}>
                   <Form.Select
@@ -295,7 +315,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                <Pagination pages={totalPages} setter={handlePage}/>
+                <Pagination pages={totalPages} setter={handlePage} />
               </Container>
             </Row>
           </Col>

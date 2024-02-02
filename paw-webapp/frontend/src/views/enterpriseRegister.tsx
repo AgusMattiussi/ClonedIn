@@ -9,7 +9,7 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useRegisterEnterprise, useLogin } from "../api/authService"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
 import * as formik from "formik"
 import * as yup from "yup"
 
@@ -20,46 +20,43 @@ function RegisterEnterprise() {
   const [workers, setWorkers] = useState("No-especificado")
   const [category, setCategory] = useState("No-Especificado")
 
-  const { loading, apiRequest } = useRequestApi()
+  const { getCategories } = useGetCategories()
   const { registerHandler } = useRegisterEnterprise()
   const { loginHandler } = useLogin()
-  const [error, setError] = useState("");
+  const [error, setError] = useState("")
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   const handleRegister = async (e: any) => {
     let fYear = e.foundingYear
-    if (fYear == '') {
+    if (fYear == "") {
       fYear = "null"
     }
     const registered = await registerHandler(
       e.email,
-      e.pass, 
-      e.repeatPass, 
-      e.name, 
+      e.pass,
+      e.repeatPass,
+      e.name,
       e.city,
-      category, 
+      category,
       workers,
       fYear,
-      e.link, 
-      e.aboutUs)
+      e.link,
+      e.aboutUs,
+    )
     if (registered) {
       await loginHandler(e.email, e.pass)
       navigate("/users")
-    }
-    else {
+    } else {
       console.log("Not registered")
       setError(t("Invalid Credentials") as string)
     }
@@ -73,7 +70,6 @@ function RegisterEnterprise() {
     setRepeatPasswordVisibility(!repeatPasswordVisibility)
   }
 
-  /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -81,22 +77,41 @@ function RegisterEnterprise() {
 
   const { Formik } = formik
 
-  const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
+  const re =
+    /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
   const schema = yup.object().shape({
-    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
-    name: yup.string().required(t('Required') as string).max(50, t('Single Line Max Length') as string),
-    pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
+    email: yup
+      .string()
+      .email(t("Invalid Email") as string)
+      .required(t("Required") as string)
+      .max(100, t("Email Max Length") as string),
+    name: yup
+      .string()
+      .required(t("Required") as string)
+      .max(50, t("Single Line Max Length") as string),
+    pass: yup
+      .string()
+      .required(t("Required") as string)
+      .min(6, t("Password Min Length") as string)
+      .max(20, t("Password Max Length") as string),
     repeatPass: yup
       .string()
-      .oneOf([yup.ref("pass")], t('Password Match') as string)
-      .required(t('Required') as string),
-    city: yup.string().max(50, t('Single Line Max Length') as string),
-    foundingYear: yup.number().typeError(t('Invalid Number') as string).min(1000, t('Invalid Year Min') as string).max(new Date().getFullYear(), t('Invalid Year Max') as string),
-    link: yup.string().matches(re, t('Invalid URL') as string).max(200, t('Multi Line Max Length') as string),
-    aboutUs: yup.string().max(600, t('Long Line Max Length') as string),
+      .oneOf([yup.ref("pass")], t("Password Match") as string)
+      .required(t("Required") as string),
+    city: yup.string().max(50, t("Single Line Max Length") as string),
+    foundingYear: yup
+      .number()
+      .typeError(t("Invalid Number") as string)
+      .min(1000, t("Invalid Year Min") as string)
+      .max(new Date().getFullYear(), t("Invalid Year Max") as string),
+    link: yup
+      .string()
+      .matches(re, t("Invalid URL") as string)
+      .max(200, t("Multi Line Max Length") as string),
+    aboutUs: yup.string().max(600, t("Long Line Max Length") as string),
   })
-  
+
   return (
     <div>
       <Header />
@@ -142,7 +157,11 @@ function RegisterEnterprise() {
                                 isInvalid={!!errors.email}
                               />
                               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-                              {error && <div className="error" style={{color: "red"}}>{error}</div>}
+                              {error && (
+                                <div className="error" style={{ color: "red" }}>
+                                  {error}
+                                </div>
+                              )}
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicName">
                               <Form.Control

@@ -35,7 +35,7 @@ function SkillsForm() {
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${id}`)
     } else {
-      //TODO: manejar error
+      console.error("Error adding skill:", response)
     }
   }
 

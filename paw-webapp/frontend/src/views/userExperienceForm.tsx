@@ -35,12 +35,12 @@ function ExperienceForm() {
       .max(50, t("Single Line Max Length") as string),
     description: yup
       .string()
-      .required()
+      .required(t("Required") as string)
       .max(600, t("Long Line Max Length") as string),
     yearFrom: yup
       .number()
       .typeError(t("Invalid Number") as string)
-      .required()
+      .required(t("Required") as string)
       .min(1900, t("Invalid Year Min") as string)
       .max(new Date().getFullYear(), t("Invalid Year Max") as string),
     yearTo: yup
@@ -73,7 +73,7 @@ function ExperienceForm() {
       if (response.status === HttpStatusCode.Created) {
         navigate(`/users/${id}`)
       } else {
-        //TODO: manejar error
+        console.error("Error adding experience:", response)
       }
     }
   }
