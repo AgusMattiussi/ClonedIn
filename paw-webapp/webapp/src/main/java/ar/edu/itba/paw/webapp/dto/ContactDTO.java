@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 
 import javax.ws.rs.core.UriBuilder;
@@ -18,6 +19,7 @@ public class ContactDTO {
     private ContactDTOLinks links;
     private String userName;
     private Integer userYearsOfExp;
+    private long userId;
 
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact, boolean preFetchUserInfo) {
@@ -27,8 +29,10 @@ public class ContactDTO {
         dto.date = contact.getDate();
 
         if(preFetchUserInfo) {
-            dto.userName = contact.getUser().getName();
-            dto.userYearsOfExp = contact.getUser().getYearsOfExperience();
+            User user = contact.getUser();
+            dto.userName = user.getName();
+            dto.userYearsOfExp = user.getYearsOfExperience();
+            dto.userId = user.getId();
         }
 
         dto.links = new ContactDTOLinks(uriInfo, contact, preFetchUserInfo);
@@ -83,6 +87,14 @@ public class ContactDTO {
 
     public void setUserYearsOfExp(Integer userYearsOfExp) {
         this.userYearsOfExp = userYearsOfExp;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public static class ContactDTOLinks {
