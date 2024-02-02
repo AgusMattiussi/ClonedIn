@@ -11,6 +11,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "axios": "^1.4.0",
+    "axios-mock-adapter": "^1.22.0",
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
     "formik": "^2.4.5",
@@ -36,6 +37,7 @@
     "build": "react-scripts build && sed -i \"\" -e 's/.\\{15\\}/&<%@ page session=\"false\" %>/' ./build/index.html\n",
     "build-windows": "react-scripts build --verbose && echo ^<%@ page session=\"false\" ^%^> ^ > .\\build\\.tmp && type .\\build\\index.html >> .\\build\\.tmp && copy .\\build\\.tmp .\\build\\index.html && del .\\build\\.tmp",
     "test": "react-scripts test",
+    "coverage": "react-scripts test -- --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
