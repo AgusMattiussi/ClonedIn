@@ -102,7 +102,7 @@ function NotificationsUser() {
   )
 
   const fetchNotifications = useCallback(
-    async (status: string, sortBy: string, filledBy: string, page:string) => {
+    async (status: string, sortBy: string, filledBy: string, page: string) => {
       setLoading(true)
       if (status) queryParams.status = status
       if (sortBy) queryParams.sortBy = sortBy
@@ -143,14 +143,14 @@ function NotificationsUser() {
           setNotifications(contactsData)
           setTotalPages(response.headers["x-total-pages"] as string)
         }
-        navigate({  
-          search: createSearchParams({ 
+        navigate({
+          search: createSearchParams({
             page: page,
             status: status,
             filledBy: filledBy,
-            sortBy: sortBy
-          }).toString() 
-        });
+            sortBy: sortBy,
+          }).toString(),
+        })
         setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -164,7 +164,7 @@ function NotificationsUser() {
     if (isLoading) {
       fetchNotifications(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy])
+  }, [fetchNotifications, isLoading, filterStatus, sortBy, filledBy, page])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -311,7 +311,7 @@ function NotificationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination pages={totalPages} setter={handlePage}/>
+                <Pagination pages={totalPages} setter={handlePage} />
               </Container>
             </Row>
           </Col>

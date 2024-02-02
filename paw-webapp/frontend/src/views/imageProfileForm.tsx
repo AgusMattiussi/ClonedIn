@@ -44,8 +44,7 @@ function ImageProfileForm() {
     if (response.status === HttpStatusCode.Ok) {
       navigate(-1)
     } else {
-      //TODO: manejar error
-      console.log("Error uploading image")
+      console.error("Error uploading image")
     }
   }
 

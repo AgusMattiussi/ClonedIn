@@ -48,7 +48,7 @@ function ProfileUserCard({
 
           setSkillsData(skillsResponse.status === HttpStatusCode.NoContent ? [] : skillsResponse.data)
           setUserCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedUser.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedUser.links.image : defaultProfile)
           setLoadingData(false)
         }
       } catch (error) {

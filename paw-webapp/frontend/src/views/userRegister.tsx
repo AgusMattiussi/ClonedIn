@@ -10,7 +10,7 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useRegisterUser, useLogin } from "../api/authService"
-import { useRequestApi } from "../api/apiRequest"
+import { useGetCategories } from "../hooks/useGetCategories"
 import * as formik from "formik"
 import * as yup from "yup"
 
@@ -21,24 +21,21 @@ function RegisterUser() {
   const [category, setCategory] = useState("No-Especificado")
   const [educationLevel, setEducationLevel] = useState("No-especificado")
 
-  const { loading, apiRequest } = useRequestApi()
+  const { getCategories } = useGetCategories()
   const { registerHandler } = useRegisterUser()
   const { loginHandler } = useLogin()
-  const [error, setError] = useState("");
+  const [error, setError] = useState("")
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiRequest({
-        url: "/categories",
-        method: "GET",
-      })
+      const response = await getCategories()
       setCategoryList(response.data)
     }
 
     if (categoryList.length === 0) {
       fetchCategories()
     }
-  }, [apiRequest, categoryList.length])
+  }, [getCategories, categoryList.length])
 
   const handleRegister = async (e: any) => {
     const registered = await registerHandler(
@@ -55,8 +52,7 @@ function RegisterUser() {
     if (registered) {
       await loginHandler(e.email, e.pass)
       navigate("/jobOffers")
-    }
-    else {
+    } else {
       console.log("Not registered")
       setError(t("Invalid Credentials") as string)
     }
@@ -74,11 +70,10 @@ function RegisterUser() {
     if (e.target.value == "No-especificado" || educationLevels.includes(e.target.value)) {
       setEducationLevel(e.target.value)
     } else {
-      alert("ERROR");
+      alert("ERROR")
     }
   }
 
-  /* TODO: En caso de que haya ERRORS, devolver pantalla adecuada */
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -87,16 +82,27 @@ function RegisterUser() {
   const { Formik } = formik
 
   const schema = yup.object().shape({
-    email: yup.string().email(t('Invalid Email') as string).required(t('Required') as string).max(100, t('Email Max Length') as string),
-    name: yup.string().required(t('Required') as string).max(100, t('Line Max Length') as string),
-    pass: yup.string().required(t('Required') as string).min(6, t('Password Min Length') as string).max(20, t('Password Max Length') as string),
+    email: yup
+      .string()
+      .email(t("Invalid Email") as string)
+      .required(t("Required") as string)
+      .max(100, t("Email Max Length") as string),
+    name: yup
+      .string()
+      .required(t("Required") as string)
+      .max(100, t("Line Max Length") as string),
+    pass: yup
+      .string()
+      .required(t("Required") as string)
+      .min(6, t("Password Min Length") as string)
+      .max(20, t("Password Max Length") as string),
     repeatPass: yup
       .string()
-      .oneOf([yup.ref("pass")], t('Password Match') as string)
-      .required(t('Required') as string),
-    location: yup.string().max(50, t('Single Line Max Length') as string),
-    position: yup.string().max(50, t('Single Line Max Length') as string),
-    description: yup.string().max(600, t('Long Line Max Length') as string),
+      .oneOf([yup.ref("pass")], t("Password Match") as string)
+      .required(t("Required") as string),
+    location: yup.string().max(50, t("Single Line Max Length") as string),
+    position: yup.string().max(50, t("Single Line Max Length") as string),
+    description: yup.string().max(600, t("Long Line Max Length") as string),
   })
 
   return (
@@ -145,7 +151,11 @@ function RegisterUser() {
                                 isInvalid={!!errors.email}
                               />
                               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-                              {error && <div className="error" style={{color: "red"}}>{error}</div>}
+                              {error && (
+                                <div className="error" style={{ color: "red" }}>
+                                  {error}
+                                </div>
+                              )}
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicName">
                               <Form.Control

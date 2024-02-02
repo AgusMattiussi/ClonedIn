@@ -73,7 +73,7 @@ function ExperienceForm() {
       if (response.status === HttpStatusCode.Created) {
         navigate(`/users/${id}`)
       } else {
-        //TODO: manejar error
+        console.error("Error adding experience:", response)
       }
     }
   }

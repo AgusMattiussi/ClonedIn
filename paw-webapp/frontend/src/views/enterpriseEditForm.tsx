@@ -83,7 +83,7 @@ function EditEnterpriseForm() {
     if (response.status === HttpStatusCode.Ok) {
       navigate(`/enterprises/${id}`)
     } else {
-      //TODO: manejar error
+      console.error("Error updating enterprise info:", response)
     }
   }
 

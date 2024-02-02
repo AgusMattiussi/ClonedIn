@@ -79,7 +79,7 @@ function JobOfferForm() {
     if (response.status === HttpStatusCode.Created) {
       navigate(`/enterprises/${id}`)
     } else {
-      //TODO: manejar error
+      console.error("Error adding job offer")
     }
   }
 

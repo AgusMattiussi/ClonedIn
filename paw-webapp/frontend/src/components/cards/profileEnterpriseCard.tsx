@@ -34,7 +34,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
           ])
 
           setEnterpriseCategory(categoryResponse.data)
-          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedEnterprise.links.image : defaultProfile) //TODO: revisar si se puede hacer mejor
+          setImageUrl(imageResponse.status === HttpStatusCode.Ok ? memorizedEnterprise.links.image : defaultProfile)
           setLoadingData(false)
         }
       } catch (error) {

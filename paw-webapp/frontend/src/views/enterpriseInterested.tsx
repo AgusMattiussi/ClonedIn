@@ -20,7 +20,7 @@ import { useGetUserData } from "../hooks/useGetUserData"
 import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
-import { useNavigate, useSearchParams, Link, createSearchParams } from "react-router-dom"
+import { useNavigate, Link, createSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 
 function EnterpriseInterested() {
@@ -173,14 +173,14 @@ function EnterpriseInterested() {
           setContacts(contactsData)
           setTotalPages(response.headers["x-total-pages"] as string)
         }
-        navigate({  
-          search: createSearchParams({ 
+        navigate({
+          search: createSearchParams({
             page: page,
             status: status,
             filledBy: filledBy,
-            sortBy: sortBy
-          }).toString() 
-        });
+            sortBy: sortBy,
+          }).toString(),
+        })
         setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
@@ -203,7 +203,7 @@ function EnterpriseInterested() {
     if (isLoading) {
       fetchContacts(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy])
+  }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy, page])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
@@ -418,7 +418,7 @@ function EnterpriseInterested() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              <Pagination pages={totalPages} setter={handlePage}/>
+              <Pagination pages={totalPages} setter={handlePage} />
             </Row>
           </Col>
         </Row>

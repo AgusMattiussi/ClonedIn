@@ -73,7 +73,7 @@ function EditUserForm() {
     if (response.status === HttpStatusCode.Ok) {
       navigate(`/users/${id}`)
     } else {
-      //TODO: manejar error
+      console.error("Error updating user", response)
     }
   }
 
