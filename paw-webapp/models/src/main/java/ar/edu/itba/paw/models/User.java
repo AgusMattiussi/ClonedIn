@@ -211,15 +211,28 @@ public class User implements CustomUserDetails {
         return userSkills.stream().map(UserSkill::getSkill).collect(Collectors.toList());
     }
 
+    // Painful
     public int getYearsOfExperience() {
-        int result = 0;
+        Set<Experience> experiences = getExperiences();
+        if(experiences == null || experiences.isEmpty())
+            return 0;
+
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        
-        for (Experience experience : this.experiences) {
-            result += (experience.getYearTo() == null ? currentYear : experience.getYearTo()) - experience.getYearFrom();
+        int firstWorkYear = experiences.stream().map(Experience::getYearFrom).min(Integer::compareTo).orElse(currentYear);
+        int lastWorkYear = experiences.stream()
+                .map(experience -> experience.getYearTo() == null ? currentYear : experience.getYearTo())
+                .max(Integer::compareTo).orElse(currentYear);
+        int[] workedYears = new int[lastWorkYear - firstWorkYear + 1];
+
+        for (Experience experience : experiences) {
+            int yearFrom = experience.getYearFrom();
+            int yearTo = experience.getYearTo() == null ? currentYear : experience.getYearTo();
+            for (int i = yearFrom - firstWorkYear; i <= yearTo - firstWorkYear; i++) {
+                workedYears[i] = 1;
+            }
         }
 
-        return result;
+        return Arrays.stream(workedYears).sum();
     }
 
     public boolean hasSkill(long skillId){
