@@ -14,12 +14,10 @@ import { HttpStatusCode } from "axios"
 
 function ProfileUserCard({
   editable,
-  contacted,
   user,
   inProfileView,
 }: {
   editable: boolean
-  contacted: boolean
   user: any
   inProfileView: boolean
 }) {
@@ -102,10 +100,6 @@ function ProfileUserCard({
             </Button>
           ) : !inProfileView ? (
             <></>
-          ) : contacted ? (
-            <Badge className="p-2" bg="secondary">
-              {t("Contacted")}
-            </Badge>
           ) : (
             <Button variant="outline-dark" onClick={() => navigate(`/enterprises/${userInfo?.id}/contacts/${id}`)}>
               {t("Contact")}
@@ -170,7 +164,6 @@ function ProfileUserCard({
 
 ProfileUserCard.defaultProps = {
   editable: false,
-  contacted: false,
   inProfileView: false,
 }
 
