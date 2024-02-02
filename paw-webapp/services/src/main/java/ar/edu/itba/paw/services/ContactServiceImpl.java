@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
@@ -10,7 +9,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.Role;
-import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
         return contactDao.getContactsForUser(user, filledBy, sortBy, page, pageSize);
     }
 
@@ -120,7 +119,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, SortBy sortBy,
+    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy,
                                                          int page, int pageSize) {
         User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -138,7 +137,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
         return contactDao.getContactsForEnterprise(enterprise, filledBy, sortBy, page, pageSize);
     }
 
@@ -150,7 +149,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
-                                           JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
+                                                               JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
         String statusValue = status != null ? status.getStatus() : null;
 
         Enterprise enterprise = enterpriseService.findById(enterpriseId)

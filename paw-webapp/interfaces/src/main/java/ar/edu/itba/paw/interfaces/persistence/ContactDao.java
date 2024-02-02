@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
-import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.enums.ContactSorting;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +23,20 @@ public interface ContactDao {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, SortBy sortBy, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, SortBy sortBy, int page, int pageSize);
+    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                           String status, SortBy sortBy, int page, int pageSize);
+                                           String status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
 

@@ -205,7 +205,7 @@ public class EnterpriseController {
                                         @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy,
+                                    @QueryParam("sortBy") @DefaultValue("any") final ContactSorting sortBy,
                                     @QueryParam("userId") @Min(1) final Long userId,
                                     @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
@@ -251,7 +251,7 @@ public class EnterpriseController {
                                         @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final SortBy sortBy) {
+                                    @QueryParam("sortBy") @DefaultValue("any") final ContactSorting sortBy) {
         PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, joid, null, filledBy,
                 status, sortBy, page, pageSize);
 

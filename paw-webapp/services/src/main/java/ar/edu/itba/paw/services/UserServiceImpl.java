@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
+import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
@@ -146,12 +147,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
-                                                         Integer maxExpYears, String location, String skillDescription, int page, int pageSize) {
+                                                         Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
+                                                         int page, int pageSize) {
 
         Category category = categoryService.findByName(categoryName).orElse(null);
 
         List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
-                                     location, skillDescription, page-1, pageSize);
+                                     location, skillDescription, sortBy, page-1, pageSize);
 
         final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
                                      location, skillDescription);

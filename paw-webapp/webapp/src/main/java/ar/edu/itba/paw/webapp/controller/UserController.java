@@ -11,10 +11,8 @@ import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,6 +88,7 @@ public class UserController {
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("pageSize") @DefaultValue(S_USERS_PER_PAGE)
                                         @Min(1) @Max(2*USERS_PER_PAGE) final int pageSize,
+                              @QueryParam("sortBy") @DefaultValue("recientes") final UserSorting sortBy,
                               @QueryParam("categoryName") final String categoryName,
                               @QueryParam("educationLevel") final EducationLevel educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
@@ -99,7 +98,7 @@ public class UserController {
                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
         final PaginatedResource<User> users = us.getUsersListByFilters(categoryName, educationLevel, searchTerm, minExpYears,
-                maxExpYears, location, skillDescription, page, pageSize);
+                maxExpYears, location, skillDescription, sortBy, page, pageSize);
 
         if (users.isEmpty())
             return Response.noContent().build();
@@ -141,7 +140,7 @@ public class UserController {
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("pageSize") @DefaultValue(S_APPLICATIONS_PER_PAGE)
                                         @Min(1) @Max(2*APPLICATIONS_PER_PAGE) final int pageSize,
-                                    @QueryParam("sortBy") @DefaultValue(SortBy.ANY_VALUE) final SortBy sortBy,
+                                    @QueryParam("sortBy") @DefaultValue(ContactSorting.ANY_VALUE) final ContactSorting sortBy,
                                     @QueryParam("status") final JobOfferStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy) {
 
