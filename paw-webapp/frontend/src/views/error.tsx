@@ -56,7 +56,11 @@ function Error(props: any) {
             {t("Return")}
           </Button>
         ) : (
-          <Button onClick={() => navigate("/users")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
+          <Button 
+            onClick={() => navigate("/users")} 
+            className="btn btn-primary" 
+            style={{ backgroundColor: "#04704C" }}
+          >
             {t("Return")}
           </Button>
         )}

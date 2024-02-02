@@ -46,7 +46,6 @@ export const AUTHORIZATION_HEADER = "x-access-token"
 export const CUSTOM_RESPONSE_CODE_FOR_INVALID_REFRESH_TOKEN = 603
 
 export const monthNames = [
-  "No-especificado",
   "Enero",
   "Febrero",
   "Marzo",
