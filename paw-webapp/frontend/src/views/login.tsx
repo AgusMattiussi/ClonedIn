@@ -93,7 +93,7 @@ function Login() {
                           </div>
                         )}
                       </div>
-                      <Button variant="success" type="submit">
+                      <Button data-testid="login-button" variant="success" type="submit">
                         <strong>{t("Log In")}</strong>
                       </Button>
                       <p>{t("No account yet?")}</p>

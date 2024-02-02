@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
+import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 
@@ -52,7 +53,8 @@ public interface UserService {
                                      int page, int pageSize);
 
     PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
-                                                  Integer maxExpYears, String location, String skillDescription, int page, int pageSize);
+                                                  Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
+                                                  int page, int pageSize);
 
     void updateName(long userID, String newName);
 

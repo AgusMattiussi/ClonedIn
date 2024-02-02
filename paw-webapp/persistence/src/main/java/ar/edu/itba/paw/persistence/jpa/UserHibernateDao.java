@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
+import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -218,7 +219,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<User> getUsersListByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription, int page, int pageSize) {
+                                            String location, String skillDescription, UserSorting sortBy, int page, int pageSize) {
 
         if(term != null && !term.isEmpty()){
             term = term.replace("_", "\\_");
@@ -232,6 +233,7 @@ public class UserHibernateDao implements UserDao {
         }
 
         queryStringBuilder.append(" WHERE visibilidad = :visible");
+        queryStringBuilder.append(sortBy.getAsQuery());
         filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);
 
         TypedQuery<User> query = em.createQuery(queryStringBuilder.toString(), User.class);

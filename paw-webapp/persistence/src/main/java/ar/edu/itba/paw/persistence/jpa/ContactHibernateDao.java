@@ -4,10 +4,9 @@ import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
-import ar.edu.itba.paw.models.enums.SortBy;
+import ar.edu.itba.paw.models.enums.ContactSorting;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -87,16 +86,16 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user", Contact.class);
         else {
-            if(sortBy.equals(SortBy.DATE_ASC))
+            if(sortBy.equals(ContactSorting.DATE_ASC))
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy ORDER BY c.date ASC", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_DESC))
+            else if(sortBy.equals(ContactSorting.DATE_DESC))
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
             else
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.user = :user AND c.filledBy = :filledBy", Contact.class);
@@ -124,7 +123,7 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, JobOfferStatus status, SortBy sortBy){
+    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy){
         if(filledBy != null && !filledBy.equals(FilledBy.ANY)){
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
@@ -146,7 +145,7 @@ public class ContactHibernateDao implements ContactDao {
             case DATE_DESC:
                 queryBuilder.append(" ORDER BY c.date DESC");
                 break;
-        }
+            }
         }
 
     }
@@ -164,7 +163,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c WHERE c.user = :user");
 
@@ -193,21 +192,21 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, SortBy sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
 
         if(filledBy.equals(FilledBy.ANY))
             query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise", Contact.class);
         else {
-            if(sortBy.equals(SortBy.USERNAME))
+            if(sortBy.equals(ContactSorting.USERNAME))
                 query = em.createQuery("SELECT c FROM Contact c JOIN c.user u WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY u.name", Contact.class);
-            else if(sortBy.equals(SortBy.STATUS))
+            else if(sortBy.equals(ContactSorting.STATUS))
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY c.status", Contact.class);
-            else if(sortBy.equals(SortBy.JOB_OFFER_POSITION))
+            else if(sortBy.equals(ContactSorting.JOB_OFFER_POSITION))
                 query = em.createQuery("SELECT c FROM Contact c JOIN c.jobOffer j WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY j.position", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_ASC))
+            else if(sortBy.equals(ContactSorting.DATE_ASC))
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY c.date ASC", Contact.class);
-            else if(sortBy.equals(SortBy.DATE_DESC))
+            else if(sortBy.equals(ContactSorting.DATE_DESC))
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy ORDER BY c.date DESC", Contact.class);
             else
                 query = em.createQuery("SELECT c FROM Contact c WHERE c.enterprise = :enterprise AND c.filledBy = :filledBy", Contact.class);
@@ -236,7 +235,7 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, JobOffer jobOffer, User user, FilledBy filledBy, String status, SortBy sortBy){
+    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, JobOffer jobOffer, User user, FilledBy filledBy, String status, ContactSorting sortBy){
 
         if(sortBy != null){
             switch (sortBy){
@@ -314,7 +313,7 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
-                                           String status, SortBy sortBy, int page, int pageSize) {
+                                                  String status, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append("SELECT c FROM Contact c");
 
