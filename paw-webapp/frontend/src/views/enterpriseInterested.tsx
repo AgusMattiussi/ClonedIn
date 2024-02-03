@@ -209,7 +209,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#acceptModal"
-                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
+                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
               >
                 {t("Accept")}
               </Button>
@@ -218,7 +218,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#rejectModal"
-                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
+                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
               >
                 {t("Decline")}
               </Button>
