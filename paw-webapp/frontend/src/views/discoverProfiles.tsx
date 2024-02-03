@@ -68,10 +68,7 @@ function DiscoverProfiles() {
 
       try {
         const response = await getUsers(queryParams)
-
-        if (response.status === HttpStatusCode.InternalServerError) {
-          navigate("/403")
-        }
+        
         if (response.status === HttpStatusCode.NoContent) {
           setUsers([])
         } else {
@@ -142,7 +139,6 @@ function DiscoverProfiles() {
     setLoading(true)
   }
 
-  //TODO: ordenamiento
   const usersList = users.map((user) => {
     return <ProfileUserCard user={user} />
   })

@@ -45,11 +45,11 @@ function EditUserForm() {
   useEffect(() => {
     const fetchUser = async () => {
       const response = await getUserById(id)
-      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
-      }
       if (response.status === HttpStatusCode.Ok) {
         setUser(response.data)
+      }
+      else {
+        console.error("Error getting user information", response)
       }
     }
 

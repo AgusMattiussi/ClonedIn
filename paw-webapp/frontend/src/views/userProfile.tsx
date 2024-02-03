@@ -55,19 +55,18 @@ function ProfileUser() {
     const fetchUser = async () => {
       const response = await getUserById(id)
 
-      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
+      if (response.status === HttpStatusCode.Ok) {
+        setUser(response.data)
       }
-      setUser(response.data)
+      else {
+        console.log("Error fetching user information")
+      }
       setUserLoading(false)
     }
 
     const fetchSkills = async () => {
       const response = await getUserSkills(id)
 
-      if (response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
-      }
       if (response.status === HttpStatusCode.NoContent) {
         setSkillsData([])
       } else {

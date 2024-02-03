@@ -50,10 +50,13 @@ function ProfileEnterprise() {
     const fetchEnterprise = async () => {
       const response = await getEnterpriseById(id)
 
-      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
+      if (response.status === HttpStatusCode.Ok) {
+        setEnterprise(response.data)
+
       }
-      setEnterprise(response.data)
+      else {
+        console.error("Error getting enterprise info:", response)
+      }
       setEnterpriseLoading(false)
     }
 

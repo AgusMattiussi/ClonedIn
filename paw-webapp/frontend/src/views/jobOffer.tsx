@@ -24,11 +24,13 @@ function JobOffer() {
     const fetchJob = async () => {
       const response = await getJobOfferById(id)
 
-      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
-      }
+      if (response.status === HttpStatusCode.Ok) {
+        setJob(response.data)
 
-      setJob(response.data)
+      }
+      else {
+        console.error("Error fetching job offer information")
+      }
       setJobLoading(false)
     }
     if (isJobLoading) fetchJob()

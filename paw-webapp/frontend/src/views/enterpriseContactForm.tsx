@@ -70,7 +70,7 @@ function ContactForm() {
   const handlePost = async (e: any) => {
     const message = e.message
     const response = await addContact(userInfo?.id, message, jobOfferId, userId)
-    console.log(response)
+
     if (response.status === HttpStatusCode.Created) {
       navigate(`/users/${userId}`)
     } else if (response.status === HttpStatusCode.Conflict) {
