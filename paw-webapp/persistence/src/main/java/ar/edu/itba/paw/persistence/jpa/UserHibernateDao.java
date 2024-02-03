@@ -146,7 +146,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     private void filterQueryAppendConditions(StringBuilder queryStringBuilder, Category category, EducationLevel educationLevel, String term,
-                                             String location, String skillDescription, Integer minExpYears, Integer maxExpYears){
+                                             String location, String skillDescription, Integer minExpYears, Integer maxExpYears, UserSorting sortBy){
         if(category != null)
             queryStringBuilder.append(" AND u.category = :category");
         if(educationLevel != null)
@@ -162,15 +162,24 @@ public class UserHibernateDao implements UserDao {
                     .append(" OR LOWER(u.name) LIKE LOWER(CONCAT('%', :term, '%')) ESCAPE '\\'")
                     .append(")");
         }
+
+        if(minExpYears != null || maxExpYears != null || sortBy == UserSorting.EXP_ASC || sortBy == UserSorting.EXP_DESC)
+            queryStringBuilder.append(" GROUP BY u.id");
+
         if(minExpYears != null || maxExpYears != null){
-            queryStringBuilder.append(" GROUP BY u.id HAVING");
+            queryStringBuilder.append(" HAVING");
             if(minExpYears != null)
-                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) >= :minExpYears");
+                queryStringBuilder.append(" (SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) >= :minExpYears)");
             if(minExpYears != null && maxExpYears != null)
                 queryStringBuilder.append(" AND");
             if(maxExpYears != null)
-                queryStringBuilder.append(" SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom, YEAR(CURRENT_DATE))) <= :maxExpYears");
+                queryStringBuilder.append(" (SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom, YEAR(CURRENT_DATE))) <= :maxExpYears)");
         }
+
+        if(sortBy != null)
+            queryStringBuilder.append(sortBy.getAsQuery());
+
+
     }
 
     private void filterQuerySetParameters(Query query, Category category, String location, EducationLevel educationLevel, String skillDescription){
@@ -218,29 +227,32 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @Transactional
     public List<User> getUsersListByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                             String location, String skillDescription, UserSorting sortBy, int page, int pageSize) {
 
-        if(term != null && !term.isEmpty()){
+        if (term != null && !term.isEmpty()) {
             term = term.replace("_", "\\_");
             term = term.replace("%", "\\%");
         }
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
 
-        if(minExpYears != null || maxExpYears != null){
+        if (minExpYears != null || maxExpYears != null) {
             queryStringBuilder.append(" LEFT JOIN u.experiences exp");
         }
 
         queryStringBuilder.append(" WHERE visibilidad = :visible");
-        queryStringBuilder.append(sortBy.getAsQuery());
-        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);
+
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears, sortBy);
 
         TypedQuery<User> query = em.createQuery(queryStringBuilder.toString(), User.class);
         filterQuerySetParameters(query, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-        return query.getResultList();
+        List<User> users = query.getResultList();
+
+        return users;
     }
 
     @Override
@@ -255,6 +267,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @Transactional
     public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
         if(term != null && !term.isEmpty()){
@@ -269,7 +282,7 @@ public class UserHibernateDao implements UserDao {
         }
 
         queryStringBuilder.append(" WHERE visibilidad = :visible");
-        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);
+        filterQueryAppendConditions(queryStringBuilder, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears, null);
 
         Query query = em.createQuery(queryStringBuilder.toString());
         filterQuerySetParameters(query, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);

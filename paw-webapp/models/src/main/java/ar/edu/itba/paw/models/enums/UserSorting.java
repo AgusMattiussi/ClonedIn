@@ -1,10 +1,37 @@
 package ar.edu.itba.paw.models.enums;
-
 public enum UserSorting {
 
     RECENT("recientes", " ORDER BY u.id DESC"),
     OLDEST("antiguos", " ORDER BY u.id ASC"),
+    EXP_ASC("expAsc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) ASC"),
+    EXP_DESC("expDesc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) DESC"),
+    EDUCATION_ASC("educAsc", " ORDER BY CASE" +
+                                                 " WHEN u.education = 'Primario' then 1" +
+                                                 " WHEN u.education = 'Secundario' then 2" +
+                                                 " WHEN u.education = 'Terciario' then 3" +
+                                                 " WHEN u.education = 'Graduado' then 4" +
+                                                 " WHEN u.education = 'Posgrado' then 5" +
+                                                 " WHEN u.education = 'No especificado' then 6" +
+                                                 " WHEN u.education = 'No-especificado' then 6" +
+                                                 " END ASC "),
+    EDUCATION_DESC("educDesc", " ORDER BY CASE" +
+                                                 " WHEN u.education = 'Primario' then 1" +
+                                                 " WHEN u.education = 'Secundario' then 2" +
+                                                 " WHEN u.education = 'Terciario' then 3" +
+                                                 " WHEN u.education = 'Graduado' then 4" +
+                                                 " WHEN u.education = 'Posgrado' then 5" +
+                                                 " WHEN u.education = 'No especificado' then 0" +
+                                                 " WHEN u.education = 'No-especificado' then 0" +
+                                                 " END DESC "),
+    DEFAULT("predeterminado", " ORDER BY u.id DESC")
     ;
+
+    /*NOT_SPECIFIED("No-especificado"),
+    PRIMARY("Primario"),
+    SECONDARY("Secundario"),
+    TERTIARY("Terciario"),
+    UNIVERSITY("Graduado"),
+    POSTGRADUATE("Posgrado");*/
 
     private final String stringValue;
     private final String asQuery;

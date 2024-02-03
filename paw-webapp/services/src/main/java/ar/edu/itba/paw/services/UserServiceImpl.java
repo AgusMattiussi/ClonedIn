@@ -109,11 +109,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription) {
         return userDao.getUsersCountByFilters(category, location, educationLevel, skillDescription);
     }
 
     @Override
+    @Transactional
     public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, String skillDescription) {
         return userDao.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillDescription);
@@ -146,6 +148,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
                                                          Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
                                                          int page, int pageSize) {

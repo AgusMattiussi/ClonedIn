@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { useGetEnterpriseById } from "../hooks/useGetEnterpriseById"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
+import { usePutEnterpriseInfo } from "../hooks/usePutEnterpriseInfo"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -23,7 +23,7 @@ function EditEnterpriseForm() {
 
   const { getCategories } = useGetCategories()
   const { getEnterpriseById } = useGetEnterpriseById()
-  const { modifyEnterpriseInfo } = usePutEnterpriseData()
+  const { modifyEnterpriseInfo } = usePutEnterpriseInfo()
 
   const [categoryList, setCategoryList] = useState([])
 
