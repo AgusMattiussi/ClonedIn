@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.utils;
 
+import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
+
 public final class ClonedInUrls {
 
     //TODO: Actualizar para deployar
@@ -35,6 +37,9 @@ public final class ClonedInUrls {
 
     // Cookies
     public static final String REFRESH_TOKEN_COOKIE = "ClonedInRefreshToken";
+
+    // Response status
+    public static final int INVALID_REFRESH_TOKEN = InvalidRefreshTokenException.STATUS;
 
     private ClonedInUrls() {}
 }
