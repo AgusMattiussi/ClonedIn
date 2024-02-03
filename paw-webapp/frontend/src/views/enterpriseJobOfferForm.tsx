@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { usePostEnterpriseData } from "../hooks/usePostEnterpriseData"
+import { usePostJobOffer } from "../hooks/usePostJobOffer"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -19,7 +19,7 @@ function JobOfferForm() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
   const { getCategories } = useGetCategories()
-  const { addJobOffer } = usePostEnterpriseData()
+  const { addJobOffer } = usePostJobOffer()
   const [categoryList, setCategoryList] = useState([])
 
   document.title = t("Job Offer Page Title")

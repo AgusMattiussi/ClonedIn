@@ -7,7 +7,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { usePostUserData } from "../hooks/usePostUserData"
+import { usePostExperience } from "../hooks/usePostExperience"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -17,7 +17,7 @@ function ExperienceForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { addExperience } = usePostUserData()
+  const { addExperience } = usePostExperience()
   const [error, setError] = useState("")
 
   document.title = t("Experience Form Page Title")

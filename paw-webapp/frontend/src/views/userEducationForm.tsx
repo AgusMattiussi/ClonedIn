@@ -7,7 +7,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { usePostUserData } from "../hooks/usePostUserData"
+import { usePostEducation } from "../hooks/usePostEducation"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -17,7 +17,7 @@ function EducationForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { addEducation } = usePostUserData()
+  const { addEducation } = usePostEducation()
   const [error, setError] = useState("")
 
   document.title = t("Education Form Page Title")

@@ -16,7 +16,7 @@ import { useSharedAuth } from "../api/auth"
 import { useGetEnterpriseById } from "../hooks/useGetEnterpriseById"
 import { useGetEnterpriseJobOffers } from "../hooks/useGetEnterpriseJobOffers"
 import { useGetJobOffersForUser } from "../hooks/useGetJobOffersForUser"
-import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
+import { usePutJobOfferStatus } from "../hooks/usePutJobOfferStatus"
 import { createSearchParams, useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -30,7 +30,7 @@ function ProfileEnterprise() {
   const { getEnterpriseById } = useGetEnterpriseById()
   const { getEnterpriseJobOffers } = useGetEnterpriseJobOffers()
   const { getUserJobs } = useGetJobOffersForUser()
-  const { closeJobOffer } = usePutEnterpriseData()
+  const { closeJobOffer } = usePutJobOfferStatus()
 
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [isEnterpriseLoading, setEnterpriseLoading] = useState(true)
