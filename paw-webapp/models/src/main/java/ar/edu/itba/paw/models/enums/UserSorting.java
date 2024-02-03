@@ -26,13 +26,6 @@ public enum UserSorting {
     DEFAULT("predeterminado", " ORDER BY u.id DESC")
     ;
 
-    /*NOT_SPECIFIED("No-especificado"),
-    PRIMARY("Primario"),
-    SECONDARY("Secundario"),
-    TERTIARY("Terciario"),
-    UNIVERSITY("Graduado"),
-    POSTGRADUATE("Posgrado");*/
-
     private final String stringValue;
     private final String asQuery;
 

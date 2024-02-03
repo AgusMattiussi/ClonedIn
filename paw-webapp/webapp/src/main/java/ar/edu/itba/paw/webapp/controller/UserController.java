@@ -132,6 +132,20 @@ public class UserController {
         return Response.ok(user).links().build();
     }
 
+    @PUT
+    @Path("/{id}")
+    @PreAuthorize(PROFILE_OWNER)
+    public Response editUser( @PathParam("id") @Min(1) final long id,
+                              @NotNull @Valid final EditUserForm editUserForm) {
+
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
+                editUserForm.getVisibilityAsEnum());
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().build();
+        return Response.ok().location(uri).build();
+    }
+
 
     @GET
     @Path("/{id}/contacts")
@@ -344,20 +358,6 @@ public class UserController {
                                             @PathParam("skillId") @Min(1) final long skillId) {
         userSkillService.deleteSkillFromUser(id, skillId);
         return Response.ok().build();
-    }
-
-    @PUT
-    @Path("/{id}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response editUser( @PathParam("id") @Min(1) final long id,
-                              @NotNull @Valid final EditUserForm editUserForm) {
-
-        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
-                editUserForm.getVisibilityAsEnum());
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
-        return Response.ok().location(uri).build();
     }
 
 
