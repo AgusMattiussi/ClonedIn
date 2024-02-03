@@ -152,7 +152,7 @@ function JobOfferDiscoverCard({
             ) : (
           userInfo?.role === UserRole.USER ? (
             <div>
-              <Button variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
+              <Button data-testid="apply-button" variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
                 {t("Apply")}
               </Button>
               {error && (
