@@ -5,6 +5,7 @@ public enum UserSorting {
     OLDEST("antiguos", " ORDER BY u.id ASC"),
     EXP_ASC("expAsc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) ASC"),
     EXP_DESC("expDesc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) DESC"),
+    DEFAULT("predeterminado", " ORDER BY u.id DESC")
     ;
 
     private final String stringValue;

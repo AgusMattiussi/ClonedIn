@@ -89,7 +89,7 @@ public class UserController {
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("pageSize") @DefaultValue(S_USERS_PER_PAGE)
                                         @Min(1) @Max(2*USERS_PER_PAGE) final int pageSize,
-                              @QueryParam("sortBy") @DefaultValue("recientes") final UserSorting sortBy,
+                              @QueryParam("sortBy") @DefaultValue("predeterminado") final UserSorting sortBy,
                               @QueryParam("categoryName") final String categoryName,
                               @QueryParam("educationLevel") final EducationLevel educationLevel,
                               @QueryParam("searchTerm") final String searchTerm,
