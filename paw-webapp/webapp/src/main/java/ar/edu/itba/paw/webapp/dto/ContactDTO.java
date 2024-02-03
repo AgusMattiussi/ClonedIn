@@ -10,7 +10,6 @@ import java.net.URI;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
-// TODO: Agregar endpoints para poner 'self'?
 public class ContactDTO {
 
     private String status;

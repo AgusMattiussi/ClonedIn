@@ -67,6 +67,9 @@ public class User implements CustomUserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 
+    @Transient
+    private Integer yearsOfExperience;
+
     public User(Long id, String email, String password, String name, String location, Category category, String currentPosition, String description, String education, int visibility, Image image) {
         this.id = id;
         this.email = email;
@@ -213,6 +216,9 @@ public class User implements CustomUserDetails {
 
     // Painful
     public int getYearsOfExperience() {
+        if(yearsOfExperience != null)
+            return yearsOfExperience;
+
         Set<Experience> experiences = getExperiences();
         if(experiences == null || experiences.isEmpty())
             return 0;
@@ -232,7 +238,8 @@ public class User implements CustomUserDetails {
             }
         }
 
-        return Arrays.stream(workedYears).sum();
+        yearsOfExperience = Arrays.stream(workedYears).sum();
+        return yearsOfExperience;
     }
 
     public boolean hasSkill(long skillId){

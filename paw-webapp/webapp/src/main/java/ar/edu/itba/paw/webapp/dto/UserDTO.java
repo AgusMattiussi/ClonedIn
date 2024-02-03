@@ -31,7 +31,7 @@ public class UserDTO {
         dto.description = user.getDescription();
         dto.educationLevel = user.getEducation();
         dto.visibility = user.getVisibility();
-        dto.yearsOfExperience = user.getYearsOfExperience(); //TODO: Cambiar para setear una sola vez
+        dto.yearsOfExperience = user.getYearsOfExperience();
 
         dto.links = new UserDTOLinks(uriInfo, user);
         return dto;
