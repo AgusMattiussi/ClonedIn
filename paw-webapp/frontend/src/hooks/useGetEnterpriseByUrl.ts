@@ -7,6 +7,7 @@ export const useGetEnterpriseByUrl = () => {
     const response = await apiRequest({
       url: enterpriseUrl,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

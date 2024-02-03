@@ -8,6 +8,7 @@ export const useGetJobOffersForUser = () => {
       url: `/jobOffers?enterpriseId=${id}`,
       method: "GET",
       queryParams: queryParams,
+      requiresAuth: true,
     })
     return response
   }

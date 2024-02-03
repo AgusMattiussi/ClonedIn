@@ -24,11 +24,21 @@ function JobOffer() {
     const fetchJob = async () => {
       const response = await getJobOfferById(id)
 
-      if (response.status === HttpStatusCode.InternalServerError || response.status === HttpStatusCode.Forbidden) {
+      if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
-
-      setJob(response.data)
+      else if (response.status === HttpStatusCode.InternalServerError) {
+        navigate("/500")
+      }
+      else if (response.status === HttpStatusCode.Unauthorized) {
+        navigate("/401")
+      }
+      else if (response.status === HttpStatusCode.Ok) {
+        setJob(response.data)
+      }
+      else {
+        console.error("Error fetching job offer information")
+      }
       setJobLoading(false)
     }
     if (isJobLoading) fetchJob()

@@ -7,6 +7,7 @@ export const useGetUserEducations = () => {
     const response = await apiRequest({
       url: `/users/${id}/educations`,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

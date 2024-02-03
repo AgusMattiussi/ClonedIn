@@ -8,6 +8,7 @@ export const useGetUserContacts = () => {
       url: `/users/${id}/contacts`,
       method: "GET",
       queryParams: queryParams,
+      requiresAuth: true,
     })
     return response
   }

@@ -3,29 +3,27 @@ import Card from "react-bootstrap/Card"
 import Badge from "react-bootstrap/Badge"
 import Button from "react-bootstrap/Button"
 import defaultProfile from "../../images/defaultProfilePicture.png"
+import CategoryDto from "../../utils/CategoryDto"
 import { UserRole } from "../../utils/constants"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react"
-import { useRequestApi } from "../../api/apiRequest"
+import { useGetUserSkills } from "../../hooks/useGetUserSkills"
+import { useGetCategoryByUrl } from "../../hooks/useGetCategoryByUrl"
+import { useGetImage } from "../../hooks/useGetImage"
 import { useSharedAuth } from "../../api/auth"
-import CategoryDto from "../../utils/CategoryDto"
 import { HttpStatusCode } from "axios"
 
-function ProfileUserCard({
-  editable,
-  user,
-  inProfileView,
-}: {
-  editable: boolean
-  user: any
-  inProfileView: boolean
-}) {
+function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean; user: any; inProfileView: boolean }) {
   const navigate = useNavigate()
+
   const { t } = useTranslation()
-  const { userInfo } = useSharedAuth()
-  const { apiRequest } = useRequestApi()
   const { id } = useParams()
+  const { userInfo } = useSharedAuth()
+
+  const { getUserSkills } = useGetUserSkills()
+  const { getCategoryByUrl } = useGetCategoryByUrl()
+  const { getImageByUrl } = useGetImage()
 
   const [loadingData, setLoadingData] = useState(true)
   const [userCategory, setUserCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -39,9 +37,9 @@ function ProfileUserCard({
       try {
         if (loadingData) {
           const [skillsResponse, categoryResponse, imageResponse] = await Promise.all([
-            apiRequest({ url: memorizedUser.links.skills, method: "GET" }),
-            apiRequest({ url: memorizedUser.links.category, method: "GET" }),
-            apiRequest({ url: memorizedUser.links.image, method: "GET" }),
+            getUserSkills(memorizedUser.id),
+            getCategoryByUrl(memorizedUser.links.category),
+            getImageByUrl(memorizedUser.links.image),
           ])
 
           setSkillsData(skillsResponse.status === HttpStatusCode.NoContent ? [] : skillsResponse.data)
@@ -54,7 +52,7 @@ function ProfileUserCard({
       }
     }
     if (loadingData) fetchData()
-  }, [apiRequest, loadingData, memorizedUser])
+  }, [loadingData, memorizedUser])
 
   const userSkillsList = skillsData.map((skill, index) => {
     return (

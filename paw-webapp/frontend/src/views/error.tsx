@@ -47,7 +47,11 @@ function Error(props: any) {
           <span className="text-danger">{t("Error Title Span")}</span> {title}
         </p>
         <p className="lead">{message}</p>
-        {userInfo?.role === UserRole.USER ? (
+        {props.statusCode !== "401" ? (
+          <Button onClick={() => navigate("/login")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
+            {t("Return")}
+          </Button>
+        ) : userInfo?.role === UserRole.USER ? (
           <Button
             onClick={() => navigate("/jobOffers")}
             className="btn btn-primary"
@@ -56,11 +60,7 @@ function Error(props: any) {
             {t("Return")}
           </Button>
         ) : (
-          <Button 
-            onClick={() => navigate("/users")} 
-            className="btn btn-primary" 
-            style={{ backgroundColor: "#04704C" }}
-          >
+          <Button onClick={() => navigate("/users")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
             {t("Return")}
           </Button>
         )}
