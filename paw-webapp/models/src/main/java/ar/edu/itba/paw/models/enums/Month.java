@@ -32,15 +32,9 @@ public enum Month {
     }
 
     public static Month fromNumber(int number) {
-        if(number < 1 || number > 12)
-            return null;
-
-        for (Month month : Month.values()) {
-            if (month.number == number) {
-                return month;
-            }
-        }
-        return null;
+        if(number >= 1 && number <= 12)
+            return Month.values()[number-1];
+        throw new IllegalArgumentException(String.format("Invalid number '%d' for month", number));
     }
 
     public static Month fromString(String name) {

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.services.EducationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.enums.Month;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.DateHelper;
 import ar.edu.itba.paw.models.utils.PaginatedResource;

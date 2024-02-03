@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.interfaces.services.SkillService;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.Optional;
 @Service
 public class SkillServiceImpl implements SkillService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkillServiceImpl.class);
+
     private final SkillDao skillDao;
 
     @Autowired
@@ -25,7 +29,10 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill create(String description) {
-        return skillDao.create(description);
+        Skill skill = skillDao.create(description);
+        LOGGER.debug("A new skill was registered under id: {}", skill.getId());
+        LOGGER.info("A new skill was registered");
+        return skill;
     }
 
     @Override
