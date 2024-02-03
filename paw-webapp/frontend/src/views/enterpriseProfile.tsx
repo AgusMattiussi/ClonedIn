@@ -49,10 +49,17 @@ function ProfileEnterprise() {
   useEffect(() => {
     const fetchEnterprise = async () => {
       const response = await getEnterpriseById(id)
-
-      if (response.status === HttpStatusCode.Ok) {
+      if (response.status === HttpStatusCode.Forbidden) {
+        navigate("/403")
+      }
+      else if (response.status === HttpStatusCode.InternalServerError) {
+        navigate("/500")
+      }
+      else if (response.status === HttpStatusCode.Unauthorized) {
+        navigate("/401")
+      }
+      else if (response.status === HttpStatusCode.Ok) {
         setEnterprise(response.data)
-
       }
       else {
         console.error("Error getting enterprise info:", response)
@@ -130,7 +137,6 @@ function ProfileEnterprise() {
   }
 
   const handlePage = (pageNumber: string) => {
-    console.log("Page")
     setPage(pageNumber)
     setJobsLoading(true)
     navigate({
