@@ -7,6 +7,7 @@ export const useGetUserById = () => {
     const response = await apiRequest({
       url: `/users/${id}`,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

@@ -7,6 +7,7 @@ export const useGetJobOfferByUrl = () => {
     const response = await apiRequest({
       url: jobOfferUrl,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

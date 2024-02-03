@@ -7,6 +7,7 @@ export const useGetUserSkills = () => {
     const response = await apiRequest({
       url: `/users/${id}/skills`,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

@@ -39,6 +39,13 @@ export const useRequestApi = () => {
     const { url, method, requiresAuth, credentials } = input
     let { headers, body } = input
 
+    if (requiresAuth && !accessToken && !credentials) {
+      navigate("/401")
+      return {
+        status: 401,
+      } as AxiosResponse
+    }
+
     if (credentials) {
       const encodedBasic = Buffer.from(`${credentials?.username}:${credentials?.password}`).toString("base64")
       headers = {

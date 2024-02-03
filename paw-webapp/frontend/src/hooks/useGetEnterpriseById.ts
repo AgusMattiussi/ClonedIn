@@ -7,6 +7,7 @@ export const useGetEnterpriseById = () => {
     const response = await apiRequest({
       url: `/enterprises/${id}`,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }
