@@ -6,7 +6,7 @@ public enum JobOfferSorting {
     OLDEST("antiguas", " ORDER BY jo.id ASC"),
     SALARY_ASC("salarioAsc", " ORDER BY jo.salary ASC"),
     SALARY_DESC("salarioDesc", " ORDER BY jo.salary DESC"),
-    //POPULARITY("populares", "TO DO"),
+
     ;
 
     private final String stringValue;

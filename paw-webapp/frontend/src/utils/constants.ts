@@ -39,6 +39,10 @@ export enum SortBy {
   OLDEST = "antiguas",
   SALARY_ASC = "salarioAsc",
   SALARY_DESC = "salarioDesc",
+  EXP_ASC = "expAsc",
+  EXP_DESC = "expDesc", 
+  EDUCATION_ASC = "educAsc",
+  EDUCATION_DESC = "educDesc",
 }
 
 export const AUTHORIZATION_HEADER = "x-access-token"
