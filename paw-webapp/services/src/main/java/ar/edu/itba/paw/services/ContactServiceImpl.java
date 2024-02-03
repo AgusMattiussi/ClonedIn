@@ -265,7 +265,7 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public boolean acceptJobOffer(User user, JobOffer jobOffer) {
         if(contactDao.acceptJobOffer(user, jobOffer)){
-            LOGGER.info("JobOffer with id {} accepted by user with id {} - acceptJobOffer", jobOffer.getId(), user.getId());
+            LOGGER.debug("JobOffer with id {} accepted by user with id {} - acceptJobOffer", jobOffer.getId(), user.getId());
 
             emailService.sendAcceptApplicationEmail(user, jobOffer.getEnterprise().getName(),
                     jobOffer.getEnterprise().getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
@@ -281,7 +281,7 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public boolean rejectJobOffer(User user, JobOffer jobOffer) {
         if(contactDao.rejectJobOffer(user, jobOffer)){
-            LOGGER.info("JobOffer with id {} rejected by user with id {} - rejectJobOffer", jobOffer.getId(), user.getId());
+            LOGGER.debug("JobOffer with id {} rejected by user with id {} - rejectJobOffer", jobOffer.getId(), user.getId());
 
             emailService.sendRejectApplicationEmail(user, jobOffer.getEnterprise().getName(),
                     jobOffer.getEnterprise().getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
@@ -335,7 +335,7 @@ public class ContactServiceImpl implements ContactService {
             LOGGER.error("JobOffer with id {} could not be closed by user with id {} - closeJobOffer", jobOffer.getId(), user.getId());
             throw new JobOfferStatusException(JobOfferStatus.CLOSED, jobOffer.getId(), user.getId());
         }
-        LOGGER.info("JobOffer with id {} closed by user with id {} - closeJobOffer", jobOffer.getId(), user.getId());
+        LOGGER.debug("JobOffer with id {} closed by user with id {} - closeJobOffer", jobOffer.getId(), user.getId());
         return true;
     }
 
@@ -345,7 +345,7 @@ public class ContactServiceImpl implements ContactService {
             LOGGER.error("JobOffer with id {} could not be closed for everyone - closeJobOfferForEveryone", jobOffer.getId());
             throw new JobOfferStatusException(JobOfferStatus.CLOSED, jobOffer.getId());
         }
-        LOGGER.info("JobOffer with id {} closed for everyone - closeJobOfferForEveryone", jobOffer.getId());
+        LOGGER.debug("JobOffer with id {} closed for everyone - closeJobOfferForEveryone", jobOffer.getId());
         return true;
     }
 
@@ -482,7 +482,7 @@ public class ContactServiceImpl implements ContactService {
                 }
                 successful = this.acceptJobOffer(user, jobOffer);
                 if(successful) {
-                    LOGGER.info("JobOffer with id {} and user with id {} accepted by user - updateUserContactStatus",
+                    LOGGER.debug("JobOffer with id {} and user with id {} accepted by user - updateUserContactStatus",
                             jobOfferId, userId);
                 }
                 break;
@@ -494,7 +494,7 @@ public class ContactServiceImpl implements ContactService {
                 }
                 successful = this.rejectJobOffer(user, jobOffer);
                 if(successful) {
-                    LOGGER.info("JobOffer with id {} and user with id {} rejected by user - updateUserContactStatus",
+                    LOGGER.debug("JobOffer with id {} and user with id {} rejected by user - updateUserContactStatus",
                             jobOfferId, userId);
                 }
                 break;

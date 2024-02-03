@@ -37,7 +37,10 @@ public class EducationServiceImpl implements EducationService {
 
         DateHelper.validateDate(fromMonthNum, yearFrom, toMonthNum, yearTo);
 
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - add", userId);
+            return new UserNotFoundException(userId);
+        });
 
         Education education = educationDao.add(user, fromMonthNum, yearFrom, toMonthNum,
                 yearTo, title, institutionName, description);
@@ -56,7 +59,10 @@ public class EducationServiceImpl implements EducationService {
     @Override
     @Transactional
     public PaginatedResource<Education> findByUser(long userId, int page, int pageSize) {
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - findByUser", userId);
+            return new UserNotFoundException(userId);
+        });
 
         List<Education> educations = educationDao.findByUser(user, page-1, pageSize);
         long educationCount = this.getEducationCountForUser(user);
