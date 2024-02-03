@@ -7,12 +7,15 @@ import ar.edu.itba.paw.models.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Primary
 @Service
 public class JobOfferSkillServiceImpl implements JobOfferSkillService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferServiceImpl.class);
 
     private final JobOfferSkillDao jobOfferSkillDao;
 
@@ -24,6 +27,7 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
     @Override
     public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
         jobOfferSkillDao.addSkillToJobOffer(skill, jobOffer);
+        LOGGER.debug("A new skill was added to the job offer with id: {}", jobOffer.getId());
     }
 
     @Override
