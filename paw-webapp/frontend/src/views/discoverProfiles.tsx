@@ -15,6 +15,7 @@ import { useGetCategories } from "../hooks/useGetCategories"
 import { useGetUsers } from "../hooks/useGetUsers"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
+import { SortBy } from "../utils/constants"
 
 function DiscoverProfiles() {
   const navigate = useNavigate()
@@ -42,6 +43,7 @@ function DiscoverProfiles() {
 
   document.title = t("Discover Profiles") + " | ClonedIn"
 
+  const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
   let queryParams: Record<string, string> = {}
 
   const fetchUsers = useCallback(
@@ -52,6 +54,7 @@ function DiscoverProfiles() {
       minExpYears: string,
       maxExpYears: string,
       page: string,
+      sortBy: string,
     ) => {
       setLoading(true)
 
@@ -61,6 +64,7 @@ function DiscoverProfiles() {
       if (minExpYears) queryParams.minExpYears = minExpYears
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
       if (page) queryParams.page = page
+      if (sortBy) queryParams.sortBy = sortBy
 
       try {
         const response = await getUsers(queryParams)
@@ -82,6 +86,7 @@ function DiscoverProfiles() {
             searchTerm: searchTerm,
             minExpYears: minExpYears,
             maxExpYears: maxExpYears,
+            sortBy: sortBy,
           }).toString(),
         })
         setPage("1")
@@ -106,9 +111,9 @@ function DiscoverProfiles() {
 
   useEffect(() => {
     if (isLoading) {
-      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page)
+      fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page, sortBy)
     }
-  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers, queryParams, page])
+  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers, queryParams, page, sortBy])
 
   const handleSearch = () => {
     setLoading(true)
@@ -116,6 +121,11 @@ function DiscoverProfiles() {
 
   const handlePage = (pageNumber: string) => {
     setPage(pageNumber)
+    setLoading(true)
+  }
+
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy.toString())
     setLoading(true)
   }
 
@@ -253,9 +263,27 @@ function DiscoverProfiles() {
               </div>
             </Row>
           </Col>
-          <Col className="align-items-start d-flex flex-column mt-2 mr-2 mb-2">
-            <Row>
-              <h3>{t("Discover Profiles")}</h3>
+          <Col className="d-flex flex-column mt-2 mr-2 mb-2">
+          <Row className="my-2">
+              <div className="d-flex justify-content-between">
+                <h3 style={{ textAlign: "left" }}>{t("Discover Profiles")}</h3>
+                <div style={{ width: "200px" }}>
+                  <Form.Select
+                    className="px-3"
+                    aria-label="Sort by select"
+                    value={sortBy}
+                    onChange={(e) => handleSort(e.target.value)}
+                  >
+                    <option value={SortBy.DEFAULT}> {t("Order By")} </option>
+                    <option value={SortBy.OLDEST}> {t("Date asc")} </option>
+                    <option value={SortBy.RECENT}> {t("Date desc")} </option>
+                    <option value={SortBy.EDUCATION_DESC}> {t("Higer Education")} </option>
+                    <option value={SortBy.EDUCATION_ASC}> {t("Lower Education")} </option>
+                    <option value={SortBy.EXP_DESC}> {t("Higer Experience")} </option>
+                    <option value={SortBy.EXP_ASC}> {t("Lower Experience")} </option>
+                  </Form.Select>
+                </div>
+              </div>
             </Row>
             <Row
               className="rounded-3 d-flex flex-row flex-wrap w-100"

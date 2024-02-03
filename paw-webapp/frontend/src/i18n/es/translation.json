@@ -51,6 +51,10 @@
 
   "Higer Salary": "Mayor salario",
   "Lower Salary": "Menor salario",
+  "Higer Education": "Mayor educacion",
+  "Lower Education": "Menor educacion",
+  "Higer Experience": "Mayor experiencia",
+  "Lower Experience": "Menor experiencia",
 
   "No-especificado": "Selecciona",
   "Primario": "Primario",
