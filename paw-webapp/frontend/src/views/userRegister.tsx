@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button"
 import Header from "../components/header"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import * as React from "react"
@@ -291,7 +291,7 @@ function RegisterUser() {
                             <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                           </div>
                           <p> {t("Fields required")} </p>
-                          <Button variant="success" type="submit">
+                          <Button data-testid="register-user-button" variant="success" type="submit">
                             <strong>{t("Register")}</strong>
                           </Button>
                         </Form>
