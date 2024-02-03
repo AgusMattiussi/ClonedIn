@@ -49,7 +49,8 @@ export function useRegisterUser() {
         level,
       },
     })
-    return response.status !== HttpStatusCode.BadRequest
+    console.log(response)
+    return response.status === HttpStatusCode.Created
   }
 
   return { loading, registerHandler }
@@ -86,7 +87,7 @@ export function useRegisterEnterprise() {
         aboutUs,
       },
     })
-    return response.status !== HttpStatusCode.BadRequest
+    return response.status === HttpStatusCode.Created
   }
 
   return { loading, registerHandler }
