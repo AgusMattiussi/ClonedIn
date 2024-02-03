@@ -68,7 +68,7 @@ public interface ContactService {
 
     boolean cancelJobOfferForEveryone(JobOffer jobOffer);
 
-    boolean closeJobOffer(User user, JobOffer jobOffer);
+    boolean closeJobOfferForUser(User user, JobOffer jobOffer);
 
     boolean closeJobOfferForEveryone(JobOffer jobOffer);
 

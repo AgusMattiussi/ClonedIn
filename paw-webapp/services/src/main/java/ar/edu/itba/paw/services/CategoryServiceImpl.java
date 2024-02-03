@@ -4,16 +4,19 @@ import ar.edu.itba.paw.interfaces.persistence.CategoryDao;
 import ar.edu.itba.paw.interfaces.services.CategoryService;
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Primary
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     private final CategoryDao categoryDao;
 
@@ -24,7 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(String name) {
-        return categoryDao.create(name);
+        Category c = categoryDao.create(name);
+        LOGGER.info("Category created: {}", c.getName());
+        LOGGER.debug("Category created: {}", c);
+        return c;
     }
 
     @Override

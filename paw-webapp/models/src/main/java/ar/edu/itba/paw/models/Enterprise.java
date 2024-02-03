@@ -233,7 +233,6 @@ public class Enterprise implements CustomUserDetails {
         sb.append(", year=").append(year);
         sb.append(", link='").append(link).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", image=").append(image);
         sb.append('}');
         return sb.toString();
     }

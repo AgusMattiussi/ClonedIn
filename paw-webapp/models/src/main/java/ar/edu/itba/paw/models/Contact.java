@@ -84,6 +84,10 @@ public class Contact {
         return status;
     }
 
+    public JobOfferStatus getStatusEnum() {
+        return JobOfferStatus.fromString(status);
+    }
+
     public int getFilledBy() {
         return filledBy;
     }
