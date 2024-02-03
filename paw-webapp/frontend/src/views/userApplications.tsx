@@ -115,10 +115,6 @@ function ApplicationsUser() {
       try {
         const response = await getUserContacts(userInfo?.id, queryParams)
 
-        if (response.status === HttpStatusCode.InternalServerError) {
-          navigate("/403")
-        }
-
         if (response.status === HttpStatusCode.NoContent) {
           setApplications([])
         } else {

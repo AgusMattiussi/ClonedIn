@@ -69,10 +69,6 @@ function DiscoverJobs() {
       try {
         const response = await getJobOffers(queryParams)
 
-        if (response.status === HttpStatusCode.InternalServerError) {
-          navigate("/403")
-        }
-
         if (response.status === HttpStatusCode.NoContent) {
           setJobs([])
         } else {
