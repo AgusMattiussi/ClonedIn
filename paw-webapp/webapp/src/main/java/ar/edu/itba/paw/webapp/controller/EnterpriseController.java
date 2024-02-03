@@ -152,7 +152,6 @@ public class EnterpriseController {
                 jobOffers.getMaxPages());
     }
 
-    //TODO: Mover esta logica al JobOfferController?
     @GET
     @Path("/{id}/jobOffers/{joid}")
     @Produces(ClonedInMediaType.JOB_OFFER_V1)
