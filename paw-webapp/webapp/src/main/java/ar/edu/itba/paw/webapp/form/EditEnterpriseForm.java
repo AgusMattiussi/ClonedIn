@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.webapp.validators.NotAfterCurrentYear;
 import ar.edu.itba.paw.webapp.validators.ValidEmployeeRange;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -19,8 +21,8 @@ public class EditEnterpriseForm {
     @ValidEmployeeRange
     private String workers;
 
-    //TODO: Validator
     @Min(1000)
+    @NotAfterCurrentYear
     private Integer year;
 
     @Size(max=200)
@@ -66,8 +68,6 @@ public class EditEnterpriseForm {
     }
 
     public void setYear(Integer year) {
-        if(year > Calendar.getInstance().get(Calendar.YEAR))
-            throw new IllegalArgumentException("Year cannot be greater than current year");
         this.year = year;
     }
 

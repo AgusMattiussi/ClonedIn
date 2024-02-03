@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
+import ar.edu.itba.paw.webapp.validators.NotAfterCurrentYear;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
 import ar.edu.itba.paw.webapp.validators.StringMatches;
 import ar.edu.itba.paw.webapp.validators.ValidEmployeeRange;
@@ -40,6 +41,7 @@ public class EnterpriseForm {
     private String workers;
 
     @Min(1000)
+    @NotAfterCurrentYear
     private Integer year;
 
     @Size(max=200)
@@ -103,10 +105,7 @@ public class EnterpriseForm {
         return year;
     }
 
-    //TODO: Year validator, para mejor mensaje de error
     public void setYear(Integer year) {
-        if(year > Calendar.getInstance().get(Calendar.YEAR))
-            throw new IllegalArgumentException("Year cannot be greater than current year");
         this.year = year;
     }
 
