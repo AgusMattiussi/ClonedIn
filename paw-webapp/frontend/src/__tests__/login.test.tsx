@@ -4,14 +4,14 @@ import { BrowserRouter } from "react-router-dom";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
-jest.mock('axios', () => {
-    return {
-      ...(jest.requireActual('axios') as object),
-      create: jest.fn().mockReturnValue(jest.requireActual('axios')),
-    };
-  });
+// jest.mock('axios', () => {
+//     return {
+//       ...(jest.requireActual('axios') as object),
+//       create: jest.fn().mockReturnValue(jest.requireActual('axios')),
+//     };
+//   });
   
-const mockAdapter = new MockAdapter(axios);
+// const mockAdapter = new MockAdapter(axios);
 
 
 describe("Test Login", () => {
@@ -36,6 +36,30 @@ describe("Test Login", () => {
         const errorMessage = await screen.findByText("Invalid Credentials")
         expect(errorMessage).toBeInTheDocument()
     })
+
+    // test("Test login fails with empty credentials", async () => {
+    //     render(
+    //         <BrowserRouter>
+    //             <Login />
+    //         </BrowserRouter>
+    //     );
+    //     const email = screen.getByPlaceholderText("Email")
+    //     fireEvent.change(email, {
+    //         target: {
+    //             value: "paw-2022b-4@gmail.com"
+    //         }
+    //     })
+    //     const password = screen.getByPlaceholderText("Password")
+    //     fireEvent.change(password, {
+    //         target: {
+    //             value: "paw-2022b-4"
+    //         }
+    //     })
+    //     const btn = screen.getByTestId("login-button")
+    //     fireEvent.click(btn)
+    //     const errorMessage = await screen.findByText("Invalid Credentials")
+    //     expect(errorMessage).not.toBeInTheDocument()
+    // })
 
     // test("Test login passes with correct credentials", async () => {
     //     mockAdapter.onPost("/auth/access-token", {

@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { usePostUserData } from "../hooks/usePostUserData"
+import { usePostSkill } from "../hooks/usePostSkill"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -16,7 +16,7 @@ function SkillsForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { addSkill } = usePostUserData()
+  const { addSkill } = usePostSkill()
 
   document.title = t("Skills Form Page Title")
 

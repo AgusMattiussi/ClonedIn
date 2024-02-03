@@ -1,15 +1,16 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const useGetCategories = () => {
+export const useGetUsers = () => {
   const { apiRequest } = useRequestApi()
 
-  async function getCategories() {
+  async function getUsers(queryParams: Record<string, string> = {}) {
     const response = await apiRequest({
-      url: "/categories",
+      url: `/users`,
       method: "GET",
+      queryParams: queryParams,
     })
     return response
   }
 
-  return { getCategories }
+  return { getUsers }
 }

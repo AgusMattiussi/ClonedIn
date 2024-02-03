@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button"
 import Header from "../components/header"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import * as Icon from "react-bootstrap-icons"
@@ -298,7 +298,7 @@ function RegisterEnterprise() {
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>
-                          <Button variant="success" type="submit">
+                          <Button data-testid="register-enterprise-button" variant="success" type="submit">
                             <strong>{t("Register")}</strong>
                           </Button>
                         </Form>

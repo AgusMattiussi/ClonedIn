@@ -8,11 +8,11 @@ import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import Loader from "../components/loader"
 import Pagination from "../components/pagination"
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom"
+import { createSearchParams, useNavigate } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetUsers } from "../hooks/useGetUsers"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
 
@@ -22,7 +22,7 @@ function DiscoverProfiles() {
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
 
-  const { getUsers } = useGetUserData()
+  const { getUsers } = useGetUsers()
   const { getCategories } = useGetCategories()
 
   const [isLoading, setLoading] = useState(true)
@@ -42,7 +42,6 @@ function DiscoverProfiles() {
 
   document.title = t("Discover Profiles") + " | ClonedIn"
 
-  const [searchParams, setSearchParams] = useSearchParams()
   let queryParams: Record<string, string> = {}
 
   const fetchUsers = useCallback(
@@ -109,32 +108,18 @@ function DiscoverProfiles() {
     if (isLoading) {
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page)
     }
-  }, [
-    categoryName,
-    educationLevel,
-    searchTerm,
-    minExpYears,
-    maxExpYears,
-    isLoading,
-    fetchUsers,
-    setSearchParams,
-    queryParams,
-    page,
-  ])
+  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers, queryParams, page])
 
   const handleSearch = () => {
-    console.log("Search")
     setLoading(true)
   }
 
   const handlePage = (pageNumber: string) => {
-    console.log("Page")
     setPage(pageNumber)
     setLoading(true)
   }
 
   const handleFilter = () => {
-    console.log("Filter")
     setLoading(true)
   }
 

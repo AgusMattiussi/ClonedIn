@@ -1,15 +1,15 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const useGetCategories = () => {
+export const useGetUserById = () => {
   const { apiRequest } = useRequestApi()
 
-  async function getCategories() {
+  async function getUserById(id: string | undefined) {
     const response = await apiRequest({
-      url: "/categories",
+      url: `/users/${id}`,
       method: "GET",
     })
     return response
   }
 
-  return { getCategories }
+  return { getUserById }
 }
