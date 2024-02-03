@@ -63,8 +63,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(long userId) {
-        User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userDao.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - delete", userId);
+            return new UserNotFoundException(userId);
+        });
         userDao.delete(user);
+        LOGGER.debug("User with id {} was deleted", userId);
     }
 
     @Override
@@ -96,6 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(String email, String password) {
         userDao.changePassword(email, passwordEncoder.encode(password));
+        LOGGER.debug("Password for user with email {} was changed", email);
     }
 
     @Override
@@ -153,7 +158,10 @@ public class UserServiceImpl implements UserService {
                                                          Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
                                                          int page, int pageSize) {
 
-        Category category = categoryService.findByName(categoryName).orElse(null);
+        Category category = categoryName != null ? categoryService.findByName(categoryName).orElseThrow(() -> {
+            LOGGER.error("Category with name {} was not found - getUsersListByFilters", categoryName);
+            return new CategoryNotFoundException(categoryName);
+        }) : null;
 
         List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
                                      location, skillDescription, sortBy, page-1, pageSize);
@@ -168,31 +176,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateName(long userID, String newName) {
         userDao.updateName(userID, newName);
+        LOGGER.debug("Name for user with id {} was updated", userID);
     }
 
     @Override
     public void updateDescription(long userID, String newDescription) {
         userDao.updateDescription(userID, newDescription);
+        LOGGER.debug("Description for user with id {} was updated", userID);
     }
 
     @Override
     public void updateLocation(long userID, String newLocation) {
         userDao.updateLocation(userID, newLocation);
+        LOGGER.debug("Location for user with id {} was updated", userID);
     }
 
     @Override
     public void updateCurrentPosition(long userID, String newPosition) {
         userDao.updateCurrentPosition(userID, newPosition);
+        LOGGER.debug("Current position for user with id {} was updated", userID);
     }
 
     @Override
     public void updateCategory(long userID, Category newCategory) {
         userDao.updateCategory(userID, newCategory);
+        LOGGER.debug("Category for user with id {} was updated", userID);
     }
 
     @Override
     public void updateEducationLevel(long userID, EducationLevel newEducationLevel) {
         userDao.updateEducationLevel(userID, newEducationLevel);
+        LOGGER.debug("Education level for user with id {} was updated", userID);
     }
 
     @Override
@@ -219,8 +233,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if(newCategory != null) {
-            Category category = categoryService.findByName(newCategory)
-                .orElseThrow(() -> new CategoryNotFoundException(newCategory));
+            Category category = categoryService.findByName(newCategory).orElseThrow(() -> {
+                LOGGER.error("Category with name {} was not found - updateUserInformation", newCategory);
+                return new CategoryNotFoundException(newCategory);
+            });
             updateCategory(userID, category);
         }
 
@@ -236,30 +252,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public void hideUserProfile(long userID) {
         updateVisibility(userID, Visibility.INVISIBLE);
+        LOGGER.debug("User with id {} hid their profile", userID);
     }
 
     @Override
     public void showUserProfile(long userID) {
         updateVisibility(userID, Visibility.VISIBLE);
+        LOGGER.debug("User with id {} showed their profile", userID);
     }
 
     private void updateVisibility(long userID, Visibility visibility) {
         userDao.updateVisibility(userID, visibility);
+        LOGGER.debug("Visibility for user with id {} was updated", userID);
     }
 
     @Override
     @Transactional
     public void updateProfileImage(long userId, byte[] imageBytes) {
-        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = this.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - updateProfileImage", userId);
+            return new UserNotFoundException(userId);
+        });
         Image image = imageService.uploadImage(imageBytes);
 
         userDao.updateUserProfileImage(user, image);
+        LOGGER.debug("Profile image for user with id {} was updated", userId);
     }
 
     @Override
     @Transactional
     public Optional<Image> getProfileImage(long userId) {
-        User user = this.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = this.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - getProfileImage", userId);
+            return new UserNotFoundException(userId);
+        });
         return Optional.ofNullable(user.getImage());
     }
 
