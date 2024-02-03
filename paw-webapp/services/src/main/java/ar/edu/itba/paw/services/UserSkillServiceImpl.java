@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
 import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import java.util.List;
 @Service
 public class UserSkillServiceImpl implements UserSkillService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserSkillServiceImpl.class);
+
     @Autowired
     private UserSkillDao userSkillDao;
     @Autowired
@@ -30,11 +34,16 @@ public class UserSkillServiceImpl implements UserSkillService {
     @Override
     @Transactional
     public UserSkill addSkillToUser(String skillDescription, long userId) {
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - addSkillToUser", userId);
+            return new UserNotFoundException(userId);
+        });
         Skill skill = skillService.findByDescriptionOrCreate(skillDescription);
 
-        if(this.alreadyExists(skill, user))
+        if(this.alreadyExists(skill, user)) {
+            LOGGER.error("User with ID={} already has skill '{}'", userId, skillDescription);
             throw new IllegalArgumentException(String.format("User with ID=%d already has skill '%s'", userId, skillDescription));
+        }
 
         return userSkillDao.addSkillToUser(skill, user);
     }
@@ -53,7 +62,10 @@ public class UserSkillServiceImpl implements UserSkillService {
     @Override
     @Transactional
     public PaginatedResource<Skill> getSkillsForUser(long userId, int page, int pageSize) {
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - getSkillsForUser", userId);
+            return new UserNotFoundException(userId);
+        });
 
         List<Skill> skills =  userSkillDao.getSkillsForUser(user, page-1, pageSize);
         long skillCount = this.getSkillCountForUser(user);
@@ -71,10 +83,12 @@ public class UserSkillServiceImpl implements UserSkillService {
     @Transactional
     public void deleteSkillFromUser(long userID, long skillID) {
         userSkillDao.deleteSkillFromUser(userID, skillID);
+        LOGGER.debug("Skill with id {} was deleted from user with id {}", skillID, userID);
     }
 
     @Override
     public void deleteSkillFromUser(User user, Skill skill) {
         userSkillDao.deleteSkillFromUser(user, skill);
+        LOGGER.debug("Skill with id {} was deleted from user with id {}", skill.getId(), user.getId());
     }
 }
