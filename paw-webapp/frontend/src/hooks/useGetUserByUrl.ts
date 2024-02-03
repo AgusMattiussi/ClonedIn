@@ -7,6 +7,7 @@ export const useGetByUrl = () => {
     const response = await apiRequest({
       url: userUrl,
       method: "GET",
+      requiresAuth: true,
     })
     return response
   }

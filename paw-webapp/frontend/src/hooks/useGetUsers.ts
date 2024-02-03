@@ -8,6 +8,7 @@ export const useGetUsers = () => {
       url: `/users`,
       method: "GET",
       queryParams: queryParams,
+      requiresAuth: true,
     })
     return response
   }
