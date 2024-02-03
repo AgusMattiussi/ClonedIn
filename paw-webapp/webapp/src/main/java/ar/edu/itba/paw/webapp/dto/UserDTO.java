@@ -19,6 +19,7 @@ public class UserDTO {
     private String educationLevel;
     private int visibility;
     private UserDTOLinks links;
+    private Integer yearsOfExperience;
 
     public static UserDTO fromUser(final UriInfo uriInfo, final User user) {
         final UserDTO dto = new UserDTO();
@@ -30,6 +31,7 @@ public class UserDTO {
         dto.description = user.getDescription();
         dto.educationLevel = user.getEducation();
         dto.visibility = user.getVisibility();
+        dto.yearsOfExperience = user.getYearsOfExperience(); //TODO: Cambiar para setear una sola vez
 
         dto.links = new UserDTOLinks(uriInfo, user);
         return dto;
@@ -105,6 +107,14 @@ public class UserDTO {
 
     public void setLinks(UserDTOLinks links) {
         this.links = links;
+    }
+
+    public Integer getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+
+    public void setYearsOfExperience(Integer yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
     }
 
     public static class UserDTOLinks {

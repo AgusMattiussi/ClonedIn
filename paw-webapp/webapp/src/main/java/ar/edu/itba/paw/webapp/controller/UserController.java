@@ -85,6 +85,7 @@ public class UserController {
     @GET
     @Produces(ClonedInMediaType.USER_LIST_V1)
     @PreAuthorize(ENTERPRISE)
+    @Transactional
     public Response listUsers(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("pageSize") @DefaultValue(S_USERS_PER_PAGE)
                                         @Min(1) @Max(2*USERS_PER_PAGE) final int pageSize,
