@@ -39,7 +39,10 @@ public class ExperienceServiceImpl implements ExperienceService {
 
         DateHelper.validateDate(monthFrom,yearFrom, monthTo, yearTo);
 
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - create", userId);
+            return new UserNotFoundException(userId);
+        });
 
         Experience experience = experienceDao.create(user, monthFrom.getNumber(), yearFrom, monthTo != null ? monthTo.getNumber() : null,
                 yearTo, enterpriseName, position, description);
@@ -59,7 +62,10 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Override
     @Transactional
     public PaginatedResource<Experience> findByUser(long userId, int page, int pageSize) {
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userService.findById(userId).orElseThrow(() -> {
+            LOGGER.error("User with id {} was not found - findByUser", userId);
+            return new UserNotFoundException(userId);
+        });
 
         List<Experience> experiences = experienceDao.findByUser(user, page - 1, pageSize);
         long experienceCount = this.getExperienceCountForUser(user);
@@ -77,5 +83,6 @@ public class ExperienceServiceImpl implements ExperienceService {
     @Transactional
     public void deleteExperience(long experienceId) {
         experienceDao.deleteExperience(experienceId);
+        LOGGER.debug("Experience with id {} was deleted", experienceId);
     }
 }
