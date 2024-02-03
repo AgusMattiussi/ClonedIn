@@ -2,8 +2,8 @@ package ar.edu.itba.paw.models.utils;
 
 import ar.edu.itba.paw.models.enums.Month;
 import ar.edu.itba.paw.models.exceptions.InvalidDateException;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DateHelper {
 

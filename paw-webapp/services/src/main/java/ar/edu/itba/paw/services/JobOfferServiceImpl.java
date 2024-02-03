@@ -13,6 +13,8 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ import static ar.edu.itba.paw.models.enums.JobOfferAvailability.*;
 @Primary
 @Service
 public class JobOfferServiceImpl implements JobOfferService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferServiceImpl.class);
 
     @Autowired
     private JobOfferDao jobOfferDao;
@@ -49,18 +53,24 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     @Transactional
     public JobOffer create(long enterpriseId, String categoryName, String position, String description, BigDecimal salary, String modalityName, List<String> skillDescriptions) {
-        Enterprise enterprise = enterpriseService.findById(enterpriseId)
-                .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+            LOGGER.error("Enterprise with id {} was not found - create", enterpriseId);
+            return new EnterpriseNotFoundException(enterpriseId);
+        });
 
-        Category category = categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        Category category = categoryService.findByName(categoryName).orElseThrow(() -> {
+            LOGGER.error("Category with name {} was not found - create", categoryName);
+            return new CategoryNotFoundException(categoryName);
+        });
 
         JobOfferModality modality = JobOfferModality.fromString(modalityName);
 
         JobOffer jobOffer = this.create(enterprise, category, position, description,
                 salary, modality);
 
-        //TODO: Agregar mas skills a la job offer
+        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
+        LOGGER.info("A new job offer was registered");
+
         List<Skill> skills = skillService.findMultipleByDescriptionOrCreate(skillDescriptions);
         jobOfferSkillService.addSkillToJobOffer(skills, jobOffer);
 
@@ -70,7 +80,10 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     @Transactional
     public List<Skill> getSkills(long jobOfferId) {
-        JobOffer jobOffer = jobOfferDao.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        JobOffer jobOffer = jobOfferDao.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job offer with id {} was not found - getSkills", jobOfferId);
+            return new JobOfferNotFoundException(jobOfferId);
+        });
         return jobOffer.getSkills();
     }
 
@@ -131,11 +144,18 @@ public class JobOfferServiceImpl implements JobOfferService {
     public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
                                                                  Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
                                                                  BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize) {
-        Category category = categoryName != null ? categoryService.findByName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryName)) : null;
 
-        if(enterpriseId != null)
-            enterpriseService.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
+        Category category = categoryName != null ? categoryService.findByName(categoryName).orElseThrow(() -> {
+            LOGGER.error("Category with name {} was not found - getJobOffersListByFilters", categoryName);
+            return new CategoryNotFoundException(categoryName);
+        }) : null;
+
+        if(enterpriseId != null) {
+            enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+                LOGGER.error("Enterprise with id {} was not found - getJobOffersListByFilters", enterpriseId);
+                return new EnterpriseNotFoundException(enterpriseId);
+            });
+        }
 
         List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseId,
                 searchTerm, position, minSalary, maxSalary, sortBy != null ? sortBy : JobOfferSorting.DEFAULT, onlyActive, page-1, pageSize);
@@ -166,28 +186,38 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
+    @Transactional
     public void closeJobOffer(JobOffer jobOffer) {
         jobOfferDao.closeJobOffer(jobOffer);
+        LOGGER.debug("Job offer with id {} was closed", jobOffer.getId());
     }
 
     @Override
+    @Transactional
     public void cancelJobOffer(JobOffer jobOffer) {
         jobOfferDao.cancelJobOffer(jobOffer);
+        LOGGER.debug("Job offer with id {} was cancelled", jobOffer.getId());
     }
 
     @Override
     @Transactional
     public void updateJobOfferAvailability(long jobOfferId, JobOfferAvailability availability) {
-        JobOffer jobOffer = this.findById(jobOfferId).orElseThrow(() -> new JobOfferNotFoundException(jobOfferId));
+        JobOffer jobOffer = this.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("Job offer with id {} was not found - updateJobOfferAvailability", jobOfferId);
+            return new JobOfferNotFoundException(jobOfferId);
+        });
 
         switch (availability) {
             case ACTIVE:
+                LOGGER.error("Cannot update job offer with id {} availability to ACTIVE, since it is the default state", jobOfferId);
                 throw new IllegalArgumentException("Cannot update job offer availability to ACTIVE");
             case CLOSED:
                 this.closeJobOffer(jobOffer);
+                LOGGER.debug("Job offer with id {} was closed", jobOfferId);
                 break;
             case CANCELLED:
                 this.cancelJobOffer(jobOffer);
+                LOGGER.debug("Job offer with id {} was cancelled", jobOfferId);
                 break;
         }
     }
