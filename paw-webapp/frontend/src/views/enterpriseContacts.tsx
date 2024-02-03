@@ -13,10 +13,10 @@ import { JobOfferStatus, SortBy, FilledBy } from "../utils/constants"
 import { HttpStatusCode } from "axios"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
-import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetCategoryByUrl } from "../hooks/useGetCategoryByUrl"
+import { useGetEnterpriseContacts } from "../hooks/useGetEnterpriseContacts"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
-import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { useGetJobOfferByUrl } from "../hooks/useGetJobOfferByUrl"
 import { useNavigate, Link, createSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 
@@ -26,10 +26,10 @@ function EnterpriseContacts() {
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
 
-  const { getCategoryByUrl } = useGetCategories()
-  const { getEnterpriseContacts } = useGetEnterpriseData()
+  const { getCategoryByUrl } = useGetCategoryByUrl()
+  const { getEnterpriseContacts } = useGetEnterpriseContacts()
   const { answerEnterpriseContact } = usePutEnterpriseData()
-  const { getJobOfferByUrl } = useGetJobOfferData()
+  const { getJobOfferByUrl } = useGetJobOfferByUrl()
 
   const [isLoading, setLoading] = useState(true)
   const [contacts, setContacts] = useState<ContactDto[]>([])

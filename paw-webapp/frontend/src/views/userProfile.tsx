@@ -15,14 +15,24 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { HttpStatusCode } from "axios"
-import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetUserById } from "../hooks/useGetUserById"
+import { useGetUserExperiences } from "../hooks/useGetUserExperiences"
+import { useGetUserEducations } from "../hooks/useGetUserEducations"
+import { useGetUserSkills } from "../hooks/useGetUserSkills"
 import { usePutUserData } from "../hooks/usePutUserData"
-import { useDeleteUserData } from "../hooks/useDeleteUserData"
+import { useDeleteUserExperience } from "../hooks/useDeleteUserExperience"
+import { useDeleteUserEducation } from "../hooks/useDeleteUserEducation"
+import { useDeleteUserSkill } from "../hooks/useDeleteUserSkill"
 
 function ProfileUser() {
-  const { getUserById, getUserExperiences, getUserEducations, getUserSkills } = useGetUserData()
+  const { getUserById } = useGetUserById()
+  const { getUserExperiences } = useGetUserExperiences()
+  const { getUserEducations } = useGetUserEducations()
+  const { getUserSkills } = useGetUserSkills()
   const { modifyUserVisibility } = usePutUserData()
-  const { deleteUserSkill, deleteUserEducation, deleteUserExperience } = useDeleteUserData()
+  const { deleteUserSkill } = useDeleteUserSkill()
+  const { deleteUserEducation } = useDeleteUserEducation()
+  const { deleteUserExperience } = useDeleteUserExperience()
 
   const [user, setUser] = useState<UserDto | undefined>({} as UserDto)
   const [isUserLoading, setUserLoading] = useState(true)

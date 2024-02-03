@@ -9,9 +9,9 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetEnterpriseJobOffers } from "../hooks/useGetEnterpriseJobOffers"
 import { usePostEnterpriseData } from "../hooks/usePostEnterpriseData"
-import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetUserById } from "../hooks/useGetUserById"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -23,8 +23,8 @@ function ContactForm() {
   const { userInfo } = useSharedAuth()
   const { userId } = useParams()
 
-  const { getUserById } = useGetUserData()
-  const { getEnterpriseJobOffers } = useGetEnterpriseData()
+  const { getUserById } = useGetUserById()
+  const { getEnterpriseJobOffers } = useGetEnterpriseJobOffers()
   const { addContact } = usePostEnterpriseData()
 
   const [userName, setUserName] = useState("")

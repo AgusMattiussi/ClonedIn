@@ -13,10 +13,10 @@ import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import { usePutUserData } from "../hooks/usePutUserData"
-import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
-import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
-import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetEnterpriseByUrl } from "../hooks/useGetEnterpriseByUrl"
+import { useGetJobOfferByUrl } from "../hooks/useGetJobOfferByUrl"
+import { useGetCategoryByUrl } from "../hooks/useGetCategoryByUrl"
+import { useGetUserContacts } from "../hooks/useGetUserContacts"
 import { createSearchParams, useNavigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -26,10 +26,10 @@ function ApplicationsUser() {
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
 
-  const { getUserContacts } = useGetUserData()
-  const { getCategoryByUrl } = useGetCategories()
-  const { getEnterpriseByUrl } = useGetEnterpriseData()
-  const { getJobOfferByUrl } = useGetJobOfferData()
+  const { getUserContacts } = useGetUserContacts()
+  const { getCategoryByUrl } = useGetCategoryByUrl()
+  const { getEnterpriseByUrl } = useGetEnterpriseByUrl()
+  const { getJobOfferByUrl } = useGetJobOfferByUrl()
   const { answerUserContact } = usePutUserData()
 
   const [isLoading, setLoading] = useState(true)

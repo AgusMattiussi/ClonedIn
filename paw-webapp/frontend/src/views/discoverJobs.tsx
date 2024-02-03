@@ -8,12 +8,12 @@ import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import Pagination from "../components/pagination"
 import Loader from "../components/loader"
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom"
+import { createSearchParams, useNavigate } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { useGetJobOffers } from "../hooks/useGetJobOffers"
 import { HttpStatusCode } from "axios"
 import { SortBy } from "../utils/constants"
 
@@ -24,7 +24,7 @@ function DiscoverJobs() {
   const { userInfo } = useSharedAuth()
 
   const { getCategories } = useGetCategories()
-  const { getJobOffers } = useGetJobOfferData()
+  const { getJobOffers } = useGetJobOffers()
 
   const [isLoading, setLoading] = useState(true)
   const [jobs, setJobs] = useState<any[]>([])
@@ -43,7 +43,6 @@ function DiscoverJobs() {
 
   document.title = t("Discover Jobs") + " | ClonedIn"
 
-  const [searchParams, setSearchParams] = useSearchParams()
   const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
   let queryParams: Record<string, string> = {}
 
@@ -115,27 +114,13 @@ function DiscoverJobs() {
     if (isLoading) {
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
-  }, [
-    categoryName,
-    modality,
-    searchTerm,
-    minSalary,
-    maxSalary,
-    isLoading,
-    fetchJobs,
-    setSearchParams,
-    queryParams,
-    page,
-    sortBy,
-  ])
+  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, queryParams, page, sortBy])
 
   const handleSearch = () => {
-    console.log("Search")
     setLoading(true)
   }
 
   const handlePage = (pageNumber: string) => {
-    console.log("Page")
     setPage(pageNumber)
     setLoading(true)
   }
@@ -146,7 +131,6 @@ function DiscoverJobs() {
   }
 
   const handleFilter = () => {
-    console.log("Filter")
     setLoading(true)
   }
 

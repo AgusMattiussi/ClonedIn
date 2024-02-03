@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
+import { useGetEnterpriseById } from "../hooks/useGetEnterpriseById"
 import { useGetCategories } from "../hooks/useGetCategories"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { HttpStatusCode } from "axios"
@@ -22,7 +22,7 @@ function EditEnterpriseForm() {
   const { userInfo } = useSharedAuth()
 
   const { getCategories } = useGetCategories()
-  const { getEnterpriseById } = useGetEnterpriseData()
+  const { getEnterpriseById } = useGetEnterpriseById()
   const { modifyEnterpriseInfo } = usePutEnterpriseData()
 
   const [categoryList, setCategoryList] = useState([])

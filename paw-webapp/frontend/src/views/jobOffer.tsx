@@ -5,7 +5,7 @@ import JobOfferDiscoverCard from "../components/cards/jobOfferDiscoverCard"
 import Loader from "../components/loader"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { useGetJobOfferById } from "../hooks/useGetJobOfferById"
 import { useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 
@@ -15,7 +15,7 @@ function JobOffer() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
 
-  const { getJobOfferById } = useGetJobOfferData()
+  const { getJobOfferById } = useGetJobOfferById()
 
   const [job, setJob] = useState<JobOfferDto>({} as JobOfferDto)
   const [isJobLoading, setJobLoading] = useState(true)

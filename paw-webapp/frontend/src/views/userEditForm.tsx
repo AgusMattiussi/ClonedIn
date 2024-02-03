@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { usePutUserData } from "../hooks/usePutUserData"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { useGetUserData } from "../hooks/useGetUserData"
+import { useGetUserById } from "../hooks/useGetUserById"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -22,7 +22,7 @@ function EditUserForm() {
   const { t } = useTranslation()
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
-  const { getUserById } = useGetUserData()
+  const { getUserById } = useGetUserById()
   const { getCategories } = useGetCategories()
   const { modifyUserInfo } = usePutUserData()
 

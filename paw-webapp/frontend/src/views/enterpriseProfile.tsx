@@ -13,8 +13,9 @@ import { JobOfferAvailability, UserRole } from "../utils/constants"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useSharedAuth } from "../api/auth"
-import { useGetEnterpriseData } from "../hooks/useGetEnterpriseData"
-import { useGetJobOfferData } from "../hooks/useGetJobOfferData"
+import { useGetEnterpriseById } from "../hooks/useGetEnterpriseById"
+import { useGetEnterpriseJobOffers } from "../hooks/useGetEnterpriseJobOffers"
+import { useGetJobOffersForUser } from "../hooks/useGetJobOffersForUser"
 import { usePutEnterpriseData } from "../hooks/usePutEnterpriseData"
 import { createSearchParams, useNavigate, useParams } from "react-router-dom"
 import { HttpStatusCode } from "axios"
@@ -26,8 +27,9 @@ function ProfileEnterprise() {
   const { id } = useParams()
   const { userInfo } = useSharedAuth()
 
-  const { getEnterpriseById, getEnterpriseJobOffers } = useGetEnterpriseData()
-  const { getUserJobs } = useGetJobOfferData()
+  const { getEnterpriseById } = useGetEnterpriseById()
+  const { getEnterpriseJobOffers } = useGetEnterpriseJobOffers()
+  const { getUserJobs } = useGetJobOffersForUser()
   const { closeJobOffer } = usePutEnterpriseData()
 
   const [enterprise, setEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
