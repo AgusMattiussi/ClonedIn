@@ -213,7 +213,7 @@ function EnterpriseContacts() {
               style={{ minWidth: "90px", marginBottom: "5px" }}
               data-bs-toggle="modal"
               data-bs-target="#cancelModal"
-              onClick={() => setParams(contact.jobOfferInfo?.id, contact.userInfo?.id)}
+              onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
             >
               {t("Cancel")}
             </Button>
