@@ -6,7 +6,8 @@ import defaultProfile from "../../images/defaultProfilePicture.png"
 import CategoryDto from "../../utils/CategoryDto"
 import { UserRole } from "../../utils/constants"
 import { useSharedAuth } from "../../api/auth"
-import { useRequestApi } from "../../api/apiRequest"
+import { useGetCategoryByUrl } from "../../hooks/useGetCategoryByUrl"
+import { useGetImage } from "../../hooks/useGetImage"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useMemo, useState } from "react"
@@ -16,7 +17,9 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { userInfo } = useSharedAuth()
-  const { loading, apiRequest } = useRequestApi()
+
+  const { getCategoryByUrl } = useGetCategoryByUrl()
+  const { getImageByUrl } = useGetImage()
 
   const [loadingData, setLoadingData] = useState(true)
   const [enterpriseCategory, setEnterpriseCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -29,8 +32,8 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
       try {
         if (loadingData) {
           const [categoryResponse, imageResponse] = await Promise.all([
-            apiRequest({ url: memorizedEnterprise.links.category, method: "GET" }),
-            apiRequest({ url: memorizedEnterprise.links.image, method: "GET" }),
+            getCategoryByUrl(memorizedEnterprise.links.category),
+            getImageByUrl(memorizedEnterprise.links.image),
           ])
 
           setEnterpriseCategory(categoryResponse.data)
@@ -42,7 +45,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
       }
     }
     if (loadingData) fetchData()
-  }, [apiRequest, loadingData, memorizedEnterprise])
+  }, [loadingData, memorizedEnterprise])
 
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>

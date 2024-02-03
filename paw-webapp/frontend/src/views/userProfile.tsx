@@ -57,8 +57,7 @@ function ProfileUser() {
 
       if (response.status === HttpStatusCode.Ok) {
         setUser(response.data)
-      }
-      else {
+      } else {
         console.log("Error fetching user information")
       }
       setUserLoading(false)
