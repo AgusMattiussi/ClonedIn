@@ -17,6 +17,7 @@
       ar.edu.itba.paw.webapp.config.WebConfig,
       ar.edu.itba.paw.webapp.config.EmailConfig
       ar.edu.itba.paw.webapp.config.WebAuthConfig,
+      ar.edu.itba.paw.webapp.config.CachingConfig
     </param-value>
   </context-param>
 
