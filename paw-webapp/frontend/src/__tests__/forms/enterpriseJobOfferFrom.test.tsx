@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import JobOfferForm from "../../views/enterpriseJobOfferForm";
 
 
-describe("Test Enterprise Form", () => {
+describe("Test Job Offer Form", () => {
 
     test("Test page is displayed correctly", async () => {
         render(
@@ -11,7 +11,7 @@ describe("Test Enterprise Form", () => {
                 <JobOfferForm/>
             </BrowserRouter>
         );
-        expect(screen.getByText("JobOffer add")).toBeInTheDocument()
+        expect(screen.getByText("Job Offer")).toBeInTheDocument()
     })
 
     test("Test sumbit with empty fields", async () => {

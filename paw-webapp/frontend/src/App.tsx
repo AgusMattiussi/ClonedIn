@@ -65,6 +65,7 @@ function App() {
           {/* ERROR */}
           <Route path="/401" element={<Error statusCode={HttpStatusCode.Unauthorized} />} />
           <Route path="/403" element={<Error statusCode={HttpStatusCode.Forbidden} />} />
+          <Route path="/500" element={<Error statusCode={HttpStatusCode.InternalServerError} />} />
           <Route path="*" element={<Error statusCode={HttpStatusCode.NotFound} />} />
         </Routes>
       </BrowserRouter>

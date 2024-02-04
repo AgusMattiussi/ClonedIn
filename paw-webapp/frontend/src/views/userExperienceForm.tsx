@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button"
 import Navigation from "../components/navbar"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useState } from "react"
@@ -236,7 +236,7 @@ function ExperienceForm() {
                             )}
                           </div>
                           <p>{t("Fields required")}</p>
-                          <Button variant="success" type="submit">
+                          <Button data-testid="experience-form-button" variant="success" type="submit">
                             <strong>{t("Save")}</strong>
                           </Button>
                         </Form>
