@@ -5,7 +5,6 @@ export function getJobMockedData (options = {}) {
         self: ""
       }
       
-    
     const category = {
         id: 50,
         name: "Technology",
@@ -31,4 +30,38 @@ export function getJobMockedData (options = {}) {
     }
 
     return { ...job, ...options };
+}
+
+export function getEnterpriseMockedData (options = {}) {
+  const enterpriseLinks = {
+    self: "",
+    image: "logo.png",
+    category: "Technology"
+  }
+
+const categoryLinks = {
+    self: ""
+  }
+  
+
+const category = {
+    id: 155,
+    name: "Technology",
+    links: categoryLinks
+}
+
+const enterprise = {
+    id: 150,
+    name: "IBM",
+    email: "hr@ibm.com",
+    password: "ibm1234",
+    location: "CABA",
+    workers: "501-1000",
+    year: 1950,
+    website: "www.ibm.com",
+    description: "Global technology innovator, leading advances in AI, automation and hybrid cloud solutions that help businesses",
+    categoryInfo: category,
+    links: enterpriseLinks
+}
+  return { ...enterprise, ...options };
 }
