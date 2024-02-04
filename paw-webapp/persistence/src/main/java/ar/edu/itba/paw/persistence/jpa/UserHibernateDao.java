@@ -28,6 +28,7 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
+    @Cacheable(key = "#result.id")
     public User create(String email, String password, String name, String location, Category category, String currentPosition,
                        String description, EducationLevel education) {
         final User user = new User(email, password, name, location, category, currentPosition, description,

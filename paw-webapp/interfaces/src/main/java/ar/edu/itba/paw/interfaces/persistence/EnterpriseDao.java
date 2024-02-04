@@ -37,7 +37,7 @@ public interface EnterpriseDao {
 
     void updateCategory(long enterpriseID, Category newCategory);
 
-    void updateEnterpriseProfileImage(Enterprise enterprise, Image image);
+    long updateEnterpriseProfileImage(Enterprise enterprise, Image image);
 
     List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
                                                 String term, int page, int pageSize);
