@@ -43,8 +43,8 @@ public class EnterpriseController {
     private static final String S_ENTERPRISES_BY_PAGE = "15";
     private static final int CONTACTS_PER_PAGE = 10;
     private static final String S_CONTACTS_BY_PAGE = "10";
-    private static final int JOB_OFFERS_PER_PAGE = 5;
-    private static final String S_JOB_OFFERS_BY_PAGE = "5";
+    private static final int JOB_OFFERS_PER_PAGE = 3;
+    private static final String S_JOB_OFFERS_BY_PAGE = "3";
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
 
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
