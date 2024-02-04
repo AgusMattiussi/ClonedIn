@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { JobOfferAvailability } from "../../utils/constants";
-import JobOfferEnterpriseCard from "../../components/cards/jobOfferEnterpriseCard";
-import { getJobMockedData } from "../../__mocks__/mockedData";
+import { getContactMockedData, getJobMockedData } from "../../__mocks__/mockedData";
+import JobOfferUserCard from "../../components/cards/jobOfferUserCard";
 
 const job = getJobMockedData()
+const contact = getContactMockedData()
 
 const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -12,25 +12,19 @@ jest.mock('react-router-dom', () => ({
 }));
 
 
-describe('Test Job Offer Enterprise Card', ()=>{
+describe('Test Job Offer User Card', ()=>{
 
     test('Test that card renders correctly for a given job', ()=>{
-        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
+        render(<JobOfferUserCard contact={contact} job={job} handler={jest.fn()} setJobOfferId={jest.fn()} applicationsView={false}/>)
         expect(screen.getByText(job.position)).toBeInTheDocument()
     })
 
     test('Test that all information is visible', ()=>{
-        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
+        render(<JobOfferUserCard contact={contact} job={job} handler={jest.fn()} setJobOfferId={jest.fn()} applicationsView={false}/>)
         expect(screen.getByText(job.position)).toBeInTheDocument()
         expect(screen.getByText(job.description)).toBeInTheDocument()
         expect(screen.getByText("$" + job.salary)).toBeInTheDocument()
         expect(screen.getByText(job.modality)).toBeInTheDocument()
-    })
-
-    test('Test that job appears as closed when not available', ()=>{
-        job.available = JobOfferAvailability.CLOSED
-        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
-        expect(screen.getByText("Closed")).toBeInTheDocument()
     })
 
 })
