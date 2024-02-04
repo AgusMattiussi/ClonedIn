@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import JobOfferDiscoverCard from "../cards/jobOfferDiscoverCard";
+import JobOfferDiscoverCard from "../../components/cards/jobOfferDiscoverCard";
 
 const categoryLinks = {
     self: ""
