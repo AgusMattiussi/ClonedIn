@@ -80,7 +80,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", user.getName());
-        mailMap.put("profileUrl", String.format("%s/users/%d/notifications", baseUrl, user.getId()));
+        mailMap.put("profileUrl", String.format("%susers/%d/notifications", baseUrl, user.getId()));
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
         mailMap.put("salary", jobOffer.getSalary() != null? String.format("$%s", jobOffer.getSalary().toString()) :
