@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import JobOfferDiscoverCard from "../../components/cards/jobOfferDiscoverCard";
 import { JobOfferAvailability } from "../../utils/constants";
 import { getMockedData } from "../../__mocks__/mockedData";
