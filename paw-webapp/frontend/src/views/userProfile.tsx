@@ -57,17 +57,13 @@ function ProfileUser() {
 
       if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
-      }
-      else if (response.status === HttpStatusCode.InternalServerError) {
+      } else if (response.status === HttpStatusCode.InternalServerError) {
         navigate("/500")
-      }
-      else if (response.status === HttpStatusCode.Unauthorized) {
+      } else if (response.status === HttpStatusCode.Unauthorized) {
         navigate("/401")
-      }
-      else if (response.status === HttpStatusCode.Ok) {
+      } else if (response.status === HttpStatusCode.Ok) {
         setUser(response.data)
-      }
-      else {
+      } else {
         console.error("Error fetching user information", response)
       }
 
@@ -76,7 +72,7 @@ function ProfileUser() {
 
     const fetchSkills = async () => {
       const response = await getUserSkills(id)
-      
+
       if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
       }
@@ -338,7 +334,7 @@ function ProfileUser() {
               <Card.Body>
                 <Card.Title>
                   <div className="d-flex flex-row justify-content-between align-items-center">
-                    <strong>{t("Education Level")}</strong>
+                    <strong>{t("Education")}</strong>
                     {userInfo?.role === "ENTERPRISE" ? (
                       <></>
                     ) : (
