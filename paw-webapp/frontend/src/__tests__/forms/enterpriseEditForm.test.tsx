@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import JobOfferForm from "../../views/enterpriseJobOfferForm";
 
 
-describe("Test Skills Form", () => {
+describe("Test Enterprise Form", () => {
 
     test("Test page is displayed correctly", async () => {
         render(
