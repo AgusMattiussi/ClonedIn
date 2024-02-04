@@ -9,6 +9,9 @@ import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@CacheConfig(cacheNames = "jobOffers-cache")
 public class JobOfferHibernateDao implements JobOfferDao {
 
     @PersistenceContext
@@ -32,6 +36,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     private ContactDao contactDao;
 
     @Override
+    @Cacheable(key = "#result.id")
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
         final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary,
                 modality.getModality(), JobOfferAvailability.ACTIVE.getStatus());
@@ -40,6 +45,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
+    @Cacheable(key = "#id", unless = "#result == null")
     public Optional<JobOffer> findById(long id) {
         return Optional.ofNullable(em.find(JobOffer.class, id));
     }
@@ -299,7 +305,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         return (Long) query.getSingleResult();
     }
-
+    
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){
         Query query = em.createQuery("UPDATE JobOffer SET available = :status WHERE id = :jobOfferID");
         query.setParameter("status", joa.getStatus());
@@ -308,12 +314,14 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
+    @CachePut(key = "#jobOffer.id")
     public void closeJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CLOSED);
         contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override
+    @CachePut(key = "#jobOffer.id")
     public void cancelJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CANCELLED);
         contactDao.cancelJobOfferForEveryone(jobOffer);

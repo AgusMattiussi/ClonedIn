@@ -21,7 +21,8 @@ public class CachingConfig {
                 new ConcurrentMapCache("enterprises-cache"),
                 new ConcurrentMapCache("images-cache"),
                 new ConcurrentMapCache("educations-cache"),
-                new ConcurrentMapCache("experiences-cache")));
+                new ConcurrentMapCache("experiences-cache"),
+                new ConcurrentMapCache("jobOffers-cache")));
         return cacheManager;
     }
 }
