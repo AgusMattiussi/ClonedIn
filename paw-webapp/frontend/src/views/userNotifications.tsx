@@ -188,7 +188,7 @@ function NotificationsUser() {
 
     const response = await answerUserContact(userInfo?.id, jobOfferToAnswerId, queryParams)
 
-    if (response.status === HttpStatusCode.NoContent) {
+    if (response.status === HttpStatusCode.Ok) {
       setLoading(true)
       const modalElement = document.getElementById(answer === "Accept" ? "acceptModal" : "rejectModal")
       modalElement?.classList.remove("show")

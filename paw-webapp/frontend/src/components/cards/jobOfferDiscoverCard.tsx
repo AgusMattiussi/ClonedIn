@@ -59,7 +59,6 @@ function JobOfferDiscoverCard({ seeMoreView, job }: { seeMoreView: boolean; job:
     })
 
     if (response.status === HttpStatusCode.Created) {
-      setLoadingData(true)
       const modalElement = document.getElementById("acceptModal")
       modalElement?.classList.remove("show")
       document.body.classList.remove("modal-open")
