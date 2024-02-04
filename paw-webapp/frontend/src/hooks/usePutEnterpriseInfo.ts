@@ -11,7 +11,7 @@ export const usePutEnterpriseInfo = () => {
     category: string | undefined,
     link: string,
     workers: string | undefined,
-    foundingYear: string,
+    year: string,
   ) {
     const response = await apiRequest({
       url: `/enterprises/${id}`,
@@ -23,7 +23,7 @@ export const usePutEnterpriseInfo = () => {
         category,
         link,
         workers,
-        foundingYear,
+        year,
       },
     })
     return response

@@ -318,7 +318,7 @@ public class UserController {
     public Response deleteEducationById(@PathParam("id") @Min(1) final long id,
                                         @PathParam("edId") @Min(1) final long edId) {
         educationService.deleteEducation(edId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
 

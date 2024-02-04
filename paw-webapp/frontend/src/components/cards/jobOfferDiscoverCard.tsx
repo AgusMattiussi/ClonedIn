@@ -15,16 +15,10 @@ import { useSharedAuth } from "../../api/auth"
 import { JobOfferAvailability, UserRole } from "../../utils/constants"
 import AcceptModal from "../modals/acceptModal"
 
-function JobOfferDiscoverCard({
-  seeMoreView,
-  job,
-}: {
-  seeMoreView: boolean
-  job: JobOfferDto
-}) {
+function JobOfferDiscoverCard({ seeMoreView, job }: { seeMoreView: boolean; job: JobOfferDto }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
+  const { apiRequest } = useRequestApi()
   const { userInfo } = useSharedAuth()
 
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
@@ -73,8 +67,7 @@ function JobOfferDiscoverCard({
         modalBackdrop.remove()
       }
       navigate(`/users/${userInfo?.id}/applications`)
-    }
-    else if (response.status === HttpStatusCode.Conflict) { 
+    } else if (response.status === HttpStatusCode.Conflict) {
       setError(t("ContactedOrAppliedUser") as string)
       const modalElement = document.getElementById("acceptModal")
       modalElement?.classList.remove("show")
@@ -98,18 +91,16 @@ function JobOfferDiscoverCard({
     <Card style={{ marginTop: "5px", marginBottom: "5px", width: "100%" }}>
       <CardHeader className="d-flex justify-content-between align-items-center">
         <div className="d-flex justify-content-start pt-2">
-        {userInfo?.role === UserRole.USER ? (
-          <h5>
-            <Link to={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
-              {jobEnterprise?.name}{" "}
-            </Link>
-            | {job.position}
-          </h5>
-        ):(
-          <h5>
-            {job.position}
-          </h5>
-        )}
+          {userInfo?.role === UserRole.USER ? (
+            <h5>
+              <Link to={`/enterprises/${jobEnterprise?.id}`} style={{ textDecoration: "none" }}>
+                {jobEnterprise?.name}{" "}
+              </Link>
+              | {job.position}
+            </h5>
+          ) : (
+            <h5>{job.position}</h5>
+          )}
         </div>
         <span>
           <h5 className="pt-2">
@@ -128,7 +119,7 @@ function JobOfferDiscoverCard({
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>
           <p>
-            {job.salary === "No-Especificado" ? "" : "$"}
+            {job.salary == null ? t("Salary Not Specified") : "$"}
             {job.salary}
           </p>
         </div>
@@ -148,10 +139,14 @@ function JobOfferDiscoverCard({
             <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
               {t("Closed")}
             </Badge>
-            ) : (
-          userInfo?.role === UserRole.USER ? (
+          ) : userInfo?.role === UserRole.USER ? (
             <div>
-              <Button data-testid="apply-button" variant="outline-dark" data-bs-toggle="modal" data-bs-target="#acceptModal">
+              <Button
+                data-testid="apply-button"
+                variant="outline-dark"
+                data-bs-toggle="modal"
+                data-bs-target="#acceptModal"
+              >
                 {t("Apply")}
               </Button>
               {error && (
@@ -160,7 +155,9 @@ function JobOfferDiscoverCard({
                 </div>
               )}
             </div>
-          ) : (<></>) )
+          ) : (
+            <></>
+          )
         ) : (
           <div>
             <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
