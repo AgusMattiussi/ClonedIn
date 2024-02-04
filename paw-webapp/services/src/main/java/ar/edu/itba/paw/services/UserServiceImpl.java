@@ -24,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 @Primary
@@ -288,6 +290,7 @@ public class UserServiceImpl implements UserService {
         });
         return Optional.ofNullable(user.getImage());
     }
+
 
     @Override
     public Map<Long, Boolean> getUserContactMap(Set<Contact> contacts) {

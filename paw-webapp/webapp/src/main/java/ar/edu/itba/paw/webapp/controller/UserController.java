@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -23,6 +25,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -379,13 +383,15 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @Transactional
-    public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
+    public Response getProfileImage(@PathParam("id") @Min(1) final long id,
+                                    @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
+                                    @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height) throws IOException {
 
         Image profileImage = us.getProfileImage(id).orElse(null);
         if(profileImage == null)
             return Response.noContent().build();
 
-        return Response.ok(profileImage.getBytes())
+        return Response.ok(profileImage.getResized(width, height))
                 .type(profileImage.getMimeType()) // @Produces
                 .tag(profileImage.getEntityTag())
                 .cacheControl(ResponseUtils.imageCacheControl())

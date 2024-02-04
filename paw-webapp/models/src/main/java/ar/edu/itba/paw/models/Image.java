@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.exceptions.NotResizableException;
+
+import javax.imageio.ImageIO;
 import javax.persistence.*;
 import javax.ws.rs.core.EntityTag;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -51,6 +55,18 @@ public class Image {
 
     public EntityTag getEntityTag() {
         return new EntityTag(String.valueOf(id));
+    }
+
+    public BufferedImage getResized(int width, int height) {
+        try {
+            BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(this.bytes));
+            java.awt.Image resultingImage = originalImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+            BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.SCALE_SMOOTH);
+            outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
+            return outputImage;
+        } catch (IOException e) {
+            throw new NotResizableException(this.id);
+        }
     }
 
     @Override

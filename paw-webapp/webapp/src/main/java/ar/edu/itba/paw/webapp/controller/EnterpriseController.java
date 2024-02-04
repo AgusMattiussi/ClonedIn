@@ -306,12 +306,14 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-    public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
+    public Response getProfileImage(@PathParam("id") @Min(1) final long id,
+                                    @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
+                                    @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height) throws IOException {
         Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
         if(profileImage == null)
             return Response.noContent().build();
 
-        return Response.ok(profileImage.getBytes())
+        return Response.ok(profileImage.getResized(width, height))
                 .type(profileImage.getMimeType()) // @Produces
                 .tag(profileImage.getEntityTag())
                 .cacheControl(ResponseUtils.imageCacheControl())

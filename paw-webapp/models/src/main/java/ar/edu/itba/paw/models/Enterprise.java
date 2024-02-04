@@ -53,10 +53,6 @@ public class Enterprise implements CustomUserDetails {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    /*@Transient
-    @Enumerated(EnumType.STRING)
-    private Role role;*/
-
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 
