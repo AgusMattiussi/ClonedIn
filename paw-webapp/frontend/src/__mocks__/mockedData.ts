@@ -54,6 +54,7 @@ const enterprise = {
     id: 150,
     name: "IBM",
     email: "hr@ibm.com",
+    password: "ibm1234",
     location: "CABA",
     workers: "501-1000",
     year: 1950,
