@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
+import ar.edu.itba.paw.webapp.validators.EducationLevelEnum;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -20,6 +21,7 @@ public class EditUserForm {
 
     private String category;
 
+    @EducationLevelEnum
     private String level;
 
     //TODO: Visibility validator?
@@ -65,13 +67,12 @@ public class EditUserForm {
         this.category = category;
     }
 
-    //TODO: Validator
     public String getLevel() {
         return level;
     }
 
     public void setLevel(String level) {
-        this.level = EducationLevel.fromString(level).getStringValue();
+        this.level = level;
     }
 
     public EducationLevel getLevelEnum() {

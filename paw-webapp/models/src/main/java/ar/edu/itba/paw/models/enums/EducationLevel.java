@@ -20,11 +20,9 @@ public enum EducationLevel {
     }
 
     public static EducationLevel fromString(String text) {
-        if(text != null && !text.isEmpty()) {
-            for (EducationLevel level : EducationLevel.values()) {
-                if (level.stringValue.equals(text)) {
-                    return level;
-                }
+        for (EducationLevel level : EducationLevel.values()) {
+            if (level.stringValue.equals(text)) {
+                return level;
             }
         }
         throw new IllegalArgumentException(String.format("No constant level matching text '%s' found", text));

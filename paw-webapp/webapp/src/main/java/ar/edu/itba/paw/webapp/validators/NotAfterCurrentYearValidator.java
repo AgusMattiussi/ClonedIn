@@ -7,10 +7,6 @@ import java.util.Calendar;
 public class NotAfterCurrentYearValidator implements ConstraintValidator<NotAfterCurrentYear, Integer> {
 
     @Override
-    public void initialize(NotAfterCurrentYear constraintAnnotation) {
-    }
-
-    @Override
     public boolean isValid(Integer year, ConstraintValidatorContext constraintValidatorContext) {
         if(year == null)
             return true;

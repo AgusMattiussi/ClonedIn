@@ -238,7 +238,7 @@ public class UserHibernateDao implements UserDao {
 
         StringBuilder queryStringBuilder = new StringBuilder().append("SELECT u FROM User u");
 
-        if (minExpYears != null || maxExpYears != null) {
+        if (minExpYears != null || maxExpYears != null || sortBy == UserSorting.EXP_ASC || sortBy == UserSorting.EXP_DESC) {
             queryStringBuilder.append(" LEFT JOIN u.experiences exp");
         }
 
