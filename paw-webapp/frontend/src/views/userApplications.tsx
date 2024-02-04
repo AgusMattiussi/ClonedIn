@@ -116,14 +116,11 @@ function ApplicationsUser() {
         const response = await getUserContacts(userInfo?.id, queryParams)
         if (response.status === HttpStatusCode.Forbidden) {
           navigate("/403")
-        }
-        else if (response.status === HttpStatusCode.InternalServerError) {
+        } else if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/500")
-        }
-        else if (response.status === HttpStatusCode.Unauthorized) {
+        } else if (response.status === HttpStatusCode.Unauthorized) {
           navigate("/401")
-        }
-        else if (response.status === HttpStatusCode.NoContent) {
+        } else if (response.status === HttpStatusCode.NoContent) {
           setApplications([])
         } else {
           const contactsData = await Promise.all(
@@ -171,7 +168,7 @@ function ApplicationsUser() {
     if (isLoading) {
       fetchApplications(filterStatus, sortBy, filledBy, page)
     }
-  }, [])
+  }, [isLoading, sortBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)

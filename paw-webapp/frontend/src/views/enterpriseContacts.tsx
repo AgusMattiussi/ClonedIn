@@ -96,14 +96,11 @@ function EnterpriseContacts() {
       const response = await getEnterpriseContacts(userInfo?.id, queryParams)
       if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
-      }
-      else if (response.status === HttpStatusCode.InternalServerError) {
+      } else if (response.status === HttpStatusCode.InternalServerError) {
         navigate("/500")
-      }
-      else if (response.status === HttpStatusCode.Unauthorized) {
+      } else if (response.status === HttpStatusCode.Unauthorized) {
         navigate("/401")
-      }
-      else if (response.status === HttpStatusCode.NoContent) {
+      } else if (response.status === HttpStatusCode.NoContent) {
         setContacts([])
       } else {
         const contactsData = await Promise.all(
@@ -145,7 +142,7 @@ function EnterpriseContacts() {
     if (isLoading) {
       fetchContacts(filterStatus, sortBy, filledBy, page)
     }
-  }, [fetchContacts, isLoading, filterStatus, sortBy, filledBy, page])
+  }, [isLoading, sortBy])
 
   const handleFilter = (status: string) => {
     setFilterStatus(status)
