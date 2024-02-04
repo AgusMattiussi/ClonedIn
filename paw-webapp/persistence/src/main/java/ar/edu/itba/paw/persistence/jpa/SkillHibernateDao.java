@@ -2,6 +2,10 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.models.Skill;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +19,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@CacheConfig(cacheNames = "skills-cache")
 public class SkillHibernateDao implements SkillDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
+    @Cacheable(key = "#result.id")
     public Skill create(String description) {
         final Skill skill = new Skill(description);
         em.persist(skill);
@@ -28,11 +34,13 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
+    @Cacheable(key = "#id", unless = "#result == null")
     public Optional<Skill> findById(long id) {
         return Optional.ofNullable(em.find(Skill.class, id));
     }
 
     @Override
+    @Cacheable(key = "#description", unless = "#result == null")
     public Optional<Skill> findByDescription(String description) {
         final TypedQuery<Skill> query = em.createQuery("SELECT s FROM Skill AS s WHERE s.description = :description", Skill.class);
         query.setParameter("description", description);
@@ -40,6 +48,7 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
+    @Cacheable(key = "#description")
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);
         if (optSkill.isPresent())
