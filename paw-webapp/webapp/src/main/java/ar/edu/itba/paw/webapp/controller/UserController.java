@@ -40,8 +40,8 @@ public class UserController {
     private static final String S_APPLICATIONS_PER_PAGE = "5";
     private static final int EXPERIENCES_PER_PAGE = 3;
     private static final String S_EXPERIENCES_PER_PAGE = "3";
-    private static final int USERS_PER_PAGE = 12;
-    private static final String S_USERS_PER_PAGE = "12";
+    private static final int USERS_PER_PAGE = 8;
+    private static final String S_USERS_PER_PAGE = "8";
     private static final int EDUCATIONS_PER_PAGE = 3;
     private static final String S_EDUCATIONS_PER_PAGE = "3";
     private static final int SKILLS_PER_PAGE = 10;
@@ -378,8 +378,6 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
-//    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-//  @Produces - set dynamically
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
 

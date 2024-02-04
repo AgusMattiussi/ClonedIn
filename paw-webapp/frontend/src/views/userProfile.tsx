@@ -282,7 +282,7 @@ function ProfileUser() {
                 <Loader />
               </div>
             ) : (
-              <ProfileUserCard editable={true} user={user} inProfileView={true} />
+              <ProfileUserCard user={user} inProfileView={true} />
             )}
           </Col>
           <Col sm={8} className="col">

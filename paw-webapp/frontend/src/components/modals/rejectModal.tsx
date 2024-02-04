@@ -20,6 +20,7 @@ export default function RejectModal(props: any) {
               {props.cancel}
             </button>
             <button
+              data-testid="confirm-button"
               className="btn btn-danger"
               style={{ whiteSpace: "normal", marginBottom: "0.75rem", width: "200px" }}
               onClick={props.onConfirmClick}

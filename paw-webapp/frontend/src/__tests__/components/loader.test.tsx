@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Loader from "../loader";
+import { render, screen } from "@testing-library/react";
+import Loader from "../../components/loader";
 
 describe('Test Loader', ()=>{
 

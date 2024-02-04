@@ -14,7 +14,7 @@ import { useGetImage } from "../../hooks/useGetImage"
 import { useSharedAuth } from "../../api/auth"
 import { HttpStatusCode } from "axios"
 
-function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean; user: any; inProfileView: boolean }) {
+function ProfileUserCard({ user, inProfileView }: { user: any; inProfileView: boolean }) {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
@@ -65,13 +65,11 @@ function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean;
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
-        <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
-          {imageUrl === "" ? (
-            <div className="spinner-border" role="status" />
-          ) : (
-            <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
-          )}
-        </Link>
+        imageUrl === "" ? (
+          <div className="spinner-border" role="status" />
+        ) : (
+          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+        )
       ) : (
         <>
           <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
@@ -104,7 +102,6 @@ function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean;
             </Button>
           )}
         </div>
-        {editable ? <hr /> : <></>}
         <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">
