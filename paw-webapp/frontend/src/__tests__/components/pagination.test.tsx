@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react"
-import Pagination from "../../components/pagination"
+import { render, screen } from "@testing-library/react";
+import Pagination from "../../components/pagination";
 
 let propsMap: { setter: any; pages: string; currentPage: string }
 
