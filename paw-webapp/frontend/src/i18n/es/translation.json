@@ -133,6 +133,7 @@
   "Minimum": "Mínimo",
   "Maximum": "Máximo",
   "Years Of Experience": "Años de Experiencia",
+  "Salary Not Specified": "No especificado",
 
   "Filter by status": "Filtrar por estado",
   "Accepted": "Aceptado",
@@ -152,8 +153,8 @@
   "Description": "Descripción",
   "Contacted": "Contactado",
   "ContactedOrApplied": "Contactado/Postulado",
-  "ContactedOrAppliedEnterprise": "You've already contacted this user / This user has already applied",
-  "ContactedOrAppliedUser": "You've already applied to this job offer/ You've already been contacted for this job offer",
+  "ContactedOrAppliedEnterprise": "Ya has contactado a este usuario para esta oferta de trabajo / Este usuario ya ha aplicado a tu oferta de trabajo",
+  "ContactedOrAppliedUser": "Ya has aplicado a esta oferta de trabajo / Ya has sido contactado para esta oferta de trabajo",
   "View More": "Ver más",
   "Apply": "Postularme",
   "Date": "Fecha",

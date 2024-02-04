@@ -31,7 +31,7 @@ function JobOfferUserCard({
   applicationsView: boolean
 }) {
   const { t } = useTranslation()
-  const { loading, apiRequest } = useRequestApi()
+  const { apiRequest } = useRequestApi()
 
   const [jobEnterprise, setJobEnterprise] = useState<EnterpriseDto | undefined>({} as EnterpriseDto)
   const [jobCategory, setJobCategory] = useState<CategoryDto | undefined>({} as CategoryDto)
@@ -101,14 +101,14 @@ function JobOfferUserCard({
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>
           <p>
-            {job?.salary === "No-Especificado" ? "" : "$"}
+            {job.salary == null ? t("Salary Not Specified") : "$"}
             {job?.salary}
           </p>
         </div>
         <div className="d-flex flex-column">
           <h5>{t("Required Skills")}</h5>
           <div className="d-flex flex-row justify-content-start">
-              {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
+            {jobOfferSkillsList.length === 0 ? <div>{t("Skills Not Specified")}</div> : jobOfferSkillsList}
           </div>
         </div>
         <div className="d-flex flex-column">

@@ -142,7 +142,7 @@ function JobOfferForm() {
                               />
                               <Form.Control.Feedback type="invalid">{errors.salary}</Form.Control.Feedback>
                             </Form.Group>
-                            <div className="d-flex">
+                            <div className="d-flex justify-content-between">
                               <Form.Group controlId="formBasicSkill">
                                 <Form.Control
                                   name="skill1"
@@ -170,7 +170,7 @@ function JobOfferForm() {
                                 <Form.Control.Feedback type="invalid">{errors.skill2}</Form.Control.Feedback>
                               </Form.Group>
                             </div>
-                            <div className="d-flex mb-4">
+                            <div className="d-flex mb-4 justify-content-between">
                               <Form.Group className="mb-3" controlId="formBasicSkill">
                                 <Form.Control
                                   name="skill3"

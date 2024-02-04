@@ -66,30 +66,28 @@ function JobOfferEnterpriseCard({
         <div className="d-flex justify-content-start pt-2">
           {userInfo?.role === UserRole.ENTERPRISE ? (
             <h5>
-            <Link to={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
-              {job.position}
-            </Link>
+              <Link to={`/jobOffers/${job.id}`} style={{ textDecoration: "none" }}>
+                {job.position}
+              </Link>
             </h5>
-            ) : (
-              <h5>
-              {job.position}
-              </h5>
-            )}
+          ) : (
+            <h5>{job.position}</h5>
+          )}
         </div>
         <span>
           <h5 className="pt-2">
-          {job.links.category !== null ? (
-                <div className="d-flex flex-row align-items-center">
-                  {t("Category")}:
-                  <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
-                    {jobCategory!.name == "No-Especificado" ? t("No especificado") : t(jobCategory!.name)}
-                  </Badge>
-                </div>
-              ) : (
-                <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                  {t("Category")}: {t("No especificado")}
-                </p>
-              )}
+            {job.links.category !== null ? (
+              <div className="d-flex flex-row align-items-center">
+                {t("Category")}:
+                <Badge pill bg="success" className="mx-2" style={{ height: "fit-content" }}>
+                  {jobCategory!.name == "No-Especificado" ? t("No especificado") : t(jobCategory!.name)}
+                </Badge>
+              </div>
+            ) : (
+              <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
+                {t("Category")}: {t("No especificado")}
+              </p>
+            )}
           </h5>
         </span>
       </CardHeader>
@@ -102,7 +100,7 @@ function JobOfferEnterpriseCard({
         <div className="d-flex flex-column">
           <h5>{t("Salary")}</h5>
           <p>
-            {job.salary == null ? "" : "$"}
+            {job.salary == null ? t("Salary Not Specified") : "$"}
             {job.salary}
           </p>
         </div>
@@ -121,8 +119,7 @@ function JobOfferEnterpriseCard({
           <Badge bg="danger" style={{ width: "fit-content", height: "fit-content", padding: "8px" }}>
             {t("Closed")}
           </Badge>
-          ) : (
-          userInfo?.role === UserRole.ENTERPRISE ? (
+        ) : userInfo?.role === UserRole.ENTERPRISE ? (
           <div>
             <Button
               variant="outline-dark"
@@ -140,13 +137,13 @@ function JobOfferEnterpriseCard({
               onConfirmClick={handleClose}
             />
           </div>
-          ) : (
+        ) : (
           <div>
             <Button variant="outline-dark" onClick={() => navigate(`/jobOffers/${job.id}`)}>
               {t("View More")}
             </Button>
           </div>
-          ))}
+        )}
       </div>
       <div className="d-flex align-items-start flex-wrap px-3">
         <div>
