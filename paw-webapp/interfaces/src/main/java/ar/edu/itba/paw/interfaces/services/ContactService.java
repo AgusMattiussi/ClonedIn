@@ -60,11 +60,11 @@ public interface ContactService {
 
     Optional<String> getStatus(User user, JobOffer jobOffer);
 
-    boolean acceptJobOffer(User user, JobOffer jobOffer);
+    boolean acceptJobOffer(User user, JobOffer jobOffer, Role updatedBy);
 
-    boolean rejectJobOffer(User user, JobOffer jobOffer);
+    boolean rejectJobOffer(User user, JobOffer jobOffer, Role updatedBy);
 
-    boolean cancelJobOffer(long userId, long jobOfferId);
+    boolean cancelJobOffer(long userId, long jobOfferId, Role updatedBy);
 
     boolean cancelJobOfferForEveryone(JobOffer jobOffer);
 
@@ -81,15 +81,15 @@ public interface ContactService {
 
     long getContactsCountForUser(User user);
 
-    void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+    void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy);
 
-    void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status);
+    void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy);
 
     default void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
         if (updatedBy == Role.ENTERPRISE)
-            updateEnterpriseContactStatus(userId, jobOfferId, status);
+            updateEnterpriseContactStatus(userId, jobOfferId, status, updatedBy);
         else
-            updateUserContactStatus(userId, jobOfferId, status);
+            updateUserContactStatus(userId, jobOfferId, status, updatedBy);
     }
 
 }
