@@ -86,56 +86,59 @@ function EnterpriseInterested() {
     [getCategoryByUrl],
   )
 
-  const fetchContacts = useCallback(async (status: string, sortBy: string, filledBy: string, page: string) => {
-    setLoading(true)
-    if (status) queryParams.status = status
-    if (sortBy) queryParams.sortBy = sortBy
-    if (filledBy) queryParams.filledBy = filledBy
-    if (page) queryParams.page = page
+  const fetchContacts = useCallback(
+    async (status: string, sortBy: string, filledBy: string, page: string) => {
+      setLoading(true)
+      if (status) queryParams.status = status
+      if (sortBy) queryParams.sortBy = sortBy
+      if (filledBy) queryParams.filledBy = filledBy
+      if (page) queryParams.page = page
 
-    try {
-      const response = await getEnterpriseContacts(userInfo?.id, queryParams)
-      if (response.status === HttpStatusCode.Forbidden) {
-        navigate("/403")
-      } else if (response.status === HttpStatusCode.InternalServerError) {
-        navigate("/500")
-      } else if (response.status === HttpStatusCode.Unauthorized) {
-        navigate("/401")
-      } else if (response.status === HttpStatusCode.NoContent) {
-        setContacts([])
-      } else {
-        const contactsData = await Promise.all(
-          response.data.map(async (contact: ContactDto) => {
-            const userCategoryInfo = await fetchCategoryInfo(contact.links.userCategory)
-            const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
-            const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
-            return {
-              ...contact,
-              categoryInfo: userCategoryInfo,
-              jobOfferInfo: {
-                ...jobOfferInfo,
-                categoryInfo: jobOfferCategoryInfo,
-              },
-            }
-          }),
-        )
-        setContacts(contactsData)
-        setTotalPages(response.headers["x-total-pages"] as string)
+      try {
+        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
+        if (response.status === HttpStatusCode.Forbidden) {
+          navigate("/403")
+        } else if (response.status === HttpStatusCode.InternalServerError) {
+          navigate("/500")
+        } else if (response.status === HttpStatusCode.Unauthorized) {
+          navigate("/401")
+        } else if (response.status === HttpStatusCode.NoContent) {
+          setContacts([])
+        } else {
+          const contactsData = await Promise.all(
+            response.data.map(async (contact: ContactDto) => {
+              const userCategoryInfo = await fetchCategoryInfo(contact.links.userCategory)
+              const jobOfferInfo = await fetchJobOfferInfo(contact.links.jobOffer)
+              const jobOfferCategoryInfo = await fetchCategoryInfo(jobOfferInfo.links.category)
+              return {
+                ...contact,
+                categoryInfo: userCategoryInfo,
+                jobOfferInfo: {
+                  ...jobOfferInfo,
+                  categoryInfo: jobOfferCategoryInfo,
+                },
+              }
+            }),
+          )
+          setContacts(contactsData)
+          setTotalPages(response.headers["x-total-pages"] as string)
+        }
+        navigate({
+          search: createSearchParams({
+            page: page,
+            status: status,
+            filledBy: filledBy,
+            sortBy: sortBy,
+          }).toString(),
+        })
+        setPage("1")
+      } catch (error) {
+        console.error("Error fetching jobs:", error)
       }
-      navigate({
-        search: createSearchParams({
-          page: page,
-          status: status,
-          filledBy: filledBy,
-          sortBy: sortBy,
-        }).toString(),
-      })
-      setPage("1")
-    } catch (error) {
-      console.error("Error fetching jobs:", error)
-    }
-    setLoading(false)
-  }, [])
+      setLoading(false)
+    },
+    [getEnterpriseContacts, queryParams, navigate, userInfo?.id, fetchCategoryInfo, fetchJobOfferInfo],
+  )
 
   useEffect(() => {
     if (isLoading) {
