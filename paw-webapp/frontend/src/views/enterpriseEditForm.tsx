@@ -56,8 +56,7 @@ function EditEnterpriseForm() {
       const response = await getEnterpriseById(id)
       if (response.status === HttpStatusCode.Ok) {
         setEnterprise(response.data)
-      }
-      else {
+      } else {
         console.error("Error getting enterprise info:", response)
       }
     }
@@ -76,10 +75,10 @@ function EditEnterpriseForm() {
   const handlePost = async (e: any) => {
     const name = e.name
     const city = e.city
-    const foundingYear = e.foundingYear
+    const year = e.foundingYear
     const link = e.link
     const aboutUs = e.aboutUs
-    const response = await modifyEnterpriseInfo(id, name, aboutUs, city, category, link, workers, foundingYear)
+    const response = await modifyEnterpriseInfo(id, name, aboutUs, city, category, link, workers, year)
     if (response.status === HttpStatusCode.Ok) {
       navigate(`/enterprises/${id}`)
     } else {
@@ -143,7 +142,7 @@ function EditEnterpriseForm() {
                               <label
                                 className="area"
                                 style={{
-                                  width: "100px",
+                                  width: "200px",
                                 }}
                               >
                                 {t("Quantity of employees")}
@@ -170,7 +169,7 @@ function EditEnterpriseForm() {
                               <label
                                 className="area"
                                 style={{
-                                  width: "100px",
+                                  width: "200px",
                                 }}
                               >
                                 {t("Job Category")}
