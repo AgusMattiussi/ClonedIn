@@ -1,10 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import JobOfferDiscoverCard from "../../components/cards/jobOfferDiscoverCard";
 import { JobOfferAvailability } from "../../utils/constants";
+import JobOfferEnterpriseCard from "../../components/cards/jobOfferEnterpriseCard";
 import { getJobMockedData } from "../../__mocks__/mockedData";
 
 const job = getJobMockedData()
-
 
 const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -13,29 +12,24 @@ jest.mock('react-router-dom', () => ({
 }));
 
 
-describe('Test Job Offer Discover Card', ()=>{
+describe('Test Job Offer Enterprise Card', ()=>{
 
     test('Test that card renders correctly for a given job', ()=>{
-        render(<JobOfferDiscoverCard job={job} seeMoreView={true}/>)
+        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
         expect(screen.getByText(job.position)).toBeInTheDocument()
     })
 
     test('Test that all information is visible', ()=>{
-        render(<JobOfferDiscoverCard job={job} seeMoreView={true}/>)
+        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
         expect(screen.getByText(job.position)).toBeInTheDocument()
         expect(screen.getByText(job.description)).toBeInTheDocument()
         expect(screen.getByText("$" + job.salary)).toBeInTheDocument()
         expect(screen.getByText(job.modality)).toBeInTheDocument()
     })
 
-    test('Test that "View More" button appears when seeMoreView is set to false', ()=>{
-        render(<JobOfferDiscoverCard job={job} seeMoreView={false}/>)
-        expect(screen.getByText("View More")).toBeInTheDocument()
-    })
-
     test('Test that job appears as closed when not available', ()=>{
         job.available = JobOfferAvailability.CLOSED
-        render(<JobOfferDiscoverCard job={job} seeMoreView={true}/>)
+        render(<JobOfferEnterpriseCard job={job} handleClose={jest.fn()} setJobOfferId={jest.fn()}/>)
         expect(screen.getByText("Closed")).toBeInTheDocument()
     })
 

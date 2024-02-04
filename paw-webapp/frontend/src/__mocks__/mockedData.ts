@@ -1,6 +1,6 @@
 import { JobOfferAvailability } from "../utils/constants";
 
-export function getMockedData (options = {}){
+export function getJobMockedData (options = {}) {
     const categoryLinks = {
         self: ""
       }
