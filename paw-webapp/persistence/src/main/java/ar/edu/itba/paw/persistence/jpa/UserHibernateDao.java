@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
+import org.springframework.cache.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@CacheConfig(cacheNames = {"users-cache"})
 public class UserHibernateDao implements UserDao {
 
     private static final Image DEFAULT_IMAGE = null;
@@ -25,6 +28,7 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
+    @Cacheable(key = "#result.id")
     public User create(String email, String password, String name, String location, Category category, String currentPosition,
                        String description, EducationLevel education) {
         final User user = new User(email, password, name, location, category, currentPosition, description,
@@ -34,6 +38,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CacheEvict(key = "#user.id")
     public void delete(User user) {
         em.remove(user);
     }
@@ -46,6 +51,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @Cacheable(key = "#userId", condition = "#result != null")
     public Optional<User> findById(long userId) {
         return Optional.ofNullable(em.find(User.class, userId));
     }
@@ -299,6 +305,7 @@ public class UserHibernateDao implements UserDao {
 
 
     @Override
+    @CachePut(key = "#userID")
     public void updateName(long userID, String newName) {
         Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID");
         query.setParameter("newName", newName);
@@ -307,6 +314,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CachePut(key = "#userID")
     public void updateDescription(long userID, String newDescription) {
         Query query = em.createQuery("UPDATE User SET description = :newDescription WHERE id = :userID");
         query.setParameter("newDescription", newDescription);
@@ -315,6 +323,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CachePut(key = "#userID")
     public void updateLocation(long userID, String newLocation) {
         Query query = em.createQuery("UPDATE User SET location = :newLocation WHERE id = :userID");
         query.setParameter("newLocation", newLocation);
@@ -323,6 +332,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CachePut(key = "#userID")
     public void updateCurrentPosition(long userID, String newPosition) {
         Query query = em.createQuery("UPDATE User SET currentPosition = :newPosition WHERE id = :userID");
         query.setParameter("newPosition", newPosition);
@@ -331,6 +341,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CachePut(key = "#userID")
     public void updateCategory(long userID, Category newCategory) {
         Query query = em.createQuery("UPDATE User SET category = :newCategory WHERE id = :userID");
         query.setParameter("newCategory", newCategory);
@@ -339,6 +350,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CachePut(key = "#userID")
     public void updateEducationLevel(long userID, EducationLevel newEducationLevel) {
         Query query = em.createQuery("UPDATE User SET education = :newEducationLevel WHERE id = :userID");
         query.setParameter("newEducationLevel", newEducationLevel.getStringValue());
@@ -347,6 +359,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @CacheEvict(key = "#userID", condition = "#visibility == T(ar.edu.itba.paw.models.enums.Visibility).INVISIBLE")
     public void updateVisibility(long userID, Visibility visibility) {
         Query query = em.createQuery("UPDATE User SET visibility = :visibility WHERE id = :userID");
         query.setParameter("visibility", visibility.getValue());
@@ -355,21 +368,23 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public void updateUserProfileImage(User user, Image image) {
-        /*Query query = em.createQuery("UPDATE User SET image = :image WHERE id = :userID");
-        query.setParameter("image", image);
-        query.setParameter("userID", userID);
-        query.executeUpdate();*/
-
+    @Caching(evict = {
+            @CacheEvict(value ="users-cache", key = "#user.id"),
+            @CacheEvict(value = "images-cache", key = "#result", condition = "#result > 0")
+    })
+    public long updateUserProfileImage(User user, Image image) {
         Image oldImage = user.getImage();
 
         user.setImage(image);
         em.persist(user);
 
         if(oldImage != null){
+            long oldId = oldImage.getId();
             oldImage = em.merge(oldImage);
             em.remove(oldImage);
+            return oldId;
         }
+        return 0;
     }
 
     @Override

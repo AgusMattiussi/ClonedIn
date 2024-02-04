@@ -62,7 +62,7 @@ public interface UserDao {
 
     void updateVisibility(long userID, Visibility visibility);
     
-    void updateUserProfileImage(User user, Image image);
+    long updateUserProfileImage(User user, Image image);
 
     long getVisibleUsersCount();
 }
