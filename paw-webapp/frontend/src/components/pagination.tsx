@@ -2,12 +2,20 @@ import React from "react"
 import { MDBPagination, MDBPaginationItem, MDBPaginationLink } from "mdb-react-ui-kit"
 import { useTranslation } from "react-i18next"
 
-export default function Pagination({ setter, pages }: { setter: any; pages: string }) {
+export default function Pagination({
+  setter,
+  pages,
+  currentPage,
+}: {
+  setter: any
+  pages: string
+  currentPage: string
+}) {
   const { t } = useTranslation()
-  const paginationNumbers = [];
+  const paginationNumbers = []
 
   for (let i = 1; i <= Number(pages); i++) {
-    paginationNumbers.push(i);
+    paginationNumbers.push(i)
   }
 
   return (
@@ -18,14 +26,16 @@ export default function Pagination({ setter, pages }: { setter: any; pages: stri
             {t("Index Pagination First")}
           </MDBPaginationLink>
         </MDBPaginationItem>
-        {paginationNumbers.map((pageNumber) => (
-          <MDBPaginationItem onClick={() => setter(pageNumber)}>
-          <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
-            {pageNumber}
-          </MDBPaginationLink>
-        </MDBPaginationItem>
+        {paginationNumbers.map((pageNumber, index) => (
+          <MDBPaginationItem
+            onClick={() => setter(pageNumber)}
+            key={index}
+            className={currentPage === pageNumber.toString() ? "fw-bold" : ""}
+          >
+            <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>{pageNumber}</MDBPaginationLink>
+          </MDBPaginationItem>
         ))}
-        <MDBPaginationItem onClick={() => setter(pages)} >
+        <MDBPaginationItem onClick={() => setter(pages)}>
           <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
             {t("Index Pagination End")}
           </MDBPaginationLink>

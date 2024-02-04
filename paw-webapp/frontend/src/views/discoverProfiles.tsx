@@ -329,7 +329,7 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Pagination pages={totalPages} setter={handlePage} />
+                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
                 </div>
               </Container>
             </Row>

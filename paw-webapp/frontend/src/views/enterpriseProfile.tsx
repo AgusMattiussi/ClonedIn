@@ -51,17 +51,13 @@ function ProfileEnterprise() {
       const response = await getEnterpriseById(id)
       if (response.status === HttpStatusCode.Forbidden) {
         navigate("/403")
-      }
-      else if (response.status === HttpStatusCode.InternalServerError) {
+      } else if (response.status === HttpStatusCode.InternalServerError) {
         navigate("/500")
-      }
-      else if (response.status === HttpStatusCode.Unauthorized) {
+      } else if (response.status === HttpStatusCode.Unauthorized) {
         navigate("/401")
-      }
-      else if (response.status === HttpStatusCode.Ok) {
+      } else if (response.status === HttpStatusCode.Ok) {
         setEnterprise(response.data)
-      }
-      else {
+      } else {
         console.error("Error getting enterprise info:", response)
       }
       setEnterpriseLoading(false)
@@ -196,7 +192,7 @@ function ProfileEnterprise() {
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            <Pagination pages={totalPages} setter={handlePage} />
+            <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
           </Col>
         </Row>
       </Container>
