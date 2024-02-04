@@ -3,6 +3,9 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.ExperienceDao;
 import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -15,12 +18,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@CacheConfig(cacheNames = "experiences-cache")
 public class ExperienceHibernateDao implements ExperienceDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
+    @Cacheable(key = "#result.id")
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);
@@ -28,6 +33,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
+    @Cacheable(key = "#experienceId", unless = "#result == null")
     public Optional<Experience> findById(long experienceId) {
         return Optional.ofNullable(em.find(Experience.class, experienceId));
     }
@@ -50,6 +56,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
+    @CacheEvict(key = "#experienceId")
     public void deleteExperience(long experienceId) {
         Optional<Experience> toDelete = findById(experienceId);
         toDelete.ifPresent(experience -> em.remove(experience));
