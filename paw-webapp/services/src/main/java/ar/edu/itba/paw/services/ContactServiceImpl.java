@@ -263,12 +263,17 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public boolean acceptJobOffer(User user, JobOffer jobOffer) {
+    public boolean acceptJobOffer(User user, JobOffer jobOffer, Role updatedBy) {
         if(contactDao.acceptJobOffer(user, jobOffer)){
             LOGGER.debug("JobOffer with id {} accepted by user with id {} - acceptJobOffer", jobOffer.getId(), user.getId());
 
-            emailService.sendAcceptApplicationEmail(user, jobOffer.getEnterprise().getName(),
-                    jobOffer.getEnterprise().getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            if(updatedBy == Role.ENTERPRISE){
+                emailService.sendAcceptApplicationEmail(user, jobOffer.getEnterprise().getName(),
+                        user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            } else {
+                emailService.sendAcceptJobOfferEmail(jobOffer.getEnterprise(), user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            }
+
             LOGGER.debug("Accept application email sent to user '{}' for enterprise '{}' and jobOffer '{}' - acceptJobOffer",
                     user, jobOffer.getEnterprise(), jobOffer);
             return true;
@@ -279,12 +284,17 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public boolean rejectJobOffer(User user, JobOffer jobOffer) {
+    public boolean rejectJobOffer(User user, JobOffer jobOffer, Role updatedBy) {
         if(contactDao.rejectJobOffer(user, jobOffer)){
             LOGGER.debug("JobOffer with id {} rejected by user with id {} - rejectJobOffer", jobOffer.getId(), user.getId());
 
-            emailService.sendRejectApplicationEmail(user, jobOffer.getEnterprise().getName(),
-                    jobOffer.getEnterprise().getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            if(updatedBy == Role.ENTERPRISE){
+                emailService.sendRejectApplicationEmail(user, jobOffer.getEnterprise().getName(),
+                        user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            } else {
+                emailService.sendRejectJobOfferEmail(jobOffer.getEnterprise(), user.getName(), user.getEmail(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+            }
+
             LOGGER.debug("Reject application email sent to user '{}' for enterprise '{}' and jobOffer '{}' - rejectJobOffer",
                     user, jobOffer.getEnterprise(), jobOffer);
 
@@ -296,7 +306,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public boolean cancelJobOffer(long userId, long jobOfferId) {
+    public boolean cancelJobOffer(long userId, long jobOfferId, Role updatedBy) {
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - cancelJobOffer", userId);
             return new UserNotFoundException(userId);
@@ -310,8 +320,11 @@ public class ContactServiceImpl implements ContactService {
             LOGGER.error("JobOffer with id {} could not be cancelled by user with id {} - cancelJobOffer", jobOffer.getId(), user.getId());
             throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, userId);
         }
-
-        emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        if(updatedBy == Role.ENTERPRISE){
+            emailService.sendCancelJobOfferEmail(user, jobOffer.getEnterprise().getName(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        } else {
+            emailService.sendCancelApplicationEmail(jobOffer.getEnterprise(), user, jobOffer.getPosition(), LocaleContextHolder.getLocale());
+        }
         LOGGER.debug("Cancel application email sent to enterprise '{}' for user '{}' and jobOffer '{}' - cancelJobOffer",
                 jobOffer.getEnterprise(), user, jobOffer);
 
@@ -377,7 +390,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status){
+    public void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy){
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - updateEnterpriseContactStatus", userId);
             return new UserNotFoundException(userId);
@@ -413,7 +426,7 @@ public class ContactServiceImpl implements ContactService {
                            jobOfferId, userId, contact.getEnterprise().getId());
                    throw new IllegalArgumentException("Cannot accept a contact that was filled by this enterprise");
                }
-               successful = this.acceptJobOffer(user, jobOffer);
+               successful = this.acceptJobOffer(user, jobOffer, updatedBy);
                if(successful) {
                    LOGGER.info("JobOffer with id {} and user with id {} accepted by enterprise with id {} - updateEnterpriseContactStatus",
                            jobOfferId, userId, contact.getEnterprise().getId());
@@ -425,14 +438,14 @@ public class ContactServiceImpl implements ContactService {
                            jobOfferId, userId, contact.getEnterprise().getId());
                    throw new IllegalArgumentException("Cannot decline a contact that was filled by this enterprise");
                }
-               successful = this.rejectJobOffer(user, jobOffer);
+               successful = this.rejectJobOffer(user, jobOffer, updatedBy);
                 if(successful) {
                     LOGGER.info("JobOffer with id {} and user with id {} rejected by enterprise with id {} - updateEnterpriseContactStatus",
                             jobOfferId, userId, contact.getEnterprise().getId());
                 }
                break;
            case CANCELLED:
-               successful = this.cancelJobOffer(userId, jobOfferId);
+               successful = this.cancelJobOffer(userId, jobOfferId, updatedBy);
                 if(successful) {
                     LOGGER.info("JobOffer with id {} cancelled by enterprise with id {} - updateEnterpriseContactStatus", jobOfferId, contact.getEnterprise().getId());
                 }
@@ -448,7 +461,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status){
+    public void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - updateUserContactStatus", userId);
             return new UserNotFoundException(userId);
@@ -480,7 +493,7 @@ public class ContactServiceImpl implements ContactService {
                             jobOfferId, userId);
                     throw new IllegalArgumentException("Cannot accept a contact that was filled by this user");
                 }
-                successful = this.acceptJobOffer(user, jobOffer);
+                successful = this.acceptJobOffer(user, jobOffer, updatedBy);
                 if(successful) {
                     LOGGER.debug("JobOffer with id {} and user with id {} accepted by user - updateUserContactStatus",
                             jobOfferId, userId);
@@ -492,7 +505,7 @@ public class ContactServiceImpl implements ContactService {
                             jobOfferId, userId);
                     throw new IllegalArgumentException("Cannot decline a contact that was filled by this user");
                 }
-                successful = this.rejectJobOffer(user, jobOffer);
+                successful = this.rejectJobOffer(user, jobOffer, updatedBy);
                 if(successful) {
                     LOGGER.debug("JobOffer with id {} and user with id {} rejected by user - updateUserContactStatus",
                             jobOfferId, userId);
@@ -504,7 +517,7 @@ public class ContactServiceImpl implements ContactService {
                             jobOfferId, userId);
                     throw new IllegalArgumentException("Cannot cancel a contact that was filled by the enterprise");
                 }
-                successful = this.cancelJobOffer(userId, jobOfferId);
+                successful = this.cancelJobOffer(userId, jobOfferId, updatedBy);
                 if(successful) {
                     LOGGER.info("JobOffer with id {} cancelled by user with id {} - updateUserContactStatus", jobOfferId, userId);
                 }
@@ -523,9 +536,9 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
         if (updatedBy == Role.ENTERPRISE)
-            updateEnterpriseContactStatus(userId, jobOfferId, status);
+            updateEnterpriseContactStatus(userId, jobOfferId, status, updatedBy);
         else
-            updateUserContactStatus(userId, jobOfferId, status);
+            updateUserContactStatus(userId, jobOfferId, status, updatedBy);
     }
 
 

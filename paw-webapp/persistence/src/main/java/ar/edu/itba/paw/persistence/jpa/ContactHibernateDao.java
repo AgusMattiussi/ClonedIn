@@ -139,12 +139,18 @@ public class ContactHibernateDao implements ContactDao {
 
         if(sortBy != null){
             switch (sortBy){
-            case DATE_ASC:
-                queryBuilder.append(" ORDER BY c.date ASC");
-                break;
-            case DATE_DESC:
-                queryBuilder.append(" ORDER BY c.date DESC");
-                break;
+                case JOB_OFFER_POSITION:
+                    queryBuilder.append(" ORDER BY j.position");
+                    break;
+                case DATE_ASC:
+                    queryBuilder.append(" ORDER BY c.date ASC");
+                    break;
+                case DATE_DESC:
+                    queryBuilder.append(" ORDER BY c.date DESC");
+                    break;
+                case STATUS:
+                    queryBuilder.append(" ORDER BY c.status");
+                    break;
             }
         }
 
@@ -165,7 +171,12 @@ public class ContactHibernateDao implements ContactDao {
     @Override
     public List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
-        StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c WHERE c.user = :user");
+        StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c");
+
+        if(sortBy == ContactSorting.JOB_OFFER_POSITION)
+            queryBuilder.append(" JOIN c.jobOffer j");
+
+        queryBuilder.append(" WHERE c.user = :user");
 
         getContactsForUserAppendConditions(queryBuilder, filledBy, status, sortBy);
 
