@@ -14,7 +14,7 @@ import { useGetImage } from "../../hooks/useGetImage"
 import { useSharedAuth } from "../../api/auth"
 import { HttpStatusCode } from "axios"
 
-function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean; user: any; inProfileView: boolean }) {
+function ProfileUserCard({ user, inProfileView }: { user: any; inProfileView: boolean }) {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
@@ -104,7 +104,6 @@ function ProfileUserCard({ editable, user, inProfileView }: { editable: boolean;
             </Button>
           )}
         </div>
-        {editable ? <hr /> : <></>}
         <div>
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-start my-2">

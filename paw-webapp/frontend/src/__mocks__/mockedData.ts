@@ -1,4 +1,4 @@
-import { JobOfferAvailability } from "../utils/constants";
+import { JobOfferAvailability, JobOfferStatus } from "../utils/constants";
 
 export function getJobMockedData (options = {}) {
     const categoryLinks = {
@@ -63,4 +63,108 @@ const enterprise = {
     links: enterpriseLinks
 }
   return { ...enterprise, ...options };
+}
+
+export function getUserMockedData (options = {}) {
+
+  const experienceLinks = {
+    self: "",
+    user: "15"
+  }
+
+  const experience = {
+    id: 1,
+    position: "Apprentice",
+    enterpriseName: "JP",
+    description: "Nice",
+    monthFrom: 1,
+    yearFrom: 2020,
+    monthTo: 5,
+    yearTo: 2020,
+    links: experienceLinks
+  }
+
+  const skillsLinks = {
+    self: ""
+  }
+
+  const skills = {
+    id: 2,
+    description: "French",
+    links: skillsLinks
+  }
+
+  const userLinks = {
+    self: "",
+    image: "logo.png",
+    category: "Technology",
+    experiences: "",
+    educations: "",
+    skills: "",
+  }
+
+const categoryLinks = {
+    self: ""
+  }
+  
+
+const category = {
+    id: 155,
+    name: "Technology",
+    links: categoryLinks
+}
+
+const user = {
+    id: 15,
+    email: "solanselmo@hotmail.com",
+    name: "Sol",
+    location: "CABA",
+    currentPosition: "Assosiate",
+    description: "Hardworking",
+    educationLevel: "Graduate",
+    visibility: 1,
+    categoryInfo: category,
+    experienceInfo: experience,
+    skillsInfo: skills,
+    links: userLinks
+}
+  return { ...user, ...options };
+}
+
+export function getContactMockedData (options = {}) {
+  const categoryLinks = {
+    self: ""
+  }
+  
+
+  const category = {
+      id: 50,
+      name: "Technology",
+      links: categoryLinks
+  }
+
+  const contactLinks = {
+    self: "",
+    user: "Sol",
+    enterprise: "ITBA",
+    jobOffer: "Backend Developer",
+    userCategory: "Technology"
+  }
+
+  const contact = {
+    id: 1,
+    filledBy: 1,
+    status: JobOfferStatus.PENDING,
+    date: "28/01/2024",
+    userInfo: getUserMockedData(),
+    userName: "Sol",
+    userYearsOfExp: 3,
+    userId: 1,
+    categoryInfo: category,
+    enterpriseInfo: getEnterpriseMockedData(),
+    jobOfferInfo: getJobMockedData(),
+    links: contactLinks,
+}
+
+  return { ...contact, ...options };
 }

@@ -10,7 +10,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockUsedNavigate,
 }));
 
-describe('Test Job Offer Discover Card', ()=>{
+describe('Test Profile Enterprise Card', ()=>{
 
     test('Test that card renders correctly for a given enterprise', ()=>{
         render(<ProfileEnterpriseCard enterprise={enterprise}/>)
