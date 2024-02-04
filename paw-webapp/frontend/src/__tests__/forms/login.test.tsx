@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import Login from "../views/login";
+import Login from "../../views/login";;
 import { BrowserRouter } from "react-router-dom";
 
 describe("Test Login", () => {

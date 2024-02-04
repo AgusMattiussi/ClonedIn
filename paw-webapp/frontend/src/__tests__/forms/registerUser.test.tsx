@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import RegisterUser from "../views/userRegister";
-import { getUserMockedData } from "../__mocks__/mockedData";
+import RegisterUser from "../../views/userRegister";
+import { getUserMockedData } from "../../__mocks__/mockedData";
 
 
 describe("Test Register User", () => {

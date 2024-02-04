@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import RegisterEnterprise from "../views/enterpriseRegister";
-import { getEnterpriseMockedData } from "../__mocks__/mockedData";
+import RegisterEnterprise from "../../views/enterpriseRegister";
+import { getEnterpriseMockedData } from "../../__mocks__/mockedData";
 
 
 describe("Test Register Enterprise", () => {
