@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
@@ -305,7 +306,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
 
         return (Long) query.getSingleResult();
     }
-    
+
     private void updateJobOfferAvailability(long jobOfferID, JobOfferAvailability joa){
         Query query = em.createQuery("UPDATE JobOffer SET available = :status WHERE id = :jobOfferID");
         query.setParameter("status", joa.getStatus());
@@ -314,14 +315,14 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    @CachePut(key = "#jobOffer.id")
+    @CacheEvict(key = "#jobOffer.id")
     public void closeJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CLOSED);
         contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override
-    @CachePut(key = "#jobOffer.id")
+    @CacheEvict(key = "#jobOffer.id")
     public void cancelJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CANCELLED);
         contactDao.cancelJobOfferForEveryone(jobOffer);

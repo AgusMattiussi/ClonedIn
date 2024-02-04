@@ -74,7 +74,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateName(long enterpriseID, String newName) {
         Query query = em.createQuery("UPDATE Enterprise SET name = :newName WHERE id = :enterpriseID");
         query.setParameter("newName", newName);
@@ -83,7 +83,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateWorkers(long enterpriseID, EmployeeRanges newWorkers) {
         Query query = em.createQuery("UPDATE Enterprise SET workers = :newWorkers WHERE id = :enterpriseID");
         query.setParameter("newWorkers", newWorkers.getStringValue());
@@ -92,7 +92,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateYear(long enterpriseID, Integer newYear) {
         Query query = em.createQuery("UPDATE Enterprise SET year = :newYear WHERE id = :enterpriseID");
         query.setParameter("newYear", newYear);
@@ -101,7 +101,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateLink(long enterpriseID, String newLink) {
         Query query = em.createQuery("UPDATE Enterprise SET link = :newLink WHERE id = :enterpriseID");
         query.setParameter("newLink", newLink);
@@ -110,7 +110,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateDescription(long enterpriseID, String newDescription) {
         Query query = em.createQuery("UPDATE Enterprise SET description = :newDescription WHERE id = :enterpriseID");
         query.setParameter("newDescription", newDescription);
@@ -119,7 +119,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateLocation(long enterpriseID, String newLocation) {
         Query query = em.createQuery("UPDATE Enterprise SET location = :newLocation WHERE id = :enterpriseID");
         query.setParameter("newLocation", newLocation);
@@ -128,7 +128,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CachePut(key = "#enterpriseID")
+    @CacheEvict(key = "#enterpriseID")
     public void updateCategory(long enterpriseID, Category newCategory) {
         Query query = em.createQuery("UPDATE Enterprise SET category = :newCategory WHERE id = :enterpriseID");
         query.setParameter("newCategory", newCategory);

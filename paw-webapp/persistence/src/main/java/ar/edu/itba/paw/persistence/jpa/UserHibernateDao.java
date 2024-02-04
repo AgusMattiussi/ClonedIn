@@ -305,7 +305,7 @@ public class UserHibernateDao implements UserDao {
 
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateName(long userID, String newName) {
         Query query = em.createQuery("UPDATE User SET name = :newName WHERE id = :userID");
         query.setParameter("newName", newName);
@@ -314,7 +314,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateDescription(long userID, String newDescription) {
         Query query = em.createQuery("UPDATE User SET description = :newDescription WHERE id = :userID");
         query.setParameter("newDescription", newDescription);
@@ -323,7 +323,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateLocation(long userID, String newLocation) {
         Query query = em.createQuery("UPDATE User SET location = :newLocation WHERE id = :userID");
         query.setParameter("newLocation", newLocation);
@@ -332,7 +332,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateCurrentPosition(long userID, String newPosition) {
         Query query = em.createQuery("UPDATE User SET currentPosition = :newPosition WHERE id = :userID");
         query.setParameter("newPosition", newPosition);
@@ -341,7 +341,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateCategory(long userID, Category newCategory) {
         Query query = em.createQuery("UPDATE User SET category = :newCategory WHERE id = :userID");
         query.setParameter("newCategory", newCategory);
@@ -350,7 +350,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CachePut(key = "#userID")
+    @CacheEvict(key = "#userID")
     public void updateEducationLevel(long userID, EducationLevel newEducationLevel) {
         Query query = em.createQuery("UPDATE User SET education = :newEducationLevel WHERE id = :userID");
         query.setParameter("newEducationLevel", newEducationLevel.getStringValue());
@@ -359,7 +359,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CacheEvict(key = "#userID", condition = "#visibility == T(ar.edu.itba.paw.models.enums.Visibility).INVISIBLE")
+    @CacheEvict(key = "#userID")
     public void updateVisibility(long userID, Visibility visibility) {
         Query query = em.createQuery("UPDATE User SET visibility = :visibility WHERE id = :userID");
         query.setParameter("visibility", visibility.getValue());

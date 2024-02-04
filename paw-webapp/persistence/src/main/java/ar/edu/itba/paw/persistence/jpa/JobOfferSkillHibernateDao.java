@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.JobOfferSkill;
 import ar.edu.itba.paw.models.Skill;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     private EntityManager em;
 
     @Override
+    @CacheEvict(value = "jobOffers-cache", key = "#jobOffer.id")
     public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
         JobOfferSkill jobOfferSkill = new JobOfferSkill(jobOffer, skill);
         em.persist(jobOfferSkill);
