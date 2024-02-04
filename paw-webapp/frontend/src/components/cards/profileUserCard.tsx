@@ -65,13 +65,11 @@ function ProfileUserCard({ user, inProfileView }: { user: any; inProfileView: bo
   return (
     <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
-        <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
-          {imageUrl === "" ? (
-            <div className="spinner-border" role="status" />
-          ) : (
-            <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
-          )}
-        </Link>
+        imageUrl === "" ? (
+          <div className="spinner-border" role="status" />
+        ) : (
+          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+        )
       ) : (
         <>
           <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />

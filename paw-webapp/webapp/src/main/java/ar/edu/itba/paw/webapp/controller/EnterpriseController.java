@@ -306,8 +306,6 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-//  @Produces - set dynamically
-//  @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id) throws IOException {
         Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
         if(profileImage == null)

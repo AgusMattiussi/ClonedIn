@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form"
 import * as Icon from "react-bootstrap-icons"
 import Loader from "../components/loader"
 import Pagination from "../components/pagination"
-import { createSearchParams, useNavigate } from "react-router-dom"
+import { createSearchParams, useNavigate, Link } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useGetCategories } from "../hooks/useGetCategories"
@@ -70,14 +70,11 @@ function DiscoverProfiles() {
         const response = await getUsers(queryParams)
         if (response.status === HttpStatusCode.Forbidden) {
           navigate("/403")
-        }
-        else if (response.status === HttpStatusCode.InternalServerError) {
+        } else if (response.status === HttpStatusCode.InternalServerError) {
           navigate("/500")
-        }
-        else if (response.status === HttpStatusCode.Unauthorized) {
+        } else if (response.status === HttpStatusCode.Unauthorized) {
           navigate("/401")
-        }
-        else if (response.status === HttpStatusCode.NoContent) {
+        } else if (response.status === HttpStatusCode.NoContent) {
           setUsers([])
         } else {
           setUsers(response.data)
@@ -118,7 +115,18 @@ function DiscoverProfiles() {
     if (isLoading) {
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page, sortBy)
     }
-  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers, queryParams, page, sortBy])
+  }, [
+    categoryName,
+    educationLevel,
+    searchTerm,
+    minExpYears,
+    maxExpYears,
+    isLoading,
+    fetchUsers,
+    queryParams,
+    page,
+    sortBy,
+  ])
 
   const handleSearch = () => {
     setLoading(true)
@@ -148,7 +156,11 @@ function DiscoverProfiles() {
   }
 
   const usersList = users.map((user) => {
-    return <ProfileUserCard user={user} />
+    return (
+      <Link to={`/users/${user.id}`} style={{ textDecoration: "none", color: "black" }} key={user.id}>
+        <ProfileUserCard user={user} />
+      </Link>
+    )
   })
 
   return (
@@ -268,7 +280,7 @@ function DiscoverProfiles() {
             </Row>
           </Col>
           <Col className="d-flex flex-column mt-2 mr-2 mb-2">
-          <Row className="my-2">
+            <Row className="my-2">
               <div className="d-flex justify-content-between">
                 <h3 style={{ textAlign: "left" }}>{t("Discover Profiles")}</h3>
                 <div style={{ width: "200px" }}>
