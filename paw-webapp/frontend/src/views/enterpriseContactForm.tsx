@@ -80,7 +80,7 @@ function ContactForm() {
     const response = await addContact(userInfo?.id, message, jobOfferId, userId)
 
     if (response.status === HttpStatusCode.Created) {
-      navigate(`/users/${userId}`)
+      navigate(`/enterprises/${userInfo?.id}/contacts`)
     } else if (response.status === HttpStatusCode.Conflict) {
       setError(t("ContactedOrAppliedEnterprise") as string)
     } else {
