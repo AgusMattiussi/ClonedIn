@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button"
 import Navigation from "../components/navbar"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import { useState, useEffect } from "react"
@@ -251,7 +251,7 @@ function JobOfferForm() {
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>
-                          <Button variant="success" type="submit">
+                          <Button data-testid="job-offer-form-button" variant="success" type="submit">
                             <strong> {t("Create")} </strong>
                           </Button>
                         </Form>

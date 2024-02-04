@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button"
 import Navigation from "../components/navbar"
-import Container from "react-bootstrap/esm/Container"
+import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import EnterpriseDto from "../utils/EnterpriseDto"
