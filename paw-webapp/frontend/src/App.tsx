@@ -27,14 +27,25 @@ import { HttpStatusCode } from "axios"
 import "bootstrap/dist/css/bootstrap.min.css"
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min"
+import { useSharedAuth } from "./api/auth"
 
 function App() {
+  const { userInfo } = useSharedAuth()
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
+          {userInfo === null ? (
+          <Route path="/" element={<Navigate to="/login" />} />
+          ) : (
+            userInfo?.role === "ENTERPRISE" ? (
+              <Route path="/" element={<Navigate to="/users" />} />
+            ) : (
+              <Route path="/" element={<Navigate to="/jobOffers" />} />
+            )
+          )}
 
           {/* ENTERPRISE CONTROLLER */}
           <Route path="/registerEnterprise" element={<RegisterEnterprise />} />
