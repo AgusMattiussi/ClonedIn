@@ -1,34 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import JobOfferDiscoverCard from "../../components/cards/jobOfferDiscoverCard";
+import { JobOfferAvailability } from "../../utils/constants";
+import { getMockedData } from "../../__mocks__/mockedData";
 
-const categoryLinks = {
-    self: ""
-  }
-  
-
-const category = {
-    id: 50,
-    name: "Technology",
-    links: categoryLinks
-}
-
-const jobOfferLinks = {
-    self: "",
-    enterprise: "ITBA",
-    category: "Technology",
-    skills: ""
-  }
-
-const job = {
-    id: 100,
-    position: "Backend Developer",
-    description: "We're looking for a backend devleoper to help build application",
-    salary: "1000",
-    modality: "Remote",
-    available: "Yes",
-    categoryInfo: category,
-    links: jobOfferLinks
-}
+const job = getMockedData()
 
 
 const mockUsedNavigate = jest.fn();
@@ -51,6 +26,17 @@ describe('Test Job Offer Discover Card', ()=>{
         expect(screen.getByText(job.description)).toBeInTheDocument()
         expect(screen.getByText("$" + job.salary)).toBeInTheDocument()
         expect(screen.getByText(job.modality)).toBeInTheDocument()
+    })
+
+    test('Test that "View More" button appears when seeMoreView is set to false', ()=>{
+        render(<JobOfferDiscoverCard job={job} seeMoreView={false}/>)
+        expect(screen.getByText("View More")).toBeInTheDocument()
+    })
+
+    test('Test that job appears as closed when not available', ()=>{
+        job.available = JobOfferAvailability.CLOSED
+        render(<JobOfferDiscoverCard job={job} seeMoreView={true}/>)
+        expect(screen.getByText("Closed")).toBeInTheDocument()
     })
 
 })
