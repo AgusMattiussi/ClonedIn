@@ -4,6 +4,10 @@ import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Month;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +22,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
+@CacheConfig(cacheNames = "educations-cache")
 public class EducationHibernateDao implements EducationDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
+    @Cacheable(key = "#result.id")
     public Education add(User user, Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo, String title, String institutionName, String description) {
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);
@@ -31,6 +37,7 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
+    @Cacheable(key = "#educationID", unless = "#result == null")
     public Optional<Education> findById(long educationID) {
         return Optional.ofNullable(em.find(Education.class, educationID));
     }
@@ -53,22 +60,10 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
+    @CacheEvict(key = "#educationId")
     public void deleteEducation(long educationId) {
         Optional<Education> toDelete = findById(educationId);
         toDelete.ifPresent(education -> em.remove(education));
     }
 
-    private boolean isMonthValid(int month){
-        return month >= 1 && month <= 12;
-    }
-
-    private boolean isYearValid(int year){
-        return year >= 1900 && year <= 2100;
-    }
-
-    private boolean isDateValid(int monthFrom, int yearFrom, int monthTo, int yearTo){
-        if(!isMonthValid(monthTo) || !isMonthValid(monthFrom) || !isYearValid(yearTo) || !isYearValid(yearFrom))
-            return false;
-        return yearTo > yearFrom || (yearTo == yearFrom && monthTo >= monthFrom);
-    }
 }
