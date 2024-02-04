@@ -118,6 +118,7 @@ const category = {
 const user = {
     id: 15,
     email: "solanselmo@hotmail.com",
+    password: "sol1234",
     name: "Sol",
     location: "CABA",
     currentPosition: "Assosiate",

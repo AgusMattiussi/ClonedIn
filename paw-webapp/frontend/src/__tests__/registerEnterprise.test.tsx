@@ -4,7 +4,7 @@ import RegisterEnterprise from "../views/enterpriseRegister";
 import { getEnterpriseMockedData } from "../__mocks__/mockedData";
 
 
-describe("Test Register User", () => {
+describe("Test Register Enterprise", () => {
 
     test("Test register enterprise page is displayed correctly", async () => {
         render(
