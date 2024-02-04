@@ -7,9 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -369,7 +367,10 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    @CacheEvict(value = "images-cache", key = "#result", condition = "#result > 0")
+    @Caching(evict = {
+            @CacheEvict(value ="users-cache", key = "#user.id"),
+            @CacheEvict(value = "images-cache", key = "#result", condition = "#result > 0")
+    })
     public long updateUserProfileImage(User user, Image image) {
         Image oldImage = user.getImage();
 
