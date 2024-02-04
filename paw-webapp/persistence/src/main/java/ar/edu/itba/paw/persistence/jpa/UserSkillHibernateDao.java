@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserSkillDao;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
     private EntityManager em;
 
     @Override
+    @CacheEvict(value = "users-cache", key = "#user.id")
     public UserSkill addSkillToUser(Skill skill, User user) {
         UserSkill userSkill = new UserSkill(user, skill);
         em.persist(userSkill);
@@ -66,6 +68,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
 
     @Override
+    @CacheEvict(value = "users-cache", key = "#userID")
     public void deleteSkillFromUser(long userID, long skillID) {
         Query query = em.createNativeQuery("DELETE FROM aptitudUsuario WHERE idUsuario = :userID AND idAptitud = :skillID");
         query.setParameter("userID", userID);
@@ -74,6 +77,7 @@ public class UserSkillHibernateDao implements UserSkillDao {
     }
 
     @Override
+    @CacheEvict(value = "users-cache", key = "#user.id")
     public void deleteSkillFromUser(User user, Skill skill) {
         Query query = em.createQuery("DELETE FROM UserSkill WHERE user = :user AND skill = :skill");
         query.setParameter("user", user);
