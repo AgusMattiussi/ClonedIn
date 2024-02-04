@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Header from "../header";
+import { render, screen } from "@testing-library/react";
+import Header from "../../components/header";
 
 describe('Test Header', ()=>{
 

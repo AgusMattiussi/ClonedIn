@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Navigation from "../navbar";
+import { render, screen } from "@testing-library/react";
+import Navigation from "../../components/navbar";
 import { UserRole } from "../../utils/constants";
 
 const mockUsedNavigate = jest.fn();

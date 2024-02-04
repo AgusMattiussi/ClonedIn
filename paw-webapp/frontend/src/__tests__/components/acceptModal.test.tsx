@@ -1,12 +1,12 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import RejectModal from "../modals/rejectModal";
+import AcceptModal from "../../components/modals/acceptModal"
 
 let propsMap: { title: any; msg: any; cancel: any; confirm: any; onConfirmClick?: jest.Mock<any, any>; }
 
 const customPropsMap = (options = {}) => {
     const map = {
-        title: "Reject Modal",
-        msg: "Reject this modal?",
+        title: "Accept Modal",
+        msg: "Accept this modal?",
         cancel: "Cancel",
         confirm: "Confirm",
         onConfirmClick: jest.fn()
@@ -16,18 +16,18 @@ const customPropsMap = (options = {}) => {
 };
 
 
-describe("Test Reject Modal", () => {
+describe("Test Accept Modal", () => {
     beforeEach(()=>{
         propsMap = customPropsMap()
     })
 
     test('Test that modal renders correctly', ()=>{
-        render(<RejectModal {...propsMap}/>)
+        render(<AcceptModal {...propsMap}/>)
         expect(screen.getByText(propsMap.title)).toBeInTheDocument()
     })
 
     test('Test that all props are visible', ()=>{
-        render(<RejectModal {...propsMap}/>)
+        render(<AcceptModal {...propsMap}/>)
         expect(screen.getByText(propsMap.title)).toBeInTheDocument()
         expect(screen.getByText(propsMap.msg)).toBeInTheDocument()
         expect(screen.getByText(propsMap.cancel)).toBeInTheDocument()
@@ -35,7 +35,7 @@ describe("Test Reject Modal", () => {
     })
 
     test('Test that onConfirmClick is run after clicking confirm button', ()=>{
-        render(<RejectModal {...propsMap}/>)
+        render(<AcceptModal {...propsMap}/>)
         const button = screen.getByTestId("confirm-button")
         fireEvent.click(button)
         expect(propsMap.onConfirmClick).toHaveBeenCalled()

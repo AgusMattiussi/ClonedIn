@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import CancelModal from "../modals/cancelModal";
+import CancelModal from "../../components/modals/cancelModal";
 
 let propsMap: { title: any; msg: any; cancel: any; confirm: any; onConfirmClick?: jest.Mock<any, any>; }
 
