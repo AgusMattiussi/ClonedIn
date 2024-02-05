@@ -66,7 +66,7 @@ public class EnterpriseController {
     @PreAuthorize("hasAuthority('USER')")
     public Response getEnterprises(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                    @QueryParam("pageSize") @DefaultValue(S_ENTERPRISES_BY_PAGE)
-                                        @Min(1) @Max(4*ENTERPRISES_PER_PAGE) final int pageSize,
+                                        @Min(1) @Max(2*ENTERPRISES_PER_PAGE) final int pageSize,
                                    @QueryParam("categoryName") final String categoryName,
                                    @QueryParam("location") final String location,
                                    @QueryParam("workers") final EmployeeRanges workers,
@@ -131,7 +131,7 @@ public class EnterpriseController {
     public Response getJobOffers(@PathParam("id") @Min(1) final long id,
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_BY_PAGE)
-                                        @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
+                                        @Min(1) @Max(4*JOB_OFFERS_PER_PAGE) final int pageSize,
                                  @QueryParam("category") final String categoryName,
                                  @QueryParam("modality") final JobOfferModality modality,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
