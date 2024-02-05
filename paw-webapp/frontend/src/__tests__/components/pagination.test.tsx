@@ -20,9 +20,9 @@ describe("Test Pagination", () => {
 
   test("Test that all props are visible", () => {
     render(<Pagination {...propsMap} />)
-    const pages = propsMap.pages
-    pages.localeCompare((num) => {
-      expect(screen.getByText(`${num}`)).toBeInTheDocument()
-    })
+    for (let i = 1; i <= Number(propsMap.pages); i++) {
+      let page = i.toString()
+      expect(screen.getByText(`${page}`)).toBeInTheDocument()
+    }
   })
 })
