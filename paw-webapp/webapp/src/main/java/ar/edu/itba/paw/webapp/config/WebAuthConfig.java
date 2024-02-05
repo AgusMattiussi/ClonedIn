@@ -87,10 +87,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(Collections.singletonList("*")); //Collections.singletonList("http://localhost:3000")); // React Frontend
-        cors.setAllowedMethods(Collections.singletonList("*"));
-        cors.setAllowedHeaders(Collections.singletonList("*"));
-        cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token"));
+        cors.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL)); //Collections.singletonList("http://localhost:3000")); // React Frontend
+        cors.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        cors.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
+        cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token",
+                "ETag", "Set-Cookie"));
         cors.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cors);
@@ -116,7 +117,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        //auth.authenticationProvider(authenticationProvider);
     }
 
 
