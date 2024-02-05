@@ -37,7 +37,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     private ContactDao contactDao;
 
     @Override
-    @Cacheable(key = "#result.id")
+    @CachePut(key = "#result.id")
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
         final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary,
                 modality.getModality(), JobOfferAvailability.ACTIVE.getStatus());

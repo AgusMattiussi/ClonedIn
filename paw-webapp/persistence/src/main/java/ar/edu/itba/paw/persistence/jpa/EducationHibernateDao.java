@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.Month;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +26,7 @@ public class EducationHibernateDao implements EducationDao {
     private EntityManager em;
 
     @Override
-    @Cacheable(key = "#result.id")
+    @CachePut(key = "#result.id")
     public Education add(User user, Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo, String title, String institutionName, String description) {
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);

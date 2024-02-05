@@ -28,7 +28,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     private EntityManager em;
 
     @Override
-    @Cacheable(key = "#result.id")
+    @CachePut(key = "#result.id")
     public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
                              Integer year, String link, String description) {
         final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers.getStringValue(),

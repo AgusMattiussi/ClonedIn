@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferSorting;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,8 @@ public class JobOfferServiceImpl implements JobOfferService {
     private SkillService skillService;
     @Autowired
     private JobOfferSkillService jobOfferSkillService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     @Transactional
@@ -190,6 +194,7 @@ public class JobOfferServiceImpl implements JobOfferService {
     public void closeJobOffer(JobOffer jobOffer) {
         jobOfferDao.closeJobOffer(jobOffer);
         LOGGER.debug("Job offer with id {} was closed", jobOffer.getId());
+        emailService.sendCloseJobOfferEmailToAllApplicants(jobOffer, LocaleContextHolder.getLocale());
     }
 
     @Override

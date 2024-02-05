@@ -2,10 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
 import ar.edu.itba.paw.models.Skill;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +23,7 @@ public class SkillHibernateDao implements SkillDao {
     private EntityManager em;
 
     @Override
-    @Cacheable(key = "#result.id")
+    @CachePut(key = "#result.id")
     public Skill create(String description) {
         final Skill skill = new Skill(description);
         em.persist(skill);

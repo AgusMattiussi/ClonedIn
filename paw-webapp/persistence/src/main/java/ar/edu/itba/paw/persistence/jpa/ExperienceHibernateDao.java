@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Experience;
 import ar.edu.itba.paw.models.User;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     private EntityManager em;
 
     @Override
-    @Cacheable(key = "#result.id")
+    @CachePut(key = "#result.id")
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);

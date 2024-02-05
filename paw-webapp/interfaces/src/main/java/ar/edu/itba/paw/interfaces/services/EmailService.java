@@ -12,6 +12,8 @@ public interface EmailService {
     void sendRegisterEnterpriseConfirmationEmail(String email, String enterpriseName, Locale locale);
     void sendAcceptJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, Locale locale);
     void sendRejectJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, Locale locale);
+
+    void sendCloseJobOfferEmailToAllApplicants(JobOffer jobOffer, Locale locale);
     void sendCloseJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale);
     void sendCancelJobOfferEmail(User user, String enterpriseName, String jobOfferPosition, Locale locale);
     void sendApplicationEmail(Enterprise enterprise, User user, String jobOfferPosition, Locale locale);

@@ -1,13 +1,17 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.enums.FilledBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -19,11 +23,13 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 
 @Service
+// In the future, we should store the user Locale in the database
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
@@ -31,6 +37,9 @@ public class EmailServiceImpl implements EmailService {
     private SpringTemplateEngine templateEngine;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    @Lazy
+    private ContactService contactService;
 
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
@@ -136,6 +145,22 @@ public class EmailServiceImpl implements EmailService {
         sendReplyJobOfferEmail(enterprise, username, email, jobOfferPosition, REJECT, locale);
     }
 
+    @Override
+    @Async
+    public void sendCloseJobOfferEmailToAllApplicants(JobOffer jobOffer, Locale locale) {
+        List<Contact> contactBatch;
+        int batchSize = 20;
+        int page = 0;
+        do {
+            contactBatch = contactService.getContactsForJobOffer(jobOffer, FilledBy.ANY, page, batchSize);
+
+            for(Contact contact : contactBatch)
+                sendCloseJobOfferEmail(contact.getUser(), jobOffer.getEnterprise().getName(), jobOffer.getPosition(), locale);
+
+            page++;
+        } while (!contactBatch.isEmpty());
+    }
+
     private void sendReplyJobOfferEmail(Enterprise enterprise, String username, String email, String jobOfferPosition, String answerMsg, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
 
@@ -178,6 +203,8 @@ public class EmailServiceImpl implements EmailService {
 
         sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }
+
+
 
     @Async
     @Override
