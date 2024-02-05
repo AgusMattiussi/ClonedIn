@@ -37,6 +37,7 @@ function ContactForm() {
     const fetchJobOffers = async () => {
       let queryParams: Record<string, string> = {}
       queryParams.onlyActive = "true"
+      queryParams.pageSize = "10"
 
       const response = await getEnterpriseJobOffers(userInfo?.id, queryParams)
       if (response.status === HttpStatusCode.Forbidden) {

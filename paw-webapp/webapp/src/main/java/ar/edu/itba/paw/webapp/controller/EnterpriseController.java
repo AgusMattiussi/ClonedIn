@@ -66,7 +66,7 @@ public class EnterpriseController {
     @PreAuthorize("hasAuthority('USER')")
     public Response getEnterprises(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                    @QueryParam("pageSize") @DefaultValue(S_ENTERPRISES_BY_PAGE)
-                                        @Min(1) @Max(2*ENTERPRISES_PER_PAGE) final int pageSize,
+                                        @Min(1) @Max(4*ENTERPRISES_PER_PAGE) final int pageSize,
                                    @QueryParam("categoryName") final String categoryName,
                                    @QueryParam("location") final String location,
                                    @QueryParam("workers") final EmployeeRanges workers,

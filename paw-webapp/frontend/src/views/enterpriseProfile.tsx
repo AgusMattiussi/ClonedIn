@@ -79,6 +79,7 @@ function ProfileEnterprise() {
 
     const fetchUserJobs = async (page: string) => {
       if (page) queryParams.page = page
+      queryParams.pageSize = "3"
 
       const response = await getUserJobs(id, queryParams)
 

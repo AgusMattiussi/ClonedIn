@@ -118,7 +118,9 @@ function JobOfferUserCard({
         <div className="d-flex flex-column">
           <h5>
             {t("Status")}
-            {": "} {t(contact.status)}
+            {": "} { contact.status === JobOfferStatus.CLOSED ? (
+              t("cancelada") ) : ( t(contact.status) )
+            }
           </h5>
           {contact.status !== JobOfferStatus.PENDING ? (
             <></>

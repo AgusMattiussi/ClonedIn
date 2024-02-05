@@ -200,7 +200,10 @@ function EnterpriseInterested() {
         <td>{contact.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.categoryInfo.name)}</td>
         <td>{contact.userYearsOfExp}</td>
         <td>{contact.date}</td>
-        <td>{t(contact.status)}</td>
+        <td>{ contact.status === JobOfferStatus.CLOSED ? (
+              t("cancelada") ) : ( t(contact.status) )
+            }
+            </td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (
             <div className="d-flex flex-column">

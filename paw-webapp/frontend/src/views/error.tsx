@@ -47,7 +47,7 @@ function Error(props: any) {
           <span className="text-danger">{t("Error Title Span")}</span> {title}
         </p>
         <p className="lead">{message}</p>
-        {props.statusCode !== "401" ? (
+        {props.statusCode == "401" ? (
           <Button onClick={() => navigate("/login")} className="btn btn-primary" style={{ backgroundColor: "#04704C" }}>
             {t("Return")}
           </Button>

@@ -217,7 +217,8 @@ function EnterpriseContacts() {
             >
               {t("Cancel")}
             </Button>
-          ) : (
+          ) : contact.status === JobOfferStatus.CLOSED ? (
+            t("cancelada") ) : (
             t(contact.status)
           )}
         </td>
