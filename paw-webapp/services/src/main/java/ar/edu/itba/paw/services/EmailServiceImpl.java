@@ -61,7 +61,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Async
-    public void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
+    protected void sendEmail(String to, String subject, String template, Map<String, Object> variables) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MULTIPART_MODE, ENCODING);
