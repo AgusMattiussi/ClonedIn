@@ -3,15 +3,11 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import ar.edu.itba.paw.models.enums.Role;
 import org.hibernate.annotations.Type;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name = "usuario")
-public class User implements ClonedInUserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
@@ -102,59 +98,21 @@ public class User implements ClonedInUserDetails {
     // Just for Hibernate, we love you!
     }
 
-    @Override
-    public Role getRole() {
-        return Role.USER;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
 
     public String getEmail() {
         return email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Role.USER.name()));
-        return authorities;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
     public String getLocation() {
         return location;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Category getCategory() {

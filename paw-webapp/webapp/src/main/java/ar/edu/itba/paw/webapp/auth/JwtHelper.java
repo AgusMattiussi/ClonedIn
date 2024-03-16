@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.models.ClonedInUserDetails;
+import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

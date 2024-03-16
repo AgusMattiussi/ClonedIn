@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.filter;
 
-import ar.edu.itba.paw.models.ClonedInUserDetails;
+import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
 import ar.edu.itba.paw.webapp.auth.AuthType;
 import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
 import ar.edu.itba.paw.webapp.auth.AuthTypeWebAuthenticationDetails;
-import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
+import ar.edu.itba.paw.webapp.security.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

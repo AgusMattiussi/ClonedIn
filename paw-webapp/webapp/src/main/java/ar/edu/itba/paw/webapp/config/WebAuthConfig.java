@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
+import ar.edu.itba.paw.webapp.security.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.ClonedInAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.filter.ExceptionHandlerFilter;
 import ar.edu.itba.paw.webapp.filter.RefreshTokenFilter;
