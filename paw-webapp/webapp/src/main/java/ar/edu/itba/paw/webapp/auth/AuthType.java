@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.models.enums;
+package ar.edu.itba.paw.webapp.auth;
 
 public enum AuthType {
     BASIC,
