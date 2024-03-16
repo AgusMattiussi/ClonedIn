@@ -1,12 +1,11 @@
 package ar.edu.itba.paw.webapp.filter;
 
-import ar.edu.itba.paw.models.CustomUserDetails;
+import ar.edu.itba.paw.models.ClonedInUserDetails;
 import ar.edu.itba.paw.models.enums.AuthType;
 import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
 import ar.edu.itba.paw.webapp.auth.AuthTypeWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtHelper;
-import ar.edu.itba.paw.webapp.utils.ClonedInUrls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -51,7 +50,7 @@ public class JwtFilterUtils {
     }
 
     public void addTokens(HttpServletRequest request, HttpServletResponse response, String email){
-        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+        ClonedInUserDetails user = (ClonedInUserDetails) userDetailsService.loadUserByUsername(email);
         String accessToken = jwtHelper.generateAccessToken(user);
         NewCookie refreshTokenCookie = this.generateRefreshTokenCookie(user, request.getRemoteAddr());
 
@@ -123,7 +122,7 @@ public class JwtFilterUtils {
         return null;
     }
 
-    public NewCookie generateRefreshTokenCookie(CustomUserDetails userDetails, String ip){
+    public NewCookie generateRefreshTokenCookie(ClonedInUserDetails userDetails, String ip){
         String refreshToken = jwtHelper.generateRefreshToken(userDetails, ip);
         Date expiry = jwtHelper.extractExpiration(refreshToken);
 

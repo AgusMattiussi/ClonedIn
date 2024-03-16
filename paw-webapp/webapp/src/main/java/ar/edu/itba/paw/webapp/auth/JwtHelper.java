@@ -1,22 +1,17 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.models.CustomUserDetails;
+import ar.edu.itba.paw.models.ClonedInUserDetails;
 import ar.edu.itba.paw.models.enums.JwtType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.glassfish.jersey.internal.inject.Custom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -38,18 +33,18 @@ public class JwtHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelper.class);
 
 
-    public String generateAccessToken(CustomUserDetails userDetails){
+    public String generateAccessToken(ClonedInUserDetails userDetails){
         return generateTokenBuilder(userDetails, ACCESS_EXPIRATION_TIME_MILLIS, JwtType.ACCESS_TOKEN)
                 .compact();
     }
 
-    public String generateRefreshToken(CustomUserDetails userDetails, String ip){
+    public String generateRefreshToken(ClonedInUserDetails userDetails, String ip){
         return generateTokenBuilder(userDetails, REFRESH_EXPIRATION_TIME_MILLIS, JwtType.REFRESH_TOKEN)
                 .claim(IP_CLAIM, ip)
                 .compact();
     }
 
-    private JwtBuilder generateTokenBuilder(CustomUserDetails userDetails, long expirationTimeMillis, JwtType tokenType){
+    private JwtBuilder generateTokenBuilder(ClonedInUserDetails userDetails, long expirationTimeMillis, JwtType tokenType){
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())

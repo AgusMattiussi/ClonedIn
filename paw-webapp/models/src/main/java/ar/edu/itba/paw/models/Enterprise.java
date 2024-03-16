@@ -4,14 +4,13 @@ import ar.edu.itba.paw.models.enums.Role;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "empresa")
-public class Enterprise implements CustomUserDetails {
+public class Enterprise implements ClonedInUserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)

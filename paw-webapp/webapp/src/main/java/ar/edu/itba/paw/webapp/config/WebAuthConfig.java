@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.AuthUserDetailsService;
-import ar.edu.itba.paw.webapp.auth.CustomAuthenticationEntryPoint;
+import ar.edu.itba.paw.webapp.auth.ClonedInAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.filter.ExceptionHandlerFilter;
 import ar.edu.itba.paw.webapp.filter.RefreshTokenFilter;
 import ar.edu.itba.paw.webapp.filter.JwtAuthenticationFilter;
@@ -111,7 +111,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint(){
-        return new CustomAuthenticationEntryPoint();
+        return new ClonedInAuthenticationEntryPoint();
     }
 
     @Override
