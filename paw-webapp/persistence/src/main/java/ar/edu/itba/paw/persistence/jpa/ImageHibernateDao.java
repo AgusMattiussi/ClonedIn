@@ -14,19 +14,19 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 @Primary
 @Repository
-@CacheConfig(cacheNames = "images-cache")
+//@CacheConfig(cacheNames = "images-cache")
 public class ImageHibernateDao implements ImageDao {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @Cacheable(key = "#id", unless = "#result == null")
+//    @Cacheable(key = "#id", unless = "#result == null")
     public Optional<Image> getImage(long id) {
         return Optional.of(em.find(Image.class, id));
     }
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public Image uploadImage(byte[] bytes) {
         Image image = new Image(bytes);
         em.persist(image);

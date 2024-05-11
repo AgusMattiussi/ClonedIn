@@ -16,14 +16,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@CacheConfig(cacheNames = "skills-cache")
+//@CacheConfig(cacheNames = "skills-cache")
 public class SkillHibernateDao implements SkillDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public Skill create(String description) {
         final Skill skill = new Skill(description);
         em.persist(skill);
@@ -31,13 +31,13 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
-    @Cacheable(key = "#id", unless = "#result == null")
+//    @Cacheable(key = "#id", unless = "#result == null")
     public Optional<Skill> findById(long id) {
         return Optional.ofNullable(em.find(Skill.class, id));
     }
 
     @Override
-    @Cacheable(key = "#description", unless = "#result == null")
+//    @Cacheable(key = "#description", unless = "#result == null")
     public Optional<Skill> findByDescription(String description) {
         final TypedQuery<Skill> query = em.createQuery("SELECT s FROM Skill AS s WHERE s.description = :description", Skill.class);
         query.setParameter("description", description);
@@ -45,7 +45,7 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
-    @Cacheable(key = "#description")
+//    @Cacheable(key = "#description")
     public Skill findByDescriptionOrCreate(String description) {
         Optional<Skill> optSkill = findByDescription(description);
         if (optSkill.isPresent())

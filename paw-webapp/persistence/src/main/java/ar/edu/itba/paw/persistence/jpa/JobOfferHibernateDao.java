@@ -27,7 +27,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@CacheConfig(cacheNames = "jobOffers-cache")
+//@CacheConfig(cacheNames = "jobOffers-cache")
 public class JobOfferHibernateDao implements JobOfferDao {
 
     @PersistenceContext
@@ -37,7 +37,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     private ContactDao contactDao;
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality) {
         final JobOffer jobOffer = new JobOffer(enterprise, category, position, description, salary,
                 modality.getModality(), JobOfferAvailability.ACTIVE.getStatus());
@@ -46,7 +46,7 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    @Cacheable(key = "#id", unless = "#result == null")
+//    @Cacheable(key = "#id", unless = "#result == null")
     public Optional<JobOffer> findById(long id) {
         return Optional.ofNullable(em.find(JobOffer.class, id));
     }
@@ -315,14 +315,14 @@ public class JobOfferHibernateDao implements JobOfferDao {
     }
 
     @Override
-    @CacheEvict(key = "#jobOffer.id")
+//    @CacheEvict(key = "#jobOffer.id")
     public void closeJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CLOSED);
         contactDao.closeJobOfferForEveryone(jobOffer);
     }
 
     @Override
-    @CacheEvict(key = "#jobOffer.id")
+//    @CacheEvict(key = "#jobOffer.id")
     public void cancelJobOffer(JobOffer jobOffer) {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CANCELLED);
         contactDao.cancelJobOfferForEveryone(jobOffer);
