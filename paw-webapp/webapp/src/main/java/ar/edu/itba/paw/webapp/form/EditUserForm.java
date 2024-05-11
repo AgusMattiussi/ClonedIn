@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.validators.VisibilityEnum;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+// TODO: Deberia ser el Custom Mime Type del usuario
 public class EditUserForm {
     @Size(max=100)
     private String name;

@@ -12,6 +12,7 @@ import javax.validation.constraints.*;
 import java.util.Calendar;
 import java.util.Date;
 
+//TODO: Renombrar forms para que matcheen con el MIME type que representan (EnterpriseV1Form, etc)
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class EnterpriseForm {
 
@@ -25,6 +26,7 @@ public class EnterpriseForm {
     @Size(min = 6, max = 20)
     private String password;
 
+    //TODO: Creo que no tiene tanto sentido este campo
     @NotEmpty
     @Size(min = 6, max = 20)
     private String repeatPassword;

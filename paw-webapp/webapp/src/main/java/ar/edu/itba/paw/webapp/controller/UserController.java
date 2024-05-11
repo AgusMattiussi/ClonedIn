@@ -43,7 +43,7 @@ public class UserController {
     private static final int APPLICATIONS_PER_PAGE = 5;
     private static final String S_APPLICATIONS_PER_PAGE = "5";
     private static final int EXPERIENCES_PER_PAGE = 3;
-    private static final String S_EXPERIENCES_PER_PAGE = "3";
+    private static final String S_EXPERIENCES_PER_PAGE = String.valueOf(EXPERIENCES_PER_PAGE);
     private static final int USERS_PER_PAGE = 8;
     private static final String S_USERS_PER_PAGE = "8";
     private static final int EDUCATIONS_PER_PAGE = 3;
@@ -154,7 +154,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
@@ -205,7 +205,7 @@ public class UserController {
         return Response.ok().location(uri).build();
     }
 
-
+    // TODO: PageSize
     @GET
     @Path("/{id}/experiences")
     @Produces(ClonedInMediaType.EXPERIENCE_LIST_V1)
@@ -382,6 +382,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,

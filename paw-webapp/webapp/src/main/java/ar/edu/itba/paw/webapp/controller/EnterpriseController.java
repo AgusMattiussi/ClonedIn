@@ -51,6 +51,7 @@ public class EnterpriseController {
     private static final String PROFILE_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id)";
     private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id) AND @securityValidator.isJobOfferOwner(#joid)";
 
+
     @Autowired
     private EnterpriseService enterpriseService;
     @Autowired
@@ -127,7 +128,7 @@ public class EnterpriseController {
     @GET
     @Path("/{id}/jobOffers")
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getJobOffers(@PathParam("id") @Min(1) final long id,
                                  @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_BY_PAGE)
@@ -152,6 +153,8 @@ public class EnterpriseController {
                 jobOffers.getMaxPages());
     }
 
+
+    //FIXME: Solo deberia ser accesible por el dueño de la job offer, que deberia ser la propia empresa
     @GET
     @Path("/{id}/jobOffers/{joid}")
     @Produces(ClonedInMediaType.JOB_OFFER_V1)
@@ -291,6 +294,7 @@ public class EnterpriseController {
         return Response.noContent().build();
     }
 
+    // TODO: Podria ser parte del propio PUT /{id}?
     @PUT
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
@@ -306,6 +310,7 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
+    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
                                     @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height) throws IOException {

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.enums;
 public enum UserSorting {
 
     RECENT("recientes", " ORDER BY u.id DESC"),
+    //TODO: Cambiar a antiguOs
     OLDEST("antiguas", " ORDER BY u.id ASC"),
     EXP_ASC("expAsc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) ASC"),
     EXP_DESC("expDesc", " ORDER BY SUM(COALESCE(exp.yearTo, YEAR(CURRENT_DATE)) - COALESCE(exp.yearFrom,YEAR(CURRENT_DATE))) DESC"),

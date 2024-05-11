@@ -61,7 +61,7 @@ public class JobOfferController {
                                  @QueryParam("position") final String position,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
-                                 @QueryParam("enterpriseId") final Long enterpriseId,
+                                 @QueryParam("enterpriseId") @Min(1) final Long enterpriseId,
                                  @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy){
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
                         enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, pageSize);

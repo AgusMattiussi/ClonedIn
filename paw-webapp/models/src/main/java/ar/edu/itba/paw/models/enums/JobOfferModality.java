@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models.enums;
 
+//TODO: Case insensitive
 public enum JobOfferModality {
     REMOTE("Remoto"),
     IN_PERSON("Presencial"),
