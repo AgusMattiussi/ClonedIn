@@ -19,8 +19,17 @@ public class SecurityUtils {
 
     public static String getPrincipalEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth != null)
-            return auth.getName();
-        return null;
+        if(auth == null)
+            throw new IllegalStateException("No authentication found");
+        return auth.getName();
+    }
+
+    public static Long getPrincipalId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null)
+            throw new IllegalStateException("No authentication found");
+
+        ClonedInUserDetails userDetails = ((UserAndWebAuthenticationDetails) auth.getDetails()).getUserDetails();
+        return userDetails.getId();
     }
 }

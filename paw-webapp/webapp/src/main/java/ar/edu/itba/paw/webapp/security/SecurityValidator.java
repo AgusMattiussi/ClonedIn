@@ -86,4 +86,29 @@ public class SecurityValidator {
         User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return user.hasEducation(educationID);
     }
+
+    @Transactional
+    public boolean isGetContactsValid(Long userId, Long enterpriseId, Long jobOfferId) {
+        Role requesterRole = SecurityUtils.getPrincipalRole();
+        if(requesterRole == Role.USER)
+            // Un usuario no deberia poder usar el parametro "userID" a menos que coincida con su ID.
+            return userId == null || userId.equals(SecurityUtils.getPrincipalId());
+        else if(requesterRole == Role.ENTERPRISE) {
+            // Una empresa no deberia poder usar el parametro "enterpriseID" a menos que coincida
+            // con su ID ni un jobOfferId que no le pertenezca
+            if(enterpriseId != null && jobOfferId != null)
+                return enterpriseId.equals(SecurityUtils.getPrincipalId()) && isJobOfferOwner(jobOfferId);
+            if(enterpriseId != null)
+                return enterpriseId.equals(SecurityUtils.getPrincipalId());
+            if(jobOfferId != null)
+                return isJobOfferOwner(jobOfferId);
+            return true;
+        }
+        return false;
+    }
+
+    //TODO: SOLO PARA TESTING
+    public void print(int value) {
+        System.out.println("\n\n\n\n\nVALOR: " + value + "\n\n\n\n\n");
+    }
 }

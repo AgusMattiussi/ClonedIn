@@ -24,7 +24,7 @@ public class EnterpriseUserDetails implements ClonedInUserDetails {
 
     @Override
     public Role getRole() {
-        return Role.USER;
+        return Role.ENTERPRISE;
     }
 
     @Override

@@ -92,4 +92,12 @@ public interface ContactService {
             updateUserContactStatus(userId, jobOfferId, status, updatedBy);
     }
 
+    /*default PaginatedResource<Contact> getContactsForRole(Role requesterRole, Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+                                                        JobOfferStatus status, ContactSorting sortBy, int page, int pageSize){
+        if(requesterRole == Role.USER)
+            return getContactsForUser(userId, filledBy, status, sortBy, page, pageSize);
+        else
+            return getContactsForEnterprise(enterpriseId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
+    }*/
+
 }

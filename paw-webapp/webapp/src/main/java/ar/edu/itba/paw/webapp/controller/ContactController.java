@@ -11,7 +11,9 @@ import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.security.SecurityValidator;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -46,7 +48,7 @@ public class ContactController {
     * */
     @GET
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    //@PreAuthorize(JOB_OFFER_OWNER)
+    @PreAuthorize("@securityValidator.isGetContactsValid(#userId, #enterpriseId, #jobOfferId)")
     public Response getContacts(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("pageSize") @DefaultValue(S_CONTACTS_PER_PAGE)
                                         @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
@@ -69,6 +71,6 @@ public class ContactController {
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 contacts.getMaxPages());*/
 
-        return Response.ok(SecurityUtils.getPrincipalRole().toString()).build();
+        return Response.ok().build();
     }
 }
