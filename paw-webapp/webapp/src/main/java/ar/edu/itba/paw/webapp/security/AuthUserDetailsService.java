@@ -32,6 +32,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     }
 
     // Username = email
+    // Always returns a ClonedInUserDetails object
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         // Puede ser usuario normal

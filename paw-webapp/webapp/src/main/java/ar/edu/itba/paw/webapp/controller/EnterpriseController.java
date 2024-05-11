@@ -242,32 +242,6 @@ public class EnterpriseController {
     }
 
     @GET
-    @Path("/{id}/contacts/{joid}")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(JOB_OFFER_OWNER)
-    @Transactional
-    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
-                                    @PathParam("joid") @Min(1) final long joid,
-                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                    @QueryParam("pageSize") @DefaultValue(S_CONTACTS_BY_PAGE)
-                                        @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
-                                    @QueryParam("status") final JobOfferStatus status,
-                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final ContactSorting sortBy) {
-        PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, joid, null, filledBy,
-                status, sortBy, page, pageSize);
-
-        if(contacts.isEmpty())
-            return Response.noContent().build();
-
-        List<ContactDTO> contactDTOs = contacts.getPage().stream()
-                .map(c -> ContactDTO.fromContact(uriInfo, c, true)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
-                contacts.getMaxPages());
-    }
-
-    @GET
     @Path("/{id}/contacts/{joid}/{userId}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)

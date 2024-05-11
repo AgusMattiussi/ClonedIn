@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.filter;
 import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
 import ar.edu.itba.paw.webapp.auth.AuthType;
 import ar.edu.itba.paw.models.exceptions.InvalidRefreshTokenException;
-import ar.edu.itba.paw.webapp.auth.AuthTypeWebAuthenticationDetails;
+import ar.edu.itba.paw.webapp.auth.UserAndWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.security.AuthUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,11 +62,11 @@ public class JwtFilterUtils {
 
     private String setAuthentication(HttpServletRequest request, String token, AuthType tokenType){
         String email = jwtHelper.extractUsername(token);
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+        ClonedInUserDetails userDetails = (ClonedInUserDetails) this.userDetailsService.loadUserByUsername(email);
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                 null, userDetails.getAuthorities());
-        authToken.setDetails(new AuthTypeWebAuthenticationDetails(request, tokenType));
+        authToken.setDetails(new UserAndWebAuthenticationDetails(request, tokenType, userDetails));
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         return email;
@@ -91,8 +91,9 @@ public class JwtFilterUtils {
         String email = splitCredentials[0];
         String password = splitCredentials[1];
 
+        ClonedInUserDetails userDetails = (ClonedInUserDetails) this.userDetailsService.loadUserByUsername(email);
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
-        authToken.setDetails(new AuthTypeWebAuthenticationDetails(request, AuthType.BASIC));
+        authToken.setDetails(new UserAndWebAuthenticationDetails(request, AuthType.BASIC, userDetails));
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         return email;

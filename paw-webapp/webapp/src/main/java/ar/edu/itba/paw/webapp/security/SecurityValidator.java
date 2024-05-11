@@ -3,10 +3,14 @@ package ar.edu.itba.paw.webapp.security;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Enterprise;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
 import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
 import ar.edu.itba.paw.models.exceptions.NotProfileOwnerException;
+import ar.edu.itba.paw.webapp.auth.UserAndWebAuthenticationDetails;
+import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
+import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,13 +28,6 @@ public class SecurityValidator {
     @Autowired
     private EnterpriseService enterpriseService;
 
-    private String getAuthEmail() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth != null)
-            return auth.getName();
-        return null;
-    }
-
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
             throw new NotProfileOwnerException(requesterID);
@@ -39,7 +36,7 @@ public class SecurityValidator {
 
     @Transactional
     public boolean isUserProfileOwner(long profileID) {
-        String email = getAuthEmail();
+        String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
             return false;
         Long userID = userService.getIdForEmail(email).orElseThrow(() -> new UserNotFoundException(profileID));
@@ -48,7 +45,7 @@ public class SecurityValidator {
 
     @Transactional
     public boolean isEnterpriseProfileOwner(long profileID) {
-        String email = getAuthEmail();
+        String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
             return false;
         Long enterpriseID = enterpriseService.getIdForEmail(email).orElseThrow(() -> new UserNotFoundException(profileID));
@@ -65,7 +62,7 @@ public class SecurityValidator {
 
     @Transactional
     public boolean isJobOfferOwner(long jobOfferId){
-        String email = getAuthEmail();
+        String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
             return false;
         Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(() -> new EnterpriseNotFoundException(email));
@@ -74,7 +71,7 @@ public class SecurityValidator {
 
     @Transactional
     public boolean isExperienceOwner(long experienceID){
-        String email = getAuthEmail();
+        String email = SecurityUtils.getPrincipalEmail();;
         if(email == null)
             return false;
         User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
@@ -83,7 +80,7 @@ public class SecurityValidator {
 
     @Transactional
     public boolean isEducationOwner(long educationID){
-        String email = getAuthEmail();
+        String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
             return false;
         User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
