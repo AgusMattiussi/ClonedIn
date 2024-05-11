@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     public PaginatedResource<Category> getAllCategories(int page, int pageSize) {
         List<Category> categoryList = categoryDao.getAllCategories(page-1, pageSize);
         long categoryCount = this.getCategoryCount();
-        long maxPages = categoryCount / pageSize + 1;
+        long maxPages = categoryCount / pageSize + categoryCount % pageSize;
 
         return new PaginatedResource<>(categoryList, page, maxPages);
     }
