@@ -18,7 +18,7 @@ public class ContactDTO {
     private ContactDTOLinks links;
     private String userName;
     private Integer userYearsOfExp;
-    private long userId;
+    private Long userId;
 
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact, boolean preFetchUserInfo) {
@@ -88,11 +88,11 @@ public class ContactDTO {
         this.userYearsOfExp = userYearsOfExp;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

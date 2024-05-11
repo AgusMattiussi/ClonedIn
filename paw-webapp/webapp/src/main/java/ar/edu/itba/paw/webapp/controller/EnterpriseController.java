@@ -211,7 +211,7 @@ public class EnterpriseController {
                                     @QueryParam("userId") @Min(1) final Long userId,
                                     @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
 
-        PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, jobOfferId, userId, filledBy,
+        PaginatedResource<Contact> contacts = contactService.getContacts(id, jobOfferId, userId, filledBy,
                 status, sortBy, page, pageSize);
 
         if(contacts.isEmpty())

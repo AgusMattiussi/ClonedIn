@@ -188,14 +188,14 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+    public PaginatedResource<Contact> getContacts(Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
                                                                JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
         String statusValue = status != null ? status.getStatus() : null;
 
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+        Enterprise enterprise = enterpriseId != null ? enterpriseService.findById(enterpriseId).orElseThrow(() -> {
                     LOGGER.error("Enterprise with id {} not found - getContactsForEnterprise method", enterpriseId);
                     return new EnterpriseNotFoundException(enterpriseId);
-                });
+                }) : null;
         User user = userId != null ? userService.findById(userId)
                 .orElseThrow(() -> {
                     LOGGER.error("User with id {} not found - getContactsForEnterprise method", userId);
@@ -207,10 +207,10 @@ public class ContactServiceImpl implements ContactService {
                     return new JobOfferNotFoundException(jobOfferId);
                 }) : null;
 
-        List<Contact> contacts = contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, statusValue,
+        List<Contact> contacts = contactDao.getContacts(enterprise, jobOffer, user, filledBy, statusValue,
                 sortBy, page-1, pageSize);
 
-        long contactCount = this.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
+        long contactCount = this.getContactsCount(enterprise, jobOffer, user, filledBy, status);
         long maxPages = contactCount / pageSize + contactCount % pageSize;
 
         return new PaginatedResource<>(contacts, page, maxPages);
@@ -363,19 +363,19 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCountForEnterprise(long enterpriseID) {
-        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    public long getContactsCount(long enterpriseID) {
+        return contactDao.getContactsCount(enterpriseID);
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise) {
-        return contactDao.getContactsCountForEnterprise(enterprise);
+    public long getContactsCount(Enterprise enterprise) {
+        return contactDao.getContactsCount(enterprise);
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status) {
+    public long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status) {
         String statusValue = status != null ? status.getStatus() : null;
-        return contactDao.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, statusValue);
+        return contactDao.getContactsCount(enterprise, jobOffer, user, filledBy, statusValue);
     }
 
     @Override

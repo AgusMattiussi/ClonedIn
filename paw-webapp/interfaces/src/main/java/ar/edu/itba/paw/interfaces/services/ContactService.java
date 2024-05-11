@@ -39,7 +39,7 @@ public interface ContactService {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+    PaginatedResource<Contact> getContacts(Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
                                                         JobOfferStatus status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
@@ -72,10 +72,10 @@ public interface ContactService {
 
     boolean closeJobOfferForEveryone(JobOffer jobOffer);
 
-    long getContactsCountForEnterprise(long enterpriseID);
-    long getContactsCountForEnterprise(Enterprise enterprise);
+    long getContactsCount(long enterpriseID);
+    long getContactsCount(Enterprise enterprise);
 
-    long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status);
+    long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status);
 
     long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status);
 
@@ -92,12 +92,17 @@ public interface ContactService {
             updateUserContactStatus(userId, jobOfferId, status, updatedBy);
     }
 
-    /*default PaginatedResource<Contact> getContactsForRole(Role requesterRole, Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+    default PaginatedResource<Contact> getContactsForRole(Role requesterRole, Long requesterId,  Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
                                                         JobOfferStatus status, ContactSorting sortBy, int page, int pageSize){
+        if(requesterRole == null)
+            throw new IllegalArgumentException("Requester role cannot be null");
+        if(requesterId == null)
+            throw new IllegalArgumentException("Requester id cannot be null");
+
         if(requesterRole == Role.USER)
-            return getContactsForUser(userId, filledBy, status, sortBy, page, pageSize);
+            return getContacts(enterpriseId, jobOfferId, requesterId, filledBy, status, sortBy, page, pageSize);
         else
-            return getContactsForEnterprise(enterpriseId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
-    }*/
+            return getContacts(requesterId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
+    }
 
 }

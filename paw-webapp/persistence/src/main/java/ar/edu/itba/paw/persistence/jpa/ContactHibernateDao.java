@@ -246,7 +246,7 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForEnterpriseAppendConditions(StringBuilder queryBuilder, JobOffer jobOffer, User user, FilledBy filledBy, String status, ContactSorting sortBy){
+    private void getContactsAppendConditions(StringBuilder queryBuilder, Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status, ContactSorting sortBy){
 
         if(sortBy != null){
             switch (sortBy){
@@ -258,7 +258,12 @@ public class ContactHibernateDao implements ContactDao {
             }
         }
 
-        queryBuilder.append(" WHERE c.enterprise = :enterprise");
+        // Esto nos permite agregar todos los campos como "AND"
+        queryBuilder.append(" WHERE 1=1");
+
+        if(enterprise != null){
+            queryBuilder.append(" AND c.enterprise = :enterprise");
+        }
 
         if(jobOffer != null){
             queryBuilder.append(" AND c.jobOffer = :jobOffer");
@@ -299,8 +304,8 @@ public class ContactHibernateDao implements ContactDao {
         }
     }
 
-    private void getContactsForEnterpriseSetParameters(Query query, Enterprise enterprise, JobOffer jobOffer, User user,
-                                                       FilledBy filledBy, String status){
+    private void getContactsSetParameters(Query query, Enterprise enterprise, JobOffer jobOffer, User user,
+                                          FilledBy filledBy, String status){
         if(enterprise != null){
             query.setParameter("enterprise", enterprise);
         }
@@ -323,15 +328,15 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+    public List<Contact> getContacts(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
                                                   String status, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append("SELECT c FROM Contact c");
 
-        getContactsForEnterpriseAppendConditions(queryBuilder, jobOffer, user, filledBy, status, sortBy);
+        getContactsAppendConditions(queryBuilder, enterprise, jobOffer, user, filledBy, status, sortBy);
 
         query = em.createQuery(queryBuilder.toString(), Contact.class);
-        getContactsForEnterpriseSetParameters(query, enterprise, jobOffer, user, filledBy, status);
+        getContactsSetParameters(query, enterprise, jobOffer, user, filledBy, status);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
@@ -515,14 +520,14 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise) {
+    public long getContactsCount(Enterprise enterprise) {
         Query query = em.createQuery("SELECT COUNT(c) FROM Contact c WHERE c.enterprise = :enterprise");
         query.setParameter("enterprise", enterprise);
         return (Long) query.getSingleResult();
     }
 
     @Override
-    public long getContactsCountForEnterprise(long enterpriseID) {
+    public long getContactsCount(long enterpriseID) {
         Query query = em.createNativeQuery("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseID AND creadoPor = :filledBy");
         query.setParameter("enterpriseID", enterpriseID);
         query.setParameter("filledBy", FilledBy.ENTERPRISE.getValue());
@@ -530,8 +535,11 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(*) FROM contactado WHERE idEmpresa = :enterpriseId");
+    public long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(*) FROM contactado WHERE 1=1");
+
+        if(enterprise != null)
+            queryBuilder.append(" AND idEmpresa = :enterpriseId");
 
         if(jobOffer != null)
             queryBuilder.append(" AND idOferta = :jobOfferId");
@@ -546,7 +554,9 @@ public class ContactHibernateDao implements ContactDao {
             queryBuilder.append(" AND estado = :status");
 
         Query query = em.createNativeQuery(queryBuilder.toString());
-        query.setParameter("enterpriseId", enterprise.getId());
+
+        if(enterprise != null)
+            query.setParameter("enterpriseId", enterprise.getId());
 
         if(jobOffer != null)
             query.setParameter("jobOfferId", jobOffer.getId());

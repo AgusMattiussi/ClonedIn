@@ -12,8 +12,10 @@ public class PaginatedResource<R> {
     public PaginatedResource(List<R> page, int currentPage, long maxPages) {
         if(currentPage < 1)
             throw new InvalidParameterException("The page number cannot be less than 1");
-        if(currentPage > maxPages)
-            throw new InvalidParameterException("The page number cannot be greater than the max number of pages");
+        if(currentPage > maxPages && maxPages != 0)
+            throw new InvalidParameterException(
+                    String.format("The page number (%d) cannot be greater than the max number of pages (%d)",
+                    currentPage, maxPages));
 
         this.page = page;
         this.currentPage = currentPage;

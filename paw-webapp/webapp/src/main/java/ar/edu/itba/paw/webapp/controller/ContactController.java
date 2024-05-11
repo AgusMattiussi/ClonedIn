@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
@@ -13,6 +14,7 @@ import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.Max;
@@ -46,6 +48,7 @@ public class ContactController {
     * que no le pertenezca
     * Un usuario no deberia poder usar el parametro "userID" a menos que coincida con su ID.
     * */
+
     @GET
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize("@securityValidator.isGetContactsValid(#userId, #enterpriseId, #jobOfferId)")
@@ -58,7 +61,9 @@ public class ContactController {
                                     @QueryParam("jobOfferId") final Long jobOfferId,
                                     @QueryParam("enterpriseId") final Long enterpriseId,
                                     @QueryParam("userId") final Long userId) {
-        /*PaginatedResource<Contact> contacts = contactService.getContactsForEnterprise(id, joid, null, filledBy,
+
+        PaginatedResource<Contact> contacts = contactService.getContactsForRole(SecurityUtils.getPrincipalRole(),
+                SecurityUtils.getPrincipalId(), enterpriseId, jobOfferId, userId, filledBy,
                 status, sortBy, page, pageSize);
 
 
@@ -66,11 +71,10 @@ public class ContactController {
             return Response.noContent().build();
 
         List<ContactDTO> contactDTOs = contacts.getPage().stream()
-                .map(c -> ContactDTO.fromContact(uriInfo, c, true)).collect(Collectors.toList());
+                .map(c -> ContactDTO.fromContact(uriInfo, c, SecurityUtils.getPrincipalRole() == Role.ENTERPRISE))
+                .collect(Collectors.toList());
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
-                contacts.getMaxPages());*/
-
-        return Response.ok().build();
+                contacts.getMaxPages());
     }
 }

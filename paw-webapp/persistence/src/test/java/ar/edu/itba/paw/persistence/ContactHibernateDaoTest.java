@@ -264,7 +264,7 @@ public class ContactHibernateDaoTest {
 
     @Test
     public void testGetContactsCountForEnterprise(){
-        long count = contactDao.getContactsCountForEnterprise(testEnterprise);
+        long count = contactDao.getContactsCount(testEnterprise);
 
         assertEquals(1, count);
     }

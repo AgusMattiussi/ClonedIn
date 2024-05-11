@@ -35,7 +35,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+    List<Contact> getContacts(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
                                            String status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
@@ -68,11 +68,11 @@ public interface ContactDao {
 
     boolean closeJobOfferForEveryone(JobOffer jobOffer);
 
-    long getContactsCountForEnterprise(Enterprise enterprise);
+    long getContactsCount(Enterprise enterprise);
 
-    long getContactsCountForEnterprise(long enterpriseID);
+    long getContactsCount(long enterpriseID);
 
-    long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status);
+    long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status);
 
     long getContactsCountForUser(User user);
 
