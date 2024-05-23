@@ -32,7 +32,7 @@
     <commons-fileupload.version>1.4</commons-fileupload.version>
     <org.hibernate.version>5.1.0.Final</org.hibernate.version>
     <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
-    <jersey.version>3.0-SNAPSHOT</jersey.version>
+    <jersey.version>3.0.0-M6</jersey.version> <!-- Updated from 3.0-SNAPSHOT -->
     <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
     <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
     <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
@@ -40,7 +40,9 @@
     <npm.version>8.5.0</npm.version>
   </properties>
 
-  <repositories>
+
+  <!-- Updated from 3.0-SNAPSHOT -->
+  <!--<repositories>
     <repository>
       <id>jersey-snapshot</id>
       <url>https://maven.java.net/content/repositories/snapshots/</url>
@@ -49,7 +51,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-  </repositories>
+  </repositories>-->
 
   <dependencyManagement>
     <dependencies>
