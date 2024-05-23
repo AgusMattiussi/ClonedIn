@@ -17,10 +17,10 @@ public class JobOfferForm {
 
     @NotEmpty
     @Size(max=50)
-    private String jobPosition;
+    private String position;
 
     @Size(max=5000)
-    private String jobDescription;
+    private String description;
 
     @Min(1)
     @Max(1000000000)
@@ -31,6 +31,7 @@ public class JobOfferForm {
 
     private String modality;
 
+    // TODO: List of skills
     @Size(max=50)
     private String skill1;
 
@@ -75,21 +76,20 @@ public class JobOfferForm {
         this.skill4 = skill4;
     }
 
-
-    public String getJobPosition() {
-        return jobPosition;
+    public String getPosition() {
+        return position;
     }
 
-    public void setJobPosition(String jobPosition) {
-        this.jobPosition = jobPosition;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public String getJobDescription() {
-        return jobDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setJobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getSalary() {

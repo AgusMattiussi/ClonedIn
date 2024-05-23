@@ -124,8 +124,8 @@ public class EnterpriseController {
         return Response.ok().location(uri).build();
     }
 
-
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/jobOffers")
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
     @PreAuthorize(USER_OR_PROFILE_OWNER)
@@ -151,11 +151,11 @@ public class EnterpriseController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferDTOS) {}), page,
                 jobOffers.getMaxPages());
-    }
+    }*/
 
 
-    //FIXME: Solo deberia ser accesible por el dueño de la job offer, que deberia ser la propia empresa
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/jobOffers/{joid}")
     @Produces(ClonedInMediaType.JOB_OFFER_V1)
     @PreAuthorize(USER_OR_PROFILE_OWNER)
@@ -164,8 +164,9 @@ public class EnterpriseController {
         JobOfferDTO jobOffer = jobOfferService.findById(joid).map(jo -> JobOfferDTO.fromJobOffer(uriInfo,jo))
                 .orElseThrow(() -> new JobOfferNotFoundException(joid));
         return Response.ok(jobOffer).build();
-    }
+    }*/
 
+    // TODO: Reemplazar
     @PUT
     @Path("/{id}/jobOffers/{joid}")
     @PreAuthorize(JOB_OFFER_OWNER)
@@ -178,7 +179,8 @@ public class EnterpriseController {
         return Response.ok().location(uri).build();
     }
 
-    @POST
+    // DEPRECATED
+    /*@POST
     @Path("/{id}/jobOffers")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
@@ -193,7 +195,7 @@ public class EnterpriseController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(jobOffer.getId().toString()).build();
         return Response.created(uri).build();
-    }
+    }*/
 
 
     @GET

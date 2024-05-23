@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.form.JobOfferForm;
+import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -17,11 +19,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;
@@ -38,6 +43,7 @@ public class JobOfferController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
+    private static final String IS_ENTERPRISE = "hasAuthority('ENTERPRISE')";
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
 
     @Autowired
@@ -50,7 +56,7 @@ public class JobOfferController {
 
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize(IS_ENTERPRISE)
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_PER_PAGE)
                                         @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
@@ -74,6 +80,23 @@ public class JobOfferController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferDTOS) {}),
                 page, jobOffers.getMaxPages());
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(IS_ENTERPRISE)
+    public Response createJobOffer(@Valid @NotNull final JobOfferForm jobOfferForm) {
+        Long requesterId = SecurityUtils.getPrincipalId();
+
+        JobOffer jobOffer = jobOfferService.create(requesterId, jobOfferForm.getCategory(), jobOfferForm.getPosition(),
+                jobOfferForm.getDescription(), jobOfferForm.getSalary(), jobOfferForm.getModality(),
+                jobOfferForm.getSkillsList());
+
+        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
+        LOGGER.info("A new job offer was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(jobOffer.getId().toString()).build();
+        return Response.created(uri).build();
     }
 
     @GET

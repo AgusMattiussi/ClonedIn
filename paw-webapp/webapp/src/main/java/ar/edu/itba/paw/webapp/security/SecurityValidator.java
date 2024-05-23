@@ -106,9 +106,4 @@ public class SecurityValidator {
         }
         return false;
     }
-
-    //TODO: SOLO PARA TESTING
-    public void print(int value) {
-        System.out.println("\n\n\n\n\nVALOR: " + value + "\n\n\n\n\n");
-    }
 }
