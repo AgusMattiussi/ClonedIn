@@ -69,6 +69,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/skills").permitAll()
                 // JobOffers
                 .antMatchers("/api/jobOffers", "/api/jobOffers/**").authenticated()
+                // Contacts
                 .antMatchers("/api/contacts", "/api/jobOffers/**").authenticated()
                 .and().exceptionHandling()
                     .authenticationEntryPoint(authenticationEntryPoint())

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
+import ar.edu.itba.paw.webapp.form.ContactForm;
 import ar.edu.itba.paw.webapp.security.SecurityValidator;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.MediaType;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -36,6 +41,8 @@ public class ContactController {
 
     private static final int CONTACTS_PER_PAGE = 10;
     private static final String S_CONTACTS_PER_PAGE = "10";
+    private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#jobOfferId)";
+
 
     @Context
     private UriInfo uriInfo;
@@ -49,6 +56,7 @@ public class ContactController {
     * Un usuario no deberia poder usar el parametro "userID" a menos que coincida con su ID.
     * */
 
+    /** Get all contacts **/
     @GET
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize("@securityValidator.isGetContactsValid(#userId, #enterpriseId, #jobOfferId)")
@@ -76,5 +84,25 @@ public class ContactController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 contacts.getMaxPages());
+    }
+
+    /** Create new contact **/
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize("hasAuthority('USER') or @securityValidator.isJobOfferOwner(#contactForm.jobOfferId)")
+    public Response contactUser(@Valid @NotNull final ContactForm contactForm) {
+
+
+        Contact contact = contactService.addContact(SecurityUtils.getPrincipalRole(), SecurityUtils.getPrincipalId(),
+                contactForm.getJobOfferId(), contactForm.getUserId(), contactForm.getMessage());
+
+        // TODO: Definir path
+        /*final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(contact.getJobOffer().getId().toString())
+                .path(contact.getUser().getId().toString())
+                .build();*/
+        //return Response.created(/*uri*/).build();
+
+        return Response.ok().build();
     }
 }

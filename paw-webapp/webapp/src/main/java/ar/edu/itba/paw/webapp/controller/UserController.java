@@ -151,8 +151,8 @@ public class UserController {
         return Response.ok().location(uri).build();
     }
 
-
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/contacts")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
@@ -175,10 +175,10 @@ public class UserController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 applications.getMaxPages());
-    }
+    }*/
 
-
-    @POST
+    // DEPRECATED
+    /*@POST
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
@@ -189,7 +189,7 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(applyToJobOfferForm.getJobOfferId())).build();
         return Response.created(uri).build();
-    }
+    }*/
 
 
     @PUT

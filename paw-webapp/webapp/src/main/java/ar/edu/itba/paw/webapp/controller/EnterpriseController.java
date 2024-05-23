@@ -153,7 +153,6 @@ public class EnterpriseController {
                 jobOffers.getMaxPages());
     }*/
 
-
     // DEPRECATED
     /*@GET
     @Path("/{id}/jobOffers/{joid}")
@@ -226,7 +225,8 @@ public class EnterpriseController {
                 contacts.getMaxPages());
     }
 
-    @POST
+    // DEPRECATED
+    /*@POST
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
@@ -241,7 +241,7 @@ public class EnterpriseController {
                 .path(contact.getUser().getId().toString())
                 .build();
         return Response.created(uri).build();
-    }
+    }*/
 
     @GET
     @Path("/{id}/contacts/{joid}/{userId}")

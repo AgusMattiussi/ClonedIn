@@ -105,4 +105,6 @@ public interface ContactService {
             return getContacts(requesterId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
     }
 
+    Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message);
+
 }

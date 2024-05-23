@@ -541,5 +541,29 @@ public class ContactServiceImpl implements ContactService {
             updateUserContactStatus(userId, jobOfferId, status, updatedBy);
     }
 
+    // TODO: Deberia ser default?
+    @Override
+    @Transactional
+    public Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message) {
+        if(requesterRole == null)
+            throw new IllegalArgumentException("Requester role cannot be null");
+        if(requesterId == null)
+            throw new IllegalArgumentException("Requester id cannot be null");
+
+        if(requesterRole == Role.USER){
+            if(userId != null && !userId.equals(requesterId))
+                throw new IllegalArgumentException("User id must be null or equal to requester id");
+            if(jobOfferId == null)
+                throw new IllegalArgumentException("Job offer id cannot be null");
+            return addContact(requesterId, jobOfferId, FilledBy.USER); //TODO: Add message
+        } else {
+            if(userId == null)
+                throw new IllegalArgumentException("User id cannot be null");
+            if(jobOfferId == null)
+                throw new IllegalArgumentException("Job offer id cannot be null");
+            return addContact(requesterId, userId, jobOfferId, FilledBy.ENTERPRISE, message);
+        }
+    }
+
 
 }
