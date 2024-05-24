@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferStatus;
 import ar.edu.itba.paw.models.enums.Role;
+import ar.edu.itba.paw.models.exceptions.ContactNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,12 +99,23 @@ public class ContactController {
                 contactForm.getJobOfferId(), contactForm.getUserId(), contactForm.getMessage());
 
         // TODO: Definir path
-        /*final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(contact.getJobOffer().getId().toString())
-                .path(contact.getUser().getId().toString())
-                .build();*/
-        //return Response.created(/*uri*/).build();
-
-        return Response.ok().build();
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(contact.getContactId())
+                .build();
+        return Response.created(uri).build();
     }
+
+    /** Get Contact by ID **/
+    @GET
+    @Path("/{contactId:\\d+-\\d+}") // userId-jobOfferId
+    @Produces(ClonedInMediaType.CONTACT_V1)
+    @PreAuthorize("@securityValidator.canAccessContact(#contactId)")
+    public Response getContact(@PathParam("contactId") final String contactId) {
+        ContactDTO contactDTO = contactService.getContact(contactId)
+                .map(c -> ContactDTO.fromContact(uriInfo, c, SecurityUtils.getPrincipalRole() == Role.ENTERPRISE))
+                .orElseThrow(() -> new ContactNotFoundException(contactId));
+
+        return Response.ok(contactDTO).build();
+    }
+
 }

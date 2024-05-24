@@ -243,7 +243,8 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }*/
 
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/contacts/{joid}/{userId}")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(JOB_OFFER_OWNER)
@@ -252,13 +253,14 @@ public class EnterpriseController {
                                     @PathParam("joid") @Min(1) final long joid,
                                     @PathParam("userId") @Min(1) final long userId) {
 
-        ContactDTO contactDTO = contactService.findByPrimaryKey(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c, true))
+        ContactDTO contactDTO = contactService.getContact(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c, true))
                 .orElseThrow(() -> new ContactNotFoundException(userId, joid));
 
         return Response.ok(contactDTO).build();
-    }
+    }*/
 
-    @PUT
+    // DEPRECATED
+    /*@PUT
     @Path("/{id}/contacts/{joid}/{userId}")
     @PreAuthorize(JOB_OFFER_OWNER)
     public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
@@ -268,7 +270,7 @@ public class EnterpriseController {
 
         contactService.updateContactStatus(userId, joid, status, Role.ENTERPRISE);
         return Response.noContent().build();
-    }
+    }*/
 
     // TODO: Podria ser parte del propio PUT /{id}?
     @PUT

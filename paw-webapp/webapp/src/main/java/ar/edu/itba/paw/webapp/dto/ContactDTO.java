@@ -16,6 +16,7 @@ public class ContactDTO {
     private String filledBy;
     private String date;
     private ContactDTOLinks links;
+    // TODO: Por favor eliminemos estos campos de abajo
     private String userName;
     private Integer userYearsOfExp;
     private Long userId;
@@ -30,7 +31,8 @@ public class ContactDTO {
         if(preFetchUserInfo) {
             User user = contact.getUser();
             dto.userName = user.getName();
-            dto.userYearsOfExp = user.getYearsOfExperience();
+            // TODO: Por que no se podria pedir en GET @ /users/{id}?
+            //dto.userYearsOfExp = user.getYearsOfExperience();
             dto.userId = user.getId();
         }
 

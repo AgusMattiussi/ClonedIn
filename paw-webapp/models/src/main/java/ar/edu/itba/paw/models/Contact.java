@@ -112,4 +112,27 @@ public class Contact {
         sb.append('}');
         return sb.toString();
     }
+
+    // Since the id is a composite key, we need to split it to get the user and job offer ids
+    public static long[] splitId(String contactId) {
+        String[] stringIds =  contactId.split("-");
+
+        if(stringIds.length != 2)
+            throw new IllegalArgumentException("Invalid contact id format. Should be '<userId>-<jobOfferId>'");
+
+        long[] ids = new long[2];
+
+        try {
+            ids[0] = Long.parseLong(stringIds[0]);
+            ids[1] = Long.parseLong(stringIds[1]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid contact id format. Should be '<userId>-<jobOfferId>'");
+        }
+
+        return ids;
+    }
+
+    public String getContactId() {
+        return String.format("%d-%d", user.getId(), jobOffer.getId());
+    }
 }

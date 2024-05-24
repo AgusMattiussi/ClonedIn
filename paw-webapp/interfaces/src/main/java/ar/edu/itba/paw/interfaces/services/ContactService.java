@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public interface ContactService {
 
-    Optional<Contact> findByPrimaryKey(long userID, long jobOfferID);
+    Optional<Contact> getContact(long userID, long jobOfferID);
 
     Contact addContact(long userId, long jobOfferId, FilledBy filledBy);
 
@@ -106,5 +106,10 @@ public interface ContactService {
     }
 
     Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message);
+
+    default Optional<Contact> getContact(String contactId) {
+        final long[] ids = Contact.splitId(contactId);
+        return getContact(ids[0], ids[1]);
+    }
 
 }

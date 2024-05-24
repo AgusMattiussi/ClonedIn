@@ -1,20 +1,19 @@
 package ar.edu.itba.paw.webapp.security;
 
+import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.Visibility;
-import ar.edu.itba.paw.models.exceptions.EnterpriseNotFoundException;
-import ar.edu.itba.paw.models.exceptions.HiddenProfileException;
-import ar.edu.itba.paw.models.exceptions.NotProfileOwnerException;
+import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.webapp.auth.UserAndWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ar.edu.itba.paw.models.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Component;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,6 +103,23 @@ public class SecurityValidator {
                 return isJobOfferOwner(jobOfferId);
             return true;
         }
+        return false;
+    }
+
+    @Transactional
+    public boolean canAccessContact(String contactId){
+        Role requesterRole = SecurityUtils.getPrincipalRole();
+
+        if(requesterRole == Role.USER) {
+            long userId = Contact.splitId(contactId)[0];
+            Long requesterId = SecurityUtils.getPrincipalId();
+            return requesterId.equals(userId);
+        }
+        else if(requesterRole == Role.ENTERPRISE) {
+            long jobOfferId = Contact.splitId(contactId)[1];
+            return isJobOfferOwner(jobOfferId);
+        }
+
         return false;
     }
 }

@@ -42,7 +42,12 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
+    public Optional<Contact> getContact(long userID, long jobOfferID) {
+        if(userID <= 0 || jobOfferID <= 0) {
+            LOGGER.error("Invalid user id {} or jobOffer id {} - getContact method", userID, jobOfferID);
+            throw new IllegalArgumentException("Invalid user id or jobOffer id");
+        }
+
         return contactDao.findByPrimaryKey(userID, jobOfferID);
     }
 
@@ -401,7 +406,7 @@ public class ContactServiceImpl implements ContactService {
             return new JobOfferNotFoundException(jobOfferId);
         });
 
-        Contact contact = this.findByPrimaryKey(user.getId(), jobOffer.getId()).orElseThrow(() -> {
+        Contact contact = this.getContact(user.getId(), jobOffer.getId()).orElseThrow(() -> {
             LOGGER.error("Contact not found for user with id {} and jobOffer with id {} - updateEnterpriseContactStatus", user.getId(), jobOffer.getId());
             return new ContactNotFoundException(user.getId(), jobOffer.getId());
         });
@@ -471,7 +476,7 @@ public class ContactServiceImpl implements ContactService {
             return new JobOfferNotFoundException(jobOfferId);
         });
 
-        Contact contact = this.findByPrimaryKey(user.getId(), jobOffer.getId()).orElseThrow(() -> {
+        Contact contact = this.getContact(user.getId(), jobOffer.getId()).orElseThrow(() -> {
             LOGGER.error("Contact not found for user with id {}, jobOffer with id {} and enterprise with id {} - updateUserContactStatus",
                     userId, jobOfferId, jobOffer.getEnterprise().getId());
             return new ContactNotFoundException(userId, jobOfferId);
