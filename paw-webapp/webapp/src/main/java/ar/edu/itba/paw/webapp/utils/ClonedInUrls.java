@@ -31,6 +31,7 @@ public final class ClonedInUrls {
 
     // URL parameters
     public static final String SKILL_DESCRIPTION_PARAM = "skillDescription";
+    public static final String ENTERPRISE_ID_PARAM = "enterpriseId";
 
     // Headers
     public static final String ACCESS_TOKEN_HEADER = "X-Access-Token";

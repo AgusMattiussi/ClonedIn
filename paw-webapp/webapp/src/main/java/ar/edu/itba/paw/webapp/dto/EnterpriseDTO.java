@@ -128,8 +128,16 @@ public class EnterpriseDTO {
             this.self = enterpriseUriBuilder.build();
 
             this.image = enterpriseUriBuilder.clone().path(IMAGE_SUBDIRECTORY).build();
-            this.contacts = enterpriseUriBuilder.clone().path(CONTACTS_SUBDIRECTORY).build();
-            this.jobOffers = enterpriseUriBuilder.clone().path(JOB_OFFERS_SUBDIRECTORY).build();
+
+            this.contacts = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CONTACTS_URL)
+                    .queryParam(ENTERPRISE_ID_PARAM, String.valueOf(enterprise.getId()))
+                    .build();
+
+            this.jobOffers = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .queryParam(ENTERPRISE_ID_PARAM, String.valueOf(enterprise.getId()))
+                    .build();
 
             UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(CATEGORIES_URL)
