@@ -3,9 +3,11 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.webapp.validators.JobOfferAvailabilityEnum;
 
-// TODO: Availability Validator
+import javax.validation.constraints.NotNull;
+
 public class UpdateJobOfferAvailabilityForm {
 
+    @NotNull
     @JobOfferAvailabilityEnum
     private String availability;
 

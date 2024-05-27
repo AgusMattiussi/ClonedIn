@@ -1,22 +1,21 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.enums.ContactStatus;
+import ar.edu.itba.paw.webapp.validators.ContactStatusEnum;
 
 import javax.validation.constraints.NotNull;
 
 public class UpdateContactStatusForm {
 
-    //TODO: Validator
     @NotNull
+    @ContactStatusEnum
     private String status;
 
     public String getStatus() {
-        ContactStatus.fromString(status); //TODO: Validator
         return status;
     }
 
     public void setStatus(String status) {
-        ContactStatus.fromString(status); //TODO: Validator
         this.status = status;
     }
 
