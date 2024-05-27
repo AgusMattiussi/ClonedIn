@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -111,7 +112,7 @@ public class EnterpriseController {
         return Response.ok(enterpriseDTO).build();
     }
 
-    @PUT
+    @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
@@ -121,7 +122,7 @@ public class EnterpriseController {
                 form.getCategory(), form.getLink(), form.getYear(), form.getWorkersEnum());
 
         final URI uri = uriInfo.getAbsolutePath();
-        return Response.ok().location(uri).build();
+        return Response.seeOther(uri).build();
     }
 
     // DEPRECATED
@@ -272,7 +273,6 @@ public class EnterpriseController {
         return Response.noContent().build();
     }*/
 
-    // TODO: Podria ser parte del propio PUT /{id}?
     @PUT
     @Path("/{id}/image")
     @Consumes({ MediaType.MULTIPART_FORM_DATA})
