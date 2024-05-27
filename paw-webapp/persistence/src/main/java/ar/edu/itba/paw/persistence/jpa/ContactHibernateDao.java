@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -123,14 +123,14 @@ public class ContactHibernateDao implements ContactDao {
         return query.getResultList();
     }
 
-    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy){
+    private void getContactsForUserAppendConditions(StringBuilder queryBuilder, FilledBy filledBy, ContactStatus status, ContactSorting sortBy){
         if(filledBy != null && !filledBy.equals(FilledBy.ANY)){
             queryBuilder.append(" AND c.filledBy = :filledBy");
         }
 
         if(status != null){
-            if(status == JobOfferStatus.CANCELLED && filledBy == FilledBy.ENTERPRISE
-            || status == JobOfferStatus.DECLINED && filledBy == FilledBy.USER) {
+            if(status == ContactStatus.CANCELLED && filledBy == FilledBy.ENTERPRISE
+            || status == ContactStatus.DECLINED && filledBy == FilledBy.USER) {
                 queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
             } else {
                 queryBuilder.append(" AND c.status = :status");
@@ -156,7 +156,7 @@ public class ContactHibernateDao implements ContactDao {
 
     }
 
-    private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, JobOfferStatus status){
+    private void getContactsForUserSetParameters(Query query, User user, FilledBy filledBy, ContactStatus status){
         query.setParameter("user", user);
 
         if(status != null){
@@ -169,7 +169,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
+    public List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactStatus status, ContactSorting sortBy, int page, int pageSize) {
         TypedQuery<Contact> query;
         StringBuilder queryBuilder = new StringBuilder().append(" SELECT c FROM Contact c");
 
@@ -274,8 +274,8 @@ public class ContactHibernateDao implements ContactDao {
         }
 
         if(status != null && !status.isEmpty()){
-            if(status.equals(JobOfferStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
-            || status.equals(JobOfferStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
+            if(status.equals(ContactStatus.CANCELLED.getStatus()) && filledBy.equals(FilledBy.ENTERPRISE)
+            || status.equals(ContactStatus.DECLINED.getStatus()) && filledBy.equals(FilledBy.USER)) {
                 queryBuilder.append(" AND (c.status = :status OR c.status = 'cerrada')");
             } else {
                 queryBuilder.append(" AND c.status = :status");
@@ -468,18 +468,18 @@ public class ContactHibernateDao implements ContactDao {
         return Optional.ofNullable(query.getSingleResult());
     }
 
-    private boolean updateJobOfferStatus(User user, JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+    private boolean updateJobOfferStatus(User user, JobOffer jobOffer, ContactStatus contactStatus){
         Query query = em.createQuery("UPDATE Contact SET status = :status WHERE user = :user AND jobOffer = :jobOffer");
-        query.setParameter("status", jobOfferStatus.getStatus());
+        query.setParameter("status", contactStatus.getStatus());
         query.setParameter("user", user);
         query.setParameter("jobOffer", jobOffer);
 
         return query.executeUpdate() > 0;
     }
 
-    private boolean updateJobOfferStatusForEveryone(JobOffer jobOffer, JobOfferStatus jobOfferStatus){
+    private boolean updateJobOfferStatusForEveryone(JobOffer jobOffer, ContactStatus contactStatus){
         Query query = em.createQuery("UPDATE Contact SET status = :status WHERE jobOffer = :jobOffer");
-        query.setParameter("status", jobOfferStatus.getStatus());
+        query.setParameter("status", contactStatus.getStatus());
         query.setParameter("jobOffer", jobOffer);
 
         return query.executeUpdate() > 0;
@@ -487,33 +487,33 @@ public class ContactHibernateDao implements ContactDao {
 
     @Override
     public boolean acceptJobOffer(User user, JobOffer jobOffer) {
-       return updateJobOfferStatus(user, jobOffer, JobOfferStatus.ACCEPTED);
+       return updateJobOfferStatus(user, jobOffer, ContactStatus.ACCEPTED);
     }
 
     @Override
     public boolean rejectJobOffer(User user, JobOffer jobOffer) {
-        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.DECLINED);
+        return updateJobOfferStatus(user, jobOffer, ContactStatus.DECLINED);
     }
 
     @Override
     public boolean cancelJobOffer(User user, JobOffer jobOffer) {
-        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.CANCELLED);
+        return updateJobOfferStatus(user, jobOffer, ContactStatus.CANCELLED);
     }
 
     @Override
     public boolean cancelJobOfferForEveryone(JobOffer jobOffer) {
-        return updateJobOfferStatusForEveryone(jobOffer, JobOfferStatus.CANCELLED);
+        return updateJobOfferStatusForEveryone(jobOffer, ContactStatus.CANCELLED);
     }
 
     @Override
     public boolean closeJobOffer(User user, JobOffer jobOffer) {
-        return updateJobOfferStatus(user, jobOffer, JobOfferStatus.CLOSED);
+        return updateJobOfferStatus(user, jobOffer, ContactStatus.CLOSED);
     }
 
     @Override
     public boolean closeJobOfferForEveryone(JobOffer jobOffer) {
         Query query = em.createQuery("UPDATE Contact SET status = :status WHERE jobOffer = :jobOffer AND status = 'pendiente' ");
-        query.setParameter("status", JobOfferStatus.CLOSED.getStatus());
+        query.setParameter("status", ContactStatus.CLOSED.getStatus());
         query.setParameter("jobOffer", jobOffer);
 
         return query.executeUpdate() > 0;
@@ -581,7 +581,7 @@ public class ContactHibernateDao implements ContactDao {
     }
 
     @Override
-    public long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status) {
+    public long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status) {
         StringBuilder queryBuilder = new StringBuilder().append("SELECT COUNT(c) FROM Contact c WHERE c.user = :user");
 
         getContactsForUserAppendConditions(queryBuilder, filledBy, status, null);

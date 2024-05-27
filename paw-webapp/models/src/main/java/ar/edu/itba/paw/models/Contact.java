@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
@@ -59,7 +59,7 @@ public class Contact {
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
-        this.status = JobOfferStatus.PENDING.getStatus();
+        this.status = ContactStatus.PENDING.getStatus();
         this.filledBy = filledBy.getValue();
         this.date = date;
     }
@@ -84,8 +84,8 @@ public class Contact {
         return status;
     }
 
-    public JobOfferStatus getStatusEnum() {
-        return JobOfferStatus.fromString(status);
+    public ContactStatus getStatusEnum() {
+        return ContactStatus.fromString(status);
     }
 
     public int getFilledBy() {

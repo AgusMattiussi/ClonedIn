@@ -197,8 +197,8 @@ public class EnterpriseController {
         return Response.created(uri).build();
     }*/
 
-
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/contacts")
     @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
@@ -224,7 +224,7 @@ public class EnterpriseController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOList) {}), page,
                 contacts.getMaxPages());
-    }
+    }*/
 
     // DEPRECATED
     /*@POST

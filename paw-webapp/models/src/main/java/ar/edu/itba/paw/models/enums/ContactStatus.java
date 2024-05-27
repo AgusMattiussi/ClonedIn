@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.enums;
 
-public enum JobOfferStatus {
+public enum ContactStatus {
     PENDING("pendiente"),
     CLOSED("cerrada"),
     CANCELLED("cancelada"),
@@ -9,7 +9,7 @@ public enum JobOfferStatus {
 
     private final String status;
 
-    JobOfferStatus(String status) {
+    ContactStatus(String status) {
         this.status = status;
     }
 
@@ -17,8 +17,8 @@ public enum JobOfferStatus {
         return status;
     }
 
-    public static JobOfferStatus fromString(String s) {
-        for (JobOfferStatus status : JobOfferStatus.values()) {
+    public static ContactStatus fromString(String s) {
+        for (ContactStatus status : ContactStatus.values()) {
             if (status.getStatus().equals(s)) {
                 return status;
             }
@@ -26,4 +26,11 @@ public enum JobOfferStatus {
         throw new IllegalArgumentException();
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ContactStatus{");
+        sb.append("status='").append(status).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

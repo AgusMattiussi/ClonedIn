@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactStatus status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
@@ -76,6 +76,6 @@ public interface ContactDao {
 
     long getContactsCountForUser(User user);
 
-    long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status);
+    long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status);
 
 }

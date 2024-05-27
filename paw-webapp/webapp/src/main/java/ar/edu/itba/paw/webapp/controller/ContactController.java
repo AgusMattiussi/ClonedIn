@@ -4,19 +4,19 @@ import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.exceptions.ContactNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.form.ContactForm;
-import ar.edu.itba.paw.webapp.security.SecurityValidator;
+import ar.edu.itba.paw.webapp.form.UpdateContactStatusForm;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
@@ -43,6 +43,7 @@ public class ContactController {
 
     private static final int CONTACTS_PER_PAGE = 10;
     private static final String S_CONTACTS_PER_PAGE = "10";
+    private static final String JOB_OFFER_OWNER = "@securityValidator.isJobOfferOwner(#userId, #jobOfferId)";
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#jobOfferId)";
 
 
@@ -52,11 +53,6 @@ public class ContactController {
     @Autowired
     private ContactService contactService;
 
-    /* TODO:
-    * Una empresa no deberia poder usar el parametro "enterpriseID" a menos que coincida con su ID ni un jobOfferId
-    * que no le pertenezca
-    * Un usuario no deberia poder usar el parametro "userID" a menos que coincida con su ID.
-    * */
 
     /** Get all contacts **/
     @GET
@@ -65,7 +61,7 @@ public class ContactController {
     public Response getContacts(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                     @QueryParam("pageSize") @DefaultValue(S_CONTACTS_PER_PAGE)
                                         @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
-                                    @QueryParam("status") final JobOfferStatus status,
+                                    @QueryParam("status") final ContactStatus status,
                                     @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
                                     @QueryParam("sortBy") @DefaultValue("any") final ContactSorting sortBy,
                                     @QueryParam("jobOfferId") final Long jobOfferId,
@@ -117,5 +113,18 @@ public class ContactController {
 
         return Response.ok(contactDTO).build();
     }
+
+    /** Update contact status **/
+    @POST
+    @Path("/{contactId:\\d+-\\d+}")
+    @PreAuthorize("@securityValidator.canAccessContact(#contactId)")
+    public Response updateContactStatus(@PathParam("contactId") final String contactId,
+                                       @NotNull final UpdateContactStatusForm statusForm) {
+        contactService.updateContactStatus(SecurityUtils.getPrincipalRole(), contactId, statusForm.getStatusEnum());
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().build();
+        return Response.seeOther(uri).build();
+    }
+
 
 }

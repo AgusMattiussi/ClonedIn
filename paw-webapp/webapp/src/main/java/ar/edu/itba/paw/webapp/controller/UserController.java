@@ -192,7 +192,7 @@ public class UserController {
     }*/
 
 
-    @PUT
+    /*@PUT
     @Path("/{id}/contacts/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
     public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
@@ -203,7 +203,7 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
-    }
+    }*/
 
     // TODO: PageSize
     @GET
