@@ -137,18 +137,18 @@ public class UserController {
         return Response.ok(user).links().build();
     }
 
-    @PUT
+    @POST
     @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
     public Response editUser( @PathParam("id") @Min(1) final long id,
                               @NotNull @Valid final EditUserForm editUserForm) {
 
-        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getCity(),
                 editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
                 editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
-        return Response.ok().location(uri).build();
+        return Response.seeOther(uri).build();
     }
 
     // DEPRECATED

@@ -40,7 +40,7 @@ public class UserForm {
     private String category;
 
     @EducationLevelEnum
-    private String level;
+    private String level; //TODO: Cambiar a educationLevel
 
     public String getPassword() {
         return password;

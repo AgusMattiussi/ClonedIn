@@ -7,13 +7,12 @@ import ar.edu.itba.paw.webapp.validators.VisibilityEnum;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-// TODO: Deberia ser el Custom Mime Type del usuario
 public class EditUserForm {
     @Size(max=100)
     private String name;
 
     @Size(max=50)
-    private String location;
+    private String city;
 
     @Size(max=50)
     private String position;
@@ -27,7 +26,7 @@ public class EditUserForm {
     private String level;
 
     @VisibilityEnum
-    private String visibility;
+    private String visibility; //TODO: Boolean?
 
     public String getName() {
         return name;
@@ -37,12 +36,12 @@ public class EditUserForm {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getCity() {
+        return city;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getPosition() {
