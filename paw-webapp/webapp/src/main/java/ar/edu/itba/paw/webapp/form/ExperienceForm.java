@@ -10,15 +10,15 @@ public class ExperienceForm {
 
     @NotEmpty
     @Size(max=50)
-    private String company;
+    private String enterpriseName;
 
     @NotEmpty
     @Size(max=50)
-    private String job;
+    private String position;
 
     @NotEmpty
     @Size(max=600)
-    private String jobDesc;
+    private String description;
 
     @NotNull
     @Min(MIN_YEAR)
@@ -38,28 +38,28 @@ public class ExperienceForm {
     @Max(12)
     private Integer monthTo;
 
-    public String getCompany() {
-        return company;
+    public String getEnterpriseName() {
+        return enterpriseName;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
     }
 
-    public String getJob() {
-        return job;
+    public String getPosition() {
+        return position;
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public String getJobDesc() {
-        return jobDesc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setJobDesc(String jobDesc) {
-        this.jobDesc = jobDesc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getMonthFrom() {

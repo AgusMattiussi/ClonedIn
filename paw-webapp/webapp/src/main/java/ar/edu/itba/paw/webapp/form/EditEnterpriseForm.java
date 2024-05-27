@@ -3,33 +3,29 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import ar.edu.itba.paw.webapp.validators.NotAfterCurrentYear;
 import ar.edu.itba.paw.webapp.validators.ValidEmployeeRange;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Calendar;
 
 public class EditEnterpriseForm {
     @Size(max=50)
     private String name;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @ValidEmployeeRange
     private String workers;
 
     @Min(1000)
     @NotAfterCurrentYear
-    private Integer year;
+    private Integer yearFounded;
 
     @Size(max=200)
-    private String link;
+    private String website;
 
     @Size(max=600)
-    private String aboutUs;
+    private String description;
 
     private String category;
 
@@ -41,12 +37,12 @@ public class EditEnterpriseForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getWorkers() {
@@ -63,28 +59,28 @@ public class EditEnterpriseForm {
         this.workers = workers;
     }
 
-    public Integer getYear() {
-        return year;
+    public Integer getYearFounded() {
+        return yearFounded;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setYearFounded(Integer yearFounded) {
+        this.yearFounded = yearFounded;
     }
 
-    public String getLink() {
-        return link;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public String getAboutUs() {
-        return aboutUs;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAboutUs(String aboutUs) {
-        this.aboutUs = aboutUs;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {

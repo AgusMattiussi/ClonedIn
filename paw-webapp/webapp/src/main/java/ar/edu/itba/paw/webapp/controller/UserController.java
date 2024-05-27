@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,8 +24,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -117,8 +114,8 @@ public class UserController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@NotNull @Valid final UserForm userForm) {
-        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevelEnum());
+        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getLocation(),
+                userForm.getCategory(), userForm.getCurrentPosition(), userForm.getDescription(), userForm.getLevelEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(user.getId().toString()).build();
@@ -143,8 +140,8 @@ public class UserController {
     public Response editUser( @PathParam("id") @Min(1) final long id,
                               @NotNull @Valid final EditUserForm editUserForm) {
 
-        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getCity(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getDescription(), editUserForm.getLocation(),
+                editUserForm.getCurrentPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
                 editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
@@ -246,8 +243,8 @@ public class UserController {
                                   @NotNull @Valid ExperienceForm experienceForm){
 
         Experience experience = experienceService.create(id, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
-                experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getCompany(), experienceForm.getJob(),
-                experienceForm.getJobDesc());
+                experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getEnterpriseName(), experienceForm.getPosition(),
+                experienceForm.getDescription());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(experience.getId())).build();
         return Response.created(uri).build();
@@ -350,7 +347,7 @@ public class UserController {
     public Response addSkill(@PathParam("id") @Min(1) final long id,
                              @NotNull @Valid final SkillForm skillForm){
 
-        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getSkill(), id);
+        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getDescription(), id);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(userSkill.getSkill().getId())).build();
         return Response.created(uri).build();

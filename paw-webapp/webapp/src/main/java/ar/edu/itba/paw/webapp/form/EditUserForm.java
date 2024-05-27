@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.webapp.validators.EducationLevelEnum;
 import ar.edu.itba.paw.webapp.validators.VisibilityEnum;
-import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Size;
 
 public class EditUserForm {
@@ -12,18 +12,18 @@ public class EditUserForm {
     private String name;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @Size(max=50)
-    private String position;
+    private String currentPosition;
 
     @Size(max=600)
-    private String aboutMe;
+    private String description;
 
     private String category;
 
     @EducationLevelEnum
-    private String level;
+    private String educationLevel;
 
     @VisibilityEnum
     private String visibility; //TODO: Boolean?
@@ -36,28 +36,28 @@ public class EditUserForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getPosition() {
-        return position;
+    public String getCurrentPosition() {
+        return currentPosition;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setCurrentPosition(String currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
-    public String getAboutMe() {
-        return aboutMe;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {
@@ -68,18 +68,18 @@ public class EditUserForm {
         this.category = category;
     }
 
-    public String getLevel() {
-        return level;
+    public String getEducationLevel() {
+        return educationLevel;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setEducationLevel(String educationLevel) {
+        this.educationLevel = educationLevel;
     }
 
     public EducationLevel getLevelEnum() {
-        if(level == null)
+        if(educationLevel == null)
             return null;
-        return EducationLevel.fromString(level);
+        return EducationLevel.fromString(educationLevel);
     }
 
     public String getVisibility() {

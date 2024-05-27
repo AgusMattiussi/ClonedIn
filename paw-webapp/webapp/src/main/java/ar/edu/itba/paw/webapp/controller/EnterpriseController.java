@@ -6,9 +6,7 @@ import ar.edu.itba.paw.models.enums.*;
 import ar.edu.itba.paw.models.exceptions.*;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
-import ar.edu.itba.paw.webapp.dto.ContactDTO;
 import ar.edu.itba.paw.webapp.dto.EnterpriseDTO;
-import ar.edu.itba.paw.webapp.dto.JobOfferDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -17,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PatchMapping;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -28,12 +24,10 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 
 @Path("api/enterprises")
@@ -92,8 +86,8 @@ public class EnterpriseController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createEnterprise(@NotNull @Valid final EnterpriseForm enterpriseForm) {
         Enterprise enterprise = enterpriseService.create(enterpriseForm.getEmail(), enterpriseForm.getName(),
-                enterpriseForm.getPassword(), enterpriseForm.getCity(), enterpriseForm.getCategory(), enterpriseForm.getWorkersEnum(),
-                enterpriseForm.getYear(), enterpriseForm.getLink(), enterpriseForm.getAboutUs());
+                enterpriseForm.getPassword(), enterpriseForm.getLocation(), enterpriseForm.getCategory(), enterpriseForm.getWorkersEnum(),
+                enterpriseForm.getYearFounded(), enterpriseForm.getWebsite(), enterpriseForm.getDescription());
 
         LOGGER.debug("A new enterprise was registered under id: {}", enterprise.getId());
         LOGGER.info("A new enterprise was registered");
@@ -118,8 +112,8 @@ public class EnterpriseController {
     @PreAuthorize(PROFILE_OWNER)
     public Response updateEnterprise(@PathParam("id") @Min(1) final long id,
                                      @Valid @NotNull final EditEnterpriseForm form) {
-        enterpriseService.updateEnterpriseInformation(id, form.getName(), form.getAboutUs(), form.getCity(),
-                form.getCategory(), form.getLink(), form.getYear(), form.getWorkersEnum());
+        enterpriseService.updateEnterpriseInformation(id, form.getName(), form.getDescription(), form.getLocation(),
+                form.getCategory(), form.getWebsite(), form.getYearFounded(), form.getWorkersEnum());
 
         final URI uri = uriInfo.getAbsolutePath();
         return Response.seeOther(uri).build();

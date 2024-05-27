@@ -8,14 +8,14 @@ public class SkillForm {
 
     @NotEmpty
     @Size(max=50)
-    private String skill;
+    private String description;
 
-    public String getSkill() {
-        return skill;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSkill(String skill) {
-        this.skill = skill;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
