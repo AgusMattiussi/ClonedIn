@@ -12,6 +12,7 @@ import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
 public class ContactDTO {
 
+    private String id;
     private String status;
     private String filledBy;
     private String date;
@@ -24,6 +25,7 @@ public class ContactDTO {
 
     public static ContactDTO fromContact(final UriInfo uriInfo, final Contact contact, boolean preFetchUserInfo) {
         final ContactDTO dto = new ContactDTO();
+        dto.id = contact.getContactId();
         dto.status = contact.getStatus();
         dto.filledBy = FilledBy.fromInt(contact.getFilledBy()).getAsString();
         dto.date = contact.getDate();
@@ -41,6 +43,13 @@ public class ContactDTO {
         return dto;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getStatus() {
         return status;
@@ -99,6 +108,7 @@ public class ContactDTO {
     }
 
     public static class ContactDTOLinks {
+        private URI self;
         private URI user;
         private URI enterprise;
         private URI jobOffer;
@@ -108,6 +118,11 @@ public class ContactDTO {
         }
 
         public ContactDTOLinks(UriInfo uriInfo, Contact contact, boolean preFetchUserInfo) {
+            UriBuilder contactUriBuilder = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CONTACTS_URL)
+                    .path(contact.getContactId());
+            this.self = contactUriBuilder.build();
+
             UriBuilder userUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
                     .path(contact.getUser().getId().toString());
@@ -130,6 +145,14 @@ public class ContactDTO {
                         .path(categoryId.toString());
                 this.userCategory = categoryUriBuilder.build();
             }
+        }
+
+        public URI getSelf() {
+            return self;
+        }
+
+        public void setSelf(URI self) {
+            this.self = self;
         }
 
         public URI getUser() {
