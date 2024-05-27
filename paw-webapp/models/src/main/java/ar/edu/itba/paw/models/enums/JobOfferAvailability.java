@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.models.enums;
 
-//TODO: Case insensitive
 public enum JobOfferAvailability {
     ACTIVE("Activa"),
     CLOSED("Cerrada"),

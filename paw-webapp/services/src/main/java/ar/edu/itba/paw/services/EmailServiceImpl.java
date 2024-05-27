@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static final int MULTIPART_MODE = MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
     private static final String ENCODING = StandardCharsets.UTF_8.name();
-    private static final String baseUrl = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
+    private static final String BASE_URL = "http://pawserver.it.itba.edu.ar/paw-2022b-4/";
     private static final String REGISTER_SUCCESS_TEMPLATE = "registerSuccess.html";
     private static final String CONTACT_TEMPLATE = "contactEmail.html";
     private static final String ANSWER_TEMPLATE = "answerEmail.html";
@@ -69,7 +69,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setFrom("noreply.cloned.in@gmail.com");
             mimeMessageHelper.setSubject(subject);
-            variables.put("baseUrl", baseUrl);
+            variables.put("baseUrl", BASE_URL);
             mimeMessageHelper.setText(getHtmlBody(template, variables), true);
 
             mailSender.send(mimeMessage);
@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendContactEmail(User user, Enterprise enterprise, JobOffer jobOffer, String message, Locale locale) {
         final Map<String, Object> mailMap = new HashMap<>();
         mailMap.put("username", user.getName());
-        mailMap.put("profileUrl", String.format("%susers/%d/notifications", baseUrl, user.getId()));
+        mailMap.put("profileUrl", String.format("%susers/%d/notifications", BASE_URL, user.getId()));
         mailMap.put("jobDesc", jobOffer.getDescription());
         mailMap.put("jobPos", jobOffer.getPosition());
         mailMap.put("salary", jobOffer.getSalary() != null? String.format("$%s", jobOffer.getSalary().toString()) :
@@ -106,7 +106,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("modalityMsg", messageSource.getMessage("contactMail.modality", null, locale));
         mailMap.put("additionalCommentsMsg", messageSource.getMessage("contactMail.additionalComments", null, locale));
         mailMap.put("buttonMsg", messageSource.getMessage("contactMail.button", null, locale));
-        String subject = messageSource.getMessage("contactMail.subject", null, locale) + enterprise.getName();
+        String subject = String.format("%s%s", messageSource.getMessage("contactMail.subject", null, locale), enterprise.getName());
         sendEmail(user.getEmail(), subject, CONTACT_TEMPLATE, mailMap);
     }
 
@@ -128,7 +128,7 @@ public class EmailServiceImpl implements EmailService {
         mailMap.put("welcomeMsg", messageSource.getMessage("registerMail.welcomeMsg", null, locale));
         mailMap.put("bodyMsg", messageSource.getMessage("registerMail.bodyMsg", null, locale));
         mailMap.put("buttonMsg", messageSource.getMessage("registerMail.button", null, locale));
-        mailMap.put("callToActionUrl", baseUrl + callToActionMsg);
+        mailMap.put("callToActionUrl", String.format("%s%s", BASE_URL, callToActionMsg));
         String subject = messageSource.getMessage("registerMail.subject", null, locale);
         sendEmail(email, subject, REGISTER_SUCCESS_TEMPLATE, mailMap);
     }
@@ -166,11 +166,11 @@ public class EmailServiceImpl implements EmailService {
 
         mailMap.put("username", username);
         mailMap.put("answerMsg", messageSource.getMessage(answerMsg, null, locale));
-        mailMap.put("contactMsg", answerMsg.compareTo(ACCEPT)==0?
-                messageSource.getMessage("contactMsg", null, locale) + email :
+        mailMap.put("contactMsg", answerMsg.equals(ACCEPT) ?
+                String.format("%s%s", messageSource.getMessage("contactMsg", null, locale), email) :
                 messageSource.getMessage("nonContactMsg", null, locale));
         mailMap.put("jobOffer", jobOfferPosition);
-        mailMap.put("contactsUrl", String.format("%senterprises/%d/contacts", baseUrl, enterprise.getId()));
+        mailMap.put("contactsUrl", String.format("%senterprises/%d/contacts", BASE_URL, enterprise.getId()));
         mailMap.put("buttonMsg", messageSource.getMessage("answerMail.button", null, locale));
 
         String subject = messageSource.getMessage("answerMail.subject", null, locale);
@@ -194,12 +194,12 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", enterpriseName);
-        mailMap.put("answerMsg", messageSource.getMessage(action + "Msg", null, locale));
+        mailMap.put("answerMsg", messageSource.getMessage(String.format("%sMsg", action), null, locale));
         mailMap.put("jobOffer", jobOfferPosition);
-        mailMap.put("contactsUrl", String.format("%susers/%d/notifications", baseUrl, user.getId()));
+        mailMap.put("contactsUrl", String.format("%susers/%d/notifications", BASE_URL, user.getId()));
         mailMap.put("buttonMsg", messageSource.getMessage("closeMail.button", null, locale));
 
-        String subject = messageSource.getMessage(action + "Mail.subject", null, locale);
+        String subject = messageSource.getMessage(String.format("%sMail.subject", action), null, locale);
 
         sendEmail(user.getEmail(), subject, ANSWER_TEMPLATE, mailMap);
     }
@@ -223,11 +223,11 @@ public class EmailServiceImpl implements EmailService {
 
         mailMap.put("username", user.getName());
         mailMap.put("jobOffer", jobOfferPosition);
-        mailMap.put("profileUrl", String.format("%susers/%d", baseUrl, user.getId()));
-        mailMap.put("bodyMsg", messageSource.getMessage(action + "Mail.bodyMsg", null, locale));
-        mailMap.put("buttonMsg", messageSource.getMessage(action + "Mail.button", null, locale));
+        mailMap.put("profileUrl", String.format("%susers/%d", BASE_URL, user.getId()));
+        mailMap.put("bodyMsg", messageSource.getMessage(String.format("%sMail.bodyMsg", action), null, locale));
+        mailMap.put("buttonMsg", messageSource.getMessage(String.format("%sMail.button", action), null, locale));
 
-        String subject = messageSource.getMessage(action + "Mail.subject", null, locale);
+        String subject = messageSource.getMessage(String.format("%sMail.subject", action), null, locale);
 
         sendEmail(enterprise.getEmail(), subject, APPLICATION_TEMPLATE, mailMap);
     }
@@ -248,12 +248,12 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> mailMap = new HashMap<>();
 
         mailMap.put("username", enterpriseName);
-        mailMap.put("answerMsg", messageSource.getMessage(action + "ApplicationMail.bodyMsg", null, locale));
+        mailMap.put("answerMsg", messageSource.getMessage(String.format("%sApplicationMail.bodyMsg", action), null, locale));
         mailMap.put("jobOffer", jobOfferPosition);
-        mailMap.put("contactsUrl", String.format("%susers/%d/applications", baseUrl, user.getId()));
+        mailMap.put("contactsUrl", String.format("%susers/%d/applications", BASE_URL, user.getId()));
         mailMap.put("buttonMsg", messageSource.getMessage("replyApplicationMail.button", null, locale));
 
-        String subject = messageSource.getMessage(action + "ApplicationMail.subject", null, locale);
+        String subject = messageSource.getMessage(String.format("%sApplicationMail.subject", action), null, locale);
 
         sendEmail(email, subject, ANSWER_TEMPLATE, mailMap);
     }

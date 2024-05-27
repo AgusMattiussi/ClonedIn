@@ -553,7 +553,6 @@ public class ContactServiceImpl implements ContactService {
         updateContactStatus(requesterRole, ids[0], ids[1], status);
     }
 
-    // TODO: Deberia ser default?
     @Override
     @Transactional
     public Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message) {
