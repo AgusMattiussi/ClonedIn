@@ -8,6 +8,7 @@ import java.net.URI;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
+// TODO: Matchear los forms con estos nombres de variables
 public class UserDTO {
 
     private long id;

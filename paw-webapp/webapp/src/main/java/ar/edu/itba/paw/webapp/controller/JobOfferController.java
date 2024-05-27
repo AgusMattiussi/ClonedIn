@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.JobOfferForm;
+import ar.edu.itba.paw.webapp.form.UpdateJobOfferAvailabilityForm;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +46,7 @@ public class JobOfferController {
 
     private static final String IS_ENTERPRISE = "hasAuthority('ENTERPRISE')";
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
+    private static final String JOB_OFFER_OWNER = "@securityValidator.isJobOfferOwner(#id)";
 
     @Autowired
     private JobOfferService jobOfferService;
@@ -108,6 +110,18 @@ public class JobOfferController {
                 .orElseThrow(() -> new JobOfferNotFoundException(id));
         return Response.ok(jobOffer).build();
     }
+
+    @POST
+    @Path("/{id}")
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
+                                               @NotNull final UpdateJobOfferAvailabilityForm form) {
+        jobOfferService.updateJobOfferAvailability(id, form.getAvailabilityEnum());
+
+        final URI uri = uriInfo.getAbsolutePath();
+        return Response.ok().location(uri).build();
+    }
+
 
     @GET
     @Path("/{id}/skills")

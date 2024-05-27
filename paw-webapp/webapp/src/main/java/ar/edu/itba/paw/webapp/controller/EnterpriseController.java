@@ -166,8 +166,8 @@ public class EnterpriseController {
         return Response.ok(jobOffer).build();
     }*/
 
-    // TODO: Reemplazar
-    @PUT
+    // DEPRECATED
+    /*@PUT
     @Path("/{id}/jobOffers/{joid}")
     @PreAuthorize(JOB_OFFER_OWNER)
     public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
@@ -177,7 +177,7 @@ public class EnterpriseController {
 
         final URI uri = uriInfo.getAbsolutePath();
         return Response.ok().location(uri).build();
-    }
+    }*/
 
     // DEPRECATED
     /*@POST

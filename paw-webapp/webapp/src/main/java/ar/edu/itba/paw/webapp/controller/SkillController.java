@@ -37,6 +37,7 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
+    // TODO: userId, jobOfferId
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
