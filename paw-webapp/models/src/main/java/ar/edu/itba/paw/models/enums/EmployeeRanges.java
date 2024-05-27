@@ -23,12 +23,21 @@ public enum EmployeeRanges {
         return stringValue;
     }
 
-    public static EmployeeRanges fromString(String text) {
-        for (EmployeeRanges range : EmployeeRanges.values()) {
-            if (range.stringValue.equals(text)) {
-                return range;
+    public static EmployeeRanges fromString(String range) {
+        if(range != null && !range.isEmpty()) {
+            String rangeLowercase = range.toLowerCase();
+
+            if(rangeLowercase.equals(NOT_SPECIFIED.stringValue.toLowerCase())){
+                return NOT_SPECIFIED;
+            }
+
+            for (EmployeeRanges rangeEnum : EmployeeRanges.values()) {
+                if (rangeEnum.stringValue.equals(rangeLowercase)) {
+                    return rangeEnum;
+                }
             }
         }
-        throw new IllegalArgumentException(String.format("No constant range matching text '%s' found", text));
+
+        throw new IllegalArgumentException(String.format("No constant range matching text '%s' found", range));
     }
 }

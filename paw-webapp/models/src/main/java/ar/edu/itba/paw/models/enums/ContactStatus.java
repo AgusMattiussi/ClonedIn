@@ -18,9 +18,12 @@ public enum ContactStatus {
     }
 
     public static ContactStatus fromString(String s) {
-        for (ContactStatus status : ContactStatus.values()) {
-            if (status.getStatus().equals(s)) {
-                return status;
+        if(s != null && !s.isEmpty()) {
+            String statusLowerCase = s.toLowerCase();
+            for (ContactStatus enumStatus : ContactStatus.values()) {
+                if (enumStatus.getStatus().equals(statusLowerCase)) {
+                    return enumStatus;
+                }
             }
         }
         throw new IllegalArgumentException();

@@ -4,8 +4,8 @@ public enum JobOfferSorting {
     DEFAULT("predeterminado", " ORDER BY jo.available ASC"),
     RECENT("recientes", " ORDER BY jo.id DESC"),
     OLDEST("antiguas", " ORDER BY jo.id ASC"),
-    SALARY_ASC("salarioAsc", " ORDER BY jo.salary ASC"),
-    SALARY_DESC("salarioDesc", " ORDER BY jo.salary DESC"),
+    SALARY_ASC("salarioasc", " ORDER BY jo.salary ASC"),
+    SALARY_DESC("salariodesc", " ORDER BY jo.salary DESC"),
 
     ;
 
@@ -25,14 +25,15 @@ public enum JobOfferSorting {
         return asQuery;
     }
 
-    public static JobOfferSorting fromString(String text) {
-        if(text != null && !text.isEmpty()) {
-            for (JobOfferSorting sorting : JobOfferSorting.values()) {
-                if (sorting.stringValue.equals(text)) {
-                    return sorting;
+    public static JobOfferSorting fromString(String sorting) {
+        if(sorting != null && !sorting.isEmpty()) {
+            String textLowercase = sorting.toLowerCase();
+            for (JobOfferSorting sortingEnum : JobOfferSorting.values()) {
+                if (sortingEnum.stringValue.equals(textLowercase)) {
+                    return sortingEnum;
                 }
             }
         }
-        throw new IllegalArgumentException(String.format("No constant sorting matching text '%s' found", text));
+        throw new IllegalArgumentException(String.format("No constant sorting matching text '%s' found", sorting));
     }
 }
