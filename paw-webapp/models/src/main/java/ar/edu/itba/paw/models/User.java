@@ -139,6 +139,10 @@ public class User {
         return visibility;
     }
 
+    public boolean isVisible() {
+        return visibility == 1;
+    }
+
     public Image getImage() {
         return image;
     }

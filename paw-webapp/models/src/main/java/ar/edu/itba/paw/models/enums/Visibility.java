@@ -39,6 +39,13 @@ public enum Visibility {
         throw new IllegalArgumentException(String.format("Invalid visibility string: %s", visibility));
     }
 
+    public static Visibility fromBoolean(Boolean visibility) {
+        if(visibility == null) {
+            throw new IllegalArgumentException("Visibility cannot be null");
+        }
+        return visibility ? VISIBLE : INVISIBLE;
+    }
+
     @Override
     public String toString() {
         return "Visibility{" +

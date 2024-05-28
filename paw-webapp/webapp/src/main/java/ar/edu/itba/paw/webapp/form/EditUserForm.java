@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.webapp.validators.EducationLevelEnum;
-import ar.edu.itba.paw.webapp.validators.VisibilityEnum;
 
 import javax.validation.constraints.Size;
 
@@ -25,8 +24,8 @@ public class EditUserForm {
     @EducationLevelEnum
     private String educationLevel;
 
-    @VisibilityEnum
-    private String visibility; //TODO: Boolean?
+    //@VisibilityEnum
+    private Boolean visible; //TODO: Boolean?
 
     public String getName() {
         return name;
@@ -82,17 +81,17 @@ public class EditUserForm {
         return EducationLevel.fromString(educationLevel);
     }
 
-    public String getVisibility() {
-        return visibility;
+    public Boolean getVisible() {
+        return visible;
     }
 
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
     public Visibility getVisibilityAsEnum() {
-        if(visibility == null)
+        if(visible == null)
             return null;
-        return Visibility.fromString(visibility);
+        return Visibility.fromBoolean(visible);
     }
 }
