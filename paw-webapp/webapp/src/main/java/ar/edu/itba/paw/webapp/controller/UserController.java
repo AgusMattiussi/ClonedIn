@@ -40,7 +40,7 @@ public class UserController {
     private static final int APPLICATIONS_PER_PAGE = 5;
     private static final String S_APPLICATIONS_PER_PAGE = "5";
     private static final int EXPERIENCES_PER_PAGE = 3;
-    private static final String S_EXPERIENCES_PER_PAGE = String.valueOf(EXPERIENCES_PER_PAGE);
+    private static final String S_EXPERIENCES_PER_PAGE = "3";
     private static final int USERS_PER_PAGE = 8;
     private static final String S_USERS_PER_PAGE = "8";
     private static final int EDUCATIONS_PER_PAGE = 3;
@@ -202,15 +202,15 @@ public class UserController {
         return Response.ok().location(uri).build();
     }*/
 
-    // TODO: PageSize
     @GET
     @Path("/{id}/experiences")
     @Produces(ClonedInMediaType.EXPERIENCE_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperiences(@PathParam("id") final long id,
-                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
+                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                   @QueryParam("pageSize") @DefaultValue(S_EXPERIENCES_PER_PAGE) @Min(1) @Max(4*EXPERIENCES_PER_PAGE) final int pageSize) {
 
-        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, EXPERIENCES_PER_PAGE);
+        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, pageSize);
 
         if(experiences.isEmpty())
             return Response.noContent().build();

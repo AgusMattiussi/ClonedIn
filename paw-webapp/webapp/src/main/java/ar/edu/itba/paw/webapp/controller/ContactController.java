@@ -94,7 +94,6 @@ public class ContactController {
         Contact contact = contactService.addContact(SecurityUtils.getPrincipalRole(), SecurityUtils.getPrincipalId(),
                 contactForm.getJobOfferId(), contactForm.getUserId(), contactForm.getMessage());
 
-        // TODO: Definir path
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(contact.getContactId())
                 .build();
