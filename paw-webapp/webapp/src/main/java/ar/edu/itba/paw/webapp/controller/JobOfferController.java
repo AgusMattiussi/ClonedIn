@@ -8,6 +8,9 @@ import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.form.JobOfferForm;
+import ar.edu.itba.paw.webapp.form.UpdateJobOfferAvailabilityForm;
+import ar.edu.itba.paw.webapp.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -17,11 +20,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;
@@ -38,7 +44,9 @@ public class JobOfferController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
+    private static final String IS_ENTERPRISE = "hasAuthority('ENTERPRISE')";
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
+    private static final String JOB_OFFER_OWNER = "@securityValidator.isJobOfferOwner(#id)";
 
     @Autowired
     private JobOfferService jobOfferService;
@@ -50,7 +58,7 @@ public class JobOfferController {
 
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize(IS_ENTERPRISE)
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_PER_PAGE)
                                         @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
@@ -61,7 +69,7 @@ public class JobOfferController {
                                  @QueryParam("position") final String position,
                                  @QueryParam("searchTerm") final String searchTerm,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
-                                 @QueryParam("enterpriseId") final Long enterpriseId,
+                                 @QueryParam("enterpriseId") @Min(1) final Long enterpriseId,
                                  @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy){
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
                         enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, pageSize);
@@ -76,6 +84,23 @@ public class JobOfferController {
                 page, jobOffers.getMaxPages());
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PreAuthorize(IS_ENTERPRISE)
+    public Response createJobOffer(@Valid @NotNull final JobOfferForm jobOfferForm) {
+        Long requesterId = SecurityUtils.getPrincipalId();
+
+        JobOffer jobOffer = jobOfferService.create(requesterId, jobOfferForm.getCategory(), jobOfferForm.getPosition(),
+                jobOfferForm.getDescription(), jobOfferForm.getSalary(), jobOfferForm.getModality(),
+                jobOfferForm.getSkillsList());
+
+        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
+        LOGGER.info("A new job offer was registered");
+
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(jobOffer.getId().toString()).build();
+        return Response.created(uri).build();
+    }
+
     @GET
     @Path("/{id}")
     @Produces(ClonedInMediaType.JOB_OFFER_V1)
@@ -85,6 +110,18 @@ public class JobOfferController {
                 .orElseThrow(() -> new JobOfferNotFoundException(id));
         return Response.ok(jobOffer).build();
     }
+
+    @POST
+    @Path("/{id}")
+    @PreAuthorize(JOB_OFFER_OWNER)
+    public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
+                                               @NotNull final UpdateJobOfferAvailabilityForm form) {
+        jobOfferService.updateJobOfferAvailability(id, form.getAvailabilityEnum());
+
+        final URI uri = uriInfo.getAbsolutePath();
+        return Response.ok().location(uri).build();
+    }
+
 
     @GET
     @Path("/{id}/skills")

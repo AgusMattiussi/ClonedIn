@@ -5,13 +5,30 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class ContactForm {
+
+    private Long jobOfferId;
+
+    private Long userId;
+
+    // TODO: Enviar mensaje tambien a empresa
     @Size(max=100)
     private String message;
 
-    @Min(1)
-    private long jobOfferId;
-    @Min(1)
-    private long userId;
+    public Long getJobOfferId() {
+        return jobOfferId;
+    }
+
+    public void setJobOfferId(Long jobOfferId) {
+        this.jobOfferId = jobOfferId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getMessage() {
         return message;
@@ -19,21 +36,5 @@ public class ContactForm {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public long getJobOfferId() {
-        return jobOfferId;
-    }
-
-    public void setJobOfferId(long jobOfferId) {
-        this.jobOfferId = jobOfferId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 }

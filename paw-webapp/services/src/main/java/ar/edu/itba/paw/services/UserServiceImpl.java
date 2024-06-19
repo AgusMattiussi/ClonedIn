@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
 
         final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
                                      location, skillDescription);
-        long maxPages = userCount/pageSize + 1;
+        long maxPages = userCount / pageSize + userCount % pageSize;
 
         return new PaginatedResource<>(users, page, maxPages);
     }

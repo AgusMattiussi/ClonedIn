@@ -19,14 +19,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@CacheConfig(cacheNames = "educations-cache")
+//@CacheConfig(cacheNames = "educations-cache")
 public class EducationHibernateDao implements EducationDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public Education add(User user, Integer monthFrom, Integer yearFrom, Integer monthTo, Integer yearTo, String title, String institutionName, String description) {
         final Education education = new Education(user, monthFrom, yearFrom, monthTo, yearTo, title, institutionName, description);
         em.persist(education);
@@ -34,7 +34,7 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
-    @Cacheable(key = "#educationID", unless = "#result == null")
+//    @Cacheable(key = "#educationID", unless = "#result == null")
     public Optional<Education> findById(long educationID) {
         return Optional.ofNullable(em.find(Education.class, educationID));
     }
@@ -57,7 +57,7 @@ public class EducationHibernateDao implements EducationDao {
     }
 
     @Override
-    @CacheEvict(key = "#educationId")
+//    @CacheEvict(key = "#educationId")
     public void deleteEducation(long educationId) {
         Optional<Education> toDelete = findById(educationId);
         toDelete.ifPresent(education -> em.remove(education));

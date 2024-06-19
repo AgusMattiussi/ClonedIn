@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@CacheConfig(cacheNames = "enterprises-cache")
+//@CacheConfig(cacheNames = "enterprises-cache")
 public class EnterpriseHibernateDao implements EnterpriseDao {
 
     public static final Image DEFAULT_IMAGE = null;
@@ -28,7 +28,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     private EntityManager em;
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public Enterprise create(String email, String name, String password, String location, Category category, EmployeeRanges workers,
                              Integer year, String link, String description) {
         final Enterprise enterprise = new Enterprise(name, email, password, location, category, workers.getStringValue(),
@@ -45,7 +45,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @Cacheable(key = "#enterpriseId", unless = "#result == null")
+//    @Cacheable(key = "#enterpriseId", unless = "#result == null")
     public Optional<Enterprise> findById(long enterpriseId) {
         return Optional.ofNullable(em.find(Enterprise.class, enterpriseId));
     }
@@ -74,7 +74,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateName(long enterpriseID, String newName) {
         Query query = em.createQuery("UPDATE Enterprise SET name = :newName WHERE id = :enterpriseID");
         query.setParameter("newName", newName);
@@ -83,7 +83,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateWorkers(long enterpriseID, EmployeeRanges newWorkers) {
         Query query = em.createQuery("UPDATE Enterprise SET workers = :newWorkers WHERE id = :enterpriseID");
         query.setParameter("newWorkers", newWorkers.getStringValue());
@@ -92,7 +92,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateYear(long enterpriseID, Integer newYear) {
         Query query = em.createQuery("UPDATE Enterprise SET year = :newYear WHERE id = :enterpriseID");
         query.setParameter("newYear", newYear);
@@ -101,7 +101,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateLink(long enterpriseID, String newLink) {
         Query query = em.createQuery("UPDATE Enterprise SET link = :newLink WHERE id = :enterpriseID");
         query.setParameter("newLink", newLink);
@@ -110,7 +110,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateDescription(long enterpriseID, String newDescription) {
         Query query = em.createQuery("UPDATE Enterprise SET description = :newDescription WHERE id = :enterpriseID");
         query.setParameter("newDescription", newDescription);
@@ -119,7 +119,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateLocation(long enterpriseID, String newLocation) {
         Query query = em.createQuery("UPDATE Enterprise SET location = :newLocation WHERE id = :enterpriseID");
         query.setParameter("newLocation", newLocation);
@@ -128,7 +128,7 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @CacheEvict(key = "#enterpriseID")
+//    @CacheEvict(key = "#enterpriseID")
     public void updateCategory(long enterpriseID, Category newCategory) {
         Query query = em.createQuery("UPDATE Enterprise SET category = :newCategory WHERE id = :enterpriseID");
         query.setParameter("newCategory", newCategory);
@@ -137,10 +137,10 @@ public class EnterpriseHibernateDao implements EnterpriseDao {
     }
 
     @Override
-    @Caching(evict = {
+/*    @Caching(evict = {
             @CacheEvict(value ="enterprises-cache", key = "#enterprise.id"),
             @CacheEvict(value = "images-cache", key = "#result", condition = "#result > 0")
-    })
+    })*/
     public long updateEnterpriseProfileImage(Enterprise enterprise, Image image) {
         Image oldImage = enterprise.getImage();
 

@@ -22,7 +22,7 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     private EntityManager em;
 
     @Override
-    @CacheEvict(value = "jobOffers-cache", key = "#jobOffer.id")
+//    @CacheEvict(value = "jobOffers-cache", key = "#jobOffer.id")
     public void addSkillToJobOffer(Skill skill, JobOffer jobOffer) {
         JobOfferSkill jobOfferSkill = new JobOfferSkill(jobOffer, skill);
         em.persist(jobOfferSkill);

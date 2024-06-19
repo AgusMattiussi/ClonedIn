@@ -6,19 +6,28 @@ public enum JobOfferModality {
     MIXED("Mixto");
 
     private final String modality;
+    private final String lowercased; // Used for case-insensitive comparison
 
     JobOfferModality(String modality) {
         this.modality = modality;
+        this.lowercased = modality.toLowerCase();
     }
 
     public String getModality() {
         return modality;
     }
 
+    public String getLowercased() {
+        return lowercased;
+    }
+
     public static JobOfferModality fromString(String modality) {
-        for (JobOfferModality jobOfferModality : JobOfferModality.values()) {
-            if (jobOfferModality.modality.equalsIgnoreCase(modality)) {
-                return jobOfferModality;
+        if(modality != null && !modality.isEmpty()) {
+            String modalityLowerCase = modality.toLowerCase();
+            for (JobOfferModality modalityEnum : JobOfferModality.values()) {
+                if (modalityEnum.lowercased.equals(modalityLowerCase)) {
+                    return modalityEnum;
+                }
             }
         }
         throw new IllegalArgumentException(String.format("Invalid JobOfferModality: '%s'", modality));

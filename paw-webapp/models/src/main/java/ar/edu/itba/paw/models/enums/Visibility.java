@@ -29,13 +29,21 @@ public enum Visibility {
         throw new IllegalArgumentException(String.format("Invalid visibility value: %s", value));
     }
 
-    public static Visibility fromString(String asString) {
-        for (Visibility visibility : Visibility.values()) {
-            if (visibility.asString.equals(asString)) {
-                return visibility;
+    public static Visibility fromString(String visibility) {
+        for (Visibility visibilityEnum : Visibility.values()) {
+            String visibilityLowerCase = visibility.toLowerCase();
+            if (visibilityEnum.asString.equals(visibilityLowerCase)) {
+                return visibilityEnum;
             }
         }
-        throw new IllegalArgumentException(String.format("Invalid visibility string: %s", asString));
+        throw new IllegalArgumentException(String.format("Invalid visibility string: %s", visibility));
+    }
+
+    public static Visibility fromBoolean(Boolean visibility) {
+        if(visibility == null) {
+            throw new IllegalArgumentException("Visibility cannot be null");
+        }
+        return visibility ? VISIBLE : INVISIBLE;
     }
 
     @Override

@@ -27,8 +27,6 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 @Component
 public class SkillController {
 
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SkillController.class);
     private static final int SKILLS_BY_PAGE = 20;
     private static final String S_SKILLS_BY_PAGE = "20";
 
@@ -37,6 +35,7 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
+    // TODO: userId, jobOfferId
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,

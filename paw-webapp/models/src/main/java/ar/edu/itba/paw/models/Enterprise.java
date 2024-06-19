@@ -1,17 +1,12 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.enums.Role;
 import org.hibernate.annotations.Type;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "empresa")
-public class Enterprise implements CustomUserDetails {
+public class Enterprise {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_seq")
     @SequenceGenerator(sequenceName = "usuario_id_seq", name = "usuario_id_seq", allocationSize = 1)
@@ -91,12 +86,6 @@ public class Enterprise implements CustomUserDetails {
         // Just for Hibernate, we love you!
     }
 
-    @Override
-    public Role getRole() {
-        return Role.ENTERPRISE;
-    }
-
-    @Override
     public Long getId() {
         return id;
     }
@@ -109,41 +98,8 @@ public class Enterprise implements CustomUserDetails {
         return email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Role.ENTERPRISE.name()));
-        return authorities;
-    }
-
-    @Override
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     public String getLocation() {

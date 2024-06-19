@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,8 +24,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -117,8 +114,8 @@ public class UserController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@NotNull @Valid final UserForm userForm) {
-        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getCity(),
-                userForm.getCategory(), userForm.getPosition(), userForm.getAboutMe(), userForm.getLevelEnum());
+        final User user = us.create(userForm.getEmail(), userForm.getPassword(), userForm.getName(), userForm.getLocation(),
+                userForm.getCategory(), userForm.getCurrentPosition(), userForm.getDescription(), userForm.getLevelEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(user.getId().toString()).build();
@@ -137,24 +134,24 @@ public class UserController {
         return Response.ok(user).links().build();
     }
 
-    @PUT
+    @POST
     @Path("/{id}")
     @PreAuthorize(PROFILE_OWNER)
     public Response editUser( @PathParam("id") @Min(1) final long id,
                               @NotNull @Valid final EditUserForm editUserForm) {
 
-        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getAboutMe(), editUserForm.getLocation(),
-                editUserForm.getPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
+        us.updateUserInformation(id, editUserForm.getName(), editUserForm.getDescription(), editUserForm.getLocation(),
+                editUserForm.getCurrentPosition(), editUserForm.getCategory(), editUserForm.getLevelEnum(),
                 editUserForm.getVisibilityAsEnum());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
-        return Response.ok().location(uri).build();
+        return Response.seeOther(uri).build();
     }
 
-
-    @GET
+    // DEPRECATED
+    /*@GET
     @Path("/{id}/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
     @PreAuthorize(PROFILE_OWNER)
     public Response getContacts(@PathParam("id") final long id,
                                     @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
@@ -175,10 +172,10 @@ public class UserController {
 
         return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
                 applications.getMaxPages());
-    }
+    }*/
 
-
-    @POST
+    // DEPRECATED
+    /*@POST
     @Path("/{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize(PROFILE_OWNER)
@@ -189,10 +186,10 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(applyToJobOfferForm.getJobOfferId())).build();
         return Response.created(uri).build();
-    }
+    }*/
 
 
-    @PUT
+    /*@PUT
     @Path("/{id}/contacts/{jobOfferId}")
     @PreAuthorize(PROFILE_OWNER)
     public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
@@ -203,17 +200,17 @@ public class UserController {
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
         return Response.ok().location(uri).build();
-    }
-
+    }*/
 
     @GET
     @Path("/{id}/experiences")
     @Produces(ClonedInMediaType.EXPERIENCE_LIST_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getExperiences(@PathParam("id") final long id,
-                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page) {
+                                   @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
+                                   @QueryParam("pageSize") @DefaultValue(S_EXPERIENCES_PER_PAGE) @Min(1) @Max(4*EXPERIENCES_PER_PAGE) final int pageSize) {
 
-        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, EXPERIENCES_PER_PAGE);
+        PaginatedResource<Experience> experiences = experienceService.findByUser(id, page, pageSize);
 
         if(experiences.isEmpty())
             return Response.noContent().build();
@@ -246,8 +243,8 @@ public class UserController {
                                   @NotNull @Valid ExperienceForm experienceForm){
 
         Experience experience = experienceService.create(id, experienceForm.getMonthFrom(), experienceForm.getYearFrom(),
-                experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getCompany(), experienceForm.getJob(),
-                experienceForm.getJobDesc());
+                experienceForm.getMonthTo(), experienceForm.getYearTo(), experienceForm.getEnterpriseName(), experienceForm.getPosition(),
+                experienceForm.getDescription());
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(experience.getId())).build();
         return Response.created(uri).build();
@@ -350,7 +347,7 @@ public class UserController {
     public Response addSkill(@PathParam("id") @Min(1) final long id,
                              @NotNull @Valid final SkillForm skillForm){
 
-        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getSkill(), id);
+        UserSkill userSkill = userSkillService.addSkillToUser(skillForm.getDescription(), id);
 
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(userSkill.getSkill().getId())).build();
         return Response.created(uri).build();
@@ -382,6 +379,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
+    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,

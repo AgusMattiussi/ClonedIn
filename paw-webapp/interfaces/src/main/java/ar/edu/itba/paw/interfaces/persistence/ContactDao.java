@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy, int page, int pageSize);
+    List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactStatus status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
 
@@ -35,7 +35,7 @@ public interface ContactDao {
 
     List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
 
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
+    List<Contact> getContacts(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy,
                                            String status, ContactSorting sortBy, int page, int pageSize);
 
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
@@ -68,14 +68,14 @@ public interface ContactDao {
 
     boolean closeJobOfferForEveryone(JobOffer jobOffer);
 
-    long getContactsCountForEnterprise(Enterprise enterprise);
+    long getContactsCount(Enterprise enterprise);
 
-    long getContactsCountForEnterprise(long enterpriseID);
+    long getContactsCount(long enterpriseID);
 
-    long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status);
+    long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, String status);
 
     long getContactsCountForUser(User user);
 
-    long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status);
+    long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status);
 
 }

@@ -17,10 +17,12 @@ public enum Month {
 
     private final int number;
     private final String name;
+    private final String nameLowerCase; // for case insensitive comparison
 
     Month(String name,int number) {
         this.number = number;
         this.name = name;
+        this.nameLowerCase = name.toLowerCase();
     }
 
     public int getNumber() {
@@ -31,6 +33,10 @@ public enum Month {
         return name;
     }
 
+    public String getNameLowerCase() {
+        return nameLowerCase;
+    }
+
     public static Month fromNumber(int number) {
         if(number >= 1 && number <= 12)
             return Month.values()[number-1];
@@ -38,9 +44,12 @@ public enum Month {
     }
 
     public static Month fromString(String name) {
-        for (Month month : Month.values()) {
-            if (month.name.equals(name)) {
-                return month;
+        if(name != null && !name.isEmpty()) {
+            String nameLowerCase = name.toLowerCase();
+            for (Month month : Month.values()) {
+                if (month.nameLowerCase.equals(nameLowerCase)) {
+                    return month;
+                }
             }
         }
         throw new IllegalArgumentException();

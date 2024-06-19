@@ -17,6 +17,7 @@ public final class ClonedInUrls {
     public static final String ENTERPRISES_URL = BASE_URL + "enterprises";
     public static final String SKILLS_URL = BASE_URL + "skills";
     public static final String AUTH_URL = BASE_URL + "auth";
+    public static final String CONTACTS_URL = BASE_URL + "contacts";
 
     // Subdirectories
     public static final String EDUCATIONS_SUBDIRECTORY = "educations";
@@ -30,6 +31,7 @@ public final class ClonedInUrls {
 
     // URL parameters
     public static final String SKILL_DESCRIPTION_PARAM = "skillDescription";
+    public static final String ENTERPRISE_ID_PARAM = "enterpriseId";
 
     // Headers
     public static final String ACCESS_TOKEN_HEADER = "X-Access-Token";

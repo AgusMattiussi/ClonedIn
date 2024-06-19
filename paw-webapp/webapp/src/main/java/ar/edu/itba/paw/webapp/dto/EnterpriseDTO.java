@@ -16,7 +16,7 @@ public class EnterpriseDTO {
     private String email;
     private String location;
     private String workers;
-    private Integer year;
+    private Integer yearFounded;
     private String website;
     private String description;
     private EnterpriseDTOLinks links;
@@ -28,7 +28,7 @@ public class EnterpriseDTO {
         dto.email = enterprise.getEmail();
         dto.location = enterprise.getLocation();
         dto.workers = enterprise.getWorkers();
-        dto.year = enterprise.getYear();
+        dto.yearFounded = enterprise.getYear();
         dto.website = enterprise.getLink();
         dto.description = enterprise.getDescription();
 
@@ -77,12 +77,12 @@ public class EnterpriseDTO {
         this.workers = workers;
     }
 
-    public Integer getYear() {
-        return year;
+    public Integer getYearFounded() {
+        return yearFounded;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setYearFounded(Integer yearFounded) {
+        this.yearFounded = yearFounded;
     }
 
     public String getDescription() {
@@ -128,8 +128,16 @@ public class EnterpriseDTO {
             this.self = enterpriseUriBuilder.build();
 
             this.image = enterpriseUriBuilder.clone().path(IMAGE_SUBDIRECTORY).build();
-            this.contacts = enterpriseUriBuilder.clone().path(CONTACTS_SUBDIRECTORY).build();
-            this.jobOffers = enterpriseUriBuilder.clone().path(JOB_OFFERS_SUBDIRECTORY).build();
+
+            this.contacts = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(CONTACTS_URL)
+                    .queryParam(ENTERPRISE_ID_PARAM, String.valueOf(enterprise.getId()))
+                    .build();
+
+            this.jobOffers = uriInfo.getAbsolutePathBuilder()
+                    .replacePath(JOB_OFFERS_URL)
+                    .queryParam(ENTERPRISE_ID_PARAM, String.valueOf(enterprise.getId()))
+                    .build();
 
             UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(CATEGORIES_URL)

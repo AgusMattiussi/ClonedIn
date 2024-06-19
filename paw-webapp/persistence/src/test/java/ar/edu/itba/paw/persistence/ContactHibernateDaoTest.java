@@ -40,7 +40,7 @@ public class ContactHibernateDaoTest {
     public static final BigDecimal NEW_JOB_OFFER_SALARY = BigDecimal.valueOf(1000);
     public static final String NEW_JOB_OFFER_MODALITY = JobOfferModality.REMOTE.getModality();
     public static final String NEW_OFFER_AVAILABILITY = JobOfferAvailability.ACTIVE.getStatus();
-    public static final String NEW_OFFER_STATUS = JobOfferStatus.PENDING.getStatus();
+    public static final String NEW_OFFER_STATUS = ContactStatus.PENDING.getStatus();
     public static final FilledBy NEW_JOB_OFFER_FILLED_BY = FilledBy.ENTERPRISE;
 
     @PersistenceContext
@@ -199,7 +199,7 @@ public class ContactHibernateDaoTest {
 
         assertTrue(accepted);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.ACCEPTED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.ACCEPTED.getStatus(), found.getStatus());
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ContactHibernateDaoTest {
 
         assertTrue(rejected);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.DECLINED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.DECLINED.getStatus(), found.getStatus());
     }
 
     @Test
@@ -223,7 +223,7 @@ public class ContactHibernateDaoTest {
 
         assertTrue(cancelled);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.CANCELLED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.CANCELLED.getStatus(), found.getStatus());
     }
 
     @Test
@@ -235,7 +235,7 @@ public class ContactHibernateDaoTest {
 
         assertTrue(cancelled);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.CANCELLED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.CANCELLED.getStatus(), found.getStatus());
     }
 
     @Test
@@ -247,7 +247,7 @@ public class ContactHibernateDaoTest {
 
         assertTrue(closed);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.CLOSED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.CLOSED.getStatus(), found.getStatus());
     }
 
     @Test
@@ -259,12 +259,12 @@ public class ContactHibernateDaoTest {
 
         assertTrue(closed);
         assertNotNull(found);
-        assertEquals(JobOfferStatus.CLOSED.getStatus(), found.getStatus());
+        assertEquals(ContactStatus.CLOSED.getStatus(), found.getStatus());
     }
 
     @Test
     public void testGetContactsCountForEnterprise(){
-        long count = contactDao.getContactsCountForEnterprise(testEnterprise);
+        long count = contactDao.getContactsCount(testEnterprise);
 
         assertEquals(1, count);
     }

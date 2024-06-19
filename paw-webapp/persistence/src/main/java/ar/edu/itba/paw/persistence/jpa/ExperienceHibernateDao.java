@@ -19,14 +19,14 @@ import java.util.Optional;
 
 @Primary
 @Repository
-@CacheConfig(cacheNames = "experiences-cache")
+//@CacheConfig(cacheNames = "experiences-cache")
 public class ExperienceHibernateDao implements ExperienceDao {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @CachePut(key = "#result.id")
+//    @CachePut(key = "#result.id")
     public Experience create(User user, int monthFrom, int yearFrom, Integer monthTo, Integer yearTo, String enterpriseName, String position, String description) {
         final Experience experience = new Experience(user, monthFrom, yearFrom, monthTo, yearTo, enterpriseName, position, description);
         em.persist(experience);
@@ -34,7 +34,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
-    @Cacheable(key = "#experienceId", unless = "#result == null")
+//    @Cacheable(key = "#experienceId", unless = "#result == null")
     public Optional<Experience> findById(long experienceId) {
         return Optional.ofNullable(em.find(Experience.class, experienceId));
     }
@@ -57,7 +57,7 @@ public class ExperienceHibernateDao implements ExperienceDao {
     }
 
     @Override
-    @CacheEvict(key = "#experienceId")
+//    @CacheEvict(key = "#experienceId")
     public void deleteExperience(long experienceId) {
         Optional<Experience> toDelete = findById(experienceId);
         toDelete.ifPresent(experience -> em.remove(experience));

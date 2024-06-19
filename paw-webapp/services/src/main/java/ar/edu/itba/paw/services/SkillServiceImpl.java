@@ -68,7 +68,7 @@ public class SkillServiceImpl implements SkillService {
     public PaginatedResource<Skill> getAllSkills(int page, int pageSize) {
         List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
         long skillCount = this.getSkillCount();
-        long maxPages = skillCount / pageSize + 1;
+        long maxPages = skillCount / pageSize + skillCount % pageSize;
 
         return new PaginatedResource<>(skills, page, maxPages);
     }

@@ -11,7 +11,8 @@ import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.EXPERIENCES_SUBDIRECTORY
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.USERS_URL;
 
 public class ExperienceDTO {
-    
+
+    private Long id;
     private Integer monthFrom;
     private Integer yearFrom;
     private Integer monthTo;
@@ -19,7 +20,6 @@ public class ExperienceDTO {
     private String position;
     private String enterpriseName;
     private String description;
-    private Long id;
     private ExperienceDTOLinks links;
     
     public static ExperienceDTO fromExperience(final UriInfo uriInfo, final Experience experience) {

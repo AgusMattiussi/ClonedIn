@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.ids.ContactId;
 
 import javax.persistence.*;
@@ -59,7 +59,7 @@ public class Contact {
         this.user = user;
         this.enterprise = enterprise;
         this.jobOffer = jobOffer;
-        this.status = JobOfferStatus.PENDING.getStatus();
+        this.status = ContactStatus.PENDING.getStatus();
         this.filledBy = filledBy.getValue();
         this.date = date;
     }
@@ -84,8 +84,8 @@ public class Contact {
         return status;
     }
 
-    public JobOfferStatus getStatusEnum() {
-        return JobOfferStatus.fromString(status);
+    public ContactStatus getStatusEnum() {
+        return ContactStatus.fromString(status);
     }
 
     public int getFilledBy() {
@@ -111,5 +111,28 @@ public class Contact {
         sb.append(", date=").append(date);
         sb.append('}');
         return sb.toString();
+    }
+
+    // Since the id is a composite key, we need to split it to get the user and job offer ids
+    public static long[] splitId(String contactId) {
+        String[] stringIds =  contactId.split("-");
+
+        if(stringIds.length != 2)
+            throw new IllegalArgumentException("Invalid contact id format. Should be '<userId>-<jobOfferId>'");
+
+        long[] ids = new long[2];
+
+        try {
+            ids[0] = Long.parseLong(stringIds[0]);
+            ids[1] = Long.parseLong(stringIds[1]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid contact id format. Should be '<userId>-<jobOfferId>'");
+        }
+
+        return ids;
+    }
+
+    public String getContactId() {
+        return String.format("%d-%d", user.getId(), jobOffer.getId());
     }
 }

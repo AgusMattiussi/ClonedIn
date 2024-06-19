@@ -24,10 +24,13 @@ public enum FilledBy {
         return asString;
     }
 
-    public static FilledBy fromString(String s) {
-        for (FilledBy filledBy : FilledBy.values()) {
-            if (filledBy.getAsString().equals(s)) {
-                return filledBy;
+    public static FilledBy fromString(String filledBy) {
+        if(filledBy != null && !filledBy.isEmpty()) {
+            String filledByLowerCase = filledBy.toLowerCase();
+            for (FilledBy filledByEnum : FilledBy.values()) {
+                if (filledByEnum.getAsString().equals(filledByLowerCase)) {
+                    return filledByEnum;
+                }
             }
         }
         throw new InvalidParameterException();

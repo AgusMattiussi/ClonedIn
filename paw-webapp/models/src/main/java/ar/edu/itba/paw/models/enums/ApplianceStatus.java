@@ -16,11 +16,12 @@ public enum ApplianceStatus {
         return status;
     }
 
-    public static ApplianceStatus fromString(String s) {
-        if(s != null && !s.isEmpty()) {
-            for (ApplianceStatus status : ApplianceStatus.values()) {
-                if (status.getStatus().equals(s)) {
-                    return status;
+    public static ApplianceStatus fromString(String status) {
+        if(status != null && !status.isEmpty()) {
+            String statusLowerCase = status.toLowerCase();
+            for (ApplianceStatus enumStatus : ApplianceStatus.values()) {
+                if (enumStatus.getStatus().equals(statusLowerCase)) {
+                    return enumStatus;
                 }
             }
         }

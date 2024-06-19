@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.auth;
+package ar.edu.itba.paw.webapp.security;
 
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -32,16 +32,19 @@ public class AuthUserDetailsService implements UserDetailsService {
     }
 
     // Username = email
+    // Always returns a ClonedInUserDetails object
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         // Puede ser usuario normal
         final Optional<User> optUser = us.findByEmail(email);
         if(optUser.isPresent()) {
-            return optUser.get();
+            return new NormalUserDetails(optUser.get());
         }
         
         // Puede ser empresa. Si no, no existe el usuario
-        return es.findByEmail(email)
+        Enterprise enterprise =  es.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("No user by the email '%s'", email)));
+
+        return new EnterpriseUserDetails(enterprise);
     }
 }

@@ -32,10 +32,13 @@ public enum ContactSorting {
         return asString;
     }
 
-    public static ContactSorting fromString(String s) {
-        for (ContactSorting sortBy : ContactSorting.values()) {
-            if (sortBy.getAsString().equals(s)) {
-                return sortBy;
+    public static ContactSorting fromString(String sorting) {
+        if(sorting != null && !sorting.isEmpty()) {
+            String sortingLowercase = sorting.toLowerCase();
+            for (ContactSorting sortBy : ContactSorting.values()) {
+                if (sortBy.getAsString().equals(sortingLowercase)) {
+                    return sortBy;
+                }
             }
         }
         throw new IllegalArgumentException();

@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
+//TODO: Deberia coincidir con el Custom Mime Type del usuario
 //@StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
     @NotExistingEmail
@@ -27,19 +28,19 @@ public class UserForm {
     private String name;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @Size(max=50)
-    private String position;
+    private String currentPosition;
 
     @Size(max=600)
-    private String aboutMe;
+    private String description;
 
     @NotEmpty
     private String category;
 
     @EducationLevelEnum
-    private String level;
+    private String educationLevel;
 
     public String getPassword() {
         return password;
@@ -73,28 +74,28 @@ public class UserForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getPosition() {
-        return position;
+    public String getCurrentPosition() {
+        return currentPosition;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setCurrentPosition(String currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
-    public String getAboutMe() {
-        return aboutMe;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {
@@ -105,17 +106,17 @@ public class UserForm {
         this.category = category;
     }
 
-    public String getLevel() {
-        return level;
+    public String getEducationLevel() {
+        return educationLevel;
     }
 
     public EducationLevel getLevelEnum() {
-        if(level == null)
+        if(educationLevel == null)
             return null;
-        return EducationLevel.fromString(level);
+        return EducationLevel.fromString(educationLevel);
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setEducationLevel(String educationLevel) {
+        this.educationLevel = educationLevel;
     }
 }

@@ -8,7 +8,6 @@ import java.net.URI;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
-// TODO: JobOffersInCategory, UsersWithCategory
 public class CategoryDTO {
 
     private String name;
@@ -73,7 +72,6 @@ public class CategoryDTO {
                     .queryParam("categoryName", category.getName())
                     .build();
 
-            //TODO: GET @ /enterprises
             this.enterprisesInCategory = uriInfo.getAbsolutePathBuilder()
                     .replacePath(ENTERPRISES_URL)
                     .queryParam("categoryName", category.getName())

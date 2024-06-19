@@ -17,7 +17,7 @@ public class UserDTO {
     private String currentPosition;
     private String description;
     private String educationLevel;
-    private int visibility;
+    private Boolean visible;
     private UserDTOLinks links;
     private Integer yearsOfExperience;
 
@@ -30,7 +30,7 @@ public class UserDTO {
         dto.currentPosition = user.getCurrentPosition();
         dto.description = user.getDescription();
         dto.educationLevel = user.getEducation();
-        dto.visibility = user.getVisibility();
+        dto.visible = user.isVisible();
         dto.yearsOfExperience = user.getYearsOfExperience();
 
         dto.links = new UserDTOLinks(uriInfo, user);
@@ -85,12 +85,12 @@ public class UserDTO {
         this.educationLevel = educationLevel;
     }
 
-    public int getVisibility() {
-        return visibility;
+    public Boolean getVisible() {
+        return visible;
     }
 
-    public void setVisibility(int visibility) {
-        this.visibility = visibility;
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
     public String getEmail() {

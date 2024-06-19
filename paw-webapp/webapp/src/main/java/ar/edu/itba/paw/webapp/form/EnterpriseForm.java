@@ -9,9 +9,8 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.*;
-import java.util.Calendar;
-import java.util.Date;
 
+//TODO: Renombrar forms para que matcheen con el MIME type que representan (EnterpriseV1Form, etc)
 @StringMatches(string1 = "password", string2 = "repeatPassword")
 public class EnterpriseForm {
 
@@ -25,6 +24,7 @@ public class EnterpriseForm {
     @Size(min = 6, max = 20)
     private String password;
 
+    //TODO: Creo que no tiene tanto sentido este campo
     @NotEmpty
     @Size(min = 6, max = 20)
     private String repeatPassword;
@@ -34,7 +34,7 @@ public class EnterpriseForm {
     private String name;
 
     @Size(max=50)
-    private String city;
+    private String location;
 
     @NotNull
     @ValidEmployeeRange
@@ -42,13 +42,13 @@ public class EnterpriseForm {
 
     @Min(1000)
     @NotAfterCurrentYear
-    private Integer year;
+    private Integer yearFounded;
 
     @Size(max=200)
-    private String link;
+    private String website;
 
     @Size(max=600)
-    private String aboutUs;
+    private String description;
 
     @NotEmpty
     private String category;
@@ -85,12 +85,12 @@ public class EnterpriseForm {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getWorkers() {
@@ -101,28 +101,28 @@ public class EnterpriseForm {
         this.workers = workers;
     }
 
-    public Integer getYear() {
-        return year;
+    public Integer getYearFounded() {
+        return yearFounded;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setYearFounded(Integer yearFounded) {
+        this.yearFounded = yearFounded;
     }
 
-    public String getLink() {
-        return link;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public String getAboutUs() {
-        return aboutUs;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAboutUs(String aboutUs) {
-        this.aboutUs = aboutUs;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {

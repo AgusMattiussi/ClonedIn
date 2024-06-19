@@ -7,7 +7,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
-import ar.edu.itba.paw.models.enums.JobOfferStatus;
+import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.exceptions.*;
@@ -42,7 +42,12 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public Optional<Contact> findByPrimaryKey(long userID, long jobOfferID) {
+    public Optional<Contact> getContact(long userID, long jobOfferID) {
+        if(userID <= 0 || jobOfferID <= 0) {
+            LOGGER.error("Invalid user id {} or jobOffer id {} - getContact method", userID, jobOfferID);
+            throw new IllegalArgumentException("Invalid user id or jobOffer id");
+        }
+
         return contactDao.findByPrimaryKey(userID, jobOfferID);
     }
 
@@ -156,7 +161,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, JobOfferStatus status, ContactSorting sortBy,
+    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, ContactStatus status, ContactSorting sortBy,
                                                          int page, int pageSize) {
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - getContactsForUser method", userId);
@@ -166,7 +171,7 @@ public class ContactServiceImpl implements ContactService {
         List<Contact> contacts = contactDao.getContactsForUser(user, filledBy, status, sortBy, page-1, pageSize);
 
         long applicationsCount = this.getContactsCountForUser(user, filledBy, status);
-        long maxPages = applicationsCount/pageSize + 1;
+        long maxPages = applicationsCount / pageSize + applicationsCount % pageSize;
 
         return new PaginatedResource<>(contacts, page, maxPages);
     }
@@ -188,14 +193,14 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public PaginatedResource<Contact> getContactsForEnterprise(long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
-                                                               JobOfferStatus status, ContactSorting sortBy, int page, int pageSize) {
+    public PaginatedResource<Contact> getContacts(Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
+                                                  ContactStatus status, ContactSorting sortBy, int page, int pageSize) {
         String statusValue = status != null ? status.getStatus() : null;
 
-        Enterprise enterprise = enterpriseService.findById(enterpriseId).orElseThrow(() -> {
+        Enterprise enterprise = enterpriseId != null ? enterpriseService.findById(enterpriseId).orElseThrow(() -> {
                     LOGGER.error("Enterprise with id {} not found - getContactsForEnterprise method", enterpriseId);
                     return new EnterpriseNotFoundException(enterpriseId);
-                });
+                }) : null;
         User user = userId != null ? userService.findById(userId)
                 .orElseThrow(() -> {
                     LOGGER.error("User with id {} not found - getContactsForEnterprise method", userId);
@@ -207,11 +212,11 @@ public class ContactServiceImpl implements ContactService {
                     return new JobOfferNotFoundException(jobOfferId);
                 }) : null;
 
-        List<Contact> contacts = contactDao.getContactsForEnterprise(enterprise, jobOffer, user, filledBy, statusValue,
+        List<Contact> contacts = contactDao.getContacts(enterprise, jobOffer, user, filledBy, statusValue,
                 sortBy, page-1, pageSize);
 
-        long contactCount = this.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, status);
-        long maxPages = contactCount / pageSize + 1;
+        long contactCount = this.getContactsCount(enterprise, jobOffer, user, filledBy, status);
+        long maxPages = contactCount / pageSize + contactCount % pageSize;
 
         return new PaginatedResource<>(contacts, page, maxPages);
     }
@@ -318,7 +323,7 @@ public class ContactServiceImpl implements ContactService {
 
         if(!contactDao.cancelJobOffer(user, jobOffer)) {
             LOGGER.error("JobOffer with id {} could not be cancelled by user with id {} - cancelJobOffer", jobOffer.getId(), user.getId());
-            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOfferId, userId);
+            throw new ContactStatusException(ContactStatus.CANCELLED, jobOfferId, userId);
         }
         if(updatedBy == Role.ENTERPRISE){
             emailService.sendCancelJobOfferEmail(user, jobOffer.getEnterprise().getName(), jobOffer.getPosition(), LocaleContextHolder.getLocale());
@@ -336,7 +341,7 @@ public class ContactServiceImpl implements ContactService {
     public boolean cancelJobOfferForEveryone(JobOffer jobOffer) {
         if(!contactDao.cancelJobOfferForEveryone(jobOffer)){
             LOGGER.error("JobOffer with id {} could not be cancelled for everyone - cancelJobOfferForEveryone", jobOffer.getId());
-            throw new JobOfferStatusException(JobOfferStatus.CANCELLED, jobOffer.getId());
+            throw new ContactStatusException(ContactStatus.CANCELLED, jobOffer.getId());
         }
         LOGGER.info("JobOffer with id {} cancelled for everyone - cancelJobOfferForEveryone", jobOffer.getId());
         return true;
@@ -346,7 +351,7 @@ public class ContactServiceImpl implements ContactService {
     public boolean closeJobOfferForUser(User user, JobOffer jobOffer) {
         if(!contactDao.closeJobOffer(user, jobOffer)){
             LOGGER.error("JobOffer with id {} could not be closed by user with id {} - closeJobOffer", jobOffer.getId(), user.getId());
-            throw new JobOfferStatusException(JobOfferStatus.CLOSED, jobOffer.getId(), user.getId());
+            throw new ContactStatusException(ContactStatus.CLOSED, jobOffer.getId(), user.getId());
         }
         LOGGER.debug("JobOffer with id {} closed by user with id {} - closeJobOffer", jobOffer.getId(), user.getId());
         return true;
@@ -356,30 +361,30 @@ public class ContactServiceImpl implements ContactService {
     public boolean closeJobOfferForEveryone(JobOffer jobOffer) {
         if(!contactDao.closeJobOfferForEveryone(jobOffer)){
             LOGGER.error("JobOffer with id {} could not be closed for everyone - closeJobOfferForEveryone", jobOffer.getId());
-            throw new JobOfferStatusException(JobOfferStatus.CLOSED, jobOffer.getId());
+            throw new ContactStatusException(ContactStatus.CLOSED, jobOffer.getId());
         }
         LOGGER.debug("JobOffer with id {} closed for everyone - closeJobOfferForEveryone", jobOffer.getId());
         return true;
     }
 
     @Override
-    public long getContactsCountForEnterprise(long enterpriseID) {
-        return contactDao.getContactsCountForEnterprise(enterpriseID);
+    public long getContactsCount(long enterpriseID) {
+        return contactDao.getContactsCount(enterpriseID);
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise) {
-        return contactDao.getContactsCountForEnterprise(enterprise);
+    public long getContactsCount(Enterprise enterprise) {
+        return contactDao.getContactsCount(enterprise);
     }
 
     @Override
-    public long getContactsCountForEnterprise(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, JobOfferStatus status) {
+    public long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, ContactStatus status) {
         String statusValue = status != null ? status.getStatus() : null;
-        return contactDao.getContactsCountForEnterprise(enterprise, jobOffer, user, filledBy, statusValue);
+        return contactDao.getContactsCount(enterprise, jobOffer, user, filledBy, statusValue);
     }
 
     @Override
-    public long getContactsCountForUser(User user, FilledBy filledBy, JobOfferStatus status) {
+    public long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status) {
         return contactDao.getContactsCountForUser(user, filledBy, status);
     }
 
@@ -390,7 +395,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void updateEnterpriseContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy){
+    public void updateEnterpriseContactStatus(long userId, long jobOfferId, ContactStatus status, Role updatedBy){
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - updateEnterpriseContactStatus", userId);
             return new UserNotFoundException(userId);
@@ -401,18 +406,18 @@ public class ContactServiceImpl implements ContactService {
             return new JobOfferNotFoundException(jobOfferId);
         });
 
-        Contact contact = this.findByPrimaryKey(user.getId(), jobOffer.getId()).orElseThrow(() -> {
+        Contact contact = this.getContact(user.getId(), jobOffer.getId()).orElseThrow(() -> {
             LOGGER.error("Contact not found for user with id {} and jobOffer with id {} - updateEnterpriseContactStatus", user.getId(), jobOffer.getId());
             return new ContactNotFoundException(user.getId(), jobOffer.getId());
         });
 
-       if (status == JobOfferStatus.PENDING) {
+       if (status == ContactStatus.PENDING) {
            LOGGER.error("Cannot update contact (JobOffer id: {}, User id:{}, Enterprise id: {}) status to PENDING, since it is the default status - updateEnterpriseContactStatus",
                    jobOfferId, userId, contact.getEnterprise().getId());
            throw new IllegalArgumentException("Cannot update contact status to PENDING");
        }
 
-       if(status == JobOfferStatus.CLOSED){
+       if(status == ContactStatus.CLOSED){
            LOGGER.error("Cannot update single contact (JobOffer id: {}, User id:{}, Enterprise id: {}) status to CLOSED. Job offer must be closed for everyone for this status change.",
                    jobOfferId, userId, contact.getEnterprise().getId());
            throw new IllegalArgumentException("Cannot update single contact status to CLOSED. Job offer must be closed for everyone for this status change.");
@@ -461,7 +466,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void updateUserContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
+    public void updateUserContactStatus(long userId, long jobOfferId, ContactStatus status, Role updatedBy) {
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} not found - updateUserContactStatus", userId);
             return new UserNotFoundException(userId);
@@ -471,17 +476,17 @@ public class ContactServiceImpl implements ContactService {
             return new JobOfferNotFoundException(jobOfferId);
         });
 
-        Contact contact = this.findByPrimaryKey(user.getId(), jobOffer.getId()).orElseThrow(() -> {
+        Contact contact = this.getContact(user.getId(), jobOffer.getId()).orElseThrow(() -> {
             LOGGER.error("Contact not found for user with id {}, jobOffer with id {} and enterprise with id {} - updateUserContactStatus",
                     userId, jobOfferId, jobOffer.getEnterprise().getId());
             return new ContactNotFoundException(userId, jobOfferId);
         });
 
-        JobOfferStatus currentStatus = contact.getStatusEnum();
-        if(currentStatus != JobOfferStatus.PENDING) {
+        ContactStatus currentStatus = contact.getStatusEnum();
+        if(currentStatus != ContactStatus.PENDING) {
             LOGGER.error("Cannot update contact (JobOffer id: {}, User id:{}, Enterprise id: {}) status, since it has already been updated. Current status: {} - updateUserContactStatus",
                     jobOfferId, userId, jobOffer.getEnterprise().getId(), currentStatus);
-            throw new JobOfferStatusException(status, jobOfferId, userId);
+            throw new ContactStatusException(status, jobOfferId, userId);
         }
 
         boolean successful = false;
@@ -527,18 +532,48 @@ public class ContactServiceImpl implements ContactService {
         if(!successful) {
             LOGGER.error("Could not update contact (JobOffer id: {}, User id:{}, Enterprise id: {}) status to '{}' - updateUserContactStatus",
                     jobOfferId, userId, jobOffer.getEnterprise().getId(), status.getStatus());
-            throw new JobOfferStatusException(status, jobOfferId, userId);
+            throw new ContactStatusException(status, jobOfferId, userId);
         }
 
     }
 
     @Override
     @Transactional
-    public void updateContactStatus(long userId, long jobOfferId, JobOfferStatus status, Role updatedBy) {
-        if (updatedBy == Role.ENTERPRISE)
-            updateEnterpriseContactStatus(userId, jobOfferId, status, updatedBy);
+    public void updateContactStatus(Role requesterRole, long userId, long jobOfferId, ContactStatus status) {
+        if (requesterRole == Role.ENTERPRISE)
+            updateEnterpriseContactStatus(userId, jobOfferId, status, requesterRole);
         else
-            updateUserContactStatus(userId, jobOfferId, status, updatedBy);
+            updateUserContactStatus(userId, jobOfferId, status, requesterRole);
+    }
+
+    @Override
+    @Transactional
+    public void updateContactStatus(Role requesterRole, String contactId, ContactStatus status) {
+        long[] ids = Contact.splitId(contactId);
+        updateContactStatus(requesterRole, ids[0], ids[1], status);
+    }
+
+    @Override
+    @Transactional
+    public Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message) {
+        if(requesterRole == null)
+            throw new IllegalArgumentException("Requester role cannot be null");
+        if(requesterId == null)
+            throw new IllegalArgumentException("Requester id cannot be null");
+
+        if(requesterRole == Role.USER){
+            if(userId != null && !userId.equals(requesterId))
+                throw new IllegalArgumentException("User id must be null or equal to requester id");
+            if(jobOfferId == null)
+                throw new IllegalArgumentException("Job offer id cannot be null");
+            return addContact(requesterId, jobOfferId, FilledBy.USER); //TODO: Add message
+        } else {
+            if(userId == null)
+                throw new IllegalArgumentException("User id cannot be null");
+            if(jobOfferId == null)
+                throw new IllegalArgumentException("Job offer id cannot be null");
+            return addContact(requesterId, userId, jobOfferId, FilledBy.ENTERPRISE, message);
+        }
     }
 
 
