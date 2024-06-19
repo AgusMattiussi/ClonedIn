@@ -56,9 +56,10 @@ public class JobOfferController {
     @Context
     private UriInfo uriInfo;
 
+    //TODO: Una empresa deberia poder pedir todas las ofertas de trabajo que tiene en la plataforma (Cambiar PreAuthorize)
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize(IS_ENTERPRISE)
+    @PreAuthorize("hasAuthority('USER')")
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_PER_PAGE)
                                         @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,
