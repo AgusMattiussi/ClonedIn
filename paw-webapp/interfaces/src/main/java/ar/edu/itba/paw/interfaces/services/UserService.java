@@ -8,15 +8,14 @@ import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+// TODO: delete unused functions (and implementations)
 public interface UserService {
+
     User create(String email, String password, String name, String location, String categoryName, String currentPosition,
                 String description, EducationLevel education);
 

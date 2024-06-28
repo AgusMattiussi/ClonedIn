@@ -2,8 +2,6 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.enums.Month;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,5 +17,4 @@ public interface EducationDao {
     long getEducationCountForUser(User user);
 
     void deleteEducation(long educationId);
-
 }

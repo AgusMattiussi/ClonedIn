@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.ContactSorting;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -77,5 +76,4 @@ public interface ContactDao {
     long getContactsCountForUser(User user);
 
     long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status);
-
 }

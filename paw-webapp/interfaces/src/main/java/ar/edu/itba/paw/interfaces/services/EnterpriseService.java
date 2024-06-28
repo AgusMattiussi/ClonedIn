@@ -6,12 +6,11 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+// TODO: delete unused functions (and implementations)
 public interface EnterpriseService {
 
     Enterprise create(String email, String name, String password, String location, String categoryName, EmployeeRanges workers,

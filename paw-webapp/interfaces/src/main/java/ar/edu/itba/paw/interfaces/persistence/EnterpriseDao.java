@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.enums.EmployeeRanges;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +35,7 @@ public interface EnterpriseDao {
 
     void updateCategory(long enterpriseID, Category newCategory);
 
+    //TODO: warning return never used
     long updateEnterpriseProfileImage(Enterprise enterprise, Image image);
 
     List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,

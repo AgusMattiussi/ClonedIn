@@ -2,11 +2,12 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-
 import java.util.List;
 import java.util.Optional;
 
+// TODO: delete unused functions (and implementations)
 public interface SkillService {
+
     Skill create (String description);
 
     Optional<Skill> findById(long id);
@@ -20,5 +21,4 @@ public interface SkillService {
     PaginatedResource<Skill> getAllSkills(int page, int pageSize);
 
     long getSkillCount();
-
 }

@@ -4,9 +4,9 @@ import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserSkill;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-
 import java.util.List;
 
+// TODO: delete unused functions (and implementations)
 public interface UserSkillService {
 
     UserSkill addSkillToUser(String skillDescription, long userId);
@@ -22,5 +22,4 @@ public interface UserSkillService {
     void deleteSkillFromUser(long userID, long skillID);
 
     void deleteSkillFromUser(User user, Skill skill);
-
 }

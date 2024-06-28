@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.services;
 
-
 import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
@@ -9,11 +8,11 @@ import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferSorting;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: delete unused functions (and implementations)
 public interface JobOfferService {
 
     JobOffer create(Enterprise enterprise, Category category, String position, String description, BigDecimal salary, JobOfferModality modality);
@@ -60,5 +59,4 @@ public interface JobOfferService {
     void cancelJobOffer(JobOffer jobOffer);
 
     void updateJobOfferAvailability(long jobOfferId, JobOfferAvailability availability);
-
 }

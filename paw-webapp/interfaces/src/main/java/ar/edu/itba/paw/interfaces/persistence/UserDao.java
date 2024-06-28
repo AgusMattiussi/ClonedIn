@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +60,8 @@ public interface UserDao {
     void updateEducationLevel(long userID, EducationLevel newEducationLevel);
 
     void updateVisibility(long userID, Visibility visibility);
-    
+
+    //TODO: warning return never used
     long updateUserProfileImage(User user, Image image);
 
     long getVisibleUsersCount();
