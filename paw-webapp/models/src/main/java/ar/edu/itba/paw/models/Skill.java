@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -19,12 +18,12 @@ public class Skill {
     @Column(name = "descripcion")
     private String description;
 
+    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "skill", fetch = FetchType.LAZY)
     private Set<JobOfferSkill> jobOfferSkillSet;
 
     @OneToMany(mappedBy = "skill", fetch = FetchType.LAZY)
     private Set<UserSkill> userSkillSet;
-
 
     public Skill(Long id, String description) {
         this.id = id;

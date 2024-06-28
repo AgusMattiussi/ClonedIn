@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.enums.Month;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -101,18 +99,16 @@ public class Education {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Education{");
-        sb.append("id=").append(id);
-        sb.append(", user=").append(user);
-        sb.append(", monthFrom=").append(monthFrom);
-        sb.append(", yearFrom=").append(yearFrom);
-        sb.append(", monthTo=").append(monthTo);
-        sb.append(", yearTo=").append(yearTo);
-        sb.append(", title='").append(title).append('\'');
-        sb.append(", institutionName='").append(institutionName).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Education{" + "id=" + id +
+                ", user=" + user +
+                ", monthFrom=" + monthFrom +
+                ", yearFrom=" + yearFrom +
+                ", monthTo=" + monthTo +
+                ", yearTo=" + yearTo +
+                ", title='" + title + '\'' +
+                ", institutionName='" + institutionName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     @Override

@@ -17,10 +17,6 @@ public enum JobOfferModality {
         return modality;
     }
 
-    public String getLowercased() {
-        return lowercased;
-    }
-
     public static JobOfferModality fromString(String modality) {
         if(modality != null && !modality.isEmpty()) {
             String modalityLowerCase = modality.toLowerCase();

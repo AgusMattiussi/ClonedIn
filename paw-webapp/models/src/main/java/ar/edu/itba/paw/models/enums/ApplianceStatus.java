@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models.enums;
 
+// TODO: no se usa??
 public enum ApplianceStatus {
     PENDING("pendiente"),
     CANCELLED("cancelada"),

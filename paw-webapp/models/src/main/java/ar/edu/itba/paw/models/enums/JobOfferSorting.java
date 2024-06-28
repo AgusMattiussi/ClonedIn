@@ -5,9 +5,7 @@ public enum JobOfferSorting {
     RECENT("recientes", " ORDER BY jo.id DESC"),
     OLDEST("antiguas", " ORDER BY jo.id ASC"),
     SALARY_ASC("salarioasc", " ORDER BY jo.salary ASC"),
-    SALARY_DESC("salariodesc", " ORDER BY jo.salary DESC"),
-
-    ;
+    SALARY_DESC("salariodesc", " ORDER BY jo.salary DESC");
 
     private final String stringValue;
     private final String asQuery;
@@ -15,10 +13,6 @@ public enum JobOfferSorting {
     JobOfferSorting(String stringValue, String asQuery) {
         this.stringValue = stringValue;
         this.asQuery = asQuery;
-    }
-
-    public String getStringValue() {
-        return stringValue;
     }
 
     public String getAsQuery() {

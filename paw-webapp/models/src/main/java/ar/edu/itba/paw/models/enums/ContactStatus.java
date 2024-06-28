@@ -31,9 +31,6 @@ public enum ContactStatus {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ContactStatus{");
-        sb.append("status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "ContactStatus{" + "status='" + status + '\'' + '}';
     }
 }

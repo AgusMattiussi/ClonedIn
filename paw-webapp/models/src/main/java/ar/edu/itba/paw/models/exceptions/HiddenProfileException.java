@@ -21,6 +21,4 @@ public class HiddenProfileException extends ClonedInException{
     public int getHttpStatus() {
         return STATUS;
     }
-
-
 }

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.models;
 
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -114,18 +113,16 @@ public class Experience {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Experience{");
-        sb.append("id=").append(id);
-        sb.append(", user=").append(user);
-        sb.append(", monthFrom=").append(monthFrom);
-        sb.append(", yearFrom=").append(yearFrom);
-        sb.append(", monthTo=").append(monthTo);
-        sb.append(", yearTo=").append(yearTo);
-        sb.append(", position='").append(position).append('\'');
-        sb.append(", enterpriseName='").append(enterpriseName).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Experience{" + "id=" + id +
+                ", user=" + user +
+                ", monthFrom=" + monthFrom +
+                ", yearFrom=" + yearFrom +
+                ", monthTo=" + monthTo +
+                ", yearTo=" + yearTo +
+                ", position='" + position + '\'' +
+                ", enterpriseName='" + enterpriseName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     @Override

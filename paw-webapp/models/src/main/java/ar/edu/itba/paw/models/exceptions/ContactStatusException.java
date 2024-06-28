@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.exceptions;
 
 import ar.edu.itba.paw.models.enums.ContactStatus;
-
 import javax.ws.rs.core.Response;
 
 public class ContactStatusException extends ClonedInException {
@@ -23,7 +22,6 @@ public class ContactStatusException extends ClonedInException {
         super(String.format(DETAILS_NO_USER, contactStatus, jobOfferId));
         this.contactStatus = contactStatus;
     }
-
 
     @Override
     public String getSimpleMessage() {

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.ids.UserSkillId;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -39,11 +38,9 @@ public class UserSkill {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UserSkill{");
-        sb.append("user=").append(user);
-        sb.append(", skill=").append(skill);
-        sb.append('}');
-        return sb.toString();
+        return "UserSkill{" + "user=" + user +
+                ", skill=" + skill +
+                '}';
     }
 
     @Override

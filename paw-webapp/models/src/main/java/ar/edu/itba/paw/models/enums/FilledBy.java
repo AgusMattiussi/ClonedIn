@@ -10,7 +10,6 @@ public enum FilledBy {
     private final int value;
     private final String asString;
 
-
     FilledBy(int value, String asString) {
         this.value = value;
         this.asString = asString;
@@ -44,5 +43,4 @@ public enum FilledBy {
         }
         throw new InvalidParameterException();
     }
-
 }

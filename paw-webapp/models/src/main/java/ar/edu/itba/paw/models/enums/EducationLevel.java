@@ -8,7 +8,6 @@ public enum EducationLevel {
     UNIVERSITY("Graduado"),
     POSTGRADUATE("Posgrado");
 
-
     private final String stringValue;
     private final String lowercased; // Used for case-insensitive comparison
 
@@ -19,10 +18,6 @@ public enum EducationLevel {
 
     public String getStringValue() {
         return stringValue;
-    }
-
-    public String getLowercased() {
-        return lowercased;
     }
 
     public static EducationLevel fromString(String level) {

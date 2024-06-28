@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.exceptions;
 
 import ar.edu.itba.paw.models.Contact;
-
 import javax.ws.rs.core.Response;
 
 public class ContactNotFoundException extends ClonedInException{

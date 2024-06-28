@@ -50,6 +50,7 @@ public class User {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Experience> experiences;
 
@@ -97,7 +98,6 @@ public class User {
     /* package */ User() {
     // Just for Hibernate, we love you!
     }
-
 
     public String getEmail() {
         return email;
@@ -244,19 +244,17 @@ public class User {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", location='").append(location).append('\'');
-        sb.append(", category=").append(category);
-        sb.append(", currentPosition='").append(currentPosition).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", education='").append(education).append('\'');
-        sb.append(", visibility=").append(visibility);
-        sb.append('}');
-        return sb.toString();
+        return "User{" + "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", category=" + category +
+                ", currentPosition='" + currentPosition + '\'' +
+                ", description='" + description + '\'' +
+                ", education='" + education + '\'' +
+                ", visibility=" + visibility +
+                '}';
     }
 
     @Override

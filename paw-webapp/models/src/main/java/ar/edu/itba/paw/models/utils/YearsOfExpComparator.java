@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.models.utils;
 
 import ar.edu.itba.paw.models.User;
-
 import java.util.Comparator;
 
+// TODO: no se usa??
 public class YearsOfExpComparator implements Comparator<User> {
 
     @Override

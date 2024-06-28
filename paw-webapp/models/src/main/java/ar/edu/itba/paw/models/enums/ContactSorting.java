@@ -6,8 +6,7 @@ public enum ContactSorting {
     USERNAME(2, ContactSorting.USERNAME_VALUE),
     STATUS(3, ContactSorting.STATUS_VALUE),
     DATE_ASC(4, ContactSorting.DATE_ASC_VALUE),
-    DATE_DESC(5, ContactSorting.DATE_DESC_VALUE)
-    ;
+    DATE_DESC(5, ContactSorting.DATE_DESC_VALUE);
 
     public static final String ANY_VALUE = "any";
     public static final String JOB_OFFER_POSITION_VALUE = "jobOfferPosition";

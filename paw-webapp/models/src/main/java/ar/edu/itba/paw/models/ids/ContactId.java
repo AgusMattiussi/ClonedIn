@@ -12,6 +12,7 @@ public class ContactId implements Serializable {
         this.jobOffer = jobOffer;
     }
 
+    // TODO: delete unused functions (and implementations)
     public ContactId() {
     }
 

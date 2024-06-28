@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.exceptions;
 
-import javax.ws.rs.core.Response;
-
 public interface ClonedInMappeableException {
 
     String getSimpleMessage();
@@ -9,5 +7,4 @@ public interface ClonedInMappeableException {
     String getDetails();
 
     int getHttpStatus();
-
 }

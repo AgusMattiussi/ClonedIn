@@ -1,4 +1,5 @@
 package ar.edu.itba.paw.models.enums;
+
 public enum UserSorting {
 
     RECENT("recientes", " ORDER BY u.id DESC"),
@@ -23,8 +24,7 @@ public enum UserSorting {
                                                  " WHEN u.education = 'No especificado' then 0" +
                                                  " WHEN u.education = 'No-especificado' then 0" +
                                                  " END DESC "),
-    DEFAULT("predeterminado", " ORDER BY u.id DESC")
-    ;
+    DEFAULT("predeterminado", " ORDER BY u.id DESC");
 
     private final String stringValue;
     private final String asQuery;
@@ -32,10 +32,6 @@ public enum UserSorting {
     UserSorting(String stringValue, String asQuery) {
         this.stringValue = stringValue;
         this.asQuery = asQuery;
-    }
-
-    public String getStringValue() {
-        return stringValue;
     }
 
     public String getAsQuery() {
@@ -54,4 +50,3 @@ public enum UserSorting {
         throw new IllegalArgumentException(String.format("No constant sorting matching text '%s' found", sorting));
     }
 }
-

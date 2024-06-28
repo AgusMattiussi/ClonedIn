@@ -17,10 +17,6 @@ public enum JobOfferAvailability {
         return status;
     }
 
-    public String getLowercased() {
-        return lowercased;
-    }
-
     public static JobOfferAvailability fromString(String availability) {
         if(availability != null && !availability.isEmpty()) {
             String availabilityLowerCase = availability.toLowerCase();

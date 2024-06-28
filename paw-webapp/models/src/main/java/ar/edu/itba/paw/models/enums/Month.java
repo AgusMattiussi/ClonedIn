@@ -2,22 +2,21 @@ package ar.edu.itba.paw.models.enums;
 
 public enum Month {
     JANUARY("Enero", 1),
-        FEBRUARY("Febrero", 2),
-        MARCH("Marzo", 3),
-        APRIL("Abril", 4),
-        MAY("Mayo", 5),
-        JUNE("Junio", 6),
-        JULY("Julio", 7),
-        AUGUST("Agosto", 8),
-        SEPTEMBER("Septiembre", 9),
-        OCTOBER("Octubre", 10),
-        NOVEMBER("Noviembre", 11),
-        DECEMBER("Diciembre", 12);
-
+    FEBRUARY("Febrero", 2),
+    MARCH("Marzo", 3),
+    APRIL("Abril", 4),
+    MAY("Mayo", 5),
+    JUNE("Junio", 6),
+    JULY("Julio", 7),
+    AUGUST("Agosto", 8),
+    SEPTEMBER("Septiembre", 9),
+    OCTOBER("Octubre", 10),
+    NOVEMBER("Noviembre", 11),
+    DECEMBER("Diciembre", 12);
 
     private final int number;
     private final String name;
-    private final String nameLowerCase; // for case insensitive comparison
+    private final String nameLowerCase; // for case-insensitive comparison
 
     Month(String name,int number) {
         this.number = number;
@@ -31,10 +30,6 @@ public enum Month {
 
     public String getName() {
         return name;
-    }
-
-    public String getNameLowerCase() {
-        return nameLowerCase;
     }
 
     public static Month fromNumber(int number) {

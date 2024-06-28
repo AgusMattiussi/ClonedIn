@@ -48,12 +48,12 @@ public class Enterprise {
     @JoinColumn(name = "idImagen")
     private Image image;
 
+    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<JobOffer> jobOffersSet;
-
 
     public Enterprise(Long id, String name, String email, String password, String location, Category category, String workers, Integer year, String link, String description, Image image) {
         this.id = id;
@@ -174,18 +174,16 @@ public class Enterprise {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Enterprise{");
-        sb.append("id=").append(id);
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", location='").append(location).append('\'');
-        sb.append(", category=").append(category);
-        sb.append(", workers='").append(workers).append('\'');
-        sb.append(", year=").append(year);
-        sb.append(", link='").append(link).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Enterprise{" + "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", category=" + category +
+                ", workers='" + workers + '\'' +
+                ", year=" + year +
+                ", link='" + link + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

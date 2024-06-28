@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.exceptions.NotResizableException;
-
 import javax.imageio.ImageIO;
 import javax.persistence.*;
 import javax.ws.rs.core.EntityTag;
@@ -90,11 +89,6 @@ public class Image {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Image{");
-        sb.append("id=").append(id);
-        sb.append(", bytes=").append(Arrays.toString(bytes));
-        sb.append('}');
-        return sb.toString();
+        return "Image{" + "id=" + id + ", bytes=" + Arrays.toString(bytes) + '}';
     }
-
 }

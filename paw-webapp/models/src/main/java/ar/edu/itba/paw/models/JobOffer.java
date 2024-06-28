@@ -2,7 +2,6 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -41,6 +40,7 @@ public class JobOffer {
     @Column(name = "disponible")
     private String available;
 
+    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "jobOffer", fetch = FetchType.LAZY)
     private Set<JobOfferSkill> jobOfferSkillSet;
 
@@ -71,7 +71,6 @@ public class JobOffer {
     /* package */ JobOffer() {
         // Just for Hibernate, we love you!
     }
-
 
     public Long getId() {
         return id;
@@ -123,17 +122,15 @@ public class JobOffer {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("JobOffer{");
-        sb.append("id=").append(id);
-        sb.append(", enterprise=").append(enterprise);
-        sb.append(", category=").append(category);
-        sb.append(", position='").append(position).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", salary=").append(salary);
-        sb.append(", modality='").append(modality).append('\'');
-        sb.append(", available='").append(available).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "JobOffer{" + "id=" + id +
+                ", enterprise=" + enterprise +
+                ", category=" + category +
+                ", position='" + position + '\'' +
+                ", description='" + description + '\'' +
+                ", salary=" + salary +
+                ", modality='" + modality + '\'' +
+                ", available='" + available + '\'' +
+                '}';
     }
 
     @Override
