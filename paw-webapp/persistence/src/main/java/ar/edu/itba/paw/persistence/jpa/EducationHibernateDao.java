@@ -3,20 +3,17 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.enums.Month;
 import org.springframework.cache.annotation.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "educations-cache")

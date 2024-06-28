@@ -8,8 +8,6 @@ import ar.edu.itba.paw.models.enums.EmployeeRanges;
 import org.springframework.cache.annotation.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -17,6 +15,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "enterprises-cache")

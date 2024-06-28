@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.Instant;

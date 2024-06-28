@@ -12,11 +12,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = {"users-cache"})
@@ -256,9 +256,8 @@ public class UserHibernateDao implements UserDao {
         filterQuerySetParameters(query, category, educationLevel, term, location, skillDescription, minExpYears, maxExpYears);
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
-        List<User> users = query.getResultList();
 
-        return users;
+        return query.getResultList();
     }
 
     @Override

@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.Category;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
-import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.JobOfferAvailability;
 import ar.edu.itba.paw.models.enums.JobOfferModality;
 import ar.edu.itba.paw.models.enums.JobOfferSorting;
@@ -21,13 +20,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static ar.edu.itba.paw.models.enums.JobOfferAvailability.*;
 
 @Primary
 @Service

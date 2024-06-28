@@ -15,8 +15,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -25,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "jobOffers-cache")
@@ -259,8 +258,6 @@ public class JobOfferHibernateDao implements JobOfferDao {
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
     }
-
-
 
     @Override
     public long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, Long enterpriseId,
