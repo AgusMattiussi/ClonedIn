@@ -8,8 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-    // TODO: Constantes de roles
-
     public static Role getPrincipalRole() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth == null)
