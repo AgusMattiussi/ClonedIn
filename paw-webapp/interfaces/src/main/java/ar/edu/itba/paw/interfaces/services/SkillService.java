@@ -20,5 +20,7 @@ public interface SkillService {
 
     PaginatedResource<Skill> getAllSkills(int page, int pageSize);
 
+    PaginatedResource<Skill> getAllSkills(Long userId, Long jobOfferId, int page, int pageSize);
+
     long getSkillCount();
 }

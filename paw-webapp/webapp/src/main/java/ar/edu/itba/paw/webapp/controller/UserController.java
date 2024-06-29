@@ -82,7 +82,7 @@ public class UserController {
         this.userSkillService = userSkillService;
     }
 
-
+    // TODO: Cambiar skillDescription por skillId
     @GET
     @Produces(ClonedInMediaType.USER_LIST_V1)
     @PreAuthorize(ENTERPRISE)

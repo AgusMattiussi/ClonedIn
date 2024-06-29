@@ -1,14 +1,19 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
+import ar.edu.itba.paw.interfaces.services.JobOfferService;
 import ar.edu.itba.paw.interfaces.services.JobOfferSkillService;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.Skill;
+import ar.edu.itba.paw.models.exceptions.JobOfferNotFoundException;
+import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Primary
@@ -16,6 +21,9 @@ import java.util.List;
 public class JobOfferSkillServiceImpl implements JobOfferSkillService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferServiceImpl.class);
+
+    @Autowired
+    private JobOfferService jobOfferService;
 
     private final JobOfferSkillDao jobOfferSkillDao;
 
@@ -45,5 +53,25 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
     @Override
     public List<Skill> getSkillsForJobOffer(JobOffer jobOffer) {
         return jobOfferSkillDao.getSkillsForJobOffer(jobOffer);
+    }
+
+    @Override
+    @Transactional
+    public PaginatedResource<Skill> getSkillsForJobOffer(long jobOfferId, int page, int pageSize) {
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
+            LOGGER.error("JobOffer with id {} was not found - getSkillsForJobOffer", jobOfferId);
+            return new JobOfferNotFoundException(jobOfferId);
+        });
+
+        List<Skill> skills = jobOfferSkillDao.getSkillsForJobOffer(jobOffer, page - 1, pageSize);
+        long skillCount = this.getSkillCountForJobOffer(jobOffer);
+        long maxPages = skillCount / pageSize + skillCount % pageSize;
+
+        return new PaginatedResource<>(skills, page, maxPages);
+    }
+
+    @Override
+    public long getSkillCountForJobOffer(JobOffer jobOffer) {
+        return jobOfferSkillDao.getSkillCountForJobOffer(jobOffer);
     }
 }

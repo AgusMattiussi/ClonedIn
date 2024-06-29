@@ -62,6 +62,7 @@ public class SkillDTO {
                     .path(String.valueOf(skill.getId()));
             this.self = categoryUriBuilder.build();
 
+            // TODO: Cambiar skillDescription por skillId
             this.usersWithSkill = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
                     .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())

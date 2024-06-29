@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.SkillDao;
+import ar.edu.itba.paw.interfaces.services.JobOfferSkillService;
 import ar.edu.itba.paw.interfaces.services.SkillService;
+import ar.edu.itba.paw.interfaces.services.UserSkillService;
 import ar.edu.itba.paw.models.Skill;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.slf4j.Logger;
@@ -18,6 +20,12 @@ import java.util.Optional;
 public class SkillServiceImpl implements SkillService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkillServiceImpl.class);
+
+    @Autowired
+    private UserSkillService userSkillService;
+
+    @Autowired
+    private JobOfferSkillService jobOfferSkillService;
 
     private final SkillDao skillDao;
 
@@ -65,6 +73,25 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public PaginatedResource<Skill> getAllSkills(int page, int pageSize) {
+        List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
+        long skillCount = this.getSkillCount();
+        long maxPages = skillCount / pageSize + skillCount % pageSize;
+
+        return new PaginatedResource<>(skills, page, maxPages);
+    }
+
+    @Override
+    public PaginatedResource<Skill> getAllSkills(Long userId, Long jobOfferId, int page, int pageSize) {
+        if(userId != null) {
+            if(jobOfferId != null) {
+                LOGGER.error("Both 'userId' and 'jobOfferId' were provided");
+                throw new IllegalArgumentException("Both 'userId' and 'jobOfferId' were provided");
+            }
+            return userSkillService.getSkillsForUser(userId, page, pageSize);
+        } else if(jobOfferId != null) {
+            return jobOfferSkillService.getSkillsForJobOffer(jobOfferId, page, pageSize);
+        }
+
         List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
         long skillCount = this.getSkillCount();
         long maxPages = skillCount / pageSize + skillCount % pageSize;

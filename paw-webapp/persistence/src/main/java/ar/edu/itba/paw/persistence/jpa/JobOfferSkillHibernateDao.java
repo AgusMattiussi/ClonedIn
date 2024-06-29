@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -41,4 +42,22 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
 
         return query.getResultList();
     }
+
+    @Override
+    public List<Skill> getSkillsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
+        TypedQuery<Skill> query = em.createQuery("SELECT jos.skill FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer", Skill.class);
+        query.setParameter("jobOffer", jobOffer);
+
+        query.setFirstResult(page * pageSize).setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public long getSkillCountForJobOffer(JobOffer jobOffer) {
+        Query query = em.createQuery("SELECT COUNT(jos) FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer");
+        query.setParameter("jobOffer", jobOffer);
+
+        return (Long) query.getSingleResult();
+    }
+
 }

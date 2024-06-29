@@ -123,7 +123,7 @@ public class JobOfferController {
         return Response.ok().location(uri).build();
     }
 
-
+    // TODO: Usar JobOfferSkillService
     @GET
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.SKILL_V1)

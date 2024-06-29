@@ -35,13 +35,15 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
-    // TODO: userId, jobOfferId
+    // TODO: @PreAuthorize: que coincidan los Ids
     @GET
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                @QueryParam("pageSize") @DefaultValue(S_SKILLS_BY_PAGE)
-                                        @Min(1) @Max(2*SKILLS_BY_PAGE) final int pageSize) {
-        final PaginatedResource<Skill> skills = skillService.getAllSkills(page, pageSize);
+                                        @Min(1) @Max(2*SKILLS_BY_PAGE) final int pageSize,
+                               @QueryParam("userId") final Long userId,
+                               @QueryParam("jobOfferId") final Long jobOfferId){
+        final PaginatedResource<Skill> skills = skillService.getAllSkills(userId, jobOfferId, page, pageSize);
 
         if (skills.isEmpty())
             return Response.noContent().build();
