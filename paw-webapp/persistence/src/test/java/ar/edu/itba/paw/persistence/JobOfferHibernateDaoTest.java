@@ -123,7 +123,7 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetJobOffersListByFilters(){
-        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null,
+        List<JobOffer> jobOfferList = dao.getJobOffersListByFilters(testCategory, TEST_MODALITY, null, null,
                 testEnterprise.getId(), EMPTY_FIELD, EMPTY_FIELD, MIN_SALARY, MAX_SALARY, JobOfferSorting.DEFAULT,
                 true, 0 ,8);
 
@@ -149,7 +149,7 @@ public class JobOfferHibernateDaoTest {
 
     @Test
     public void testGetActiveJobOffersCount(){
-        assertEquals(1, dao.getJobOfferCount(testCategory, TEST_MODALITY, null, testEnterprise.getId(), EMPTY_FIELD,
+        assertEquals(1, dao.getJobOfferCount(testCategory, TEST_MODALITY, null, null, testEnterprise.getId(), EMPTY_FIELD,
                 EMPTY_FIELD, MIN_SALARY, MAX_SALARY, true));
     }
 

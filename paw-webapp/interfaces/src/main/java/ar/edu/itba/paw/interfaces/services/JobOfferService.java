@@ -41,14 +41,14 @@ public interface JobOfferService {
 
     long getActiveJobOffersCountForEnterprise(Enterprise enterprise);
 
-    PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+    PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, Long skillId, String skillDescription,
                                                           Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
                                                           BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize);
 
     List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary,
                                              BigDecimal maxSalary, int page, int pageSize);
 
-    long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, Long enterpriseId,
+    long getJobOfferCount(Category category, JobOfferModality modality, Long skillId, String skillDescription, Long enterpriseId,
                           String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive);
 
 

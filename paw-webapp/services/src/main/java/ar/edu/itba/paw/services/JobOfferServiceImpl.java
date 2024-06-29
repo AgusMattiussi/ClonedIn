@@ -140,7 +140,7 @@ public class JobOfferServiceImpl implements JobOfferService {
 
 
     @Override
-    public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, String skillDescription,
+    public PaginatedResource<JobOffer> getJobOffersListByFilters(String categoryName, JobOfferModality modality, Long skillId, String skillDescription,
                                                                  Long enterpriseId, String searchTerm, String position, BigDecimal minSalary,
                                                                  BigDecimal maxSalary, JobOfferSorting sortBy, boolean onlyActive, int page, int pageSize) {
 
@@ -156,10 +156,10 @@ public class JobOfferServiceImpl implements JobOfferService {
             });
         }
 
-        List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillDescription, enterpriseId,
+        List<JobOffer> jobOffers = jobOfferDao.getJobOffersListByFilters(category, modality, skillId, skillDescription, enterpriseId,
                 searchTerm, position, minSalary, maxSalary, sortBy != null ? sortBy : JobOfferSorting.DEFAULT, onlyActive, page-1, pageSize);
 
-        long jobOffersCount = this.getJobOfferCount(category, modality, skillDescription, enterpriseId,
+        long jobOffersCount = this.getJobOfferCount(category, modality, skillId, skillDescription, enterpriseId,
                         searchTerm, position, minSalary, maxSalary, onlyActive);
         long maxPages = jobOffersCount / pageSize + jobOffersCount % pageSize;
 
@@ -173,9 +173,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public long getJobOfferCount(Category category, JobOfferModality modality, String skillDescription, Long enterpriseId,
+    public long getJobOfferCount(Category category, JobOfferModality modality, Long skillId, String skillDescription, Long enterpriseId,
                                  String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive) {
-        return jobOfferDao.getJobOfferCount(category, modality, skillDescription, enterpriseId, searchTerm,
+        return jobOfferDao.getJobOfferCount(category, modality, skillId, skillDescription, enterpriseId, searchTerm,
                 position, minSalary, maxSalary, onlyActive);
     }
 
