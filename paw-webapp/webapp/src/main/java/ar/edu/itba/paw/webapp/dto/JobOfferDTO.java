@@ -113,11 +113,9 @@ public class JobOfferDTO {
                     .path(String.valueOf(jobOffer.getCategory().getId()))
                     .build();
 
-            // TODO: Cambiar por /skills?userId=userId
             this.skills = uriInfo.getAbsolutePathBuilder()
-                    .replacePath(JOB_OFFERS_URL)
-                    .path(String.valueOf(jobOffer.getId()))
-                    .path("skills")
+                    .replacePath(SKILLS_URL)
+                    .queryParam("jobOfferId", jobOffer.getId())
                     .build();
         }
 
