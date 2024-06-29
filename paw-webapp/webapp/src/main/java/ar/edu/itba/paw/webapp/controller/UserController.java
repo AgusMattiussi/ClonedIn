@@ -37,8 +37,6 @@ import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
 @Component
 public class UserController {
 
-    private static final int APPLICATIONS_PER_PAGE = 5;
-    private static final String S_APPLICATIONS_PER_PAGE = "5";
     private static final int EXPERIENCES_PER_PAGE = 3;
     private static final String S_EXPERIENCES_PER_PAGE = "3";
     private static final int USERS_PER_PAGE = 8;
@@ -61,8 +59,6 @@ public class UserController {
     @Autowired
     private UserService us;
     @Autowired
-    private ContactService contactService;
-    @Autowired
     private ExperienceService experienceService;
     @Autowired
     private EducationService educationService;
@@ -73,10 +69,9 @@ public class UserController {
     private UriInfo uriInfo;
 
     @Autowired
-    public UserController(final UserService userService, final ContactService contactService, final ExperienceService experienceService,
+    public UserController(final UserService userService, final ExperienceService experienceService,
                           final EducationService educationService, final UserSkillService userSkillService) {
         this.us = userService;
-        this.contactService = contactService;
         this.experienceService = experienceService;
         this.educationService = educationService;
         this.userSkillService = userSkillService;
@@ -147,60 +142,6 @@ public class UserController {
         final URI uri = uriInfo.getAbsolutePathBuilder().build();
         return Response.seeOther(uri).build();
     }
-
-    // DEPRECATED
-    /*@GET
-    @Path("/{id}/contacts")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response getContacts(@PathParam("id") final long id,
-                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                    @QueryParam("pageSize") @DefaultValue(S_APPLICATIONS_PER_PAGE)
-                                        @Min(1) @Max(2*APPLICATIONS_PER_PAGE) final int pageSize,
-                                    @QueryParam("sortBy") @DefaultValue(ContactSorting.ANY_VALUE) final ContactSorting sortBy,
-                                    @QueryParam("status") final JobOfferStatus status,
-                                    @QueryParam("filledBy") @DefaultValue("any") final FilledBy filledBy) {
-
-        PaginatedResource<Contact> applications = contactService.getContactsForUser(id, filledBy, status,
-                sortBy, page, pageSize);
-
-        if(applications.isEmpty())
-            return Response.noContent().build();
-
-        List<ContactDTO> contactDTOs = applications.getPage().stream()
-                .map(contact -> ContactDTO.fromContact(uriInfo, contact, false)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOs) {}), page,
-                applications.getMaxPages());
-    }*/
-
-    // DEPRECATED
-    /*@POST
-    @Path("/{id}/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response applyToJobOffer(@PathParam("id") @Min(1) final long id,
-                                    @NotNull @Valid ApplyToJobOfferForm applyToJobOfferForm) {
-
-        contactService.addContact(id, applyToJobOfferForm.getJobOfferId(), FilledBy.USER);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(applyToJobOfferForm.getJobOfferId())).build();
-        return Response.created(uri).build();
-    }*/
-
-
-    /*@PUT
-    @Path("/{id}/contacts/{jobOfferId}")
-    @PreAuthorize(PROFILE_OWNER)
-    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
-                                         @PathParam("jobOfferId") @Min(1) final long jobOfferId,
-                                         @NotNull @QueryParam("status") final JobOfferStatus newStatus) {
-
-        contactService.updateContactStatus(id, jobOfferId, newStatus, Role.USER);
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(jobOfferId)).build();
-        return Response.ok().location(uri).build();
-    }*/
 
     @GET
     @Path("/{id}/experiences")

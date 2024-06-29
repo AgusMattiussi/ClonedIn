@@ -36,26 +36,15 @@ public class EnterpriseController {
 
     private static final int ENTERPRISES_PER_PAGE = 15;
     private static final String S_ENTERPRISES_BY_PAGE = "15";
-    private static final int CONTACTS_PER_PAGE = 10;
-    private static final String S_CONTACTS_BY_PAGE = "10";
-    private static final int JOB_OFFERS_PER_PAGE = 3;
-    private static final String S_JOB_OFFERS_BY_PAGE = "3";
     private static final Logger LOGGER = LoggerFactory.getLogger(EnterpriseController.class);
-
     private static final String USER_OR_PROFILE_OWNER = "hasAuthority('USER') or @securityValidator.isEnterpriseProfileOwner(#id)";
     private static final String PROFILE_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id)";
-    private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') AND @securityValidator.isEnterpriseProfileOwner(#id) AND @securityValidator.isJobOfferOwner(#joid)";
-
 
     @Autowired
     private EnterpriseService enterpriseService;
-    @Autowired
-    private JobOfferService jobOfferService;
-    @Autowired
-    private ContactService contactService;
+
     @Context
     private UriInfo uriInfo;
-
 
     @GET
     @Produces(ClonedInMediaType.ENTERPRISE_LIST_V1)
@@ -118,154 +107,6 @@ public class EnterpriseController {
         final URI uri = uriInfo.getAbsolutePath();
         return Response.seeOther(uri).build();
     }
-
-    // DEPRECATED
-    /*@GET
-    @Path("/{id}/jobOffers")
-    @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getJobOffers(@PathParam("id") @Min(1) final long id,
-                                 @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                 @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_BY_PAGE)
-                                        @Min(1) @Max(4*JOB_OFFERS_PER_PAGE) final int pageSize,
-                                 @QueryParam("category") final String categoryName,
-                                 @QueryParam("modality") final JobOfferModality modality,
-                                 @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
-                                 @QueryParam("searchTerm") final String searchTerm,
-                                 @QueryParam("position") final String position,
-                                 @QueryParam("minSalary") @Min(0) final BigDecimal minSalary,
-                                 @QueryParam("maxSalary") @Min(0) final BigDecimal maxSalary,
-                                 @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sorting,
-                                 @QueryParam("onlyActive") @DefaultValue("false") final boolean onlyActive) {
-
-        PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillDescription,
-                        id, searchTerm, position, minSalary, maxSalary, sorting, onlyActive, page, pageSize);
-
-        List<JobOfferDTO> jobOfferDTOS = jobOffers.getPage().stream()
-                .map(jobOffer -> JobOfferDTO.fromJobOffer(uriInfo, jobOffer)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<JobOfferDTO>>(jobOfferDTOS) {}), page,
-                jobOffers.getMaxPages());
-    }*/
-
-    // DEPRECATED
-    /*@GET
-    @Path("/{id}/jobOffers/{joid}")
-    @Produces(ClonedInMediaType.JOB_OFFER_V1)
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
-    public Response getJobOfferById(@PathParam("id") @Min(1) final long id,
-                                    @PathParam("joid") @Min(1) final long joid) {
-        JobOfferDTO jobOffer = jobOfferService.findById(joid).map(jo -> JobOfferDTO.fromJobOffer(uriInfo,jo))
-                .orElseThrow(() -> new JobOfferNotFoundException(joid));
-        return Response.ok(jobOffer).build();
-    }*/
-
-    // DEPRECATED
-    /*@PUT
-    @Path("/{id}/jobOffers/{joid}")
-    @PreAuthorize(JOB_OFFER_OWNER)
-    public Response updateJobOfferAvailability(@PathParam("id") @Min(1) final long id,
-                                               @PathParam("joid") @Min(1) final long joid,
-                                               @QueryParam("availability") @NotNull final JobOfferAvailability availability) {
-        jobOfferService.updateJobOfferAvailability(joid, availability);
-
-        final URI uri = uriInfo.getAbsolutePath();
-        return Response.ok().location(uri).build();
-    }*/
-
-    // DEPRECATED
-    /*@POST
-    @Path("/{id}/jobOffers")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response createJobOffer(@PathParam("id") @Min(1) final long id,
-                                   @Valid @NotNull final JobOfferForm jobOfferForm) {
-        JobOffer jobOffer = jobOfferService.create(id, jobOfferForm.getCategory(), jobOfferForm.getJobPosition(),
-                jobOfferForm.getJobDescription(), jobOfferForm.getSalary(), jobOfferForm.getModality(),
-                jobOfferForm.getSkillsList());
-
-        LOGGER.debug("A new job offer was registered under id: {}", jobOffer.getId());
-        LOGGER.info("A new job offer was registered");
-
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(jobOffer.getId().toString()).build();
-        return Response.created(uri).build();
-    }*/
-
-    // DEPRECATED
-    /*@GET
-    @Path("/{id}/contacts")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(PROFILE_OWNER)
-    @Transactional
-    public Response getContacts(@PathParam("id") @Min(1) final long id,
-                                    @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
-                                    @QueryParam("pageSize") @DefaultValue(S_CONTACTS_BY_PAGE)
-                                        @Min(1) @Max(2*CONTACTS_PER_PAGE) final int pageSize,
-                                    @QueryParam("status") final JobOfferStatus status,
-                                    @QueryParam("filledBy") @DefaultValue("any") FilledBy filledBy,
-                                    @QueryParam("sortBy") @DefaultValue("any") final ContactSorting sortBy,
-                                    @QueryParam("userId") @Min(1) final Long userId,
-                                    @QueryParam("jobOfferId") @Min(1) final Long jobOfferId) {
-
-        PaginatedResource<Contact> contacts = contactService.getContacts(id, jobOfferId, userId, filledBy,
-                status, sortBy, page, pageSize);
-
-        if(contacts.isEmpty())
-            return Response.noContent().build();
-
-        List<ContactDTO> contactDTOList = contacts.getPage().stream()
-                .map(c -> ContactDTO.fromContact(uriInfo, c, true)).collect(Collectors.toList());
-
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<ContactDTO>>(contactDTOList) {}), page,
-                contacts.getMaxPages());
-    }*/
-
-    // DEPRECATED
-    /*@POST
-    @Path("/{id}/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @PreAuthorize(PROFILE_OWNER)
-    public Response contactUser(@PathParam("id") @Min(1) final long id,
-                                @Valid @NotNull final ContactForm contactForm){
-
-        Contact contact = contactService.addContact(id, contactForm.getUserId(), contactForm.getJobOfferId(),
-                FilledBy.ENTERPRISE, contactForm.getMessage());
-
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(contact.getJobOffer().getId().toString())
-                .path(contact.getUser().getId().toString())
-                .build();
-        return Response.created(uri).build();
-    }*/
-
-    // DEPRECATED
-    /*@GET
-    @Path("/{id}/contacts/{joid}/{userId}")
-    @Produces(ClonedInMediaType.CONTACT_LIST_V1)
-    @PreAuthorize(JOB_OFFER_OWNER)
-    @Transactional
-    public Response getContactsByJobOffer(@PathParam("id") @Min(1) final long id,
-                                    @PathParam("joid") @Min(1) final long joid,
-                                    @PathParam("userId") @Min(1) final long userId) {
-
-        ContactDTO contactDTO = contactService.getContact(userId, joid).map(c -> ContactDTO.fromContact(uriInfo, c, true))
-                .orElseThrow(() -> new ContactNotFoundException(userId, joid));
-
-        return Response.ok(contactDTO).build();
-    }*/
-
-    // DEPRECATED
-    /*@PUT
-    @Path("/{id}/contacts/{joid}/{userId}")
-    @PreAuthorize(JOB_OFFER_OWNER)
-    public Response updateContactStatus(@PathParam("id") @Min(1) final long id,
-                                       @PathParam("userId") @NotNull @Min(1) final long userId,
-                                       @PathParam("joid") @NotNull @Min(1) final long joid,
-                                       @QueryParam("status") @NotNull final JobOfferStatus status) {
-
-        contactService.updateContactStatus(userId, joid, status, Role.ENTERPRISE);
-        return Response.noContent().build();
-    }*/
 
     @PUT
     @Path("/{id}/image")
