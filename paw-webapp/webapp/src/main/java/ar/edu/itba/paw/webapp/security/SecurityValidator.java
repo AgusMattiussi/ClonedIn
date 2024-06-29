@@ -107,6 +107,21 @@ public class SecurityValidator {
     }
 
     @Transactional
+    public boolean isGetSkillsValid(Long userId, Long jobOfferId) {
+        Role requesterRole = SecurityUtils.getPrincipalRole();
+        if(requesterRole == Role.USER)
+            // Un usuario no deberia poder usar el parametro "userId" a menos que coincida con su ID.
+            return userId == null || userId.equals(SecurityUtils.getPrincipalId());
+        else if(requesterRole == Role.ENTERPRISE) {
+            // Una empresa no deberia poder usar un jobOfferId que no le pertenezca
+            if(jobOfferId != null)
+                return isJobOfferOwner(jobOfferId);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
     public boolean canAccessContact(String contactId){
         Role requesterRole = SecurityUtils.getPrincipalRole();
 

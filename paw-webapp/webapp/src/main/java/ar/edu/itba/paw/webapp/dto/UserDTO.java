@@ -139,6 +139,7 @@ public class UserDTO {
             this.image = userUriBuilder.clone().path(IMAGE_SUBDIRECTORY).build();
             this.experiences = userUriBuilder.clone().path(EXPERIENCES_SUBDIRECTORY).build();
             this.educations = userUriBuilder.clone().path(EDUCATIONS_SUBDIRECTORY).build();
+            // TODO: Cambiar por /skills?userId=userId
             this.skills = userUriBuilder.clone().path(SKILLS_SUBDIRECTORY).build();
             this.applications = userUriBuilder.clone().path(APPLICATIONS_SUBDIRECTORY).build();
             this.notifications = userUriBuilder.clone().path(NOTIFICATIONS_SUBDIRECTORY).build();

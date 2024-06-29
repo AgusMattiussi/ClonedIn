@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.dto.SkillDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Max;
@@ -35,8 +36,8 @@ public class SkillController {
     @Autowired
     private SkillService skillService;
 
-    // TODO: @PreAuthorize: que coincidan los Ids
     @GET
+    @PreAuthorize("@securityValidator.isGetSkillsValid(#userId, #jobOfferId)")
     @Produces(ClonedInMediaType.SKILL_LIST_V1)
     public Response listSkills(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                @QueryParam("pageSize") @DefaultValue(S_SKILLS_BY_PAGE)
