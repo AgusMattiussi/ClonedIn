@@ -8,7 +8,6 @@ import java.net.URI;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
 
-// TODO: Agregar links a las jobOffers
 public class EnterpriseDTO {
 
     private long id;

@@ -24,8 +24,7 @@ public class EditUserForm {
     @EducationLevelEnum
     private String educationLevel;
 
-    //@VisibilityEnum
-    private Boolean visible; //TODO: Boolean?
+    private Boolean visible;
 
     public String getName() {
         return name;
