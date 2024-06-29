@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
-// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "images-cache")

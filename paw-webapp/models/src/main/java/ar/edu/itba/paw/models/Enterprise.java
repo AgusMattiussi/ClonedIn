@@ -48,7 +48,6 @@ public class Enterprise {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "enterprise", fetch = FetchType.LAZY)
     private Set<Contact> contacts;
 

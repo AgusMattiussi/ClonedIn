@@ -13,7 +13,6 @@ public class JobOfferNotFoundException extends ClonedInException{
         super(String.format(DETAILS_WITH_ID, jobOfferId));
     }
 
-    // TODO: delete unused functions (and implementations)
     public JobOfferNotFoundException(String title) {
         super(String.format(DETAILS_WITH_TITLE, title));
     }

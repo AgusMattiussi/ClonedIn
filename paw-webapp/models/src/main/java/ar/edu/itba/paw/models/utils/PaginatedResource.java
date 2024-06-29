@@ -22,7 +22,6 @@ public class PaginatedResource<R> {
         this.maxPages = maxPages;
     }
 
-    // TODO: delete unused functions (and implementations)
     public List<R> getPage() {
         return page;
     }

@@ -50,7 +50,6 @@ public class User {
     @JoinColumn(name = "idImagen")
     private Image image;
 
-    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Experience> experiences;
 

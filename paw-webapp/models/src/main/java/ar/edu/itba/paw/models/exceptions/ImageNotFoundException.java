@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models.exceptions;
 import ar.edu.itba.paw.models.enums.Role;
 import javax.ws.rs.core.Response;
 
-//TODO: no se usa??
 public class ImageNotFoundException extends ClonedInException {
 
     private static final int STATUS = Response.Status.NOT_FOUND.getStatusCode();

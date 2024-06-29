@@ -18,7 +18,6 @@ public class Skill {
     @Column(name = "descripcion")
     private String description;
 
-    // TODO: delete unused functions (and implementations)
     @OneToMany(mappedBy = "skill", fetch = FetchType.LAZY)
     private Set<JobOfferSkill> jobOfferSkillSet;
 

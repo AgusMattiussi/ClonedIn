@@ -12,7 +12,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "skills-cache")

@@ -16,7 +16,6 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = {"users-cache"})

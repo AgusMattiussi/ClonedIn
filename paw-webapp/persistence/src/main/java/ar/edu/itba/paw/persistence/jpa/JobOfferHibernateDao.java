@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: borrar cache implementation??
 @Primary
 @Repository
 //@CacheConfig(cacheNames = "jobOffers-cache")

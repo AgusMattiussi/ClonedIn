@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-// TODO: borrar cache implementation??
 @Primary
 @Repository
 public class JobOfferSkillHibernateDao implements JobOfferSkillDao {

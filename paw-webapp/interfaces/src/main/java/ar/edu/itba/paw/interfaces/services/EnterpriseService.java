@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-// TODO: delete unused functions (and implementations)
 public interface EnterpriseService {
 
     Enterprise create(String email, String name, String password, String location, String categoryName, EmployeeRanges workers,

@@ -16,7 +16,7 @@ public enum Visibility {
         return value;
     }
 
-    // TODO: no se usa
+
     public static Visibility fromValue(int value) {
         for (Visibility visibility : Visibility.values()) {
             if (visibility.value == value) {

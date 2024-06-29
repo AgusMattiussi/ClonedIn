@@ -388,6 +388,7 @@ public class UserController {
         Image profileImage = us.getProfileImage(id).orElse(null);
         if(profileImage == null)
             return Response.noContent().build();
+            //throw new ImageNotFoundException(id, Role.USER);
 
         return Response.ok(profileImage.getResized(width, height))
                 .type(profileImage.getMimeType()) // @Produces
