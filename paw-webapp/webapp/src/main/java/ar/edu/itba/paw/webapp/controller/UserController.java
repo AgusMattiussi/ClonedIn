@@ -321,7 +321,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/skills")
-    @Produces(ClonedInMediaType.USER_SKILL_LIST_V1)
+    @Produces(ClonedInMediaType.SKILL_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     public Response getSkills(@PathParam("id") @Min(1) final long id,
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
