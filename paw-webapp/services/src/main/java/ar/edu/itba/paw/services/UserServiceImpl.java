@@ -121,8 +121,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                     String location, String skillDescription) {
-        return userDao.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillDescription);
+                                     String location, Long skillId, String skillDescription) {
+        return userDao.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillId, skillDescription);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
-                                                         Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
+                                                         Integer maxExpYears, String location, Long skillId, String skillDescription, UserSorting sortBy,
                                                          int page, int pageSize) {
 
         Category category = categoryName != null ? categoryService.findByName(categoryName).orElseThrow(() -> {
@@ -163,10 +163,10 @@ public class UserServiceImpl implements UserService {
         }) : null;
 
         List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
-                                     location, skillDescription, sortBy, page-1, pageSize);
+                                     location, skillId, skillDescription, sortBy, page-1, pageSize);
 
         final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
-                                     location, skillDescription);
+                                     location, skillId, skillDescription);
         long maxPages = userCount / pageSize + userCount % pageSize;
 
         return new PaginatedResource<>(users, page, maxPages);

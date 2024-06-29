@@ -77,7 +77,6 @@ public class UserController {
         this.userSkillService = userSkillService;
     }
 
-    // TODO: Cambiar skillDescription por skillId
     @GET
     @Produces(ClonedInMediaType.USER_LIST_V1)
     @PreAuthorize(ENTERPRISE)
@@ -92,10 +91,11 @@ public class UserController {
                               @QueryParam("minExpYears") @Min(0) final Integer minExpYears,
                               @QueryParam("maxExpYears") @Min(0) final Integer maxExpYears,
                               @QueryParam("location") final String location,
+                              @QueryParam("skillId") final Long skillId,
                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
         final PaginatedResource<User> users = us.getUsersListByFilters(categoryName, educationLevel, searchTerm, minExpYears,
-                maxExpYears, location, skillDescription, sortBy, page, pageSize);
+                maxExpYears, location, skillId, skillDescription, sortBy, page, pageSize);
 
         if (users.isEmpty())
             return Response.noContent().build();

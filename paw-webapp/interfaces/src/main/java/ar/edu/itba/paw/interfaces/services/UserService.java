@@ -40,7 +40,7 @@ public interface UserService {
     long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription);
 
     long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
-                                String location, String skillDescription);
+                                String location, Long skillId, String skillDescription);
 
     List<User> getVisibleUsers(int page, int pageSize);
 
@@ -54,7 +54,7 @@ public interface UserService {
                                      int page, int pageSize);
 
     PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
-                                                  Integer maxExpYears, String location, String skillDescription, UserSorting sortBy,
+                                                  Integer maxExpYears, String location, Long skillId, String skillDescription, UserSorting sortBy,
                                                   int page, int pageSize);
 
     void updateName(long userID, String newName);
