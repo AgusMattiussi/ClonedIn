@@ -57,20 +57,19 @@ public class SkillDTO {
         public SkillDTOLinks(){}
 
         public SkillDTOLinks(UriInfo uriInfo, Skill skill) {
-            final UriBuilder categoryUriBuilder = uriInfo.getAbsolutePathBuilder()
+            final UriBuilder skillUriBuilder = uriInfo.getAbsolutePathBuilder()
                     .replacePath(SKILLS_URL)
                     .path(String.valueOf(skill.getId()));
-            this.self = categoryUriBuilder.build();
+            this.self = skillUriBuilder.build();
 
-            // TODO: Cambiar skillDescription por skillId
             this.usersWithSkill = uriInfo.getAbsolutePathBuilder()
                     .replacePath(USERS_URL)
-                    .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())
+                    .queryParam("skillId", skill.getId().toString())
                     .build();
 
             this.jobOffersWithSkill = uriInfo.getAbsolutePathBuilder()
                     .replacePath(JOB_OFFERS_URL)
-                    .queryParam(SKILL_DESCRIPTION_PARAM, skill.getDescription())
+                    .queryParam("skillId", skill.getId().toString())
                     .build();
         }
 
