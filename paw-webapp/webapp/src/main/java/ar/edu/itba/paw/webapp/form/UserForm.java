@@ -8,7 +8,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-//TODO: Deberia coincidir con el Custom Mime Type del usuario
 //@StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
     @NotExistingEmail

@@ -57,7 +57,6 @@ public class JobOfferController {
     @Context
     private UriInfo uriInfo;
 
-    //TODO: Una empresa deberia poder pedir todas las ofertas de trabajo que tiene en la plataforma (Cambiar PreAuthorize)
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
     @PreAuthorize(USER_OR_ENTERPRISE_ID_MATCHES_PRINCIPAL)

@@ -56,9 +56,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/enterprises").anonymous()
                 // Users and Enterprises
-                .antMatchers("/api/users/*/image").permitAll() // TODO: Permitir solo a empresas
+                .antMatchers("/api/users/*/image").permitAll() // TODO: authenticated()
                 .antMatchers("/api/users", "/api/users/**").authenticated()
-                .antMatchers("/api/enterprises/*/image").permitAll() // TODO: Permitir solo a usuarios
+                .antMatchers("/api/enterprises/*/image").permitAll() // TODO: authenticated()
                 .antMatchers("/api/enterprises", "/api/enterprises/**").authenticated()
                 // Categories
                 .antMatchers("/api/categories").permitAll()
