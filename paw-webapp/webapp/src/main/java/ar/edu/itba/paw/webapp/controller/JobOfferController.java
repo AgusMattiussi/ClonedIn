@@ -47,6 +47,7 @@ public class JobOfferController {
     private static final String IS_ENTERPRISE = "hasAuthority('ENTERPRISE')";
     private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
     private static final String JOB_OFFER_OWNER = "@securityValidator.isJobOfferOwner(#id)";
+    private static final String USER_OR_ENTERPRISE_ID_MATCHES_PRINCIPAL = "hasAuthority('USER') or hasAuthority('ENTERPRISE') and @securityValidator.idMatchesPrincipal(#enterpriseId)";
 
     @Autowired
     private JobOfferService jobOfferService;
@@ -59,7 +60,7 @@ public class JobOfferController {
     //TODO: Una empresa deberia poder pedir todas las ofertas de trabajo que tiene en la plataforma (Cambiar PreAuthorize)
     @GET
     @Produces(ClonedInMediaType.JOB_OFFER_LIST_V1)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize(USER_OR_ENTERPRISE_ID_MATCHES_PRINCIPAL)
     public Response jobOfferList(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                  @QueryParam("pageSize") @DefaultValue(S_JOB_OFFERS_PER_PAGE)
                                         @Min(1) @Max(2*JOB_OFFERS_PER_PAGE) final int pageSize,

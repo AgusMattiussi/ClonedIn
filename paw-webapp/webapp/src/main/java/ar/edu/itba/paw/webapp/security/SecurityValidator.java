@@ -122,4 +122,8 @@ public class SecurityValidator {
 
         return false;
     }
+
+    public boolean idMatchesPrincipal(long id) {
+        return id == SecurityUtils.getPrincipalId();
+    }
 }
