@@ -6,8 +6,8 @@ export function useLogin() {
 
   async function loginHandler(username: string, password: string) {
     const response = await apiRequest({
-      url: "/auth/access-token",
-      method: "POST",
+      url: "/skills",
+      method: "GET",
       requiresAuth: true,
       credentials: {
         username,
