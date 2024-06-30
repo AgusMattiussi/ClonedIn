@@ -72,9 +72,10 @@ public class JobOfferController {
                                  @QueryParam("skillId") final Long skillId,
                                  @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription,
                                  @QueryParam("enterpriseId") @Min(1) final Long enterpriseId,
-                                 @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy){
+                                 @QueryParam("sortBy") @DefaultValue("predeterminado") final JobOfferSorting sortBy,
+                                 @QueryParam("onlyActive") @DefaultValue("true") final boolean onlyActive) {
         PaginatedResource<JobOffer> jobOffers = jobOfferService.getJobOffersListByFilters(categoryName, modality, skillId, skillDescription,
-                        enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, true, page, pageSize);
+                        enterpriseId, searchTerm, position, minSalary, maxSalary, sortBy, onlyActive, page, pageSize);
 
         if(jobOffers.isEmpty())
             return Response.noContent().build();
