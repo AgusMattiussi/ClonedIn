@@ -6,24 +6,24 @@ export const usePutEnterpriseInfo = () => {
   async function modifyEnterpriseInfo(
     id: string | undefined,
     name: string,
-    aboutUs: string,
-    city: string,
+    description: string,
+    location: string,
     category: string | undefined,
-    link: string,
+    website: string,
     workers: string | undefined,
-    year: string,
+    yearFounded: string,
   ) {
     const response = await apiRequest({
       url: `/enterprises/${id}`,
       method: "PUT",
       body: {
         name,
-        aboutUs,
-        city,
+        description,
+        location,
         category,
-        link,
+        website,
         workers,
-        year,
+        yearFounded,
       },
     })
     return response

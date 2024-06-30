@@ -65,6 +65,7 @@ function ProfileEnterprise() {
 
     const fetchEnterpriseJobs = async (page: string) => {
       if (page) queryParams.page = page
+      queryParams.onlyActive = "false"
 
       const response = await getEnterpriseJobOffers(id, queryParams)
 

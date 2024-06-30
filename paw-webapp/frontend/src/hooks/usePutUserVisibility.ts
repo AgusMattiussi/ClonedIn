@@ -3,10 +3,10 @@ import { useRequestApi } from "../api/apiRequest"
 export const usePutUserVisibility = () => {
   const { apiRequest } = useRequestApi()
 
-  async function modifyUserVisibility(id: string | undefined, visibility: string) {
+  async function modifyUserVisibility(id: string | undefined, visibility: boolean) {
     const response = await apiRequest({
       url: `/users/${id}`,
-      method: "PUT",
+      method: "POST",
       body: { visibility },
     })
     return response

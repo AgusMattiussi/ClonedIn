@@ -3,12 +3,12 @@ import { useRequestApi } from "../api/apiRequest"
 export const usePostSkill = () => {
   const { apiRequest } = useRequestApi()
 
-  async function addSkill(id: string | undefined, skill: string) {
+  async function addSkill(id: string | undefined, description: string) {
     const response = await apiRequest({
       url: `/users/${id}/skills`,
       method: "POST",
       body: {
-        skill,
+        description,
       },
     })
     return response

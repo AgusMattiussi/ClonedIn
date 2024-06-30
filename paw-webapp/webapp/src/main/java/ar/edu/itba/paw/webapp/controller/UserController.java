@@ -307,7 +307,7 @@ public class UserController {
     @PUT
     @Path("/{id}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @PreAuthorize(PROFILE_OWNER)
+    // @PreAuthorize(PROFILE_OWNER)
     public Response updateImage(@PathParam("id") final long id,
                                 @Size(max = Image.IMAGE_MAX_SIZE_BYTES) @FormDataParam("image") byte[] bytes)  {
 
@@ -320,7 +320,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/image")
-    @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
+    // @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
     @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,

@@ -10,7 +10,7 @@ export default interface UserDto {
   currentPosition: string
   description: string
   educationLevel: string
-  visibility: number
+  visibility: boolean
   categoryInfo: CategoryDto
   experienceInfo: ExperienceDto[]
   skillsInfo: SkillDto[]

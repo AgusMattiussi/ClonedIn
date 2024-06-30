@@ -5,9 +5,9 @@ export const usePostExperience = () => {
 
   async function addExperience(
     id: string | undefined,
-    company: string,
-    job: string,
-    jobDesc: string,
+    enterpriseName: string,
+    position: string,
+    description: string,
     monthFrom: string,
     yearFrom: string,
     monthTo: string,
@@ -17,9 +17,9 @@ export const usePostExperience = () => {
       url: `/users/${id}/experiences`,
       method: "POST",
       body: {
-        company,
-        job,
-        jobDesc,
+        enterpriseName,
+        position,
+        description,
         monthFrom,
         yearFrom,
         monthTo,

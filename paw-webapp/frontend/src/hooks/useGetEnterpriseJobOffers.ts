@@ -5,7 +5,7 @@ export const useGetEnterpriseJobOffers = () => {
 
   async function getEnterpriseJobOffers(id: string | undefined, queryParams: Record<string, string> = {}) {
     const response = await apiRequest({
-      url: `/enterprises/${id}/jobOffers`,
+      url: `/jobOffers?enterpriseId=${id}`,
       method: "GET",
       queryParams: queryParams,
       requiresAuth: true,

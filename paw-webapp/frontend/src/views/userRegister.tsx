@@ -40,17 +40,17 @@ function RegisterUser() {
   const handleRegister = async (e: any) => {
     const registered = await registerHandler(
       e.email,
-      e.pass,
-      e.repeatPass,
+      e.password,
+      e.repeatPassword,
       e.name,
       e.location,
-      e.position,
+      e.currentPosition,
       e.description,
       category,
       educationLevel,
     )
     if (registered) {
-      await loginHandler(e.email, e.pass)
+      await loginHandler(e.email, e.password)
       navigate("/jobOffers")
     } else {
       console.log("Not registered")
@@ -91,17 +91,17 @@ function RegisterUser() {
       .string()
       .required(t("Required") as string)
       .max(100, t("Line Max Length") as string),
-    pass: yup
+    password: yup
       .string()
       .required(t("Required") as string)
       .min(6, t("Password Min Length") as string)
       .max(20, t("Password Max Length") as string),
-    repeatPass: yup
+    repeatPassword: yup
       .string()
-      .oneOf([yup.ref("pass")], t("Password Match") as string)
+      .oneOf([yup.ref("password")], t("Password Match") as string)
       .required(t("Required") as string),
     location: yup.string().max(50, t("Single Line Max Length") as string),
-    position: yup.string().max(50, t("Single Line Max Length") as string),
+    currentPosition: yup.string().max(50, t("Single Line Max Length") as string),
     description: yup.string().max(600, t("Long Line Max Length") as string),
   })
 
@@ -124,10 +124,10 @@ function RegisterUser() {
                       initialValues={{
                         email: "",
                         name: "",
-                        pass: "",
-                        repeatPass: "",
+                        password: "",
+                        repeatPassword: "",
                         location: "",
-                        position: "",
+                        currentPosition: "",
                         description: "",
                       }}
                       onSubmit={(values) => {
@@ -172,15 +172,15 @@ function RegisterUser() {
                             </Form.Group>
                             <Form.Group className="mb-3 d-flex" controlId="formBasicPassword">
                               <Form.Control
-                                name="pass"
+                                name="password"
                                 className="input"
                                 type={passwordVisibility ? "text" : "password"}
                                 placeholder={t("Password*").toString()}
-                                value={values.pass}
+                                value={values.password}
                                 onChange={(e) => {
                                   handleChange(e)
                                 }}
-                                isInvalid={!!errors.pass}
+                                isInvalid={!!errors.password}
                               />
                               <Button
                                 className="pb-3"
@@ -189,19 +189,19 @@ function RegisterUser() {
                               >
                                 {passwordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                               </Button>
-                              <Form.Control.Feedback type="invalid">{errors.pass}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3 d-flex" controlId="formBasicCheckPassword">
                               <Form.Control
-                                name="repeatPass"
+                                name="repeatPassword"
                                 className="input"
                                 type={repeatPasswordVisibility ? "text" : "password"}
                                 placeholder={t("Repeat Password*").toString()}
-                                value={values.repeatPass}
+                                value={values.repeatPassword}
                                 onChange={(e) => {
                                   handleChange(e)
                                 }}
-                                isInvalid={!!errors.repeatPass}
+                                isInvalid={!!errors.repeatPassword}
                               />
                               <Button
                                 className="pb-3"
@@ -210,7 +210,7 @@ function RegisterUser() {
                               >
                                 {repeatPasswordVisibility ? <Icon.Eye /> : <Icon.EyeSlash />}
                               </Button>
-                              <Form.Control.Feedback type="invalid">{errors.repeatPass}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.repeatPassword}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
@@ -227,16 +227,16 @@ function RegisterUser() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPosition">
                               <Form.Control
-                                name="position"
+                                name="currentPosition"
                                 className="input"
                                 placeholder={t("Current Position").toString()}
-                                value={values.position}
+                                value={values.currentPosition}
                                 onChange={(e) => {
                                   handleChange(e)
                                 }}
-                                isInvalid={!!errors.position}
+                                isInvalid={!!errors.currentPosition}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.position}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.currentPosition}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group>
                               <div className="d-flex mb-4 justify-content-between">
