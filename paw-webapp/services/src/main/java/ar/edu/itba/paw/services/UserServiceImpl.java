@@ -285,7 +285,14 @@ public class UserServiceImpl implements UserService {
             LOGGER.error("User with id {} was not found - getProfileImage", userId);
             return new UserNotFoundException(userId);
         });
-        return Optional.ofNullable(user.getImage());
+
+        Image image = user.getImage();
+        if(image != null) {
+            // This is done to avoid lazy loading exceptions
+            image.getBytes();
+        }
+
+        return Optional.ofNullable(image);
     }
 
     @Override

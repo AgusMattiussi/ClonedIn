@@ -50,6 +50,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    @Transactional
 //    @Cacheable(key = "#userId", condition = "#result != null")
     public Optional<User> findById(long userId) {
         return Optional.ofNullable(em.find(User.class, userId));

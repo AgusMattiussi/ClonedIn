@@ -201,7 +201,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         Enterprise enterprise = this.findById(enterpriseId)
                 .orElseThrow(() -> new EnterpriseNotFoundException(enterpriseId));
 
-        return Optional.ofNullable(enterprise.getImage());
+        Image image = enterprise.getImage();
+        if(image != null) {
+            // This is done to avoid lazy loading exceptions
+            image.getBytes();
+        }
+
+        return Optional.ofNullable(image);
     }
 
     @Override

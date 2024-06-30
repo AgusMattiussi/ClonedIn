@@ -321,7 +321,6 @@ public class UserController {
     @GET
     @Path("/{id}/image")
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    @Transactional
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
                                     @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height) throws IOException {
