@@ -65,7 +65,7 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
 
         List<Skill> skills = jobOfferSkillDao.getSkillsForJobOffer(jobOffer, page - 1, pageSize);
         long skillCount = this.getSkillCountForJobOffer(jobOffer);
-        long maxPages = skillCount / pageSize + skillCount % pageSize;
+        long maxPages = (long) Math.ceil((double) skillCount / pageSize);
 
         return new PaginatedResource<>(skills, page, maxPages);
     }

@@ -161,7 +161,7 @@ public class JobOfferServiceImpl implements JobOfferService {
 
         long jobOffersCount = this.getJobOfferCount(category, modality, skillId, skillDescription, enterpriseId,
                         searchTerm, position, minSalary, maxSalary, onlyActive);
-        long maxPages = jobOffersCount / pageSize + jobOffersCount % pageSize;
+        long maxPages = (long) Math.ceil((double) jobOffersCount / pageSize);
 
         return new PaginatedResource<>(jobOffers, page, maxPages);
     }

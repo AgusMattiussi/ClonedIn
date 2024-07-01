@@ -231,7 +231,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         List<Enterprise> enterprises = enterpriseDao.getEnterpriseListByFilters(category, location, workers, enterpriseName,
                 term, page-1, pageSize);
         long enterpriseCount = this.getEnterpriseCountByFilters(category, location, workers, enterpriseName, term);
-        long maxPages = enterpriseCount / pageSize + enterpriseCount % pageSize;
+        long maxPages = (long) Math.ceil((double) enterpriseCount / pageSize);
 
         return new PaginatedResource<>(enterprises, page, maxPages);
     }

@@ -69,7 +69,7 @@ public class UserSkillServiceImpl implements UserSkillService {
 
         List<Skill> skills =  userSkillDao.getSkillsForUser(user, page-1, pageSize);
         long skillCount = this.getSkillCountForUser(user);
-        long maxPages = skillCount / pageSize + skillCount % pageSize;
+        long maxPages = (long) Math.ceil((double) skillCount / pageSize);
 
         return new PaginatedResource<>(skills, page, maxPages);
     }

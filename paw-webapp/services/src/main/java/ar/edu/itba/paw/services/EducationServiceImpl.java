@@ -65,7 +65,7 @@ public class EducationServiceImpl implements EducationService {
 
         List<Education> educations = educationDao.findByUser(user, page-1, pageSize);
         long educationCount = this.getEducationCountForUser(user);
-        long maxPages = educationCount / pageSize + educationCount % pageSize;
+        long maxPages = (long) Math.ceil((double) educationCount / pageSize);
 
         return new PaginatedResource<>(educations, page, maxPages);
     }
