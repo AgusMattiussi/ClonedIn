@@ -49,7 +49,7 @@ function JobOfferEnterpriseCard({
       }
     }
     if (loadingData) fetchData()
-  }, [apiRequest])
+  }, [])
 
   const jobOfferSkillsList = skillsData.map((skill) => {
     return (

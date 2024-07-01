@@ -59,7 +59,7 @@ function JobOfferUserCard({
       }
     }
     if (loadingData) fetchData()
-  }, [apiRequest])
+  }, [])
 
   const jobOfferSkillsList = skillsData.map((skill, index) => {
     return (
@@ -118,9 +118,7 @@ function JobOfferUserCard({
         <div className="d-flex flex-column">
           <h5>
             {t("Status")}
-            {": "} { contact.status === JobOfferStatus.CLOSED ? (
-              t("cancelada") ) : ( t(contact.status) )
-            }
+            {": "} {contact.status === JobOfferStatus.CLOSED ? t("cancelada") : t(contact.status)}
           </h5>
           {contact.status !== JobOfferStatus.PENDING ? (
             <></>

@@ -44,7 +44,6 @@ function DiscoverJobs() {
   document.title = t("Discover Jobs") + " | ClonedIn"
 
   const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
-  let queryParams: Record<string, string> = {}
 
   const fetchJobs = useCallback(
     async (
@@ -57,6 +56,8 @@ function DiscoverJobs() {
       sortBy: string,
     ) => {
       setLoading(true)
+
+      const queryParams: Record<string, string> = {}
 
       if (categoryName) queryParams.categoryName = categoryName
       if (modality) queryParams.modality = modality
@@ -95,7 +96,7 @@ function DiscoverJobs() {
       }
       setLoading(false)
     },
-    [getJobOffers, queryParams, navigate],
+    [getJobOffers, navigate],
   )
 
   useEffect(() => {
@@ -113,7 +114,7 @@ function DiscoverJobs() {
     if (isLoading) {
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
-  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs, queryParams, page, sortBy])
+  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs])
 
   const handleSearch = () => {
     setLoading(true)
