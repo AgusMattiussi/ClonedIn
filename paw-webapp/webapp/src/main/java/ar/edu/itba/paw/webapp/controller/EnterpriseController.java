@@ -126,16 +126,24 @@ public class EnterpriseController {
     @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
-                                    @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height) throws IOException {
+                                    @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height,
+                                    @Context Request request) throws IOException {
         Image profileImage = enterpriseService.getProfileImage(id).orElse(null);
         if(profileImage == null)
             return Response.noContent().build();
             // throw new ImageNotFoundException(id, Role.ENTERPRISE);
 
+        Response.ResponseBuilder responseBuilder = ResponseUtils.getBuilderForCachedResponse(request, profileImage.getEntityTag());
+
+        // Cache Hit
+        if(responseBuilder != null){
+            return responseBuilder.build();
+        }
+
+        // Cache Miss
         return Response.ok(profileImage.getResized(width, height))
                 .type(profileImage.getMimeType()) // @Produces
                 .tag(profileImage.getEntityTag())
-                .cacheControl(ResponseUtils.imageCacheControl())
                 .build();
     }
 }

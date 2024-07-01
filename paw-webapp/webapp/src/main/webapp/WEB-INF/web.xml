@@ -88,15 +88,15 @@
 
   <!-- Unconditional Cache Filter -->
   <filter>
-    <filter-name>unconditionalCacheFilter</filter-name>
+    <filter-name>StaticElementsCacheFilter</filter-name>
     <filter-class>ar.edu.itba.paw.webapp.filter.StaticElementsCacheFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>unconditionalCacheFilter</filter-name>
+    <filter-name>StaticElementsCacheFilter</filter-name>
     <url-pattern>/static/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>unconditionalCacheFilter</filter-name>
+    <filter-name>StaticElementsCacheFilter</filter-name>
     <servlet-name>index</servlet-name>
   </filter-mapping>
 
@@ -112,24 +112,5 @@
     <servlet-name>index</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
-
-
-  <!--<error-page>
-    &lt;!&ndash; Forbidden directory listing &ndash;&gt;
-    <error-code>403</error-code>
-    <location>/WEB-INF/views/403.jsp</location>
-  </error-page>
-
-  <error-page>
-    &lt;!&ndash; Missing resource &ndash;&gt;
-    <error-code>404</error-code>
-    <location>/WEB-INF/views/404.jsp</location>
-  </error-page>-->
-
-  <!--<error-page>
-    &lt;!&ndash; Internal server Error &ndash;&gt;
-    <error-code>500</error-code>
-    <location>/WEB-INF/views/500.jsp</location>
-  </error-page>-->
 
 </web-app>

@@ -80,14 +80,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) {
         web.ignoring().antMatchers( "/assets/css/**", "/assets/js/**", "/assets/images/**",
-                "/views/403", "/views/404","/views/500");
+                "/resources/**", "/static/**");
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL)); //Collections.singletonList("http://localhost:3000")); // React Frontend
-        cors.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        cors.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
         cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token",
                 "ETag", "Set-Cookie"));

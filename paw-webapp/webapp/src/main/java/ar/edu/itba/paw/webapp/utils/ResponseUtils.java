@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.utils;
 
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 
 public final class ResponseUtils {
 
@@ -30,5 +28,16 @@ public final class ResponseUtils {
         cacheControl.setNoTransform(true);
         cacheControl.setMustRevalidate(true);
         return cacheControl;
+    }
+
+    // Used for conditional caching
+    public static Response.ResponseBuilder getBuilderForCachedResponse(Request request, EntityTag eTag) {
+        Response.ResponseBuilder response = request.evaluatePreconditions(eTag);
+        if (response != null) {
+            final CacheControl cacheControl = new CacheControl();
+            cacheControl.setNoCache(true);
+            //response.cacheControl(cacheControl);
+        }
+        return response;
     }
 }
