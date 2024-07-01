@@ -47,7 +47,7 @@ function JobOfferDiscoverCard({ seeMoreView, job }: { seeMoreView: boolean; job:
       }
     }
     if (loadingData) fetchData()
-  }, [apiRequest])
+  }, [])
 
   const handleApply = async () => {
     const response = await apiRequest({

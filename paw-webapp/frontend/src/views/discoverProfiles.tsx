@@ -44,7 +44,6 @@ function DiscoverProfiles() {
   document.title = t("Discover Profiles") + " | ClonedIn"
 
   const [sortBy, setSortBy] = useState(SortBy.DEFAULT.toString())
-  let queryParams: Record<string, string> = {}
 
   const fetchUsers = useCallback(
     async (
@@ -57,6 +56,8 @@ function DiscoverProfiles() {
       sortBy: string,
     ) => {
       setLoading(true)
+
+      const queryParams: Record<string, string> = {}
 
       if (categoryName) queryParams.categoryName = categoryName
       if (educationLevel) queryParams.educationLevel = educationLevel
@@ -95,7 +96,7 @@ function DiscoverProfiles() {
       }
       setLoading(false)
     },
-    [getUsers, queryParams, navigate],
+    [getUsers, navigate],
   )
 
   useEffect(() => {
@@ -113,18 +114,7 @@ function DiscoverProfiles() {
     if (isLoading) {
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page, sortBy)
     }
-  }, [
-    categoryName,
-    educationLevel,
-    searchTerm,
-    minExpYears,
-    maxExpYears,
-    isLoading,
-    fetchUsers,
-    queryParams,
-    page,
-    sortBy,
-  ])
+  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers])
 
   const handleSearch = () => {
     setLoading(true)
