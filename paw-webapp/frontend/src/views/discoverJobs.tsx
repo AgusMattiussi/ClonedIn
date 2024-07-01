@@ -252,7 +252,7 @@ function DiscoverJobs() {
             </Row>
             <br />
             <Row>
-              <div className="d-flex flex-wrap justify-content-center">
+              <div className="d-flex flex-wrap justify-content-center" style={{ marginBottom: "10px" }}>
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleClear()}>
                   {t("Clear Filter")}
                 </Button>
@@ -299,7 +299,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                {jobsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} currentPage={page} /> : <></>}
               </Container>
             </Row>
           </Col>

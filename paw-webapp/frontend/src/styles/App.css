@@ -120,7 +120,13 @@
 
 .sidebar {
   background-color: #459f78;
-  height: 100vh;
+}
+
+@media (min-width: 576px) {
+  .sidebar {
+    background-color: #459f78;
+    min-height: 850px;
+  }
 }
 
 .search {

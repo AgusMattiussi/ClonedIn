@@ -200,10 +200,7 @@ function EnterpriseInterested() {
         <td>{contact.categoryInfo.name == "No-Especificado" ? t("No especificado") : t(contact.categoryInfo.name)}</td>
         <td>{contact.userYearsOfExp}</td>
         <td>{contact.date}</td>
-        <td>{ contact.status === JobOfferStatus.CLOSED ? (
-              t("cancelada") ) : ( t(contact.status) )
-            }
-            </td>
+        <td>{contact.status === JobOfferStatus.CLOSED ? t("cancelada") : t(contact.status)}</td>
         <td>
           {contact.status === JobOfferStatus.PENDING ? (
             <div className="d-flex flex-column">
@@ -285,7 +282,10 @@ function EnterpriseInterested() {
                   {t("Cancelled")}
                 </Button>
               </div>
-              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
+              <div
+                className="d-flex flex-wrap justify-content-center mt-4 mx-auto"
+                style={{ maxWidth: "fit-content", marginBottom: "10px" }}
+              >
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleFilter("")}>
                   {t("View All")}
                 </Button>
@@ -349,7 +349,11 @@ function EnterpriseInterested() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+              {contactsList.length > 0 ? (
+                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+              ) : (
+                <></>
+              )}
             </Row>
           </Col>
         </Row>

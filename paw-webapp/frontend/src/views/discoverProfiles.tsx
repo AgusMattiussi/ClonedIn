@@ -260,7 +260,7 @@ function DiscoverProfiles() {
               <br />
             </Form>
             <Row>
-              <div className="d-flex flex-wrap justify-content-center">
+              <div className="d-flex flex-wrap justify-content-center" style={{ marginBottom: "10px" }}>
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleClear()}>
                   {t("Clear Filter")}
                 </Button>
@@ -319,7 +319,11 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                  {usersList.length > 0 ? (
+                    <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </Container>
             </Row>

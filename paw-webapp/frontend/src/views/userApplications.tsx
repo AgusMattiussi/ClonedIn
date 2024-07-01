@@ -266,7 +266,10 @@ function ApplicationsUser() {
                   {t("Cancelled")}
                 </Button>
               </div>
-              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
+              <div
+                className="d-flex flex-wrap justify-content-center mt-4 mx-auto"
+                style={{ maxWidth: "fit-content", marginBottom: "10px" }}
+              >
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleFilter("")}>
                   {t("View All")}
                 </Button>
@@ -314,7 +317,11 @@ function ApplicationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                {userApplications.length > 0 ? (
+                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                ) : (
+                  <></>
+                )}
               </Container>
             </Row>
           </Col>
