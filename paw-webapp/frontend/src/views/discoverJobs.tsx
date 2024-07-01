@@ -299,7 +299,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                {jobsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} currentPage={page} /> : <></>}
               </Container>
             </Row>
           </Col>

@@ -194,7 +194,7 @@ function ProfileEnterprise() {
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+            {usersJobs.length > 0 ? <Pagination pages={totalPages} setter={handlePage} currentPage={page} /> : <></>}
           </Col>
         </Row>
       </Container>

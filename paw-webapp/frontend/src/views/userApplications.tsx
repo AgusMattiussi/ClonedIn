@@ -317,7 +317,11 @@ function ApplicationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                {userApplications.length > 0 ? (
+                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+                ) : (
+                  <></>
+                )}
               </Container>
             </Row>
           </Col>

@@ -218,7 +218,8 @@ function EnterpriseContacts() {
               {t("Cancel")}
             </Button>
           ) : contact.status === JobOfferStatus.CLOSED ? (
-            t("cancelada") ) : (
+            t("cancelada")
+          ) : (
             t(contact.status)
           )}
         </td>
@@ -340,7 +341,11 @@ function EnterpriseContacts() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+              {contactsList.length > 0 ? (
+                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
+              ) : (
+                <></>
+              )}
             </Row>
           </Col>
         </Row>
