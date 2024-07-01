@@ -165,6 +165,9 @@ public class UserServiceImpl implements UserService {
         List<User> users = userDao.getUsersListByFilters(category, educationLevel, term, minExpYears, maxExpYears,
                                      location, skillId, skillDescription, sortBy, page-1, pageSize);
 
+        // This is done to avoid lazy loading exceptions when calculating the experience years
+        users.forEach(User::getYearsOfExperience);
+
         final long userCount = this.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears,
                                      location, skillId, skillDescription);
         long maxPages = userCount / pageSize + userCount % pageSize;
