@@ -171,7 +171,8 @@ public class ContactServiceImpl implements ContactService {
         List<Contact> contacts = contactDao.getContactsForUser(user, filledBy, status, sortBy, page-1, pageSize);
 
         long applicationsCount = this.getContactsCountForUser(user, filledBy, status);
-        long maxPages = applicationsCount / pageSize + applicationsCount % pageSize;
+        long maxPages = (long) Math.ceil((double) applicationsCount / pageSize);
+
 
         return new PaginatedResource<>(contacts, page, maxPages);
     }
@@ -216,7 +217,7 @@ public class ContactServiceImpl implements ContactService {
                 sortBy, page-1, pageSize);
 
         long contactCount = this.getContactsCount(enterprise, jobOffer, user, filledBy, status);
-        long maxPages = contactCount / pageSize + contactCount % pageSize;
+        long maxPages = (long) Math.ceil((double) contactCount / pageSize);
 
         return new PaginatedResource<>(contacts, page, maxPages);
     }

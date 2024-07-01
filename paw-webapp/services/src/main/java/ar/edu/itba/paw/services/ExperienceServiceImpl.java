@@ -69,7 +69,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 
         List<Experience> experiences = experienceDao.findByUser(user, page - 1, pageSize);
         long experienceCount = this.getExperienceCountForUser(user);
-        long maxPages = experienceCount/pageSize + 1;
+        long maxPages = (long) Math.ceil((double) experienceCount / pageSize);
 
         return new PaginatedResource<>(experiences, page, maxPages);
     }
