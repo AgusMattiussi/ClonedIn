@@ -46,12 +46,12 @@ function RegisterEnterprise() {
       e.pass,
       e.repeatPass,
       e.name,
-      e.city,
+      e.location,
       category,
       workers,
       fYear,
-      e.link,
-      e.aboutUs,
+      e.website,
+      e.description,
     )
     if (registered) {
       await loginHandler(e.email, e.pass)
@@ -99,17 +99,17 @@ function RegisterEnterprise() {
       .string()
       .oneOf([yup.ref("pass")], t("Password Match") as string)
       .required(t("Required") as string),
-    city: yup.string().max(50, t("Single Line Max Length") as string),
+    location: yup.string().max(50, t("Single Line Max Length") as string),
     foundingYear: yup
       .number()
       .typeError(t("Invalid Number") as string)
       .min(1000, t("Invalid Year Min") as string)
       .max(new Date().getFullYear(), t("Invalid Year Max") as string),
-    link: yup
+    website: yup
       .string()
       .matches(re, t("Invalid URL") as string)
       .max(200, t("Multi Line Max Length") as string),
-    aboutUs: yup.string().max(600, t("Long Line Max Length") as string),
+    description: yup.string().max(600, t("Long Line Max Length") as string),
   })
 
   return (
@@ -133,10 +133,10 @@ function RegisterEnterprise() {
                         name: "",
                         pass: "",
                         repeatPass: "",
-                        city: "",
+                        location: "",
                         foundingYear: "",
-                        link: "",
-                        aboutUs: "",
+                        website: "",
+                        description: "",
                       }}
                       onSubmit={(values) => {
                         handleRegister(values)
@@ -214,14 +214,14 @@ function RegisterEnterprise() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicLocation">
                               <Form.Control
-                                name="city"
+                                name="location"
                                 className="input"
                                 placeholder={t("Location").toString()}
-                                value={values.city}
+                                value={values.location}
                                 onChange={handleChange}
-                                isInvalid={!!errors.city}
+                                isInvalid={!!errors.location}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
                             </Form.Group>
                             <div className="d-flex mb-4 justify-content-between">
                               <label className="area pt-1 mx-1">{t("Quantity of employees")}</label>
@@ -275,26 +275,26 @@ function RegisterEnterprise() {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicWebsite">
                               <Form.Control
-                                name="link"
+                                name="website"
                                 className="input"
                                 placeholder={t("Website").toString()}
-                                value={values.link}
+                                value={values.website}
                                 onChange={handleChange}
-                                isInvalid={!!errors.link}
+                                isInvalid={!!errors.website}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.link}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.website}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
-                                name="aboutUs"
+                                name="description"
                                 placeholder={t("About Us").toString()}
                                 as="textarea"
                                 rows={3}
-                                value={values.aboutUs}
+                                value={values.description}
                                 onChange={handleChange}
-                                isInvalid={!!errors.aboutUs}
+                                isInvalid={!!errors.description}
                               />
-                              <Form.Control.Feedback type="invalid">{errors.aboutUs}</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             </Form.Group>
                           </div>
                           <p>{t("Fields required")}</p>

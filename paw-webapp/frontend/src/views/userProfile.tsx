@@ -162,10 +162,9 @@ function ProfileUser() {
   }
 
   const handleVisibility = async () => {
-    let visibility = "visible"
-    if (user?.visibility === 1) visibility = "invisible"
-    else visibility = "visible"
-
+    let visibility = true
+    if (user?.visible) visibility = false
+    else visibility = true
     const response = await modifyUserVisibility(id, visibility)
 
     if (response.status === HttpStatusCode.Ok) {
@@ -270,7 +269,7 @@ function ProfileUser() {
               <></>
             ) : (
               <Button variant="success" type="button" onClick={() => handleVisibility()}>
-                {user?.visibility === 1 ? t("Hide My Profile") : t("Show My Profile")}
+                {user?.visible ? t("Hide My Profile") : t("Show My Profile")}
               </Button>
             )}
             {isUserLoading ? (

@@ -7,21 +7,21 @@ export const usePutUserInfo = () => {
     id: string | undefined,
     name: string,
     location: string,
-    position: string,
-    aboutMe: string,
+    currentPosition: string,
+    description: string,
     category: string | undefined,
-    level: string | undefined,
+    educationLevel: string | undefined,
   ) {
     const response = await apiRequest({
       url: `/users/${id}`,
-      method: "PUT",
+      method: "POST",
       body: {
         name,
         location,
-        position,
-        aboutMe,
+        currentPosition,
+        description,
         category,
-        level,
+        educationLevel,
       },
     })
     return response
