@@ -121,11 +121,10 @@ public class UserController {
     @Path("/{id}")
     @Produces(ClonedInMediaType.USER_V1)
     @PreAuthorize(ENTERPRISE_OR_PROFILE_OWNER)
-    @Transactional
     public Response getById(@PathParam("id") @Min(1) final long id) {
-        UserDTO user = us.findById(id).map(u -> UserDTO.fromUser(uriInfo,u))
+        UserDTO user = us.findById(id, true).map(u -> UserDTO.fromUser(uriInfo,u))
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return Response.ok(user).links().build();
+        return Response.ok(user).build();
     }
 
     @POST

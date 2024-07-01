@@ -82,6 +82,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public Optional<User> findById(long userId, boolean getYearsOfExperience) {
+        Optional<User> optUser = findById(userId);
+
+        if(getYearsOfExperience) {
+            optUser.ifPresent(user -> {
+                // This is done to avoid lazy initialization exceptions
+                user.getYearsOfExperience();
+            });
+        }
+
+        return optUser;
+    }
+
+    @Override
     public Optional<Long> getIdForEmail(String email) {
         return userDao.getIdForEmail(email);
     }

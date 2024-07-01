@@ -25,6 +25,8 @@ public interface UserService {
 
     Optional<User> findById(long userId);
 
+    Optional<User> findById(long userId, boolean getYearsOfExperience);
+
     Optional<Long> getIdForEmail(String email);
 
     boolean userExists(String email);
