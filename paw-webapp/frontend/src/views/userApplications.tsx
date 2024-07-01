@@ -266,7 +266,10 @@ function ApplicationsUser() {
                   {t("Cancelled")}
                 </Button>
               </div>
-              <div className="d-flex flex-wrap justify-content-center mt-4 mx-auto" style={{ maxWidth: "fit-content" }}>
+              <div
+                className="d-flex flex-wrap justify-content-center mt-4 mx-auto"
+                style={{ maxWidth: "fit-content", marginBottom: "10px" }}
+              >
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleFilter("")}>
                   {t("View All")}
                 </Button>

@@ -260,7 +260,7 @@ function DiscoverProfiles() {
               <br />
             </Form>
             <Row>
-              <div className="d-flex flex-wrap justify-content-center">
+              <div className="d-flex flex-wrap justify-content-center" style={{ marginBottom: "10px" }}>
                 <Button variant="outline-light " className="filterbtn" onClick={() => handleClear()}>
                   {t("Clear Filter")}
                 </Button>
