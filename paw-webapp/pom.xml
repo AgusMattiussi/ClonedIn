@@ -51,6 +51,15 @@
     </repository>
   </repositories>
 
+  <modules>
+    <module>frontend</module>
+    <module>webapp</module>
+    <module>services</module>
+    <module>models</module>
+    <module>interfaces</module>
+    <module>persistence</module>
+  </modules>
+
   <dependencyManagement>
     <dependencies>
 
@@ -366,17 +375,16 @@
         <version>${frontend-maven-plugin.version}</version>
       </dependency>
 
+      <!-- Ensures that the frontend is built before the webapp module -->
+      <dependency>
+        <groupId>ar.edu.itba.paw</groupId>
+        <artifactId>frontend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <modules>
-    <module>frontend</module>
-    <module>webapp</module>
-    <module>services</module>
-    <module>models</module>
-    <module>interfaces</module>
-    <module>persistence</module>
-  </modules>
+
 
    <build>
      <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults -->
