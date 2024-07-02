@@ -17,6 +17,8 @@ public interface ContactService {
 
     Optional<Contact> getContact(long userID, long jobOfferID);
 
+    Optional<Contact> getContact(long userID, long jobOfferID, boolean fetchYearsOfExperience);
+
     Contact addContact(long userId, long jobOfferId, FilledBy filledBy);
 
     Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage);
@@ -104,8 +106,8 @@ public interface ContactService {
 
     Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message);
 
-    default Optional<Contact> getContact(String contactId) {
+    default Optional<Contact> getContact(String contactId, Role requesterRole) {
         final long[] ids = Contact.splitId(contactId);
-        return getContact(ids[0], ids[1]);
+        return getContact(ids[0], ids[1], requesterRole == Role.ENTERPRISE);
     }
 }

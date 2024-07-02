@@ -53,6 +53,26 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
+    public Optional<Contact> getContact(long userID, long jobOfferID, boolean fetchYearsOfExperience) {
+        if(!fetchYearsOfExperience) {
+            return this.getContact(userID, jobOfferID);
+        }
+
+        if(userID <= 0 || jobOfferID <= 0) {
+            LOGGER.error("Invalid user id {} or jobOffer id {} - getContact method", userID, jobOfferID);
+            throw new IllegalArgumentException("Invalid user id or jobOffer id");
+        }
+
+        Optional<Contact> optContact = contactDao.findByPrimaryKey(userID, jobOfferID);
+        optContact.ifPresent(contact -> {
+            contact.getUser().getYearsOfExperience();
+        });
+
+        return optContact;
+    }
+
+    @Override
+    @Transactional
     public Contact addContact(long userId, long jobOfferId, FilledBy filledBy) {
 
         if(filledBy == FilledBy.ANY) {
@@ -595,6 +615,13 @@ public class ContactServiceImpl implements ContactService {
                 throw new IllegalArgumentException("Job offer id cannot be null");
             return addContact(requesterId, userId, jobOfferId, FilledBy.ENTERPRISE, message);
         }
+    }
+
+    @Override
+    @Transactional
+    public Optional<Contact> getContact(String contactId, Role requesterRole) {
+        final long[] ids = Contact.splitId(contactId);
+        return getContact(ids[0], ids[1], requesterRole == Role.ENTERPRISE);
     }
 
 

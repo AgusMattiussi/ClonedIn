@@ -104,7 +104,6 @@ public class SecurityValidator {
         return false;
     }
 
-    @Transactional
     public boolean isGetSkillsValid(Long userId, Long jobOfferId) {
         Role requesterRole = SecurityUtils.getPrincipalRole();
         if(requesterRole == Role.USER)
@@ -119,7 +118,6 @@ public class SecurityValidator {
         return false;
     }
 
-    @Transactional
     public boolean canAccessContact(String contactId){
         Role requesterRole = SecurityUtils.getPrincipalRole();
 

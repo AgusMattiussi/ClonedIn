@@ -104,7 +104,7 @@ public class ContactController {
     @Produces(ClonedInMediaType.CONTACT_V1)
     @PreAuthorize("@securityValidator.canAccessContact(#contactId)")
     public Response getContact(@PathParam("contactId") final String contactId) {
-        ContactDTO contactDTO = contactService.getContact(contactId)
+        ContactDTO contactDTO = contactService.getContact(contactId, SecurityUtils.getPrincipalRole())
                 .map(c -> ContactDTO.fromContact(uriInfo, c, SecurityUtils.getPrincipalRole() == Role.ENTERPRISE))
                 .orElseThrow(() -> new ContactNotFoundException(contactId));
 
