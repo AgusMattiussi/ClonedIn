@@ -4,15 +4,15 @@ export const usePutJobOfferStatus = () => {
   const { apiRequest } = useRequestApi()
 
   async function closeJobOffer(
-    id: string | undefined,
-    jobOfferToCloseId: number | null,
-    queryParams: Record<string, string> = {},
+    id: number | null,
+    availability: string,
   ) {
     const response = await apiRequest({
-      url: `/enterprises/${id}/jobOffers/${jobOfferToCloseId}`,
-
-      method: "PUT",
-      queryParams: queryParams,
+      url: `/jobOffers/${id}`,
+      method: "POST",
+      body: {
+        availability
+      },
     })
     return response
   }

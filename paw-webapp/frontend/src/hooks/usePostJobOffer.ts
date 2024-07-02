@@ -5,8 +5,8 @@ export const usePostJobOffer = () => {
 
   async function addJobOffer(
     id: string | undefined,
-    jobPosition: string,
-    jobDescription: string,
+    position: string,
+    description: string,
     salary: string,
     category: string,
     modality: string,
@@ -16,11 +16,11 @@ export const usePostJobOffer = () => {
     skill4: string,
   ) {
     const response = await apiRequest({
-      url: `/enterprises/${id}/jobOffers`,
+      url: `/jobOffers`,
       method: "POST",
       body: {
-        jobPosition,
-        jobDescription,
+        position,
+        description,
         salary,
         category,
         modality,

@@ -117,10 +117,8 @@ function ProfileEnterprise() {
   ])
 
   const handleClose = async () => {
-    const queryParams: Record<string, string> = {}
-    queryParams.availability = JobOfferAvailability.CLOSED
-
-    const response = await closeJobOffer(id, jobOfferToCloseId, queryParams)
+ 
+    const response = await closeJobOffer(jobOfferToCloseId, JobOfferAvailability.CLOSED)
 
     if (response.status === HttpStatusCode.Ok) {
       setJobsLoading(true)
