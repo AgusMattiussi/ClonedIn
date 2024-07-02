@@ -18,25 +18,30 @@ export default function Pagination({
     paginationNumbers.push(i)
   }
 
+  const handleClick = (newpage: string) => {
+    setter(newpage);
+  };
+
   return (
     <nav className="d-flex justify-content-center align-items-center">
       <MDBPagination className="mb-0">
-        <MDBPaginationItem onClick={() => setter("1")}>
-          <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
+        <MDBPaginationItem disabled={currentPage === "1"} onClick={() => handleClick("1")}>
+          <MDBPaginationLink style={{ textDecoration: "none", color: currentPage === "1" ? 'gray' : 'black' }}>
             {t("Index Pagination First")}
           </MDBPaginationLink>
         </MDBPaginationItem>
         {paginationNumbers.map((pageNumber, index) => (
           <MDBPaginationItem
-            onClick={() => setter(pageNumber)}
+            onClick={() => handleClick(pageNumber.toString())}
             key={index}
-            className={currentPage === pageNumber.toString() ? "fw-bold" : ""}
           >
-            <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>{pageNumber}</MDBPaginationLink>
+            <MDBPaginationLink style={{ textDecoration: "none",
+              fontWeight: currentPage === pageNumber.toString() ? 'bold' : 'normal',
+            }}>{pageNumber}</MDBPaginationLink>
           </MDBPaginationItem>
         ))}
-        <MDBPaginationItem onClick={() => setter(pages)}>
-          <MDBPaginationLink style={{ textDecoration: "none", color: "black" }}>
+        <MDBPaginationItem disabled={currentPage === pages} onClick={() => handleClick(pages)}>
+          <MDBPaginationLink style={{ textDecoration: "none", color: currentPage === pages ? 'gray' : 'black'}}>
             {t("Index Pagination End")}
           </MDBPaginationLink>
         </MDBPaginationItem>
