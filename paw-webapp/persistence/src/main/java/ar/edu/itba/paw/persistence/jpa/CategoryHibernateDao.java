@@ -33,7 +33,7 @@ public class CategoryHibernateDao implements CategoryDao {
     @Override
     //@Cacheable(key = "#name", unless = "#result == null")
     public Optional<Category> findByName(String name) {
-        final TypedQuery<Category> query = em.createQuery("SELECT c FROM Category AS c WHERE c.name = :name", Category.class);
+        final TypedQuery<Category> query = em.createQuery("SELECT c FROM Category AS c WHERE LOWER(c.name) = LOWER(:name)", Category.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
     }
@@ -44,10 +44,21 @@ public class CategoryHibernateDao implements CategoryDao {
         return Optional.ofNullable(em.find(Category.class, id));
     }
 
+
     @Override
     //@Cacheable(key = "#page + '-' + #pageSize")
-    public List<Category> getAllCategories(int page, int pageSize) {
-        TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c WHERE c.id <> 1", Category.class);
+    public List<Category> getAllCategories(String nameLike, int page, int pageSize) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT c FROM Category c WHERE c.id <> 1");
+
+        if(nameLike != null && !nameLike.isEmpty()) {
+            queryBuilder.append(" AND LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')) ESCAPE '\\'");
+        }
+
+        TypedQuery<Category> query = em.createQuery(queryBuilder.toString(), Category.class);
+
+        if(nameLike != null && !nameLike.isEmpty()) {
+            query.setParameter("name", nameLike);
+        }
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();

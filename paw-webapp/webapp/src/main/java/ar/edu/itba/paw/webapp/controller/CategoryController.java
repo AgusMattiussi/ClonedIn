@@ -41,8 +41,9 @@ public class CategoryController {
     @Produces(ClonedInMediaType.CATEGORY_LIST_V1)
     public Response listCategories(@QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                                    @QueryParam("pageSize") @DefaultValue(S_CATEGORIES_BY_PAGE)
-                                        @Min(1) @Max(2*CATEGORIES_BY_PAGE) final int pageSize) {
-        final PaginatedResource<Category> categories = categoryService.getAllCategories(page, pageSize);
+                                        @Min(1) @Max(2*CATEGORIES_BY_PAGE) final int pageSize,
+                                   @QueryParam("searchTerm") final String searchTerm) {
+        final PaginatedResource<Category> categories = categoryService.getAllCategories(searchTerm, page, pageSize);
 
         if (categories.getPage().isEmpty())
             return Response.noContent().build();

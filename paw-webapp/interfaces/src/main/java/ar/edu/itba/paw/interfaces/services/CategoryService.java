@@ -13,7 +13,7 @@ public interface CategoryService {
 
     Optional<Category> findById(long id);
 
-    PaginatedResource<Category> getAllCategories(int page, int pageSize);
+    PaginatedResource<Category> getAllCategories(String nameLike, int page, int pageSize);
 
     long getCategoryCount();
 }

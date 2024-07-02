@@ -68,7 +68,7 @@ public class CategoryHibernateDaoTest {
 
     @Test
     public void testGetAllCategories(){
-        final List<Category> allCategories = dao.getAllCategories(0, 3);
+        final List<Category> allCategories = dao.getAllCategories(null,0, 3);
         assertEquals(CATEGORIES_COUNT, allCategories.size());
     }
 }

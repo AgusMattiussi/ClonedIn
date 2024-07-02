@@ -10,9 +10,10 @@ public interface CategoryDao {
 
     Optional<Category> findByName(String name);
 
+
     Optional<Category> findById(long id);
 
-    List<Category> getAllCategories(int page, int pageSize);
+    List<Category> getAllCategories(String nameLike, int page, int pageSize);
 
     long getCategoryCount();
 }
