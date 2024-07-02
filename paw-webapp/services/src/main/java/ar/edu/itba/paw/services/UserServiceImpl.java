@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<Long> getIdForEmail(String email) {
         return userDao.getIdForEmail(email);
     }
