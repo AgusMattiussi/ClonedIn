@@ -66,7 +66,6 @@ function DiscoverProfiles() {
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
       if (page) queryParams.page = page
       if (sortBy) queryParams.sortBy = sortBy
-      queryParams.pageSize = "2"
 
       try {
         const response = await getUsers(queryParams)
