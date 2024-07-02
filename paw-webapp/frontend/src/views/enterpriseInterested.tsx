@@ -41,8 +41,7 @@ function EnterpriseInterested() {
   const [totalPages, setTotalPages] = useState("")
   const [page, setPage] = useState("1")
 
-  const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
-  const [userToAnswerId, setUserToAnswerId] = useState<any>()
+  const [contactId, setToAnswerId] = useState<any>()
 
   document.title = t("Interested Page Title")
 
@@ -156,9 +155,8 @@ function EnterpriseInterested() {
     setLoading(true)
   }
 
-  const setParams = (jobOfferId: number, userId: number) => {
-    setJobOfferToAnswerId(jobOfferId)
-    setUserToAnswerId(userId)
+  const setParams = (contactId: string) => {
+    setToAnswerId(contactId)
   }
 
   const handlePage = (pageNumber: string) => {
@@ -167,10 +165,9 @@ function EnterpriseInterested() {
   }
 
   const handleAnswer = async (answer: string) => {
-    const queryParams: Record<string, string> = {}
-    queryParams.status = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
+    let status_answer = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
 
-    const response = await answerEnterpriseContact(userInfo?.id, jobOfferToAnswerId, userToAnswerId, queryParams)
+    const response = await answerEnterpriseContact(contactId, status_answer)
 
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
@@ -209,7 +206,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#acceptModal"
-                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
+                onClick={() => setParams(contact.id)}
               >
                 {t("Accept")}
               </Button>
@@ -218,7 +215,7 @@ function EnterpriseInterested() {
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#rejectModal"
-                onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
+                onClick={() => setParams(contact.id)}
               >
                 {t("Decline")}
               </Button>

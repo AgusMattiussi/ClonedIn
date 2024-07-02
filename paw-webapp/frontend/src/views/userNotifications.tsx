@@ -39,7 +39,7 @@ function NotificationsUser() {
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const [filledBy] = useState(FilledBy.ENTERPRISE.toString())
 
-  const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
+  const [contactId, setToAnswerId] = useState<any>()
   const [totalPages, setTotalPages] = useState("")
   const [page, setPage] = useState("1")
 
@@ -183,10 +183,9 @@ function NotificationsUser() {
   }
 
   const handleAnswer = async (answer: string) => {
-    const queryParams: Record<string, string> = {}
-    queryParams.status = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
+    let status_answer = answer === "Accept" ? JobOfferStatus.ACCEPTED : JobOfferStatus.DECLINED
 
-    const response = await answerUserContact(userInfo?.id, jobOfferToAnswerId, queryParams)
+    const response = await answerUserContact(contactId, status_answer)
 
     if (response.status === HttpStatusCode.Ok) {
       setLoading(true)
@@ -206,7 +205,7 @@ function NotificationsUser() {
         contact={notification}
         job={notification.jobOfferInfo}
         handler={handleAnswer}
-        setJobOfferId={setJobOfferToAnswerId}
+        setToAnswerId={setToAnswerId}
         applicationsView={false}
         key={index}
       />

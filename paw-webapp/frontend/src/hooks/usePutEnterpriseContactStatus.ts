@@ -4,15 +4,15 @@ export const usePutEnterpriseContactStatus = () => {
   const { apiRequest } = useRequestApi()
 
   async function answerEnterpriseContact(
-    id: string | undefined,
-    jobOfferToAnswerId: string,
-    userToAnswerId: string,
-    queryParams: Record<string, string> = {},
+    contactId: string | undefined,
+    status: string
   ) {
     const response = await apiRequest({
-      url: `/enterprises/${id}/contacts/${jobOfferToAnswerId}/${userToAnswerId}`,
-      method: "PUT",
-      queryParams: queryParams,
+      url: `/contacts/${contactId}`,
+      method: "POST",
+      body: {
+        status,
+      },
     })
     return response
   }

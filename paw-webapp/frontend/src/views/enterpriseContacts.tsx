@@ -40,8 +40,7 @@ function EnterpriseContacts() {
   const [totalPages, setTotalPages] = useState("")
   const [page, setPage] = useState("1")
 
-  const [jobOfferToCancelId, setJobOfferToCancelId] = useState<any>()
-  const [userToCancelId, setUserToCancelId] = useState<any>()
+  const [contactId, setToCancelId] = useState<any>()
 
   document.title = t("My Recruits Page Title")
 
@@ -163,16 +162,13 @@ function EnterpriseContacts() {
     setLoading(true)
   }
 
-  const setParams = (jobOfferId: number, userId: number) => {
-    setJobOfferToCancelId(jobOfferId)
-    setUserToCancelId(userId)
+  const setParams = (contactId: string) => {
+    setToCancelId(contactId)
   }
 
   const handleCancel = async () => {
-    const queryParams: Record<string, string> = {}
-    queryParams.status = JobOfferStatus.CANCELLED
 
-    const response = await answerEnterpriseContact(userInfo?.id, jobOfferToCancelId, userToCancelId, queryParams)
+    const response = await answerEnterpriseContact(contactId, JobOfferStatus.CANCELLED)
 
     if (response.status === HttpStatusCode.NoContent) {
       setLoading(true)
@@ -213,7 +209,7 @@ function EnterpriseContacts() {
               style={{ minWidth: "90px", marginBottom: "5px" }}
               data-bs-toggle="modal"
               data-bs-target="#cancelModal"
-              onClick={() => setParams(contact.jobOfferInfo?.id, contact.userId)}
+              onClick={() => setParams(contact.id)}
             >
               {t("Cancel")}
             </Button>

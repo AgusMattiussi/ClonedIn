@@ -51,10 +51,11 @@ function JobOfferDiscoverCard({ seeMoreView, job }: { seeMoreView: boolean; job:
 
   const handleApply = async () => {
     const response = await apiRequest({
-      url: `/users/${userInfo?.id}/contacts`,
+      url: `/contacts`,
       method: "POST",
       body: {
         jobOfferId: job.id,
+        userId: jobEnterprise?.id
       },
     })
 
