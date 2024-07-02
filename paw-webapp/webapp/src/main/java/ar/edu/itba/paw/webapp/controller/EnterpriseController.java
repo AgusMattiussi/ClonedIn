@@ -93,7 +93,7 @@ public class EnterpriseController {
         EnterpriseDTO enterpriseDTO = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e))
                 .orElseThrow(() -> new EnterpriseNotFoundException(id));
         return Response.ok(enterpriseDTO)
-                .cacheControl(unconditionalCache(CACHE_1_HOUR))
+                //.cacheControl(unconditionalCache(CACHE_1_HOUR))
                 .build();
     }
 

@@ -113,7 +113,7 @@ public class JobOfferController {
                 .orElseThrow(() -> new JobOfferNotFoundException(id));
         return Response
                 .ok(jobOffer)
-                .cacheControl(unconditionalCache(CACHE_1_HOUR))
+                //.cacheControl(unconditionalCache(CACHE_1_HOUR))
                 .build();
     }
 
@@ -144,7 +144,7 @@ public class JobOfferController {
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {})
-                .cacheControl(unconditionalCache(CACHE_1_WEEK))
+                .cacheControl(unconditionalCache(CACHE_1_YEAR))
                 .build();
     }
 }
