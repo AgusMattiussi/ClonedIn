@@ -78,7 +78,7 @@ function ContactForm() {
 
   const handlePost = async (e: any) => {
     const message = e.message
-    const response = await addContact(userInfo?.id, message, jobOfferId, userId)
+    const response = await addContact(message, jobOfferId, userId)
 
     if (response.status === HttpStatusCode.Created) {
       navigate(`/enterprises/${userInfo?.id}/contacts`)

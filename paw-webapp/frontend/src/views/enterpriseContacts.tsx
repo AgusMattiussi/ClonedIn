@@ -94,7 +94,7 @@ function EnterpriseContacts() {
       if (page) queryParams.page = page
 
       try {
-        const response = await getEnterpriseContacts(userInfo?.id, queryParams)
+        const response = await getEnterpriseContacts(queryParams)
         if (response.status === HttpStatusCode.Forbidden) {
           navigate("/403")
         } else if (response.status === HttpStatusCode.InternalServerError) {

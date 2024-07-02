@@ -113,7 +113,7 @@ function ApplicationsUser() {
       if (page) queryParams.page = page
 
       try {
-        const response = await getUserContacts(userInfo?.id, queryParams)
+        const response = await getUserContacts(queryParams)
         if (response.status === HttpStatusCode.Forbidden) {
           navigate("/403")
         } else if (response.status === HttpStatusCode.InternalServerError) {

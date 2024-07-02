@@ -3,9 +3,9 @@ import { useRequestApi } from "../api/apiRequest"
 export const useGetUserContacts = () => {
   const { apiRequest } = useRequestApi()
 
-  async function getUserContacts(id: string | undefined, queryParams: Record<string, string> = {}) {
+  async function getUserContacts(queryParams: Record<string, string> = {}) {
     const response = await apiRequest({
-      url: `/users/${id}/contacts`,
+      url: `/contacts`,
       method: "GET",
       queryParams: queryParams,
       requiresAuth: true,
