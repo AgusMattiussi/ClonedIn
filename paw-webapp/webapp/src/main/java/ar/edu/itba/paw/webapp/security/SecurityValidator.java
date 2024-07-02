@@ -33,7 +33,6 @@ public class SecurityValidator {
         return true;
     }
 
-    @Transactional
     public boolean isUserProfileOwner(long profileID) {
         String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
@@ -42,7 +41,6 @@ public class SecurityValidator {
         return isProfileOwner(userID, profileID);
     }
 
-    @Transactional
     public boolean isEnterpriseProfileOwner(long profileID) {
         String email = SecurityUtils.getPrincipalEmail();
         if(email == null)
@@ -51,7 +49,6 @@ public class SecurityValidator {
         return isProfileOwner(enterpriseID, profileID);
     }
 
-    @Transactional
     public boolean isUserVisible(long userID){
         User user = userService.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         if(user.getVisibility() != Visibility.VISIBLE.getValue())
