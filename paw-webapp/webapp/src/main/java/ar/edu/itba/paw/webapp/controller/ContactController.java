@@ -89,8 +89,6 @@ public class ContactController {
     @Consumes(MediaType.APPLICATION_JSON)
     @PreAuthorize("hasAuthority('USER') or @securityValidator.isJobOfferOwner(#contactForm.jobOfferId)")
     public Response contactUser(@Valid @NotNull final ContactForm contactForm) {
-
-
         Contact contact = contactService.addContact(SecurityUtils.getPrincipalRole(), SecurityUtils.getPrincipalId(),
                 contactForm.getJobOfferId(), contactForm.getUserId(), contactForm.getMessage());
 

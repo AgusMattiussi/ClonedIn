@@ -213,8 +213,12 @@ public class ContactServiceImpl implements ContactService {
                     return new JobOfferNotFoundException(jobOfferId);
                 }) : null;
 
+
         List<Contact> contacts = contactDao.getContacts(enterprise, jobOffer, user, filledBy, statusValue,
                 sortBy, page-1, pageSize);
+
+        // Fetch user years of experience to avoid LazyInitializationException
+        contacts.forEach(contact -> contact.getUser().getYearsOfExperience());
 
         long contactCount = this.getContactsCount(enterprise, jobOffer, user, filledBy, status);
         long maxPages = (long) Math.ceil((double) contactCount / pageSize);
@@ -552,6 +556,22 @@ public class ContactServiceImpl implements ContactService {
     public void updateContactStatus(Role requesterRole, String contactId, ContactStatus status) {
         long[] ids = Contact.splitId(contactId);
         updateContactStatus(requesterRole, ids[0], ids[1], status);
+    }
+
+    @Override
+    @Transactional
+    public PaginatedResource<Contact> getContactsForRole(Role requesterRole, Long requesterId, Long enterpriseId,
+                                                         Long jobOfferId, Long userId, FilledBy filledBy, ContactStatus status,
+                                                         ContactSorting sortBy, int page, int pageSize) {
+        if(requesterRole == null)
+            throw new IllegalArgumentException("Requester role cannot be null");
+        if(requesterId == null)
+            throw new IllegalArgumentException("Requester id cannot be null");
+
+        if(requesterRole == Role.USER)
+            return getContacts(enterpriseId, jobOfferId, requesterId, filledBy, status, sortBy, page, pageSize);
+        else
+            return getContacts(requesterId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
     }
 
     @Override

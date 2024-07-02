@@ -34,7 +34,7 @@ public class ContactDTO {
             User user = contact.getUser();
             dto.userName = user.getName();
             // TODO: Por que no se podria pedir en GET @ /users/{id}?
-            //dto.userYearsOfExp = user.getYearsOfExperience();
+            dto.userYearsOfExp = user.getYearsOfExperience();
             dto.userId = user.getId();
         }
 
