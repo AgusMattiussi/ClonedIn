@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.exceptions.CategoryNotFoundException;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import ar.edu.itba.paw.webapp.api.ClonedInMediaType;
 import ar.edu.itba.paw.webapp.dto.CategoryDTO;
+import ar.edu.itba.paw.webapp.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 @Path("api/categories")
 @Component
@@ -59,6 +60,8 @@ public class CategoryController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         CategoryDTO categoryDTO = categoryService.findById(id).map(c -> CategoryDTO.fromCategory(uriInfo, c))
                 .orElseThrow(() -> new CategoryNotFoundException(id));
-        return Response.ok(categoryDTO).build();
+        return Response.ok(categoryDTO)
+                .cacheControl(unconditionalCache(CACHE_1_YEAR))
+                .build();
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 /*
-* We tried to make use of caching in our application, but we were not able to make it work properly
+* We tried to make use of caching in our persistence layer, but we were not able to make it work properly
 * because of the many LazyInitializationExceptions that we were getting.
 */
 
