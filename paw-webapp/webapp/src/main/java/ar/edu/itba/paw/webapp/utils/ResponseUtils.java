@@ -7,6 +7,9 @@ public final class ResponseUtils {
     public static final String TOTAL_PAGES_HEADER = "X-Total-Pages";
     public static final int CACHE_1_YEAR = 31_536_000;
     public static final int CACHE_1_MONTH = 2_592_000;
+    public static final int CACHE_1_WEEK = 604_800;
+    public static final int CACHE_1_DAY = 86_400;
+    public static final int CACHE_1_HOUR = 3_600;
 
     private ResponseUtils() {}
 

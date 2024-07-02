@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.GET;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 @Path("api/jobOffers")
 @Component
@@ -111,7 +111,10 @@ public class JobOfferController {
     public Response getById(@PathParam("id") final long id) {
         JobOfferDTO jobOffer = jobOfferService.findById(id).map(job -> JobOfferDTO.fromJobOffer(uriInfo,job))
                 .orElseThrow(() -> new JobOfferNotFoundException(id));
-        return Response.ok(jobOffer).build();
+        return Response
+                .ok(jobOffer)
+                .cacheControl(unconditionalCache(CACHE_1_HOUR))
+                .build();
     }
 
     @POST
@@ -122,7 +125,9 @@ public class JobOfferController {
         jobOfferService.updateJobOfferAvailability(id, form.getAvailabilityEnum());
 
         final URI uri = uriInfo.getAbsolutePath();
-        return Response.ok().location(uri).build();
+        return Response.ok()
+                .location(uri)
+                .build();
     }
 
     // TODO: Usar JobOfferSkillService
@@ -138,6 +143,8 @@ public class JobOfferController {
         List<SkillDTO> skillDTOs = skills.stream().map(skill -> SkillDTO.fromSkill(uriInfo,skill))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}).build();
+        return Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {})
+                .cacheControl(unconditionalCache(CACHE_1_WEEK))
+                .build();
     }
 }
