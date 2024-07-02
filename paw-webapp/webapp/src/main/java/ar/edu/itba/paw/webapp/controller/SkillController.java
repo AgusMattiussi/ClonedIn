@@ -22,7 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 @Path("api/skills")
 @Component
@@ -52,8 +52,11 @@ public class SkillController {
         List<SkillDTO> skillDTOs = skills.getPage().stream()
                 .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {}),
-                page, skills.getMaxPages());
+        Response.ResponseBuilder responseBuilder = Response
+                .ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {})
+                .cacheControl(unconditionalCache(CACHE_1_MONTH));
+
+        return paginatedOkResponse(uriInfo, responseBuilder, page, skills.getMaxPages());
     }
 
     @GET
@@ -62,6 +65,8 @@ public class SkillController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         SkillDTO skillDTO = skillService.findById(id).map(skill -> SkillDTO.fromSkill(uriInfo, skill))
                 .orElseThrow(() -> new SkillNotFoundException(id));
-        return Response.ok(skillDTO).build();
+        return Response.ok(skillDTO)
+                .cacheControl(unconditionalCache(CACHE_1_YEAR))
+                .build();
     }
 }
