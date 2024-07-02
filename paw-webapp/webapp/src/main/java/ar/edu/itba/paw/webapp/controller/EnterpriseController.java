@@ -28,7 +28,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 @Path("api/enterprises")
 @Component
@@ -92,7 +92,9 @@ public class EnterpriseController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         EnterpriseDTO enterpriseDTO = enterpriseService.findById(id).map(e -> EnterpriseDTO.fromEnterprise(uriInfo, e))
                 .orElseThrow(() -> new EnterpriseNotFoundException(id));
-        return Response.ok(enterpriseDTO).build();
+        return Response.ok(enterpriseDTO)
+                .cacheControl(unconditionalCache(CACHE_1_HOUR))
+                .build();
     }
 
     @POST
