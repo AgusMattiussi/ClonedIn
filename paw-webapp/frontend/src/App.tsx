@@ -5,7 +5,7 @@ import React, { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { HttpStatusCode } from "axios"
 import { useSharedAuth } from "./api/auth"
-import Loader from "./components/loader"
+import Loading from "./views/loading"
 
 const Login = lazy(() => import("./views/login"))
 const DiscoverJobs = lazy(() => import("./views/discoverJobs"))
@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/login" element={<Login />} />
             {userInfo === null ? (
