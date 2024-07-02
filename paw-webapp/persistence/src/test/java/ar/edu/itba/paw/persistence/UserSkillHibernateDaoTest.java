@@ -81,7 +81,7 @@ public class UserSkillHibernateDaoTest {
 
     @Test
     public void testGetSkillsForUser() {
-        final List<Skill> skillList = userSkillDao.getSkillsForUser(testUser, 0, 1);
+        final List<Skill> skillList = userSkillDao.getSkillsForUser(null, testUser, 0, 1);
 
         assertEquals(1, skillList.size());
         assertEquals(testSkill, skillList.get(0));

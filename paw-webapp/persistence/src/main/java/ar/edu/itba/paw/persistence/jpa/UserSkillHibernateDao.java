@@ -48,18 +48,38 @@ public class UserSkillHibernateDao implements UserSkillDao {
 
 
     @Override
-    public List<Skill> getSkillsForUser(User user, int page, int pageSize) {
-        TypedQuery<Skill> query = em.createQuery("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user", Skill.class);
+    public List<Skill> getSkillsForUser(String descriptionLike, User user, int page, int pageSize) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT us.skill FROM UserSkill AS us WHERE us.user = :user");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" AND LOWER(us.skill.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        TypedQuery<Skill> query = em.createQuery(queryBuilder.toString(), Skill.class);
         query.setParameter("user", user);
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
-    public long getSkillCountForUser(User user) {
-        Query query = em.createQuery("SELECT COUNT(us) FROM UserSkill AS us WHERE us.user = :user");
+    public long getSkillCountForUser(String descriptionLike, User user) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(us) FROM UserSkill AS us WHERE us.user = :user");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" AND LOWER(us.skill.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        Query query = em.createQuery(queryBuilder.toString());
         query.setParameter("user", user);
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         return (Long) query.getSingleResult();
     }

@@ -52,16 +52,40 @@ public class SkillHibernateDao implements SkillDao {
     }
 
     @Override
-    public List<Skill> getAllSkills(int page, int pageSize) {
-        TypedQuery<Skill> query = em.createQuery("SELECT s FROM Skill s ORDER BY s.description ASC", Skill.class);
+    public List<Skill> getAllSkills(String descriptionLike, int page, int pageSize) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT s FROM Skill s");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" WHERE LOWER(s.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        System.out.println("\n\n\n\n\n\n" + queryBuilder + "\n\n\n\n\n\n");
+
+        queryBuilder.append(" ORDER BY s.description ASC");
+
+        TypedQuery<Skill> query = em.createQuery(queryBuilder.toString(), Skill.class);
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
-    public long getSkillCount() {
-        Query query = em.createQuery("SELECT COUNT(s) FROM Skill s");
+    public long getSkillCount(String descriptionLike) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(s) FROM Skill s");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" WHERE LOWER(s.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        Query query = em.createQuery(queryBuilder.toString());
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         return (Long) query.getSingleResult();
     }

@@ -15,9 +15,9 @@ public interface UserSkillService {
 
     List<User> getUsersWithSkill(Skill skill);
 
-    PaginatedResource<Skill> getSkillsForUser(long userId, int page, int pageSize);
+    PaginatedResource<Skill> getSkillsForUser(String descriptionLike, long userId, int page, int pageSize);
 
-    long getSkillCountForUser(User user);
+    long getSkillCountForUser(String descriptionLike, User user);
 
     void deleteSkillFromUser(long userID, long skillID);
 

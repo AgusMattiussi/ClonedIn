@@ -18,9 +18,9 @@ public interface SkillService {
 
     List<Skill> findMultipleByDescriptionOrCreate(List<String> description);
 
-    PaginatedResource<Skill> getAllSkills(int page, int pageSize);
+    PaginatedResource<Skill> getAllSkills(String descriptionLike, int page, int pageSize);
 
-    PaginatedResource<Skill> getAllSkills(Long userId, Long jobOfferId, int page, int pageSize);
+    PaginatedResource<Skill> getAllSkills(String descriptionLike, Long userId, Long jobOfferId, int page, int pageSize);
 
-    long getSkillCount();
+    long getSkillCount(String descriptionLike);
 }

@@ -17,8 +17,8 @@ public interface JobOfferSkillService {
 
     List<Skill> getSkillsForJobOffer(JobOffer jobOffer);
 
-    PaginatedResource<Skill> getSkillsForJobOffer(long jobOfferId, int page, int pageSize);
+    PaginatedResource<Skill> getSkillsForJobOffer(String descriptionLike, long jobOfferId, int page, int pageSize);
 
 
-    long getSkillCountForJobOffer(JobOffer jobOffer);
+    long getSkillCountForJobOffer(String descriptionLike, JobOffer jobOffer);
 }

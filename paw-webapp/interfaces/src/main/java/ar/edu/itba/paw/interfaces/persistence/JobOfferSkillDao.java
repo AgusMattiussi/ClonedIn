@@ -12,7 +12,7 @@ public interface JobOfferSkillDao {
 
     List<Skill> getSkillsForJobOffer(JobOffer jobOffer);
 
-    List<Skill> getSkillsForJobOffer(JobOffer jobOffer, int page, int pageSize);
+    List<Skill> getSkillsForJobOffer(String descriptionLike, JobOffer jobOffer, int page, int pageSize);
 
-    long getSkillCountForJobOffer(JobOffer jobOffer);
+    long getSkillCountForJobOffer(String descriptionLike, JobOffer jobOffer);
 }

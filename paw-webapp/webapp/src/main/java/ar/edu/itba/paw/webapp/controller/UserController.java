@@ -271,9 +271,10 @@ public class UserController {
     public Response getSkills(@PathParam("id") @Min(1) final long id,
                               @QueryParam("page") @DefaultValue("1") @Min(1) final int page,
                               @QueryParam("pageSize") @DefaultValue(S_SKILLS_PER_PAGE)
-                                        @Min(1) @Max(2*SKILLS_PER_PAGE) final int pageSize) {
+                                        @Min(1) @Max(2*SKILLS_PER_PAGE) final int pageSize,
+                              @QueryParam(SKILL_DESCRIPTION_PARAM) final String skillDescription) {
 
-        PaginatedResource<Skill> skills = userSkillService.getSkillsForUser(id, page, SKILLS_PER_PAGE);
+        PaginatedResource<Skill> skills = userSkillService.getSkillsForUser(skillDescription, id, page, SKILLS_PER_PAGE);
 
         if (skills.isEmpty())
             return Response.noContent().build();

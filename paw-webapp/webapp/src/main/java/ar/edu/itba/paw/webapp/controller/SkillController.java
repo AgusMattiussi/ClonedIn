@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.SKILL_DESCRIPTION_PARAM;
 import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 @Path("api/skills")
@@ -43,8 +44,9 @@ public class SkillController {
                                @QueryParam("pageSize") @DefaultValue(S_SKILLS_BY_PAGE)
                                         @Min(1) @Max(2*SKILLS_BY_PAGE) final int pageSize,
                                @QueryParam("userId") final Long userId,
-                               @QueryParam("jobOfferId") final Long jobOfferId){
-        final PaginatedResource<Skill> skills = skillService.getAllSkills(userId, jobOfferId, page, pageSize);
+                               @QueryParam("jobOfferId") final Long jobOfferId,
+                               @QueryParam(SKILL_DESCRIPTION_PARAM) final String searchTerm) {
+        final PaginatedResource<Skill> skills = skillService.getAllSkills(searchTerm, userId, jobOfferId, page, pageSize);
 
         if (skills.isEmpty())
             return Response.noContent().build();

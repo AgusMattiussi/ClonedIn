@@ -72,36 +72,31 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public PaginatedResource<Skill> getAllSkills(int page, int pageSize) {
-        List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
-        long skillCount = this.getSkillCount();
+    public PaginatedResource<Skill> getAllSkills(String descriptionLike, int page, int pageSize) {
+        List<Skill> skills = skillDao.getAllSkills(descriptionLike, page-1, pageSize);
+        long skillCount = this.getSkillCount(descriptionLike);
         long maxPages = (long) Math.ceil((double) skillCount / pageSize);
-
 
         return new PaginatedResource<>(skills, page, maxPages);
     }
 
     @Override
-    public PaginatedResource<Skill> getAllSkills(Long userId, Long jobOfferId, int page, int pageSize) {
+    public PaginatedResource<Skill> getAllSkills(String descriptionLike, Long userId, Long jobOfferId, int page, int pageSize) {
         if(userId != null) {
             if(jobOfferId != null) {
                 LOGGER.error("Both 'userId' and 'jobOfferId' were provided");
                 throw new IllegalArgumentException("Both 'userId' and 'jobOfferId' were provided");
             }
-            return userSkillService.getSkillsForUser(userId, page, pageSize);
+            return userSkillService.getSkillsForUser(descriptionLike, userId, page, pageSize);
         } else if(jobOfferId != null) {
-            return jobOfferSkillService.getSkillsForJobOffer(jobOfferId, page, pageSize);
+            return jobOfferSkillService.getSkillsForJobOffer(descriptionLike, jobOfferId, page, pageSize);
         }
 
-        List<Skill> skills = skillDao.getAllSkills(page-1, pageSize);
-        long skillCount = this.getSkillCount();
-        long maxPages = (long) Math.ceil((double) skillCount / pageSize);
-
-        return new PaginatedResource<>(skills, page, maxPages);
+        return getAllSkills(descriptionLike, page, pageSize);
     }
 
     @Override
-    public long getSkillCount() {
-        return skillDao.getSkillCount();
+    public long getSkillCount(String descriptionLike) {
+        return skillDao.getSkillCount(descriptionLike);
     }
 }

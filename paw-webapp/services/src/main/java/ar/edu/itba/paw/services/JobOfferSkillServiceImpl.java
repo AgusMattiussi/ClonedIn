@@ -57,21 +57,21 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
 
     @Override
     @Transactional
-    public PaginatedResource<Skill> getSkillsForJobOffer(long jobOfferId, int page, int pageSize) {
+    public PaginatedResource<Skill> getSkillsForJobOffer(String descriptionLike, long jobOfferId, int page, int pageSize) {
         JobOffer jobOffer = jobOfferService.findById(jobOfferId).orElseThrow(() -> {
             LOGGER.error("JobOffer with id {} was not found - getSkillsForJobOffer", jobOfferId);
             return new JobOfferNotFoundException(jobOfferId);
         });
 
-        List<Skill> skills = jobOfferSkillDao.getSkillsForJobOffer(jobOffer, page - 1, pageSize);
-        long skillCount = this.getSkillCountForJobOffer(jobOffer);
+        List<Skill> skills = jobOfferSkillDao.getSkillsForJobOffer(descriptionLike, jobOffer, page - 1, pageSize);
+        long skillCount = this.getSkillCountForJobOffer(descriptionLike, jobOffer);
         long maxPages = (long) Math.ceil((double) skillCount / pageSize);
 
         return new PaginatedResource<>(skills, page, maxPages);
     }
 
     @Override
-    public long getSkillCountForJobOffer(JobOffer jobOffer) {
-        return jobOfferSkillDao.getSkillCountForJobOffer(jobOffer);
+    public long getSkillCountForJobOffer(String descriptionLike, JobOffer jobOffer) {
+        return jobOfferSkillDao.getSkillCountForJobOffer(descriptionLike, jobOffer);
     }
 }

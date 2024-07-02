@@ -61,22 +61,22 @@ public class UserSkillServiceImpl implements UserSkillService {
 
     @Override
     @Transactional
-    public PaginatedResource<Skill> getSkillsForUser(long userId, int page, int pageSize) {
+    public PaginatedResource<Skill> getSkillsForUser(String descriptionLike, long userId, int page, int pageSize) {
         User user = userService.findById(userId).orElseThrow(() -> {
             LOGGER.error("User with id {} was not found - getSkillsForUser", userId);
             return new UserNotFoundException(userId);
         });
 
-        List<Skill> skills =  userSkillDao.getSkillsForUser(user, page-1, pageSize);
-        long skillCount = this.getSkillCountForUser(user);
+        List<Skill> skills =  userSkillDao.getSkillsForUser(descriptionLike, user, page-1, pageSize);
+        long skillCount = this.getSkillCountForUser(descriptionLike, user);
         long maxPages = (long) Math.ceil((double) skillCount / pageSize);
 
         return new PaginatedResource<>(skills, page, maxPages);
     }
 
     @Override
-    public long getSkillCountForUser(User user) {
-        return userSkillDao.getSkillCountForUser(user);
+    public long getSkillCountForUser(String descriptionLike, User user) {
+        return userSkillDao.getSkillCountForUser(descriptionLike, user);
     }
 
     @Override

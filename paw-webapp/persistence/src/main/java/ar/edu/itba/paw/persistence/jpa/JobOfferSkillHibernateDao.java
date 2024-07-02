@@ -44,18 +44,38 @@ public class JobOfferSkillHibernateDao implements JobOfferSkillDao {
     }
 
     @Override
-    public List<Skill> getSkillsForJobOffer(JobOffer jobOffer, int page, int pageSize) {
-        TypedQuery<Skill> query = em.createQuery("SELECT jos.skill FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer", Skill.class);
+    public List<Skill> getSkillsForJobOffer(String descriptionLike, JobOffer jobOffer, int page, int pageSize) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT jos.skill FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" AND LOWER(jos.skill.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        TypedQuery<Skill> query = em.createQuery(queryBuilder.toString(), Skill.class);
         query.setParameter("jobOffer", jobOffer);
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         query.setFirstResult(page * pageSize).setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
-    public long getSkillCountForJobOffer(JobOffer jobOffer) {
-        Query query = em.createQuery("SELECT COUNT(jos) FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer");
+    public long getSkillCountForJobOffer(String descriptionLike, JobOffer jobOffer) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(jos) FROM JobOfferSkill AS jos WHERE jos.jobOffer = :jobOffer");
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            queryBuilder.append(" AND LOWER(jos.skill.description) LIKE LOWER(CONCAT('%', :description, '%')) ESCAPE '\\'");
+        }
+
+        Query query = em.createQuery(queryBuilder.toString());
         query.setParameter("jobOffer", jobOffer);
+
+        if(descriptionLike != null && !descriptionLike.isEmpty()) {
+            query.setParameter("description", descriptionLike);
+        }
 
         return (Long) query.getSingleResult();
     }
