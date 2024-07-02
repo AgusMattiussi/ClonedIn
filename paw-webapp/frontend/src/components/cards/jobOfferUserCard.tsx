@@ -21,13 +21,13 @@ function JobOfferUserCard({
   contact,
   job,
   handler,
-  setJobOfferId,
+  setToAnswerId,
   applicationsView,
 }: {
   contact: ContactDto
   job: JobOfferDto
   handler: any
-  setJobOfferId: any
+  setToAnswerId: any
   applicationsView: boolean
 }) {
   const { t } = useTranslation()
@@ -128,7 +128,7 @@ function JobOfferUserCard({
               style={{ minWidth: "90px" }}
               data-bs-toggle="modal"
               data-bs-target="#cancelModal"
-              onClick={() => setJobOfferId(job.id)}
+              onClick={() => setToAnswerId(contact.id)}
             >
               {t("Cancel")}
             </Button>
@@ -139,7 +139,7 @@ function JobOfferUserCard({
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#acceptModal"
-                onClick={() => setJobOfferId(job.id)}
+                onClick={() => setToAnswerId(contact.id)}
               >
                 {t("Accept")}
               </Button>
@@ -148,7 +148,7 @@ function JobOfferUserCard({
                 style={{ minWidth: "90px", marginBottom: "5px" }}
                 data-bs-toggle="modal"
                 data-bs-target="#rejectModal"
-                onClick={() => setJobOfferId(job.id)}
+                onClick={() => setToAnswerId(contact.id)}
               >
                 {t("Decline")}
               </Button>

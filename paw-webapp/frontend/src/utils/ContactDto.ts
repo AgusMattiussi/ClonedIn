@@ -4,6 +4,7 @@ import JobOfferDto from "./JobOfferDto"
 import CategoryDto from "./CategoryDto"
 
 export default interface ContactDto {
+  id: string
   status: string
   filledBy: number
   date: string

@@ -39,7 +39,7 @@ function ApplicationsUser() {
   const [sortBy, setSortBy] = useState(SortBy.ANY.toString())
   const [filledBy] = useState(FilledBy.USER.toString())
 
-  const [jobOfferToAnswerId, setJobOfferToAnswerId] = useState<any>()
+  const [contactId, setToAnswerId] = useState<any>()
   const [totalPages, setTotalPages] = useState("")
   const [page, setPage] = useState("1")
 
@@ -186,10 +186,8 @@ function ApplicationsUser() {
   }
 
   const handleCancel = async () => {
-    const queryParams: Record<string, string> = {}
-    queryParams.status = JobOfferStatus.CANCELLED
 
-    const response = await answerUserContact(userInfo?.id, jobOfferToAnswerId, queryParams)
+    const response = await answerUserContact(contactId, JobOfferStatus.CANCELLED)
 
     if (response.status === HttpStatusCode.Ok) {
       setLoading(true)
@@ -209,7 +207,7 @@ function ApplicationsUser() {
         contact={application}
         job={application.jobOfferInfo}
         handler={handleCancel}
-        setJobOfferId={setJobOfferToAnswerId}
+        setToAnswerId={setToAnswerId}
         applicationsView={true}
         key={index}
       />
