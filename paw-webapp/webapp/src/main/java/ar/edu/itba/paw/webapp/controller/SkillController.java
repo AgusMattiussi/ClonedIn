@@ -52,10 +52,7 @@ public class SkillController {
         List<SkillDTO> skillDTOs = skills.getPage().stream()
                 .map(skill -> SkillDTO.fromSkill(uriInfo, skill)).collect(Collectors.toList());
 
-        Response.ResponseBuilder responseBuilder = Response
-                .ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {})
-                .cacheControl(unconditionalCache(CACHE_1_MONTH));
-
+        Response.ResponseBuilder responseBuilder = Response.ok(new GenericEntity<List<SkillDTO>>(skillDTOs) {});
         return paginatedOkResponse(uriInfo, responseBuilder, page, skills.getMaxPages());
     }
 
