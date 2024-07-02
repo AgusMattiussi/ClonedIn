@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.security;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.interfaces.services.EnterpriseService;
+import ar.edu.itba.paw.interfaces.services.JobOfferService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
@@ -26,6 +27,8 @@ public class SecurityValidator {
     private UserService userService;
     @Autowired
     private EnterpriseService enterpriseService;
+    @Autowired
+    private JobOfferService jobOfferService;
 
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
@@ -56,13 +59,12 @@ public class SecurityValidator {
         return true;
     }
 
-    @Transactional
+    // Must be called after validating the requester is an enterprise
     public boolean isJobOfferOwner(long jobOfferId){
-        String email = SecurityUtils.getPrincipalEmail();
-        if(email == null)
+        Long enterpriseId = SecurityUtils.getPrincipalId();
+        if(enterpriseId == null)
             return false;
-        Enterprise enterprise = enterpriseService.findByEmail(email).orElseThrow(() -> new EnterpriseNotFoundException(email));
-        return enterprise.isJobOfferOwner(jobOfferId);
+        return jobOfferService.isJobOfferOwner(jobOfferId, enterpriseId);
     }
 
     @Transactional

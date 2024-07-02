@@ -221,4 +221,9 @@ public class JobOfferServiceImpl implements JobOfferService {
                 break;
         }
     }
+
+    @Override
+    public boolean isJobOfferOwner(long jobOfferId, long enterpriseId) {
+        return jobOfferDao.isJobOfferOwner(jobOfferId, enterpriseId);
+    }
 }

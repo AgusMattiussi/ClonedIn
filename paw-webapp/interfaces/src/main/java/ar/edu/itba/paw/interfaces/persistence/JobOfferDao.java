@@ -48,4 +48,6 @@ public interface JobOfferDao {
     void closeJobOffer(JobOffer jobOffer);
 
     void cancelJobOffer(JobOffer jobOffer);
+
+    boolean isJobOfferOwner(long jobOfferId, long enterpriseId);
 }

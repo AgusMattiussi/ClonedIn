@@ -59,4 +59,6 @@ public interface JobOfferService {
     void cancelJobOffer(JobOffer jobOffer);
 
     void updateJobOfferAvailability(long jobOfferId, JobOfferAvailability availability);
+
+    boolean isJobOfferOwner(long jobOfferId, long enterpriseId);
 }

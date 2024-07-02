@@ -327,4 +327,12 @@ public class JobOfferHibernateDao implements JobOfferDao {
         updateJobOfferAvailability(jobOffer.getId(), JobOfferAvailability.CANCELLED);
         contactDao.cancelJobOfferForEveryone(jobOffer);
     }
+
+    @Override
+    public boolean isJobOfferOwner(long jobOfferId, long enterpriseId) {
+        Query query = em.createQuery("SELECT COUNT(jo) FROM JobOffer jo WHERE jo.id = :jobOfferId AND jo.enterprise.id = :enterpriseId");
+        query.setParameter("jobOfferId", jobOfferId);
+        query.setParameter("enterpriseId", enterpriseId);
+        return (Long) query.getSingleResult() > 0;
+    }
 }

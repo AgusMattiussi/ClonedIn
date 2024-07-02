@@ -64,6 +64,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
+    @Transactional
     public Optional<Enterprise> findByEmail(String email) {
         return enterpriseDao.findByEmail(email);
     }
