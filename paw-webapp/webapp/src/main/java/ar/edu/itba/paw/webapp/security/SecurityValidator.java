@@ -28,6 +28,8 @@ public class SecurityValidator {
     private JobOfferService jobOfferService;
     @Autowired
     private ExperienceService experienceService;
+    @Autowired
+    private EducationService educationService;
 
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
@@ -66,7 +68,7 @@ public class SecurityValidator {
         return jobOfferService.isJobOfferOwner(jobOfferId, enterpriseId);
     }
 
-    // Must be called after validating the requester is an user
+    // Must be called after validating the requester is a user
     public boolean isExperienceOwner(long experienceID){
         Long userId = SecurityUtils.getPrincipalId();
         if(userId == null)
@@ -74,13 +76,12 @@ public class SecurityValidator {
         return experienceService.isExperienceOwner(experienceID, userId);
     }
 
-    @Transactional
+    // Must be called after validating the requester is a user
     public boolean isEducationOwner(long educationID){
-        String email = SecurityUtils.getPrincipalEmail();
-        if(email == null)
+        Long userId = SecurityUtils.getPrincipalId();
+        if(userId == null)
             return false;
-        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
-        return user.hasEducation(educationID);
+        return educationService.isEducationOwner(educationID, userId);
     }
 
     @Transactional
