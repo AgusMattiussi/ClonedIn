@@ -5,6 +5,8 @@ export function useLogin() {
   const { loading, apiRequest } = useRequestApi()
 
   async function loginHandler(username: string, password: string) {
+    const queryParams: Record<string, string> = {}
+    queryParams.pageSize = "1"
     const response = await apiRequest({
       url: "/skills",
       method: "GET",
@@ -13,6 +15,7 @@ export function useLogin() {
         username,
         password,
       },
+      queryParams: queryParams,
     })
     return response.status === HttpStatusCode.Ok
   }
