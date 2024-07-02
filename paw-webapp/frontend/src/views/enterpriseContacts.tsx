@@ -167,7 +167,6 @@ function EnterpriseContacts() {
   }
 
   const handleCancel = async () => {
-
     const response = await answerEnterpriseContact(contactId, JobOfferStatus.CANCELLED)
 
     if (response.status === HttpStatusCode.NoContent) {
@@ -337,11 +336,7 @@ function EnterpriseContacts() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              {contactsList.length > 0 ? (
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
-              ) : (
-                <></>
-              )}
+              {contactsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
             </Row>
           </Col>
         </Row>

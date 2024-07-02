@@ -117,7 +117,6 @@ function ProfileEnterprise() {
   ])
 
   const handleClose = async () => {
- 
     const response = await closeJobOffer(jobOfferToCloseId, JobOfferAvailability.CLOSED)
 
     if (response.status === HttpStatusCode.Ok) {
@@ -192,7 +191,7 @@ function ProfileEnterprise() {
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            {usersJobs.length > 0 ? <Pagination pages={totalPages} setter={handlePage} currentPage={page} /> : <></>}
+            {usersJobs.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
           </Col>
         </Row>
       </Container>

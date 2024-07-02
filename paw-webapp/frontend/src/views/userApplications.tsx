@@ -186,7 +186,6 @@ function ApplicationsUser() {
   }
 
   const handleCancel = async () => {
-
     const response = await answerUserContact(contactId, JobOfferStatus.CANCELLED)
 
     if (response.status === HttpStatusCode.Ok) {
@@ -315,11 +314,7 @@ function ApplicationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                {userApplications.length > 0 ? (
-                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
-                ) : (
-                  <></>
-                )}
+                {userApplications.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
               </Container>
             </Row>
           </Col>

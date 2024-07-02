@@ -66,6 +66,7 @@ function DiscoverProfiles() {
       if (maxExpYears) queryParams.maxExpYears = maxExpYears
       if (page) queryParams.page = page
       if (sortBy) queryParams.sortBy = sortBy
+      queryParams.pageSize = "2"
 
       try {
         const response = await getUsers(queryParams)
@@ -93,8 +94,9 @@ function DiscoverProfiles() {
         setPage("1")
       } catch (error) {
         console.error("Error fetching users:", error)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     },
     [getUsers, navigate],
   )
@@ -114,7 +116,7 @@ function DiscoverProfiles() {
     if (isLoading) {
       fetchUsers(categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, page, sortBy)
     }
-  }, [categoryName, educationLevel, searchTerm, minExpYears, maxExpYears, isLoading, fetchUsers])
+  }, [isLoading])
 
   const handleSearch = () => {
     setLoading(true)
@@ -319,11 +321,7 @@ function DiscoverProfiles() {
                   )}
                 </div>
                 <div className="mt-2">
-                  {usersList.length > 0 ? (
-                    <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
-                  ) : (
-                    <></>
-                  )}
+                  {usersList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
                 </div>
               </Container>
             </Row>
