@@ -5,7 +5,8 @@ import javax.ws.rs.core.*;
 public final class ResponseUtils {
 
     public static final String TOTAL_PAGES_HEADER = "X-Total-Pages";
-    public static final int CACHE_1_YEAR = 31536000;
+    public static final int CACHE_1_YEAR = 31_536_000;
+    public static final int CACHE_1_MONTH = 2_592_000;
 
     private ResponseUtils() {}
 

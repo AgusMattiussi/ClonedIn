@@ -50,8 +50,11 @@ public class CategoryController {
         final List<CategoryDTO> categoryDTOs = categories.getPage().stream()
                 .map(c -> CategoryDTO.fromCategory(uriInfo, c)).collect(Collectors.toList());
 
-        return paginatedOkResponse(uriInfo, Response.ok(new GenericEntity<List<CategoryDTO>>(categoryDTOs) {}),
-                page, categories.getMaxPages());
+        Response.ResponseBuilder responseBuilder = Response
+                .ok(new GenericEntity<List<CategoryDTO>>(categoryDTOs) {})
+                .cacheControl(unconditionalCache(CACHE_1_MONTH));
+
+        return paginatedOkResponse(uriInfo, responseBuilder, page, categories.getMaxPages());
     }
 
     @GET
