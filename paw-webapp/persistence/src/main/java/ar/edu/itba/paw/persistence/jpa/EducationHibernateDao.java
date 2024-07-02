@@ -59,4 +59,14 @@ public class EducationHibernateDao implements EducationDao {
         toDelete.ifPresent(education -> em.remove(education));
     }
 
+    @Override
+    public boolean isEducationOwner(long educationId, long userId) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Education e WHERE e.id = :educationId AND e.user.id = :userId", Long.class);
+
+        query.setParameter("educationId", educationId);
+        query.setParameter("userId", userId);
+
+        return query.getSingleResult() > 0;
+    }
+
 }

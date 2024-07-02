@@ -81,4 +81,9 @@ public class EducationServiceImpl implements EducationService {
     public void deleteEducation(long educationId) {
         educationDao.deleteEducation(educationId);
     }
+
+    @Override
+    public boolean isEducationOwner(long educationId, long userId) {
+        return educationDao.isEducationOwner(educationId, userId);
+    }
 }

@@ -17,4 +17,6 @@ public interface EducationService {
     long getEducationCountForUser(User user);
 
     void deleteEducation(long educationId);
+
+    boolean isEducationOwner(long educationId, long userId);
 }

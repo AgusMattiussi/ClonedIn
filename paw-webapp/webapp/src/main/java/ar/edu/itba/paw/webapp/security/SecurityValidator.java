@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.security;
 
-import ar.edu.itba.paw.interfaces.services.ContactService;
-import ar.edu.itba.paw.interfaces.services.EnterpriseService;
-import ar.edu.itba.paw.interfaces.services.JobOfferService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Role;
@@ -29,6 +26,10 @@ public class SecurityValidator {
     private EnterpriseService enterpriseService;
     @Autowired
     private JobOfferService jobOfferService;
+    @Autowired
+    private ExperienceService experienceService;
+    @Autowired
+    private EducationService educationService;
 
     private boolean isProfileOwner(long requesterID, long profileID) {
         if(requesterID != profileID)
@@ -67,22 +68,20 @@ public class SecurityValidator {
         return jobOfferService.isJobOfferOwner(jobOfferId, enterpriseId);
     }
 
-    @Transactional
+    // Must be called after validating the requester is a user
     public boolean isExperienceOwner(long experienceID){
-        String email = SecurityUtils.getPrincipalEmail();;
-        if(email == null)
+        Long userId = SecurityUtils.getPrincipalId();
+        if(userId == null)
             return false;
-        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
-        return user.hasExperience(experienceID);
+        return experienceService.isExperienceOwner(experienceID, userId);
     }
 
-    @Transactional
+    // Must be called after validating the requester is a user
     public boolean isEducationOwner(long educationID){
-        String email = SecurityUtils.getPrincipalEmail();
-        if(email == null)
+        Long userId = SecurityUtils.getPrincipalId();
+        if(userId == null)
             return false;
-        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
-        return user.hasEducation(educationID);
+        return educationService.isEducationOwner(educationID, userId);
     }
 
     @Transactional

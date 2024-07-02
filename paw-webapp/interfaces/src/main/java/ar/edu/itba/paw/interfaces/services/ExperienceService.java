@@ -17,4 +17,6 @@ public interface ExperienceService {
     long getExperienceCountForUser(User user);
 
     void deleteExperience(long experienceId);
+
+    boolean isExperienceOwner(long experienceId, long userId);
 }
