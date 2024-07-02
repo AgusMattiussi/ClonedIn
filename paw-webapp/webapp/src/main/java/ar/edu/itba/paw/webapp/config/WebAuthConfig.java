@@ -61,7 +61,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/enterprises/*/image").permitAll() // TODO: authenticated()
                 .antMatchers("/api/enterprises", "/api/enterprises/**").authenticated()
                 // Categories
-                .antMatchers("/api/categories").permitAll() // TODO: authenticated()
+                .antMatchers("/api/categories").permitAll()
                 // Skills
                 .antMatchers("/api/skills").authenticated()
                 // JobOffers

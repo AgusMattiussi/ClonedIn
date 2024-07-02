@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.exceptions;
 
 import javax.ws.rs.core.Response;
-//TODO: no se usa??
+
 public class NotExperienceOwnerException extends ClonedInException {
 
     private static final int STATUS = Response.Status.FORBIDDEN.getStatusCode();

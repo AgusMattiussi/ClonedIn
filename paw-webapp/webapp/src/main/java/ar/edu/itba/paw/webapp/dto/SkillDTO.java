@@ -48,7 +48,6 @@ public class SkillDTO {
         this.links = links;
     }
 
-    //TODO: Pensar links utiles, como jobOffers con la skill, users con la skill, etc
     public static class SkillDTOLinks {
         private URI self;
         private URI usersWithSkill;

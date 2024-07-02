@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import ar.edu.itba.paw.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
-//TODO: Sacar @Transactionals y hacerlos en los services
 @Component
 public class SecurityValidator {
 

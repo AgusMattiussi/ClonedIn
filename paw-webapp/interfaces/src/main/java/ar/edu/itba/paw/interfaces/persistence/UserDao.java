@@ -61,7 +61,6 @@ public interface UserDao {
 
     void updateVisibility(long userID, Visibility visibility);
 
-    //TODO: warning return never used
     long updateUserProfileImage(User user, Image image);
 
     long getVisibleUsersCount();

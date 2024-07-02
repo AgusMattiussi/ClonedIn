@@ -130,7 +130,6 @@ public class JobOfferController {
                 .build();
     }
 
-    // TODO: Usar JobOfferSkillService
     @GET
     @Path("/{id}/skills")
     @Produces(ClonedInMediaType.SKILL_V1)

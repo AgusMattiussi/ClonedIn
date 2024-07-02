@@ -35,7 +35,6 @@ public interface EnterpriseDao {
 
     void updateCategory(long enterpriseID, Category newCategory);
 
-    //TODO: warning return never used
     long updateEnterpriseProfileImage(Enterprise enterprise, Image image);
 
     List<Enterprise> getEnterpriseListByFilters(Category category, String location, EmployeeRanges workers, String enterpriseName,
