@@ -310,11 +310,7 @@ function NotificationsUser() {
                     <h5>{t("No job offers found")}</h5>
                   </div>
                 )}
-                {userNotifications.length > 0 ? (
-                  <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
-                ) : (
-                  <></>
-                )}
+                {userNotifications.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
               </Container>
             </Row>
           </Col>

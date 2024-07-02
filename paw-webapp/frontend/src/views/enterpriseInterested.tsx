@@ -346,11 +346,7 @@ function EnterpriseInterested() {
                   {}
                 </MDBTableBody>
               </MDBTable>
-              {contactsList.length > 0 ? (
-                <Pagination pages={totalPages} setter={handlePage} currentPage={page} />
-              ) : (
-                <></>
-              )}
+              {contactsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
             </Row>
           </Col>
         </Row>

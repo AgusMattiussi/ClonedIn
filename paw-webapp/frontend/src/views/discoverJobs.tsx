@@ -93,8 +93,9 @@ function DiscoverJobs() {
         setPage("1")
       } catch (error) {
         console.error("Error fetching jobs:", error)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     },
     [getJobOffers, navigate],
   )
@@ -114,7 +115,7 @@ function DiscoverJobs() {
     if (isLoading) {
       fetchJobs(categoryName, modality, searchTerm, minSalary, maxSalary, page, sortBy)
     }
-  }, [categoryName, modality, searchTerm, minSalary, maxSalary, isLoading, fetchJobs])
+  }, [isLoading])
 
   const handleSearch = () => {
     setLoading(true)
@@ -299,7 +300,7 @@ function DiscoverJobs() {
                 ) : (
                   jobsList
                 )}
-                {jobsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} currentPage={page} /> : <></>}
+                {jobsList.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
               </Container>
             </Row>
           </Col>
