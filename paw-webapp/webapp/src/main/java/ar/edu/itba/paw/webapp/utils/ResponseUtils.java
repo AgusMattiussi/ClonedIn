@@ -5,6 +5,7 @@ import javax.ws.rs.core.*;
 public final class ResponseUtils {
 
     public static final String TOTAL_PAGES_HEADER = "X-Total-Pages";
+    public static final int CACHE_1_YEAR = 31536000;
 
     private ResponseUtils() {}
 
@@ -31,13 +32,22 @@ public final class ResponseUtils {
     }
 
     // Used for conditional caching
-    public static Response.ResponseBuilder getBuilderForCachedResponse(Request request, EntityTag eTag) {
-        Response.ResponseBuilder response = request.evaluatePreconditions(eTag);
-        if (response != null) {
-            final CacheControl cacheControl = new CacheControl();
-            cacheControl.setNoCache(true);
-            //response.cacheControl(cacheControl);
+    public static Response getCachedResponse(Request request, EntityTag eTag) {
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(eTag);
+        if (responseBuilder == null) {
+            return null;
         }
-        return response;
+
+        final CacheControl cacheControl = new CacheControl();
+        cacheControl.setNoCache(true);
+        //response.cacheControl(cacheControl);
+        return responseBuilder.build();
+    }
+
+    // Used for unconditional caching
+    public static CacheControl unconditionalCache(int maxAgeSeconds) {
+        final CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(maxAgeSeconds);
+        return cacheControl;
     }
 }

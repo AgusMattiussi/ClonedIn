@@ -327,14 +327,11 @@ public class UserController {
         Image profileImage = us.getProfileImage(id).orElse(null);
         if(profileImage == null)
             return Response.noContent().build();
-            //throw new ImageNotFoundException(id, Role.USER);
 
-        Response.ResponseBuilder responseBuilder = ResponseUtils.getBuilderForCachedResponse(request, profileImage.getEntityTag());
-
+        Response cachedResponse = ResponseUtils.getCachedResponse(request, profileImage.getEntityTag());
         // Cache Hit
-        if(responseBuilder != null){
-            return responseBuilder.build();
-        }
+        if(cachedResponse != null)
+            return cachedResponse;
 
         // Cache Miss
         return Response.ok(profileImage.getResized(width, height))
