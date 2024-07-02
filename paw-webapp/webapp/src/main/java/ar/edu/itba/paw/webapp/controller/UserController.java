@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utils.ClonedInUrls.*;
-import static ar.edu.itba.paw.webapp.utils.ResponseUtils.paginatedOkResponse;
+import static ar.edu.itba.paw.webapp.utils.ResponseUtils.*;
 
 
 @Path("api/users")
@@ -124,7 +124,9 @@ public class UserController {
     public Response getById(@PathParam("id") @Min(1) final long id) {
         UserDTO user = us.findById(id, true).map(u -> UserDTO.fromUser(uriInfo,u))
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return Response.ok(user).build();
+        return Response.ok(user)
+                //.cacheControl(unconditionalCache(CACHE_1_HOUR))
+                .build();
     }
 
     @POST
@@ -171,7 +173,9 @@ public class UserController {
         ExperienceDTO experienceDTO = experienceService.findById(expId).map(exp -> ExperienceDTO.fromExperience(uriInfo, exp))
                 .orElseThrow(() -> new ExperienceNotFoundException(expId));
 
-        return Response.ok(experienceDTO).build();
+        return Response.ok(experienceDTO)
+                .cacheControl(unconditionalCache(CACHE_1_YEAR))
+                .build();
     }
 
     @POST
@@ -230,7 +234,9 @@ public class UserController {
         EducationDTO educationDTO = educationService.findById(edId).map(ed -> EducationDTO.fromEducation(uriInfo, ed))
                 .orElseThrow(() -> new EducationNotFoundException(edId));
 
-        return Response.ok(educationDTO).build();
+        return Response.ok(educationDTO)
+                .cacheControl(unconditionalCache(CACHE_1_YEAR))
+                .build();
     }
 
     @POST
