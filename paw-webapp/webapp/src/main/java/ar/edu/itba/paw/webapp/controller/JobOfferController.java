@@ -45,8 +45,8 @@ public class JobOfferController {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobOfferController.class);
 
     private static final String IS_ENTERPRISE = "hasAuthority('ENTERPRISE')";
-    private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or @securityValidator.isJobOfferOwner(#id)";
-    private static final String JOB_OFFER_OWNER = "@securityValidator.isJobOfferOwner(#id)";
+    private static final String JOB_OFFER_OWNER = "hasAuthority('ENTERPRISE') and @securityValidator.isJobOfferOwner(#id)";
+    private static final String USER_OR_JOB_OFFER_OWNER = "hasAuthority('USER') or " + JOB_OFFER_OWNER;
     private static final String USER_OR_ENTERPRISE_ID_MATCHES_PRINCIPAL = "hasAuthority('USER') or hasAuthority('ENTERPRISE') and @securityValidator.idMatchesPrincipal(#enterpriseId)";
 
     @Autowired

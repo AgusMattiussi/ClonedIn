@@ -85,4 +85,9 @@ public class ExperienceServiceImpl implements ExperienceService {
         experienceDao.deleteExperience(experienceId);
         LOGGER.debug("Experience with id {} was deleted", experienceId);
     }
+
+    @Override
+    public boolean isExperienceOwner(long experienceId, long userId) {
+        return experienceDao.isExperienceOwner(experienceId, userId);
+    }
 }

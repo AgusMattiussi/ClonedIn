@@ -62,4 +62,13 @@ public class ExperienceHibernateDao implements ExperienceDao {
         toDelete.ifPresent(experience -> em.remove(experience));
     }
 
+    @Override
+    public boolean isExperienceOwner(long experienceId, long userId) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Experience e WHERE e.id = :experienceId AND e.user.id = :userId", Long.class);
+        query.setParameter("experienceId", experienceId);
+        query.setParameter("userId", userId);
+
+        return query.getSingleResult() > 0;
+    }
+
 }
