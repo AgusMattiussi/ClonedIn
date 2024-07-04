@@ -48,11 +48,11 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   }, [loadingData, memorizedEnterprise])
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "500px" }}>
       {imageUrl === "" ? (
         <div className="spinner-border" role="status" />
       ) : (
-        <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+        <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "inherit" }} />
       )}
       {userInfo?.role === UserRole.ENTERPRISE ? (
         <Button type="button" variant="success" onClick={() => navigate(`image`)}>

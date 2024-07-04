@@ -125,7 +125,7 @@ public class EnterpriseController {
 
     @GET
     @Path("/{id}/image")
-    @PreAuthorize(USER_OR_PROFILE_OWNER)
+//    @PreAuthorize(USER_OR_PROFILE_OWNER)
     public Response getProfileImage(@PathParam("id") @Min(1) final long id,
                                     @QueryParam("w") @Min(50) @Max(800) @DefaultValue("220") final int width,
                                     @QueryParam("h") @Min(50) @Max(800) @DefaultValue("220") final int height,
