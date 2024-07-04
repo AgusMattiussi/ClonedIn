@@ -48,7 +48,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
   }, [loadingData, memorizedEnterprise])
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "500px" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
       {imageUrl === "" ? (
         <div className="spinner-border" role="status" />
       ) : (
