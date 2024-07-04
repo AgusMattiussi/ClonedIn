@@ -63,16 +63,16 @@ function ProfileUserCard({ user, inProfileView }: { user: any; inProfileView: bo
   })
 
   return (
-    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem" }}>
+    <Card className="profileCard rounded-3 mx-2" style={{ width: "14rem", height: "550px" }}>
       {userInfo?.role === UserRole.ENTERPRISE ? (
         imageUrl === "" ? (
           <div className="spinner-border" role="status" />
         ) : (
-          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "inherit" }} />
         )
       ) : (
         <>
-          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "220px" }} />
+          <Card.Img variant="top" src={imageUrl} style={{ height: "220px", width: "inherit" }} />
           <Button type="button" variant="success" onClick={() => navigate(`image`)}>
             <div className="d-flex align-items-center justify-content-center">
               <Icon.PlusSquare color="white" size={20} style={{ marginRight: "7px" }} />
