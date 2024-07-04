@@ -66,6 +66,7 @@ function ProfileEnterprise() {
     const fetchEnterpriseJobs = async (page: string) => {
       if (page) queryParams.page = page
       queryParams.onlyActive = "false"
+      queryParams.pageSize = "3"
 
       const response = await getEnterpriseJobOffers(id, queryParams)
 
@@ -157,7 +158,7 @@ function ProfileEnterprise() {
     <div>
       <Navigation role={userInfo?.role} />
       <Container fluid style={{ background: "#F2F2F2", height: "800px" }}>
-        <Row className="row">
+        <Row className="row" style={{ backgroundColor: "#f2f2f2" }}>
           <Col sm={3} className="col d-flex flex-column align-items-center">
             {isEnterpriseLoading ? (
               <div className="my-5">
@@ -182,16 +183,21 @@ function ProfileEnterprise() {
             <br />
             {userInfo?.role === UserRole.ENTERPRISE ? (
               enterprisesJobs.length > 0 ? (
-                <div className="w-100">{enterprisesJobs}</div>
+                <>
+                  <div className="w-100">{enterprisesJobs}</div>
+                  <Pagination pages={totalPages} setter={handlePage} />
+                </>
               ) : (
                 <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
               )
             ) : usersJobs.length > 0 ? (
-              <div className="w-100">{usersJobs}</div>
+              <>
+                <div className="w-100">{usersJobs}</div>
+                <Pagination pages={totalPages} setter={handlePage} />
+              </>
             ) : (
               <div style={{ fontWeight: "bold" }}>{t("No Job Offers")}</div>
             )}
-            {usersJobs.length > 0 ? <Pagination pages={totalPages} setter={handlePage} /> : <></>}
           </Col>
         </Row>
       </Container>

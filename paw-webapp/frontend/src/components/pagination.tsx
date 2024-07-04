@@ -17,7 +17,7 @@ export default function Pagination({ setter, pages }: { setter: any; pages: stri
   }
 
   return (
-    <nav className="d-flex justify-content-center align-items-center">
+    <nav className="d-flex justify-content-center align-items-center" style={{ marginBottom: "10px" }}>
       <MDBPagination className="mb-0">
         <MDBPaginationItem disabled={currentPage === "1"} onClick={() => handleClick("1")}>
           <MDBPaginationLink style={{ textDecoration: "none", color: currentPage === "1" ? "grey" : "black" }}>
