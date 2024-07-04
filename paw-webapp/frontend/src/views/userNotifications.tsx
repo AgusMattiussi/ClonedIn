@@ -108,6 +108,7 @@ function NotificationsUser() {
       if (sortBy) queryParams.sortBy = sortBy
       if (filledBy) queryParams.filledBy = filledBy
       if (page) queryParams.page = page
+      queryParams.pageSize = "3"
 
       try {
         const response = await getUserContacts(queryParams)
