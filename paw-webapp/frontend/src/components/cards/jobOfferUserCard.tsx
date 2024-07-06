@@ -169,14 +169,14 @@ function JobOfferUserCard({
       </div>
       <AcceptModal
         title={t("Modal Title")}
-        msg={t("Accept Application Modal Msg")}
+        msg={t("Accept Job Offer Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
         onConfirmClick={() => handler("Accept")}
       />
       <RejectModal
         title={t("Modal Title")}
-        msg={t("Reject Application Modal Msg")}
+        msg={t("Reject Job Offer Modal Msg")}
         cancel={t("Cancel")}
         confirm={t("Confirm")}
         onConfirmClick={() => handler("Decline")}
