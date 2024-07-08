@@ -153,7 +153,7 @@ function DiscoverJobs() {
       <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <Col sm={2} className="sidebar">
+          <Col sm={2} className="sidebar-user-discovery">
             <Row className="search">
               <h5 className="ml-2 mt-2">{t("Search By")}</h5>
             </Row>

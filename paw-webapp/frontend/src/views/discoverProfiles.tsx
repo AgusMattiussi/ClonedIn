@@ -157,7 +157,7 @@ function DiscoverProfiles() {
       <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex vh-100">
-          <Col sm={2} className="sidebar">
+          <Col sm={2} className="sidebar-enterprise-discovery">
             <Row className="search">
               <h5 className="ml-2 mt-2">{t("Search By")}</h5>
             </Row>

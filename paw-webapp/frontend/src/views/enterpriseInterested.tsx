@@ -234,7 +234,7 @@ function EnterpriseInterested() {
       <Navigation role={userInfo?.role} />
       <Container fluid>
         <Row className="align-items-start d-flex">
-          <Col sm={2} className="sidebar">
+          <Col sm={2} className="sidebar-enterprise-contacts">
             <div className="d-flex flex-column justify-content-center">
               <div className="search mx-auto">
                 <h5 className="ml-2 mt-2">{t("Filter by status")}:</h5>
