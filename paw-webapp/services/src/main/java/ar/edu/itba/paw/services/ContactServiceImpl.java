@@ -154,63 +154,6 @@ public class ContactServiceImpl implements ContactService {
         return contact;
     }
 
-    @Override
-    public List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy) {
-        return contactDao.getEnterprisesForUser(user, filledBy);
-    }
-
-    @Override
-    public List<User> getUsersForEnterprise(Enterprise enterprise, FilledBy filledBy) {
-        return contactDao.getUsersForEnterprise(enterprise, filledBy);
-    }
-
-
-    @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy) {
-        return contactDao.getContactsForUser(user, filledBy);
-    }
-
-    @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
-        return contactDao.getContactsForUser(user, filledBy, sortBy, page, pageSize);
-    }
-
-    @Override
-    public List<Contact> getContactsForUser(User user, FilledBy filledBy, String status) {
-        return contactDao.getContactsForUser(user, filledBy, status);
-    }
-
-    @Override
-    public PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, ContactStatus status, ContactSorting sortBy,
-                                                         int page, int pageSize) {
-        User user = userService.findById(userId).orElseThrow(() -> {
-            LOGGER.error("User with id {} not found - getContactsForUser method", userId);
-            return new UserNotFoundException(userId);
-        });
-
-        List<Contact> contacts = contactDao.getContactsForUser(user, filledBy, status, sortBy, page-1, pageSize);
-
-        long applicationsCount = this.getContactsCountForUser(user, filledBy, status);
-        long maxPages = (long) Math.ceil((double) applicationsCount / pageSize);
-
-
-        return new PaginatedResource<>(contacts, page, maxPages);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy) {
-        return contactDao.getContactsForEnterprise(enterprise, filledBy);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize) {
-        return contactDao.getContactsForEnterprise(enterprise, filledBy, sortBy, page, pageSize);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status) {
-        return contactDao.getContactsForEnterprise(enterprise, filledBy, status);
-    }
 
     @Override
     @Transactional
@@ -247,33 +190,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy) {
-        return contactDao.getContactsForJobOffer(jobOffer, filledBy);
-    }
-
-    @Override
     public List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy, int page, int pageSize) {
         return contactDao.getContactsForJobOffer(jobOffer, filledBy, page, pageSize);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy) {
-        return contactDao.getContactsForEnterpriseAndUser(enterprise, user, filledBy);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy, int page, int pageSize) {
-        return contactDao.getContactsForEnterpriseAndUser(enterprise, user, filledBy, page, pageSize);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy) {
-        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer, filledBy);
-    }
-
-    @Override
-    public List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy, int page, int pageSize) {
-        return contactDao.getContactsForEnterpriseAndJobOffer(enterprise, jobOffer, filledBy, page, pageSize);
     }
 
     @Override
@@ -281,15 +199,6 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.alreadyContacted(userID, jobOfferID);
     }
 
-    @Override
-    public boolean alreadyContactedByEnterprise(long userID, long enterpriseID) {
-        return contactDao.alreadyContactedByEnterprise(userID, enterpriseID);
-    }
-
-    @Override
-    public Optional<String> getStatus(User user, JobOffer jobOffer) {
-        return contactDao.getStatus(user, jobOffer);
-    }
 
     @Override
     @Transactional
@@ -393,29 +302,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public long getContactsCount(long enterpriseID) {
-        return contactDao.getContactsCount(enterpriseID);
-    }
-
-    @Override
-    public long getContactsCount(Enterprise enterprise) {
-        return contactDao.getContactsCount(enterprise);
-    }
-
-    @Override
     public long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, ContactStatus status) {
         String statusValue = status != null ? status.getStatus() : null;
         return contactDao.getContactsCount(enterprise, jobOffer, user, filledBy, statusValue);
-    }
-
-    @Override
-    public long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status) {
-        return contactDao.getContactsCountForUser(user, filledBy, status);
-    }
-
-    @Override
-    public long getContactsCountForUser(User user) {
-        return contactDao.getContactsCountForUser(user);
     }
 
     @Override
@@ -607,7 +496,7 @@ public class ContactServiceImpl implements ContactService {
                 throw new IllegalArgumentException("User id must be null or equal to requester id");
             if(jobOfferId == null)
                 throw new IllegalArgumentException("Job offer id cannot be null");
-            return addContact(requesterId, jobOfferId, FilledBy.USER); //TODO: Add message
+            return addContact(requesterId, jobOfferId, FilledBy.USER);
         } else {
             if(userId == null)
                 throw new IllegalArgumentException("User id cannot be null");

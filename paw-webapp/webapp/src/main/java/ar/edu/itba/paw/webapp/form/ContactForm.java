@@ -10,7 +10,6 @@ public class ContactForm {
 
     private Long userId;
 
-    // TODO: Enviar mensaje tambien a empresa
     @Size(max=100)
     private String message;
 

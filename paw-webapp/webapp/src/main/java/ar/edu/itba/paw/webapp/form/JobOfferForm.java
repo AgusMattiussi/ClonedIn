@@ -31,7 +31,6 @@ public class JobOfferForm {
 
     private String modality;
 
-    // TODO: List of skills
     @Size(max=50)
     private String skill1;
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.ids;
 import java.io.Serializable;
 import java.util.Objects;
 
+// TODO: Revisar
 public class ContactId implements Serializable {
     private Long user;
     private Long jobOffer;
@@ -12,7 +13,6 @@ public class ContactId implements Serializable {
         this.jobOffer = jobOffer;
     }
 
-    // TODO: delete unused functions (and implementations)
     public ContactId() {
     }
 

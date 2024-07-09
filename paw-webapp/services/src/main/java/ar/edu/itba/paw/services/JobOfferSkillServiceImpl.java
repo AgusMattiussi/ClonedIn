@@ -39,7 +39,7 @@ public class JobOfferSkillServiceImpl implements JobOfferSkillService {
     }
 
     @Override
-    public void addSkillToJobOffer(List<Skill> skills, JobOffer jobOffer) {
+    public void addSkillsToJobOffer(List<Skill> skills, JobOffer jobOffer) {
         for(Skill skill : skills)
             jobOfferSkillDao.addSkillToJobOffer(skill, jobOffer);
     }

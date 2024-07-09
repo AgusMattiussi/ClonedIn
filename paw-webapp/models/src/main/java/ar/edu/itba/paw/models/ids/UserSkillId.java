@@ -12,7 +12,6 @@ public class UserSkillId implements Serializable {
         this.skill = skill;
     }
 
-    // TODO: delete unused functions (and implementations)
     public UserSkillId() {
     }
 
