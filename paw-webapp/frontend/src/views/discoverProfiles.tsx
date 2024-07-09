@@ -288,9 +288,9 @@ function DiscoverProfiles() {
                     <option value={SortBy.DEFAULT}> {t("Order By")} </option>
                     <option value={SortBy.OLDEST}> {t("Date asc")} </option>
                     <option value={SortBy.RECENT}> {t("Date desc")} </option>
-                    <option value={SortBy.EDUCATION_DESC}> {t("Higer Education")} </option>
+                    <option value={SortBy.EDUCATION_DESC}> {t("Higher Education")} </option>
                     <option value={SortBy.EDUCATION_ASC}> {t("Lower Education")} </option>
-                    <option value={SortBy.EXP_DESC}> {t("Higer Experience")} </option>
+                    <option value={SortBy.EXP_DESC}> {t("Higher Experience")} </option>
                     <option value={SortBy.EXP_ASC}> {t("Lower Experience")} </option>
                   </Form.Select>
                 </div>

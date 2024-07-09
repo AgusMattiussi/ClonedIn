@@ -278,7 +278,7 @@ function DiscoverJobs() {
                     onChange={(e) => handleSort(e.target.value)}
                   >
                     <option value={SortBy.DEFAULT}> {t("Order By")} </option>
-                    <option value={SortBy.SALARY_DESC}> {t("Higer Salary")} </option>
+                    <option value={SortBy.SALARY_DESC}> {t("Higher Salary")} </option>
                     <option value={SortBy.SALARY_ASC}> {t("Lower Salary")} </option>
                     <option value={SortBy.OLDEST}> {t("Date asc")} </option>
                     <option value={SortBy.RECENT}> {t("Date desc")} </option>

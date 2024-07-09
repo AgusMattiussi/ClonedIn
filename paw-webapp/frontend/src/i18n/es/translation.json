@@ -49,11 +49,11 @@
   "Invalid Salary Min": "Salario debe ser un valor positivo",
   "Invalid Salary Max": "Salario debe ser menor a 1000000000",
 
-  "Higer Salary": "Mayor salario",
+  "Higher Salary": "Mayor salario",
   "Lower Salary": "Menor salario",
-  "Higer Education": "Mayor educacion",
+  "Higher Education": "Mayor educacion",
   "Lower Education": "Menor educacion",
-  "Higer Experience": "Mayor experiencia",
+  "Higher Experience": "Mayor experiencia",
   "Lower Experience": "Menor experiencia",
 
   "No-especificado": "Selecciona",
