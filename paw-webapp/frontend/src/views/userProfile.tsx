@@ -212,9 +212,9 @@ function ProfileUser() {
           )}
         </div>
         <p style={{ fontSize: "10pt" }}>
-          {t(monthNames[education.monthFrom])} {education.yearFrom}
+          {t(monthNames[education.monthFrom - 1])} {education.yearFrom}
           {" - "}
-          {t(monthNames[education.monthTo])} {education.yearTo}
+          {t(monthNames[education.monthTo - 1])} {education.yearTo}
         </p>
         <p>{education.description}</p>
         <hr />
@@ -239,15 +239,15 @@ function ProfileUser() {
         </div>
         {experience.monthTo == null || experience.monthTo == 0 || experience.yearTo == null ? (
           <p style={{ fontSize: "10pt" }}>
-            {t(monthNames[experience.monthFrom])} {experience.yearFrom}
+            {t(monthNames[experience.monthFrom - 1])} {experience.yearFrom}
             {" - "}
             {t("Present")}
           </p>
         ) : (
           <p style={{ fontSize: "10pt" }}>
-            {t(monthNames[experience.monthFrom])} {experience.yearFrom}
+            {t(monthNames[experience.monthFrom - 1])} {experience.yearFrom}
             {" - "}
-            {t(monthNames[experience.monthTo])} {experience.yearTo}
+            {t(monthNames[experience.monthTo - 1])} {experience.yearTo}
           </p>
         )}
         <p>{experience.description}</p>
