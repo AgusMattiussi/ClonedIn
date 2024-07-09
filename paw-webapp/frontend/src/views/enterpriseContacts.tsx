@@ -169,7 +169,7 @@ function EnterpriseContacts() {
   const handleCancel = async () => {
     const response = await answerEnterpriseContact(contactId, JobOfferStatus.CANCELLED)
 
-    if (response.status === HttpStatusCode.NoContent) {
+    if (response.status === HttpStatusCode.Ok) {
       setLoading(true)
       const modalElement = document.getElementById("cancelModal")
       modalElement?.classList.remove("show")
