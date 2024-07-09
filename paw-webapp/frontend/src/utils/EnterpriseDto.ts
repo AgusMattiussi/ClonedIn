@@ -6,7 +6,7 @@ export default interface EnterpriseDto {
   email: string
   location: string
   workers: string
-  year: number
+  yearFounded: number
   website: string
   description: string
   categoryInfo: CategoryDto

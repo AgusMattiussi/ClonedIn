@@ -19,7 +19,7 @@ import { useGetUserById } from "../hooks/useGetUserById"
 import { useGetUserExperiences } from "../hooks/useGetUserExperiences"
 import { useGetUserEducations } from "../hooks/useGetUserEducations"
 import { useGetUserSkills } from "../hooks/useGetUserSkills"
-import { usePutUserVisibility } from "../hooks/usePutUserVisibility"
+import { usePostUserVisibility } from "../hooks/usePostUserVisibility"
 import { useDeleteUserExperience } from "../hooks/useDeleteUserExperience"
 import { useDeleteUserEducation } from "../hooks/useDeleteUserEducation"
 import { useDeleteUserSkill } from "../hooks/useDeleteUserSkill"
@@ -29,7 +29,7 @@ function ProfileUser() {
   const { getUserExperiences } = useGetUserExperiences()
   const { getUserEducations } = useGetUserEducations()
   const { getUserSkills } = useGetUserSkills()
-  const { modifyUserVisibility } = usePutUserVisibility()
+  const { modifyUserVisibility } = usePostUserVisibility()
   const { deleteUserSkill } = useDeleteUserSkill()
   const { deleteUserEducation } = useDeleteUserEducation()
   const { deleteUserExperience } = useDeleteUserExperience()

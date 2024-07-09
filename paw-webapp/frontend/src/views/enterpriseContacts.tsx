@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
 import { useGetCategoryByUrl } from "../hooks/useGetCategoryByUrl"
 import { useGetEnterpriseContacts } from "../hooks/useGetEnterpriseContacts"
-import { usePutEnterpriseContactStatus } from "../hooks/usePutEnterpriseContactStatus"
+import { usePostEnterpriseContactStatus } from "../hooks/usePostEnterpriseContactStatus"
 import { useGetJobOfferByUrl } from "../hooks/useGetJobOfferByUrl"
 import { useNavigate, Link, createSearchParams } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
@@ -28,7 +28,7 @@ function EnterpriseContacts() {
 
   const { getCategoryByUrl } = useGetCategoryByUrl()
   const { getEnterpriseContacts } = useGetEnterpriseContacts()
-  const { answerEnterpriseContact } = usePutEnterpriseContactStatus()
+  const { answerEnterpriseContact } = usePostEnterpriseContactStatus()
   const { getJobOfferByUrl } = useGetJobOfferByUrl()
 
   const [isLoading, setLoading] = useState(true)

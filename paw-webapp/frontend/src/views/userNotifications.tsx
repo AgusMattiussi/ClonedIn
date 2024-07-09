@@ -12,7 +12,7 @@ import { FilledBy, SortBy, JobOfferStatus } from "../utils/constants"
 import { useState, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useSharedAuth } from "../api/auth"
-import { usePutUserContactStatus } from "../hooks/usePutUserContactStatus"
+import { usePostUserContactStatus } from "../hooks/usePostUserContactStatus"
 import { useGetEnterpriseByUrl } from "../hooks/useGetEnterpriseByUrl"
 import { useGetJobOfferByUrl } from "../hooks/useGetJobOfferByUrl"
 import { useGetCategoryByUrl } from "../hooks/useGetCategoryByUrl"
@@ -30,7 +30,7 @@ function NotificationsUser() {
   const { getCategoryByUrl } = useGetCategoryByUrl()
   const { getEnterpriseByUrl } = useGetEnterpriseByUrl()
   const { getJobOfferByUrl } = useGetJobOfferByUrl()
-  const { answerUserContact } = usePutUserContactStatus()
+  const { answerUserContact } = usePostUserContactStatus()
 
   const [isLoading, setLoading] = useState(true)
   const [notifications, setNotifications] = useState<ContactDto[]>([])
