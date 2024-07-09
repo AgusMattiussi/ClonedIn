@@ -54,8 +54,7 @@ function JobOfferDiscoverCard({ seeMoreView, job }: { seeMoreView: boolean; job:
       url: `/contacts`,
       method: "POST",
       body: {
-        jobOfferId: job.id,
-        userId: jobEnterprise?.id
+        jobOfferId: job.id
       },
     })
 

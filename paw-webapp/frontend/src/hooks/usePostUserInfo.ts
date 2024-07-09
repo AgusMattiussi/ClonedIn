@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePutUserInfo = () => {
+export const usePostUserInfo = () => {
   const { apiRequest } = useRequestApi()
 
   async function modifyUserInfo(

@@ -120,7 +120,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.CalendarEvent color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Founding Year")}: {enterprise.year == null ? t("No especificado") : enterprise.year}
+                {t("Founding Year")}: {enterprise.yearFounded == null ? t("No especificado") : enterprise.yearFounded}
               </p>
             </div>
             <div className="d-flex justify-content-start my-2">

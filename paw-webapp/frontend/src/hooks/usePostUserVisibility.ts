@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePutUserVisibility = () => {
+export const usePostUserVisibility = () => {
   const { apiRequest } = useRequestApi()
 
   async function modifyUserVisibility(id: string | undefined, visible: boolean) {

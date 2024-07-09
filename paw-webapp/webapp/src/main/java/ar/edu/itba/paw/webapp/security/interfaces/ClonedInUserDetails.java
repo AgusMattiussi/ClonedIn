@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.security.interfaces;
 
 import ar.edu.itba.paw.models.enums.Role;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 public interface ClonedInUserDetails extends UserDetails {
 

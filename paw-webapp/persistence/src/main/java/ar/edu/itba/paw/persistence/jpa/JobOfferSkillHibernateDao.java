@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.persistence.JobOfferSkillDao;
 import ar.edu.itba.paw.models.JobOffer;
 import ar.edu.itba.paw.models.JobOfferSkill;
 import ar.edu.itba.paw.models.Skill;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;

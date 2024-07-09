@@ -20,11 +20,11 @@ jest.mock('../../api/apiRequest', () => ({
   
       let deleteResult;
       await act(async () => {
-        deleteResult = await result.current.deleteUserEducation('user_id_123', 456);
+        deleteResult = await result.current.deleteUserEducation('user_id_123', 123);
       });
   
       expect(mockApiRequest).toHaveBeenCalledWith({
-        url: '/users/user_id_123/educations/456',
+        url: '/users/user_id_123/educations/123',
         method: 'DELETE',
       });
       expect(deleteResult).toEqual(mockResponse);

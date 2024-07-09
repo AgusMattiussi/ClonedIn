@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.interfaces.persistence.EducationDao;
 import ar.edu.itba.paw.models.Education;
 import ar.edu.itba.paw.models.User;
-import org.springframework.cache.annotation.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;

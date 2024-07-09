@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePutJobOfferStatus = () => {
+export const usePostJobOfferStatus = () => {
   const { apiRequest } = useRequestApi()
 
   async function closeJobOffer(

@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePutEnterpriseContactStatus = () => {
+export const usePostEnterpriseContactStatus = () => {
   const { apiRequest } = useRequestApi()
 
   async function answerEnterpriseContact(

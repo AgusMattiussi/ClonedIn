@@ -1,17 +1,13 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Category;
-import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.models.enums.UserSorting;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public interface UserService {
 

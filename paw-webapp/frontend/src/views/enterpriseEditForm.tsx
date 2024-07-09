@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
 import { useGetEnterpriseById } from "../hooks/useGetEnterpriseById"
 import { useGetCategories } from "../hooks/useGetCategories"
-import { usePutEnterpriseInfo } from "../hooks/usePutEnterpriseInfo"
+import { usePostEnterpriseInfo } from "../hooks/usePostEnterpriseInfo"
 import { HttpStatusCode } from "axios"
 import * as formik from "formik"
 import * as yup from "yup"
@@ -23,7 +23,7 @@ function EditEnterpriseForm() {
 
   const { getCategories } = useGetCategories()
   const { getEnterpriseById } = useGetEnterpriseById()
-  const { modifyEnterpriseInfo } = usePutEnterpriseInfo()
+  const { modifyEnterpriseInfo } = usePostEnterpriseInfo()
 
   const [categoryList, setCategoryList] = useState([])
 
@@ -194,7 +194,7 @@ function EditEnterpriseForm() {
                               <Form.Control
                                 name="foundingYear"
                                 className="input"
-                                placeholder={"" + enterprise?.year}
+                                placeholder={"" + enterprise?.yearFounded}
                                 value={values.foundingYear}
                                 onChange={handleChange}
                                 isInvalid={!!errors.foundingYear}

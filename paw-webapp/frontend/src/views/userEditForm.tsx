@@ -9,7 +9,7 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSharedAuth } from "../api/auth"
-import { usePutUserInfo } from "../hooks/usePutUserInfo"
+import { usePostUserInfo } from "../hooks/usePostUserInfo"
 import { useGetCategories } from "../hooks/useGetCategories"
 import { useGetUserById } from "../hooks/useGetUserById"
 import { HttpStatusCode } from "axios"
@@ -24,7 +24,7 @@ function EditUserForm() {
   const { userInfo } = useSharedAuth()
   const { getUserById } = useGetUserById()
   const { getCategories } = useGetCategories()
-  const { modifyUserInfo } = usePutUserInfo()
+  const { modifyUserInfo } = usePostUserInfo()
 
   const [categoryList, setCategoryList] = useState([])
 

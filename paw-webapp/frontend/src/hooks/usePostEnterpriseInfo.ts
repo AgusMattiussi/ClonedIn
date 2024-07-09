@@ -1,6 +1,6 @@
 import { useRequestApi } from "../api/apiRequest"
 
-export const usePutEnterpriseInfo = () => {
+export const usePostEnterpriseInfo = () => {
   const { apiRequest } = useRequestApi()
 
   async function modifyEnterpriseInfo(
@@ -15,7 +15,7 @@ export const usePutEnterpriseInfo = () => {
   ) {
     const response = await apiRequest({
       url: `/enterprises/${id}`,
-      method: "PUT",
+      method: "POST",
       body: {
         name,
         description,

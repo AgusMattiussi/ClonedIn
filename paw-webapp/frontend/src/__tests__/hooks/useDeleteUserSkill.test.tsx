@@ -8,7 +8,7 @@ jest.mock('../../api/apiRequest', () => ({
   }));
   
   describe('useDeleteUserSkill', () => {
-    it('deletes user experience successfully', async () => {
+    it('deletes user skill successfully', async () => {
       const mockApiRequest = jest.fn();
       (useRequestApi as jest.Mock).mockReturnValue({ apiRequest: mockApiRequest });
   
