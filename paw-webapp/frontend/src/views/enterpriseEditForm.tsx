@@ -132,7 +132,11 @@ function EditEnterpriseForm() {
                               <Form.Control
                                 name="city"
                                 className="input"
-                                placeholder={enterprise?.location}
+                                placeholder={
+                                  enterprise?.location === ""
+                                    ? t("Location").toString()
+                                    : enterprise?.location || undefined
+                                }
                                 value={values.city}
                                 onChange={handleChange}
                                 isInvalid={!!errors.city}
@@ -194,7 +198,11 @@ function EditEnterpriseForm() {
                               <Form.Control
                                 name="foundingYear"
                                 className="input"
-                                placeholder={"" + enterprise?.yearFounded}
+                                placeholder={
+                                  enterprise?.yearFounded === undefined
+                                    ? t("Founding Year").toString()
+                                    : enterprise?.yearFounded.toString() || undefined
+                                }
                                 value={values.foundingYear}
                                 onChange={handleChange}
                                 isInvalid={!!errors.foundingYear}
@@ -204,7 +212,11 @@ function EditEnterpriseForm() {
                               <Form.Control
                                 name="link"
                                 className="input"
-                                placeholder={enterprise?.website}
+                                placeholder={
+                                  enterprise?.website === ""
+                                    ? t("Website").toString()
+                                    : enterprise?.website || undefined
+                                }
                                 value={values.link}
                                 onChange={handleChange}
                                 isInvalid={!!errors.link}
@@ -213,7 +225,11 @@ function EditEnterpriseForm() {
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
                                 name="aboutUs"
-                                placeholder={enterprise?.description}
+                                placeholder={
+                                  enterprise?.description === ""
+                                    ? t("About Us").toString()
+                                    : enterprise?.description || undefined
+                                }
                                 as="textarea"
                                 rows={3}
                                 value={values.aboutUs}

@@ -111,7 +111,7 @@ function ProfileEnterpriseCard({ enterprise }: { enterprise: any }) {
             <div className="d-flex justify-content-start my-2">
               <Icon.PeopleFill color="black" size={15} style={{ marginRight: "10px", marginTop: "5px" }} />
               <p style={{ wordBreak: "break-word", textAlign: "left", marginBottom: "0" }}>
-                {t("Quantity of employees")}:
+                {t("Quantity of employees")}:{" "}
                 {enterprise.workers === "" || enterprise.workers === null || enterprise.workers === "No-especificado"
                   ? t("No especificado")
                   : enterprise.workers}

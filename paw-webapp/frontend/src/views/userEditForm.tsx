@@ -47,8 +47,7 @@ function EditUserForm() {
       const response = await getUserById(id)
       if (response.status === HttpStatusCode.Ok) {
         setUser(response.data)
-      }
-      else {
+      } else {
         console.error("Error getting user information", response)
       }
     }
@@ -130,7 +129,9 @@ function EditUserForm() {
                               <Form.Control
                                 name="location"
                                 className="input"
-                                placeholder={user?.location}
+                                placeholder={
+                                  user?.location === "" ? t("Location").toString() : user?.location || undefined
+                                }
                                 value={values.location}
                                 onChange={handleChange}
                                 isInvalid={!!errors.location}
@@ -141,7 +142,11 @@ function EditUserForm() {
                               <Form.Control
                                 name="position"
                                 className="input"
-                                placeholder={user?.currentPosition}
+                                placeholder={
+                                  user?.currentPosition === ""
+                                    ? t("Current Position").toString()
+                                    : user?.location || undefined
+                                }
                                 value={values.position}
                                 onChange={handleChange}
                                 isInvalid={!!errors.position}
@@ -199,7 +204,9 @@ function EditUserForm() {
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                               <Form.Control
                                 name="aboutMe"
-                                placeholder={user?.description}
+                                placeholder={
+                                  user?.description === "" ? t("About Me").toString() : user?.location || undefined
+                                }
                                 as="textarea"
                                 rows={3}
                                 value={values.aboutMe}
