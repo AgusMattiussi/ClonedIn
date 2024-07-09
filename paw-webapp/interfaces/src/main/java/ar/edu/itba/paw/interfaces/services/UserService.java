@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-// TODO: delete unused functions (and implementations)
 public interface UserService {
 
     User create(String email, String password, String name, String location, String categoryName, String currentPosition,
@@ -31,29 +30,10 @@ public interface UserService {
 
     boolean userExists(String email);
 
-    List<User> getAllUsers();
-
     void changePassword(String email, String password);
-
-    long getUsersCount();
-
-    long getVisibleUsersCount();
-
-    long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription);
 
     long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                 String location, Long skillId, String skillDescription);
-
-    List<User> getVisibleUsers(int page, int pageSize);
-
-    List<User> getVisibleUsersByCategory(Category category, int page, int pageSize);
-
-    List<User> getVisibleUsersByNameLike(String term, int page, int pageSize);
-
-    List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize);
-
-    List<User> getUsersListByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription,
-                                     int page, int pageSize);
 
     PaginatedResource<User> getUsersListByFilters(String categoryName, EducationLevel educationLevel, String term, Integer minExpYears,
                                                   Integer maxExpYears, String location, Long skillId, String skillDescription, UserSorting sortBy,
@@ -82,5 +62,4 @@ public interface UserService {
 
     Optional<Image> getProfileImage(long userId);
 
-    Map<Long, Boolean> getUserContactMap(Set<Contact> contacts);
 }

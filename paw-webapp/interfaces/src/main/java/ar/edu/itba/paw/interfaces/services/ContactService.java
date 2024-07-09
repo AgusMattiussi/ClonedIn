@@ -12,7 +12,6 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: delete unused functions (and implementations)
 public interface ContactService {
 
     Optional<Contact> getContact(long userID, long jobOfferID);
@@ -23,44 +22,15 @@ public interface ContactService {
 
     Contact addContact(long enterpriseId, long userId, long jobOfferId, FilledBy filledBy, String contactMessage);
 
-    List<Enterprise> getEnterprisesForUser(User user, FilledBy filledBy);
-
-    List<User> getUsersForEnterprise(Enterprise enterprise, FilledBy filledBy);
-
-    List<Contact> getContactsForUser(User user, FilledBy filledBy);
-
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize);
-
-    List<Contact> getContactsForUser(User user, FilledBy filledBy, String status);
-
-    PaginatedResource<Contact> getContactsForUser(long userId, FilledBy filledBy, ContactStatus status, ContactSorting sortBy, int page, int pageSize);
-
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy);
-
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, ContactSorting sortBy, int page, int pageSize);
-
-    List<Contact> getContactsForEnterprise(Enterprise enterprise, FilledBy filledBy, String status);
+    Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message);
 
     PaginatedResource<Contact> getContacts(Long enterpriseId, Long jobOfferId, Long userId, FilledBy filledBy,
                                            ContactStatus status, ContactSorting sortBy, int page, int pageSize);
 
-    List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy);
-
     List<Contact> getContactsForJobOffer(JobOffer jobOffer, FilledBy filledBy, int page, int pageSize);
 
-    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy);
-
-    List<Contact> getContactsForEnterpriseAndUser(Enterprise enterprise, User user, FilledBy filledBy, int page, int pageSize);
-
-    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy);
-
-    List<Contact> getContactsForEnterpriseAndJobOffer(Enterprise enterprise, JobOffer jobOffer, FilledBy filledBy, int page, int pageSize);
 
     boolean alreadyContacted(long userID, long jobOfferID);
-
-    boolean alreadyContactedByEnterprise(long userID, long enterpriseID);
-
-    Optional<String> getStatus(User user, JobOffer jobOffer);
 
     boolean acceptJobOffer(User user, JobOffer jobOffer, Role updatedBy);
 
@@ -74,14 +44,7 @@ public interface ContactService {
 
     boolean closeJobOfferForEveryone(JobOffer jobOffer);
 
-    long getContactsCount(long enterpriseID);
-    long getContactsCount(Enterprise enterprise);
-
     long getContactsCount(Enterprise enterprise, JobOffer jobOffer, User user, FilledBy filledBy, ContactStatus status);
-
-    long getContactsCountForUser(User user, FilledBy filledBy, ContactStatus status);
-
-    long getContactsCountForUser(User user);
 
     void updateEnterpriseContactStatus(long userId, long jobOfferId, ContactStatus status, Role updatedBy);
 
@@ -103,8 +66,6 @@ public interface ContactService {
         else
             return getContacts(requesterId, jobOfferId, userId, filledBy, status, sortBy, page, pageSize);
     }
-
-    Contact addContact(Role requesterRole, Long requesterId, Long jobOfferId, Long userId, String message);
 
     default Optional<Contact> getContact(String contactId, Role requesterRole) {
         final long[] ids = Contact.splitId(contactId);

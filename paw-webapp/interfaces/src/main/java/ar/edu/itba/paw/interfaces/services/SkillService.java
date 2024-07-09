@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: delete unused functions (and implementations)
 public interface SkillService {
 
     Skill create (String description);

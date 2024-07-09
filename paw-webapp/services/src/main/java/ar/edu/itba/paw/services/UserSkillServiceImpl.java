@@ -86,9 +86,4 @@ public class UserSkillServiceImpl implements UserSkillService {
         LOGGER.debug("Skill with id {} was deleted from user with id {}", skillID, userID);
     }
 
-    @Override
-    public void deleteSkillFromUser(User user, Skill skill) {
-        userSkillDao.deleteSkillFromUser(user, skill);
-        LOGGER.debug("Skill with id {} was deleted from user with id {}", skill.getId(), user.getId());
-    }
 }

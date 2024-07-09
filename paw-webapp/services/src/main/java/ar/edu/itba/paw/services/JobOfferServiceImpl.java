@@ -71,7 +71,7 @@ public class JobOfferServiceImpl implements JobOfferService {
         LOGGER.info("A new job offer was registered");
 
         List<Skill> skills = skillService.findMultipleByDescriptionOrCreate(skillDescriptions);
-        jobOfferSkillService.addSkillToJobOffer(skills, jobOffer);
+        jobOfferSkillService.addSkillsToJobOffer(skills, jobOffer);
 
         return jobOffer;
     }
@@ -87,55 +87,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public List<JobOffer> getAllJobOffers() {
-        return jobOfferDao.getAllJobOffers();
-    }
-
-    @Override
-    public long getJobOffersCount() {
-        return jobOfferDao.getJobOffersCount();
-    }
-
-    @Override
-    public List<JobOffer> getAllJobOffers(int page, int pageSize) {
-        return jobOfferDao.getAllJobOffers(page, pageSize);
-    }
-
-    @Override
     @Transactional
     public Optional<JobOffer> findById(long id) {
         return jobOfferDao.findById(id);
-    }
-
-    @Override
-    public List<JobOffer> findByEnterprise(Enterprise enterprise) {
-        return jobOfferDao.findByEnterprise(enterprise);
-    }
-
-    @Override
-    public List<JobOffer> findByEnterprise(Enterprise enterprise, int page, int pageSize) {
-        return jobOfferDao.findByEnterprise(enterprise, page, pageSize);
-    }
-
-    @Override
-    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise) {
-        return jobOfferDao.findActiveByEnterprise(enterprise);
-    }
-
-    @Override
-    public List<JobOffer> findActiveByEnterprise(Enterprise enterprise, int page, int pageSize) {
-        return jobOfferDao.findActiveByEnterprise(enterprise, page, pageSize);
-    }
-
-
-    @Override
-    public long getJobOffersCountForEnterprise(Enterprise enterprise) {
-        return jobOfferDao.getJobOffersCountForEnterprise(enterprise);
-    }
-
-    @Override
-    public long getActiveJobOffersCountForEnterprise(Enterprise enterprise) {
-        return jobOfferDao.getActiveJobOffersCountForEnterprise(enterprise);
     }
 
 
@@ -166,22 +120,11 @@ public class JobOfferServiceImpl implements JobOfferService {
         return new PaginatedResource<>(jobOffers, page, maxPages);
     }
 
-
-    @Override
-    public List<JobOffer> getJobOffersListByFilters(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary, int page, int pageSize) {
-        return jobOfferDao.getJobOffersListByFilters(category, modality, term, minSalary, maxSalary, page, pageSize);
-    }
-
     @Override
     public long getJobOfferCount(Category category, JobOfferModality modality, Long skillId, String skillDescription, Long enterpriseId,
                                  String searchTerm, String position, BigDecimal minSalary, BigDecimal maxSalary, boolean onlyActive) {
         return jobOfferDao.getJobOfferCount(category, modality, skillId, skillDescription, enterpriseId, searchTerm,
                 position, minSalary, maxSalary, onlyActive);
-    }
-
-    @Override
-    public long getJobOfferCount(Category category, JobOfferModality modality, String term, BigDecimal minSalary, BigDecimal maxSalary) {
-        return jobOfferDao.getJobOfferCount(category, modality, term, minSalary, maxSalary);
     }
 
     @Override

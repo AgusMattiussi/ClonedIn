@@ -87,10 +87,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> optUser = findById(userId);
 
         if(getYearsOfExperience) {
-            optUser.ifPresent(user -> {
-                // This is done to avoid lazy initialization exceptions
-                user.getYearsOfExperience();
-            });
+            // This is done to avoid lazy initialization exceptions
+            optUser.ifPresent(User::getYearsOfExperience);
         }
 
         return optUser;
@@ -108,30 +106,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDao.getAllUsers();
-    }
-
-    @Override
     public void changePassword(String email, String password) {
         userDao.changePassword(email, passwordEncoder.encode(password));
         LOGGER.debug("Password for user with email {} was changed", email);
-    }
-
-    @Override
-    public long getUsersCount() {
-        return userDao.getUsersCount();
-    }
-
-    @Override
-    public long getVisibleUsersCount() {
-        return userDao.getVisibleUsersCount();
-    }
-
-    @Override
-    @Transactional
-    public long getUsersCountByFilters(Category category, String location, EducationLevel educationLevel, String skillDescription) {
-        return userDao.getUsersCountByFilters(category, location, educationLevel, skillDescription);
     }
 
     @Override
@@ -139,32 +116,6 @@ public class UserServiceImpl implements UserService {
     public long getUsersCountByFilters(Category category, EducationLevel educationLevel, String term, Integer minExpYears, Integer maxExpYears,
                                      String location, Long skillId, String skillDescription) {
         return userDao.getUsersCountByFilters(category, educationLevel, term, minExpYears, maxExpYears, location, skillId, skillDescription);
-    }
-
-    @Override
-    public List<User> getVisibleUsers(int page, int pageSize) {
-        return userDao.getVisibleUsers(page, pageSize);
-    }
-
-    @Override
-    public List<User> getVisibleUsersByCategory(Category category, int page, int pageSize) {
-        return userDao.getVisibleUsersByCategory(category, page,pageSize);
-    }
-
-    @Override
-    public List<User> getVisibleUsersByNameLike(String term, int page, int pageSize) {
-        return userDao.getVisibleUsersByNameLike(term, page, pageSize);
-    }
-
-    @Override
-    public List<User> getVisibleUsersByLocationLike(String location, int page, int pageSize) {
-        return userDao.getVisibleUsersByLocationLike(location, page, pageSize);
-    }
-
-    @Override
-    public List<User> getUsersListByFilters(Category category, String location, EducationLevel educationLevel,
-                                            String skillDescription, int page, int pageSize) {
-        return userDao.getUsersListByFilters(category, location, educationLevel, skillDescription, page, pageSize);
     }
 
     @Override
@@ -231,9 +182,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserInformation(long userID, String newName, String newDescription, String newLocation, String newPosition,
                                       String newCategory, EducationLevel newEducationLevel, Visibility newVisibility) {
-
-
-
         if(newName != null && !newName.isEmpty()) {
             updateName(userID, newName);
         }
@@ -312,14 +260,5 @@ public class UserServiceImpl implements UserService {
         }
 
         return Optional.ofNullable(image);
-    }
-
-    @Override
-    public Map<Long, Boolean> getUserContactMap(Set<Contact> contacts) {
-        Map<Long, Boolean> toReturn = new HashMap<>();
-        for (Contact contact : contacts) {
-            toReturn.putIfAbsent(contact.getJobOffer().getId(), true);
-        }
-        return toReturn;
     }
 }

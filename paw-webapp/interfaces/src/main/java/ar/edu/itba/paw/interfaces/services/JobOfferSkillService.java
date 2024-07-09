@@ -6,12 +6,11 @@ import ar.edu.itba.paw.models.utils.PaginatedResource;
 
 import java.util.List;
 
-// TODO: delete unused functions (and implementations)
 public interface JobOfferSkillService {
 
     void addSkillToJobOffer(Skill skill, JobOffer jobOffer);
 
-    void addSkillToJobOffer(List<Skill> skills, JobOffer jobOffer);
+    void addSkillsToJobOffer(List<Skill> skills, JobOffer jobOffer);
 
     List<JobOffer> getJobOffersWithSkill(Skill skill);
 
