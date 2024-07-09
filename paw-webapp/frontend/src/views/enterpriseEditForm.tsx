@@ -75,7 +75,7 @@ function EditEnterpriseForm() {
   const handlePost = async (e: any) => {
     const name = e.name
     const city = e.city
-    const year = e.foundingYear
+    const year = e.foundingYear === "" ? enterprise?.yearFounded : e.foundingYear
     const link = e.link
     const aboutUs = e.aboutUs
     const response = await modifyEnterpriseInfo(id, name, aboutUs, city, category, link, workers, year)
