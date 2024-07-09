@@ -12,10 +12,10 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception>{
 
     private static final String MESSAGE = "An exception occurred";
 
-    // TODO: Me parece que no deberiamos mostrar e.getMessage() para excepciones no conocidas
+    // We decided not to show unknown exceptions to the user, since they could be a security risk
     @Override
     public Response toResponse(Exception e) {
-        ErrorDTO errorDTO = new ErrorDTO(e.getClass(), MESSAGE, e.getMessage());
+        ErrorDTO errorDTO = new ErrorDTO(e.getClass(), MESSAGE, MESSAGE);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorDTO).build();
     }
 }
