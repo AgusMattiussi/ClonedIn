@@ -94,7 +94,7 @@ function RegisterUser() {
     password: yup
       .string()
       .required(t("Required") as string)
-      .min(6, t("Password Min Length") as string)
+      .min(8, t("Password Min Length") as string)
       .max(20, t("Password Max Length") as string),
     repeatPassword: yup
       .string()
