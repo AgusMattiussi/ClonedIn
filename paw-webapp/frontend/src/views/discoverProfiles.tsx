@@ -132,6 +132,12 @@ function DiscoverProfiles() {
   }
 
   const handleFilter = () => {
+    if (parseInt(minExpYears) < 0) {
+      setMinExpYears("0")
+    }
+    if (parseInt(maxExpYears) < 0) {
+      setMaxExpYears("")
+    }
     setLoading(true)
   }
 
