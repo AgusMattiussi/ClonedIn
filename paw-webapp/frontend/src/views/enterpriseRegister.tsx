@@ -93,7 +93,7 @@ function RegisterEnterprise() {
     pass: yup
       .string()
       .required(t("Required") as string)
-      .min(6, t("Password Min Length") as string)
+      .min(8, t("Password Min Length") as string)
       .max(20, t("Password Max Length") as string),
     repeatPass: yup
       .string()
@@ -266,7 +266,7 @@ function RegisterEnterprise() {
                               <Form.Control
                                 name="foundingYear"
                                 className="input"
-                                placeholder={t("Funding Year").toString()}
+                                placeholder={t("Founding Year").toString()}
                                 value={values.foundingYear}
                                 onChange={handleChange}
                                 isInvalid={!!errors.foundingYear}
