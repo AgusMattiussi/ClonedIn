@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Enterprise;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.Visibility;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.webapp.auth.UserAndWebAuthenticationDetails;
 import ar.edu.itba.paw.webapp.security.interfaces.ClonedInUserDetails;
 import ar.edu.itba.paw.webapp.utils.SecurityUtils;
@@ -119,15 +120,14 @@ public class SecurityValidator {
 
     public boolean canAccessContact(String contactId){
         Role requesterRole = SecurityUtils.getPrincipalRole();
+        ContactId ids = ContactId.fromString(contactId);
 
         if(requesterRole == Role.USER) {
-            long userId = Contact.splitId(contactId)[0];
             Long requesterId = SecurityUtils.getPrincipalId();
-            return requesterId.equals(userId);
+            return requesterId.equals(ids.getUser());
         }
         else if(requesterRole == Role.ENTERPRISE) {
-            long jobOfferId = Contact.splitId(contactId)[1];
-            return isJobOfferOwner(jobOfferId);
+            return isJobOfferOwner(ids.getJobOffer());
         }
 
         return false;

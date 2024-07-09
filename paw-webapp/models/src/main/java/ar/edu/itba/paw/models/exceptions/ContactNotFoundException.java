@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.exceptions;
 
-import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.ids.ContactId;
+
 import javax.ws.rs.core.Response;
 
 public class ContactNotFoundException extends ClonedInException{
@@ -15,7 +16,7 @@ public class ContactNotFoundException extends ClonedInException{
 
     public ContactNotFoundException(String contactId) {
         // Java forces us to call super in the first line of the constructor
-        super(String.format(DETAILS, Contact.splitId(contactId)[0], Contact.splitId(contactId)[1]));
+        super(String.format(DETAILS, ContactId.splitId(contactId)[0], ContactId.splitId(contactId)[1]));
     }
 
     @Override

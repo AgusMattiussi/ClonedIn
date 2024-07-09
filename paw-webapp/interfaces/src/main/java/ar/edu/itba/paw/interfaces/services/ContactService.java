@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.enums.FilledBy;
 import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.ContactSorting;
+import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public interface ContactService {
     }
 
     default Optional<Contact> getContact(String contactId, Role requesterRole) {
-        final long[] ids = Contact.splitId(contactId);
+        final long[] ids = ContactId.splitId(contactId);
         return getContact(ids[0], ids[1], requesterRole == Role.ENTERPRISE);
     }
 }

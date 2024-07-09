@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.enums.ContactStatus;
 import ar.edu.itba.paw.models.enums.Role;
 import ar.edu.itba.paw.models.enums.ContactSorting;
 import ar.edu.itba.paw.models.exceptions.*;
+import ar.edu.itba.paw.models.ids.ContactId;
 import ar.edu.itba.paw.models.utils.PaginatedResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -463,7 +464,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public void updateContactStatus(Role requesterRole, String contactId, ContactStatus status) {
-        long[] ids = Contact.splitId(contactId);
+        long[] ids = ContactId.splitId(contactId);
         updateContactStatus(requesterRole, ids[0], ids[1], status);
     }
 
@@ -509,7 +510,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional
     public Optional<Contact> getContact(String contactId, Role requesterRole) {
-        final long[] ids = Contact.splitId(contactId);
+        final long[] ids = ContactId.splitId(contactId);
         return getContact(ids[0], ids[1], requesterRole == Role.ENTERPRISE);
     }
 
