@@ -132,6 +132,12 @@ function DiscoverJobs() {
   }
 
   const handleFilter = () => {
+    if (parseInt(minSalary) < 0) {
+      setMinSalary("0")
+    }
+    if (parseInt(maxSalary) < 0) {
+      setMaxSalary("")
+    }
     setLoading(true)
   }
 
