@@ -60,9 +60,9 @@ describe('useGetUsers', () => {
     ] };
     mockApiRequest.mockResolvedValue(mockResponse);
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getUsers();
+      getResult = await result.current.getUsers();
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -71,6 +71,6 @@ describe('useGetUsers', () => {
         queryParams: {},
         requiresAuth: true,
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

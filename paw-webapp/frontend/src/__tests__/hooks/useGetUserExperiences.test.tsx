@@ -34,9 +34,9 @@ describe('useGetUserExperiences', () => {
 
     const id = "28"
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getUserExperiences(id);
+      getResult = await result.current.getUserExperiences(id);
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -44,6 +44,6 @@ describe('useGetUserExperiences', () => {
         method: "GET",
         requiresAuth: true,
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

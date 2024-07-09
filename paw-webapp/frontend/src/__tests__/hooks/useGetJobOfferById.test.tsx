@@ -36,9 +36,9 @@ describe('useGetEnterpriseJobOffers', () => {
 
     const id="29"
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getJobOfferById(id);
+      getResult = await result.current.getJobOfferById(id);
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -46,6 +46,6 @@ describe('useGetEnterpriseJobOffers', () => {
       method: 'GET',
       requiresAuth: true,
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

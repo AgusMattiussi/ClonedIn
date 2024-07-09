@@ -40,9 +40,9 @@ describe('useGetUserSkills', () => {
 
     const id = "28"
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getUserSkills(id);
+      getResult = await result.current.getUserSkills(id);
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -50,6 +50,6 @@ describe('useGetUserSkills', () => {
         method: "GET",
         requiresAuth: true,
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

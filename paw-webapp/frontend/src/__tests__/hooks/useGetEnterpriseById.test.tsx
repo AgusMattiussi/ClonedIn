@@ -64,9 +64,9 @@ describe('useGetEnterpriseById', () => {
   ] };
     mockApiRequest.mockResolvedValue(mockResponse);
 
-    let enterprise;
+    let getResult;
     await act(async () => {
-      enterprise = await result.current.getEnterpriseById("42");
+      getResult = await result.current.getEnterpriseById("42");
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -74,6 +74,6 @@ describe('useGetEnterpriseById', () => {
       method: 'GET',
       requiresAuth: true,
     });
-    expect(enterprise).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

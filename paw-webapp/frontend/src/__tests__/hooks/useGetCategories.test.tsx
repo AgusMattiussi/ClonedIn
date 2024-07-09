@@ -39,15 +39,15 @@ describe('useGetCategories', () => {
   ] };
     mockApiRequest.mockResolvedValue(mockResponse);
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getCategories();
+      getResult = await result.current.getCategories();
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
       url: '/categories',
       method: 'GET',
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });

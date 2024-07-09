@@ -36,9 +36,9 @@ describe('useGetEnterpriseContacts', () => {
     ] };
     mockApiRequest.mockResolvedValue(mockResponse);
 
-    let categories;
+    let getResult;
     await act(async () => {
-      categories = await result.current.getEnterpriseContacts();
+      getResult = await result.current.getEnterpriseContacts();
     });
 
     expect(mockApiRequest).toHaveBeenCalledWith({
@@ -47,6 +47,6 @@ describe('useGetEnterpriseContacts', () => {
       queryParams: {},
       requiresAuth: true,
     });
-    expect(categories).toEqual(mockResponse);
+    expect(getResult).toEqual(mockResponse);
   });
 });
