@@ -16,7 +16,7 @@ describe('usePostSkill', () => {
     const { result } = renderHook(() => usePostSkill());
 
     // Mock API request response
-    const mockResponse = { status: 208, data: { message: 'Skill created successfully' } };
+    const mockResponse = { status: 400, data: { message: 'Skill created successfully' } };
     mockApiRequest.mockResolvedValue(mockResponse);
 
     const id = "28"
