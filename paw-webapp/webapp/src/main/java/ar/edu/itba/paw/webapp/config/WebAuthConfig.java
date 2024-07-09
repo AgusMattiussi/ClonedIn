@@ -56,9 +56,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/users").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/enterprises").anonymous()
                 // Users and Enterprises
-                .antMatchers("/api/users/*/image").permitAll() // TODO: authenticated()
+                .antMatchers("/api/users/*/image").permitAll()
                 .antMatchers("/api/users", "/api/users/**").authenticated()
-                .antMatchers("/api/enterprises/*/image").permitAll() // TODO: authenticated()
+                .antMatchers("/api/enterprises/*/image").permitAll()
                 .antMatchers("/api/enterprises", "/api/enterprises/**").authenticated()
                 // Categories
                 .antMatchers("/api/categories").permitAll()
@@ -76,7 +76,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
-    //FIXME: Revisar esto
     @Override
     public void configure(final WebSecurity web) {
         web.ignoring().antMatchers( "/assets/css/**", "/assets/js/**", "/assets/images/**",
@@ -90,7 +89,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         cors.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
         cors.setExposedHeaders(Arrays.asList("Authorization", "Location", "Link", "X-Total-Pages", "X-Access-Token",
-                "ETag", "Set-Cookie"));
+                "ETag", "Set-Cookie", "Cache-Control", "Content-Type"));
         cors.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cors);

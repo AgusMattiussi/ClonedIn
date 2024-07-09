@@ -31,7 +31,7 @@ public class UserDTO {
         dto.description = user.getDescription();
         dto.educationLevel = user.getEducation();
         dto.visible = user.isVisible();
-        dto.yearsOfExperience = user.getYearsOfExperience(); // TODO: Me parece que no coincide con el sorting enum
+        dto.yearsOfExperience = user.getYearsOfExperience();
 
         dto.links = new UserDTOLinks(uriInfo, user);
         return dto;
