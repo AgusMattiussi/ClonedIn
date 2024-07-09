@@ -36,11 +36,11 @@ export enum SortBy {
   YEARS_OF_EXPERIENCE = "yearsOfExperience",
   DEFAULT = "predeterminado",
   RECENT = "recientes",
-  OLDEST = "antiguas",
+  OLDEST = "antiguos",
   SALARY_ASC = "salarioAsc",
   SALARY_DESC = "salarioDesc",
   EXP_ASC = "expAsc",
-  EXP_DESC = "expDesc", 
+  EXP_DESC = "expDesc",
   EDUCATION_ASC = "educAsc",
   EDUCATION_DESC = "educDesc",
 }
