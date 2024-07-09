@@ -496,7 +496,7 @@ public class ContactServiceImpl implements ContactService {
                 throw new IllegalArgumentException("User id must be null or equal to requester id");
             if(jobOfferId == null)
                 throw new IllegalArgumentException("Job offer id cannot be null");
-            return addContact(requesterId, jobOfferId, FilledBy.USER); //TODO: Add message
+            return addContact(requesterId, jobOfferId, FilledBy.USER);
         } else {
             if(userId == null)
                 throw new IllegalArgumentException("User id cannot be null");

@@ -23,7 +23,6 @@ public class EnterpriseForm {
     @Size(min = 6, max = 20)
     private String password;
 
-    //TODO: No tiene sentido este campo, resolverlo en el front
     @NotEmpty
     @Size(min = 6, max = 20)
     private String repeatPassword;
