@@ -3,12 +3,13 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.enums.EducationLevel;
 import ar.edu.itba.paw.webapp.validators.EducationLevelEnum;
 import ar.edu.itba.paw.webapp.validators.NotExistingEmail;
+import ar.edu.itba.paw.webapp.validators.StringMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-//@StringMatches(string1 = "password", string2 = "repeatPassword")
+@StringMatches(string1 = "password", string2 = "repeatPassword")
 public class UserForm {
     @NotExistingEmail
     @Email
