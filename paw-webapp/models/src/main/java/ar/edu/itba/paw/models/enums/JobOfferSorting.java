@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models.enums;
 public enum JobOfferSorting {
     DEFAULT("predeterminado", " ORDER BY jo.available ASC"),
     RECENT("recientes", " ORDER BY jo.id DESC"),
-    OLDEST("antiguas", " ORDER BY jo.id ASC"),
+    OLDEST("antiguos", " ORDER BY jo.id ASC"),
     SALARY_ASC("salarioasc", " ORDER BY jo.salary ASC"),
     SALARY_DESC("salariodesc", " ORDER BY jo.salary DESC");
 
