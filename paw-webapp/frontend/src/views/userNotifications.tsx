@@ -283,7 +283,6 @@ function NotificationsUser() {
                   >
                     <option value={SortBy.ANY}> {t("Order By")} </option>
                     <option value={SortBy.JOB_OFFER_POSITION}> {t("Job Offer")} </option>
-                    <option value={SortBy.USERNAME}> {t("Name")} </option>
                     <option value={SortBy.DATE_ASC}> {t("Date asc")} </option>
                     <option value={SortBy.DATE_DESC}> {t("Date desc")} </option>
                   </Form.Select>
