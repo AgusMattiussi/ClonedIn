@@ -145,7 +145,7 @@ function EditUserForm() {
                                 placeholder={
                                   user?.currentPosition === ""
                                     ? t("Current Position").toString()
-                                    : user?.location || undefined
+                                    : user?.currentPosition || undefined
                                 }
                                 value={values.position}
                                 onChange={handleChange}
@@ -205,7 +205,7 @@ function EditUserForm() {
                               <Form.Control
                                 name="aboutMe"
                                 placeholder={
-                                  user?.description === "" ? t("About Me").toString() : user?.location || undefined
+                                  user?.description === "" ? t("About Me").toString() : user?.description || undefined
                                 }
                                 as="textarea"
                                 rows={3}
